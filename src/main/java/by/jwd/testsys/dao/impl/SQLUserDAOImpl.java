@@ -13,7 +13,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDAOImpl implements UserDAO {
+public class SQLUserDAOImpl implements UserDAO {
 
     private ConnectionPool connectionPool = new ConnectionPool();
     private static final String SELECT_ALL_USERS = "SELECT id, login,password, first_name, last_name, role.title" +
