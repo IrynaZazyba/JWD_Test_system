@@ -1,9 +1,6 @@
 package by.jwd.testsys.logic;
 
-import by.jwd.testsys.logic.impl.SignIn;
-import by.jwd.testsys.logic.impl.SignOut;
-import by.jwd.testsys.logic.impl.SignUp;
-import by.jwd.testsys.logic.impl.WrongRequest;
+import by.jwd.testsys.logic.impl.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,11 +11,11 @@ public final class CommandProvider {
 
     private final Map<CommandName, Command> repository = new HashMap<>();
 
-    CommandProvider() {
+    private CommandProvider() {
         repository.put(CommandName.SIGN_IN, new SignIn());
-       /* repository.put(CommandName.SIGN_OUT, new SignOut());
+        repository.put(CommandName.SIGN_OUT, new SignOut());
         repository.put(CommandName.SIGN_UP, new SignUp());
-        repository.put(CommandName.WRONG_REQUEST, new WrongRequest());*/
+        repository.put(CommandName.WRONG_REQUEST, new WrongRequest());
     }
 
     public static CommandProvider getInstance() {
@@ -26,8 +23,8 @@ public final class CommandProvider {
     }
 
     public Command getCommand(String name) {
-        CommandName commandName = null;
-        Command command = null;
+        CommandName commandName;
+        Command command;
 
         commandName = CommandName.valueOf(name.toUpperCase());
         command = repository.get(commandName);

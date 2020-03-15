@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class Controller extends HttpServlet {
@@ -23,39 +24,39 @@ public class Controller extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.service(req, resp);
-
-
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String commandName = req.getParameter(RequestParametrName.COMMAND_NAME);
-        Command command = CommandProvider.getInstance().getCommand(commandName.toUpperCase());
-
-        String page = null;
-        try {
-            page = command.execute(req);
-        } catch (CommandException e) {
-            e.printStackTrace();
-        }
-
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher(page);
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("jsp/startMenu.jsp");
         if (requestDispatcher != null) {
-            requestDispatcher.forward(req, resp);
+            HttpSession session = req.getSession(false);
+            if (session.getAttribute("user_login")==null) {
+                resp.sendRedirect("/test-system");
+            } else {
+                requestDispatcher.forward(req, resp);
+            }
         } else {
             errorMessage(resp);
         }
     }
 
+    //todo if command=null
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
-
+        String commandName = req.getParameter(RequestParametrName.COMMAND_NAME);
+        Command command = CommandProvider.getInstance().getCommand(commandName.toUpperCase());
+        try {
+            command.execute(req,resp);
+        } catch (CommandException e) {
+            e.printStackTrace();
+        }
     }
 
+    //todo destroy pool
     @Override
     public void destroy() {
-
         super.destroy();
     }
 

@@ -8,6 +8,9 @@ import by.jwd.testsys.dao.exception.DAOConnectionPoolException;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 import by.jwd.testsys.service.Role;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,13 +18,16 @@ import java.util.List;
 
 public class SQLUserDAOImpl implements UserDAO {
 
-    private ConnectionPool connectionPool = new ConnectionPool();
+    static Logger logger = LogManager.getLogger();
+
+    private final static ConnectionPool connectionPool = new ConnectionPool();
     private static final String SELECT_ALL_USERS = "SELECT id, login,password, first_name, last_name, role.title" +
             " from users INNER JOIN role ON users.role_id=role.id";
     private static final String INSERT_USER = "INSERT INTO users (login, password, first_name, last_name, role_id) " +
-            "VALUES (?,?,?,?,1)";
+            "VALUES (?,?,?,?,?)";
     private static final String SELECT_USER_BY_LOGIN = "SELECT u.id,u.login,u.password,u.first_name,u.last_name," +
             "role.title FROM users as u INNER JOIN role ON u.role_id=role.id WHERE u.login=?";
+    private static final String SELECT_ROLE_ID = "SELECT id FROM role WHERE title=?";
 
 
     @Override
@@ -38,7 +44,6 @@ public class SQLUserDAOImpl implements UserDAO {
             while (resultSet.next()) {
                 usersFromDB.add(getUserFromDB(resultSet));
             }
-
         } catch (ConnectionPoolException e) {
             throw new DAOConnectionPoolException("ConnectionPool DAO exception", e);
         } catch (SQLException e) {
@@ -48,17 +53,16 @@ public class SQLUserDAOImpl implements UserDAO {
                 try {
                     connection.close();
                 } catch (SQLException e) {
-                    //todo
-                    throw new DAOSqlException("SQLException in close connection", e);
+                    logger.log(Level.ERROR, "SQLException in return connection", e);
                 }
             }
         }
-
         return usersFromDB;
     }
 
     @Override
     public void save(User user) throws DAOException {
+        int id = getRoleId(user.getRole());
         Connection connection = null;
         try {
             connection = connectionPool.takeConnection();
@@ -67,7 +71,8 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getFirstName());
             preparedStatement.setString(4, user.getLastName());
-            preparedStatement.executeUpdate();
+            preparedStatement.setInt(5, id);
+            int i = preparedStatement.executeUpdate();
         } catch (ConnectionPoolException e) {
             throw new DAOConnectionPoolException("ConnectionPool DAO exception", e);
         } catch (SQLException e) {
@@ -77,8 +82,7 @@ public class SQLUserDAOImpl implements UserDAO {
                 try {
                     connection.close();
                 } catch (SQLException e) {
-                    //todo
-                    throw new DAOSqlException("SQLException in close connection", e);
+                    logger.log(Level.ERROR, "SQLException in close connection");
                 }
             }
         }
@@ -89,30 +93,25 @@ public class SQLUserDAOImpl implements UserDAO {
         User user = null;
         Connection connection = null;
         try {
-            System.out.println("in getUserBYLogin");
             connection = connectionPool.takeConnection();
-            System.out.println("after in getUserBYLogin");
-
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN);
             preparedStatement.setString(1, login);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-               user = getUserFromDB(resultSet);
+                user = getUserFromDB(resultSet);
             }
 
         } catch (ConnectionPoolException e) {
             throw new DAOConnectionPoolException("ConnectionPool DAO exception", e);
         } catch (SQLException e) {
             throw new DAOSqlException("SQLException in getUsersByLogin() method", e);
-        }
-        finally {
+        } finally {
             if (connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException e) {
-                    //todo
-                    throw new DAOSqlException("SQLException in close connection", e);
+                    logger.log(Level.ERROR, "SQLException in close connection");
                 }
             }
         }
@@ -128,5 +127,31 @@ public class SQLUserDAOImpl implements UserDAO {
         String lastName = resultSet.getString("last_name");
         Role role = Role.valueOf(resultSet.getString("title").toUpperCase());
         return new User(id, login, password, firstName, lastName, role);
+    }
+
+    //todo проверка есть ли такая роль в коде
+    private static int getRoleId(Role role) throws DAOSqlException {
+        Connection connection = null;
+        int roleId = 0;
+        try {
+            connection = connectionPool.takeConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ROLE_ID);
+            preparedStatement.setString(1, role.toString());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                roleId = resultSet.getInt(1);
+            }
+        } catch (SQLException | ConnectionPoolException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    logger.log(Level.ERROR, "SQLException in close connection");
+                }
+            }
+        }
+        return roleId;
     }
 }

@@ -2,6 +2,8 @@ package by.jwd.testsys.dao.exception;
 
 public class DAOSqlException extends DAOException {
 
+    private static final long serialVersionUID = -2208227899151192160L;
+
     public DAOSqlException() {
         super();
     }

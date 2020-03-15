@@ -29,6 +29,13 @@ public class User implements Serializable {
         this.lastName=lastName;
         this.role=role;
     }
+    public User(String login, String password, String firstName, String lastName, Role role){
+        this.login=login;
+        this.password=password;
+        this.firstName=firstName;
+        this.lastName=lastName;
+        this.role=role;
+    }
 
     public final int getId() {
         return id;
@@ -127,9 +134,9 @@ public class User implements Serializable {
     public String toString() {
         return getClass().getName() + '@' +
                 "id=" + id +
-                ", firstName='" + firstName +
-                ", login='" + login +
-                ", password='" + password +
+                ", firstName=" + firstName +
+                ", login=" + login +
+                ", password=" + password +
                 ", role=" + role;
     }
 }
