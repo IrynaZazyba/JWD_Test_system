@@ -1,0 +1,18 @@
+.form form {
+    width: 300px;
+    margin: 0 auto;
+    padding-top: 20px;
+}
+
+.bor-gray-solid {
+    border: 1px solid #dee2e6;
+}
+
+
+.p-150 {
+    padding-top: 150px;
+}
+
+.t-color-red{
+    color: red;
+}

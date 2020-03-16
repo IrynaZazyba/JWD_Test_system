@@ -9,7 +9,7 @@ public interface UserDAO {
 
     List<User> getAll() throws DAOException;
 
-    void save(User user) throws DAOException;
+    boolean save(User user) throws DAOException;
 
     User getUserByLogin(String login) throws DAOException;
 

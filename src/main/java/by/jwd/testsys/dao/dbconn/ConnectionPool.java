@@ -8,12 +8,16 @@ import java.sql.*;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
 public final class ConnectionPool {
-    static Logger logger = LogManager.getLogger();
+
+    private static ConnectionPool instance = new ConnectionPool();
+
+    private static Logger logger = LogManager.getLogger();
     private BlockingQueue<Connection> connectionQueue;
     private BlockingQueue<Connection> givenAwayConQueue;
     private String driverName;
@@ -22,7 +26,13 @@ public final class ConnectionPool {
     private String password;
     private int poolSize;
 
-    public ConnectionPool() {
+
+    public static ConnectionPool getInstance() {
+        return instance;
+    }
+
+
+    private ConnectionPool() {
         DBResourceManager dbResourseManager = DBResourceManager.getInstance();
         this.driverName = dbResourseManager.getValue(DBParameter.DB_DRIVER);
         this.url = dbResourseManager.getValue(DBParameter.DB_URL);
@@ -50,8 +60,7 @@ public final class ConnectionPool {
         } catch (SQLException e) {
             throw new ConnectionPoolException("SQLException in ConnectionPool", e);
         } catch (ClassNotFoundException e) {
-            throw new ConnectionPoolException(
-                    "Can't find database driver class", e);
+            throw new ConnectionPoolException("Can't find database driver class", e);
         }
     }
 
@@ -69,7 +78,11 @@ public final class ConnectionPool {
     }
 
     public Connection takeConnection() throws ConnectionPoolException {
-        initPoolData();
+
+        if (connectionQueue == null) {
+            initPoolData();
+        }
+
         Connection connection = null;
         try {
             connection = connectionQueue.take();
@@ -146,14 +159,18 @@ public final class ConnectionPool {
             if (connection.isReadOnly()) {
                 connection.setReadOnly(false);
             }
+
             if (!givenAwayConQueue.remove(this)) {
                 throw new SQLException(
                         "Error deleting connection from the given away connections pool.");
             }
+
             if (!connectionQueue.offer(this)) {
                 throw new SQLException(
                         "Error allocating connection in the pool.");
             }
+
+
         }
 
         @Override

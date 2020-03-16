@@ -1,12 +1,10 @@
 package by.jwd.testsys.bean;
 
-import by.jwd.testsys.service.Role;
-import by.jwd.testsys.service.Status;
+import by.jwd.testsys.logic.util.Role;
 
 import java.io.Serializable;
 
 public class User implements Serializable {
-
 
     private static final long serialVersionUID = -6672256886751595811L;
 

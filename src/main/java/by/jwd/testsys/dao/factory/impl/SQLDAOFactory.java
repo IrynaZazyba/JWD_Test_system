@@ -6,9 +6,14 @@ import by.jwd.testsys.dao.impl.SQLUserDAOImpl;
 
 public class SQLDAOFactory implements DAOFactory {
 
+    private final static SQLDAOFactory sqlDAOFactory=new SQLDAOFactory();
     private final static UserDAO userDao = new SQLUserDAOImpl();
 
-    public SQLDAOFactory() {
+    private SQLDAOFactory() {
+    }
+
+    public static SQLDAOFactory getInstance(){
+        return sqlDAOFactory;
     }
 
     @Override
