@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<div class="container-fluid bor cont">
+<div class="container-fluid cont">
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #e3f2fd;">
         <div class="row wight-100">
             <div class="col-2">
@@ -94,7 +94,7 @@
 
                     </div>
                 </div>
-                <div class="col-sm-10 p-0 bor">
+                <div class="col-sm-10 p-0">
                     <div class="tab-content" id="v-pills-tabContent">
                         <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
                              aria-labelledby="v-pills-home-tab">...

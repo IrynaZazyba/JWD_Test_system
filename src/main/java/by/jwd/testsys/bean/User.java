@@ -113,7 +113,6 @@ public class User implements Serializable {
             if(role!=other.role) return false;
         }
 
-
       return true;
     }
 

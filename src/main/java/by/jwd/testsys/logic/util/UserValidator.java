@@ -3,20 +3,18 @@ package by.jwd.testsys.logic.util;
 public class UserValidator {
 
     /**
-    * login c ограничением 1-20 символов,
+    * login c ограничением 5-15 символов,
      * которыми могут быть буквы и цифры,
-     * символ подчеркивания, дефис,
-     * первый символ обязательно буква
+     * символ подчеркивания, дефис.
      */
     public static boolean validateLogin(String login) {
-        return login.matches("[a-zA-Z0-9-_]{1,15}$");
+        return login.matches("[a-zA-Z0-9-_]{5,15}$");
     }
 
     /**
      * password с ограничением 6-18 символов,
      * которыми могут быть буквы и цифры,
-     * символ подчеркивания, дефис,
-     * первый символ обязательно буква
+     * символ подчеркивания, дефис.
      */
     public static boolean validatePassword(String password) {
 
@@ -26,7 +24,7 @@ public class UserValidator {
     /**
      * name с ограничением 2-25 символов,
      * которыми могут быть только буквы и
-     * дефис, первый символ обязаткльно буква.
+     * дефис.
      */
     public static boolean validateName(String name){
 

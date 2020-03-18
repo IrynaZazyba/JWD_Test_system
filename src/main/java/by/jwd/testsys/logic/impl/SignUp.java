@@ -22,7 +22,8 @@ public class SignUp implements Command {
     private Logger logger = LogManager.getLogger();
 
     private static final String ALREADY_EXISTS_LOGIN_MESSAGE = "Choose another login. Such login already exist!";
-    private static final String INVALID_LOGIN_MESSAGE = "Your login is invalid! Please try one more";
+    private static final String INVALID_LOGIN_MESSAGE = "Your login is invalid! The login must contain 5-15\" +\n" +
+            "            \" characters: upper and lower case letters, numbers, dashes and underscores!";
     private static final String INVALID_PASSWORD_MESSAGE = "Your password is invalid. The password must contain 6-18" +
             " characters: upper and lower case letters, numbers, dashes and underscores!";
     private static final String INVALID_NAME_MESSAGE = "Name is too long or contains numbers.";

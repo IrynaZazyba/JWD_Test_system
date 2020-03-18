@@ -52,7 +52,7 @@ public class Controller extends HttpServlet {
                 List<Type> testsType = null;
                 try {
                     testsType = testService.getAllTestsType();
-                    req.setAttribute("tests_type", testsType);
+                    req.setAttribute(RequestParameterName.TESTS_TYPE_LIST, testsType);
                 } catch (ServiceException e) {
                     resp.sendRedirect(JspPageName.ERROR_PAGE);
                 }
