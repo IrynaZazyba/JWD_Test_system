@@ -1,9 +1,13 @@
 package by.jwd.testsys.controller;
 
+import by.jwd.testsys.bean.Type;
 import by.jwd.testsys.dao.dbconn.ConnectionPool;
 import by.jwd.testsys.logic.Command;
 import by.jwd.testsys.logic.CommandProvider;
 import by.jwd.testsys.logic.exception.CommandException;
+import by.jwd.testsys.logic.service.ServiceException;
+import by.jwd.testsys.logic.service.TestService;
+import by.jwd.testsys.logic.service.factory.ServiceFactory;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 
 public class Controller extends HttpServlet {
@@ -42,6 +47,16 @@ public class Controller extends HttpServlet {
             if (session.getAttribute(SessionAttrinbuteName.USER_LOGIN_SESSION_ATTRIBUTE) == null) {
                 resp.sendRedirect("/test-system");
             } else {
+
+                TestService testService = ServiceFactory.getInstance().getTestService();
+                List<Type> testsType = null;
+                try {
+                    testsType = testService.getAllTestsType();
+                    req.setAttribute("tests_type", testsType);
+                } catch (ServiceException e) {
+                    resp.sendRedirect(JspPageName.ERROR_PAGE);
+                }
+
                 requestDispatcher.forward(req, resp);
             }
         } else {

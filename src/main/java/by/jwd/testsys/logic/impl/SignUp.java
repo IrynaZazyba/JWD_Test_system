@@ -3,13 +3,11 @@ package by.jwd.testsys.logic.impl;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.JspPageName;
 import by.jwd.testsys.controller.RequestParameterName;
-import by.jwd.testsys.controller.SessionAttrinbuteName;
-import by.jwd.testsys.dao.UserDAO;
-import by.jwd.testsys.dao.exception.DAOException;
-import by.jwd.testsys.dao.factory.DAOFactory;
-import by.jwd.testsys.dao.factory.DAOType;
 import by.jwd.testsys.logic.Command;
 import by.jwd.testsys.logic.exception.CommandException;
+import by.jwd.testsys.logic.service.ServiceException;
+import by.jwd.testsys.logic.service.UserService;
+import by.jwd.testsys.logic.service.factory.ServiceFactory;
 import by.jwd.testsys.logic.util.Role;
 import by.jwd.testsys.logic.util.UserValidator;
 import org.apache.logging.log4j.Level;
@@ -18,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 
 public class SignUp implements Command {
@@ -29,6 +26,7 @@ public class SignUp implements Command {
     private static final String INVALID_PASSWORD_MESSAGE = "Your password is invalid. The password must contain 6-18" +
             " characters: upper and lower case letters, numbers, dashes and underscores!";
     private static final String INVALID_NAME_MESSAGE = "Name is too long or contains numbers.";
+    private static final String SUCCESS_SIGNUP_MESSAGE = "Sign up was successful! Please sign in";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
@@ -39,30 +37,27 @@ public class SignUp implements Command {
 
 
         String userDataValid = isUserDataValid(login, password, firstName, lastName);
+
         if (userDataValid != null) {
             request.setAttribute(RequestParameterName.SIGN_UP_ERROR, userDataValid);
             Command.forwardToPage(request, response, JspPageName.START_JSP_PAGE);
         } else {
 
-            DAOFactory daoFactory = Command.getDAOFactory(DAOType.SQL);
-            UserDAO userDao = daoFactory.getUserDao();
+            UserService userService = ServiceFactory.getInstance().getUserService();
 
             try {
                 User user = new User(login, password, firstName, lastName, Role.USER);
-                boolean isSaved = userDao.save(user);
+                boolean isSaved = userService.addUser(user);
 
                 if (isSaved) {
-                    HttpSession session = request.getSession();
-                    session.setAttribute(SessionAttrinbuteName.USER_ID_SESSION_ATTRIBUTE, user.getId());
-                    session.setAttribute(SessionAttrinbuteName.USER_LOGIN_SESSION_ATTRIBUTE, user.getLogin());
-                    session.setAttribute(SessionAttrinbuteName.USER_ROLE_SESSION_ATTRIBUTE, user.getRole());
-                    Command.forwardToPage(request, response, JspPageName.START_MENU_PAGE);
+                    request.setAttribute(RequestParameterName.SIGN_UP_SUCCESS_MESSAGE,SUCCESS_SIGNUP_MESSAGE);
+                    Command.forwardToPage(request, response, JspPageName.START_JSP_PAGE);
                 } else {
                     request.setAttribute(RequestParameterName.SIGN_UP_ERROR, ALREADY_EXISTS_LOGIN_MESSAGE);
                     Command.forwardToPage(request, response, JspPageName.START_JSP_PAGE);
                 }
-            } catch (DAOException e) {
-                logger.log(Level.ERROR, "DAOException in SignUp command.");
+            }  catch (ServiceException e) {
+                logger.log(Level.ERROR, "Service Exception in SignUp command.",e);
                 Command.forwardToPage(request, response, JspPageName.ERROR_PAGE);
             }
         }

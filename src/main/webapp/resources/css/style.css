@@ -1,18 +1,87 @@
 .form form {
-    width: 300px;
+    width: 400px;
     margin: 0 auto;
     padding-top: 20px;
+    padding-bottom: 20px;
 }
 
-.bor-gray-solid {
+.bor {
     border: 1px solid #dee2e6;
 }
 
-
-.p-150 {
+.size {
     padding-top: 150px;
 }
 
-.t-color-red{
-    color: red;
+.p-l-27{
+    padding-left: 27px;
 }
+
+.color-dodgerblue{
+    color: dodgerblue;
+}
+
+.p-top-7{
+    padding-top: 7px;
+}
+
+.p-left-7{
+    padding-left: 27px;
+}
+
+.p-right-27{
+    padding-right: 27px;
+}
+
+.p-r-0{
+    padding-right: 0px;
+}
+
+.p-l-0{
+    padding-left: 0px;
+}
+
+.cont{
+    margin-left: 0;
+    margin-right: 0;
+    height:100%;
+    width: 100%;
+}
+
+.p-0{
+    padding: 0px;
+}
+
+.m-3-5-5-5{
+    margin: 3px 5px 5px 5px;
+}
+
+.p-l-15{
+    padding-left: 15px;
+}
+
+.wight-100{
+    width: 100%;
+}
+
+.m-t-7{
+    margin-top: 7px;
+}
+
+.m-0{
+    margin: 0;
+}
+
+.icon-user{
+    margin-top: 10px;
+}
+
+.m-t-15{
+    margin-top: 15px;
+}
+
+
+
+
+
+

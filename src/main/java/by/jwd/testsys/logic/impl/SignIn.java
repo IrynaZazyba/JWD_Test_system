@@ -1,15 +1,16 @@
 package by.jwd.testsys.logic.impl;
 
+import by.jwd.testsys.bean.Type;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.JspPageName;
 import by.jwd.testsys.controller.RequestParameterName;
 import by.jwd.testsys.controller.SessionAttrinbuteName;
-import by.jwd.testsys.dao.UserDAO;
-import by.jwd.testsys.dao.exception.DAOException;
-import by.jwd.testsys.dao.factory.DAOFactory;
-import by.jwd.testsys.dao.factory.DAOType;
 import by.jwd.testsys.logic.Command;
 import by.jwd.testsys.logic.exception.CommandException;
+import by.jwd.testsys.logic.service.ServiceException;
+import by.jwd.testsys.logic.service.TestService;
+import by.jwd.testsys.logic.service.UserService;
+import by.jwd.testsys.logic.service.factory.ServiceFactory;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 
 public class SignIn implements Command {
@@ -30,24 +32,30 @@ public class SignIn implements Command {
         String login = request.getParameter(RequestParameterName.USER_LOGIN_PARAMETER);
         String password = request.getParameter(RequestParameterName.USER_PASSWORD_PARAMETER);
 
-        DAOFactory daoFactory = Command.getDAOFactory(DAOType.SQL);
-        UserDAO userDao = daoFactory.getUserDao();
 
+        UserService userService = ServiceFactory.getInstance().getUserService();
+        TestService testService = ServiceFactory.getInstance().getTestService();
         try {
-            User userByLogin = userDao.getUserByLogin(login);
+            User userByLogin = userService.getUserByLogin(login);
 
             if (userByLogin != null && userByLogin.getPassword().equals(password)) {
                 HttpSession session = request.getSession();
                 session.setAttribute(SessionAttrinbuteName.USER_ID_SESSION_ATTRIBUTE, userByLogin.getId());
                 session.setAttribute(SessionAttrinbuteName.USER_LOGIN_SESSION_ATTRIBUTE, userByLogin.getLogin());
                 session.setAttribute(SessionAttrinbuteName.USER_ROLE_SESSION_ATTRIBUTE, userByLogin.getRole());
+
+
+                List<Type> testsType = testService.getAllTestsType();
+                request.setAttribute(RequestParameterName.TESTS_TYPE_LIST, testsType);
+
                 Command.forwardToPage(request, response, JspPageName.START_MENU_PAGE);
             } else {
                 request.setAttribute(RequestParameterName.SIGN_IN_ERROR, INVALID_PASSWORD_MESSAGE);
                 Command.forwardToPage(request, response, JspPageName.START_JSP_PAGE);
             }
-        } catch (DAOException e) {
-            logger.log(Level.ERROR, "DAOException in sign in command.");
+        } catch (ServiceException e) {
+
+            logger.log(Level.ERROR, "Service Exception in sign in command.", e);
             Command.forwardToPage(request, response, JspPageName.ERROR_PAGE);
 
         }

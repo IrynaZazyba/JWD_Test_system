@@ -9,7 +9,7 @@ public class UserValidator {
      * первый символ обязательно буква
      */
     public static boolean validateLogin(String login) {
-        return login.matches("[a-zA-Z0-9-_]{1,20}$");
+        return login.matches("[a-zA-Z0-9-_]{1,15}$");
     }
 
     /**
