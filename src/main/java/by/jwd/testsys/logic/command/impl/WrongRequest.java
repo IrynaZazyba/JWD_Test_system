@@ -1,8 +1,8 @@
-package by.jwd.testsys.logic.impl;
+package by.jwd.testsys.logic.command.impl;
 
 import by.jwd.testsys.controller.JspPageName;
-import by.jwd.testsys.logic.Command;
-import by.jwd.testsys.logic.exception.CommandException;
+import by.jwd.testsys.logic.command.Command;
+import by.jwd.testsys.logic.command.CommandException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

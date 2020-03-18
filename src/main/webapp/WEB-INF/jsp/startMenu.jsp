@@ -83,9 +83,7 @@
             <div class="row p-l-15">
                 <div class="col-sm-2 p-0 bor">
                     <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-
                         <c:forEach var="item" items="${tests_type}">
-
                         <a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home"
                                role="tab"
                                aria-controls="v-pills-home" aria-selected="true">${item.title}</a>

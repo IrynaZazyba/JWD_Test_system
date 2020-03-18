@@ -2,9 +2,9 @@ package by.jwd.testsys.controller;
 
 import by.jwd.testsys.bean.Type;
 import by.jwd.testsys.dao.dbconn.ConnectionPool;
-import by.jwd.testsys.logic.Command;
-import by.jwd.testsys.logic.CommandProvider;
-import by.jwd.testsys.logic.exception.CommandException;
+import by.jwd.testsys.logic.command.Command;
+import by.jwd.testsys.logic.command.CommandProvider;
+import by.jwd.testsys.logic.command.CommandException;
 import by.jwd.testsys.logic.service.ServiceException;
 import by.jwd.testsys.logic.service.TestService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;

@@ -1,6 +1,6 @@
-package by.jwd.testsys.logic;
+package by.jwd.testsys.logic.command;
 
-import by.jwd.testsys.logic.impl.*;
+import by.jwd.testsys.logic.command.impl.*;
 
 import java.util.HashMap;
 import java.util.Map;

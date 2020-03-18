@@ -11,6 +11,7 @@ import by.jwd.testsys.logic.service.TestService;
 import java.util.List;
 
 public class TestServiceImpl implements TestService {
+
     private DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
     private TestTypeDAO typeDAO = daoFactory.getTypeDao();
 

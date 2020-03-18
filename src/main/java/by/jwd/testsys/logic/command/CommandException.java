@@ -1,4 +1,4 @@
-package by.jwd.testsys.logic.exception;
+package by.jwd.testsys.logic.command;
 
 public class CommandException extends Exception {
 

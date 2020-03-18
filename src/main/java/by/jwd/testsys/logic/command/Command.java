@@ -1,7 +1,5 @@
-package by.jwd.testsys.logic;
+package by.jwd.testsys.logic.command;
 
-
-import by.jwd.testsys.logic.exception.CommandException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

@@ -49,7 +49,6 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
                 }else{
                     deletedAt=null;
                 }
-                System.out.println(typeId + " " + typeTitle + " " + deletedAt);
                 typesFromDB.add(new Type(typeId, typeTitle, deletedAt));
             }
         } catch (ConnectionPoolException | SQLException e) {
@@ -57,9 +56,6 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
             throw new DAOException("Exception in SQLTypeDAOImpl getAll().");
         }
 
-        if (typesFromDB != null) {
-            System.out.println("not null");
-        }
         return typesFromDB;
     }
 
