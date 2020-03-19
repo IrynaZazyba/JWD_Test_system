@@ -1,7 +1,8 @@
 package by.jwd.testsys.logic.service;
 
-public class ServiceException extends Exception {
+import java.io.Serializable;
 
+public class ServiceException extends Exception implements Serializable {
 
     private static final long serialVersionUID = 6081026820292151098L;
 

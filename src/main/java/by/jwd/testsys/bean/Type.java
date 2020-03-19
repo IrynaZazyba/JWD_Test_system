@@ -1,10 +1,11 @@
 package by.jwd.testsys.bean;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Set;
 
-public class Type {
-
+public class Type implements Serializable {
+//todo
     private int id;
     private String title;
     private LocalDate deletedAt;

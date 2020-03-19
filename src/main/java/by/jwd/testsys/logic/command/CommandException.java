@@ -1,6 +1,10 @@
 package by.jwd.testsys.logic.command;
 
-public class CommandException extends Exception {
+import java.io.Serializable;
+
+public class CommandException extends Exception implements Serializable {
+
+    private static final long serialVersionUID = -5594668304170524296L;
 
     public CommandException() {
         super();

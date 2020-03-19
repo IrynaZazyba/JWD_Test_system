@@ -7,6 +7,8 @@ public class UserValidator {
      * которыми могут быть буквы и цифры,
      * символ подчеркивания, дефис.
      */
+
+    //todo заменить рег выражения на константы
     public static boolean validateLogin(String login) {
         return login.matches("[a-zA-Z0-9-_]{5,15}$");
     }

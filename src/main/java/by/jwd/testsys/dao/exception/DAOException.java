@@ -1,6 +1,8 @@
 package by.jwd.testsys.dao.exception;
 
-public class DAOException extends Exception {
+import java.io.Serializable;
+
+public class DAOException extends Exception implements Serializable {
 
     private static final long serialVersionUID = 2220592095980878035L;
 

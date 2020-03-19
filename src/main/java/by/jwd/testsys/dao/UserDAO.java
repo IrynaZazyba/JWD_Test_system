@@ -11,7 +11,7 @@ public interface UserDAO {
 
     boolean save(User user) throws DAOException;
 
-    User getUserByLogin(String login) throws DAOException;
+    User getUserByLoginPassword(String login, String password) throws DAOException;
 
 
 }

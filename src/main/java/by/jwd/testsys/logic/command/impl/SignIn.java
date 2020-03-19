@@ -36,7 +36,7 @@ public class SignIn implements Command {
         UserService userService = ServiceFactory.getInstance().getUserService();
         TestService testService = ServiceFactory.getInstance().getTestService();
         try {
-            User userByLogin = userService.getUserByLogin(login);
+            User userByLogin = userService.getUserByLoginPassword(login,password);
 
             if (userByLogin != null && userByLogin.getPassword().equals(password)) {
                 HttpSession session = request.getSession();

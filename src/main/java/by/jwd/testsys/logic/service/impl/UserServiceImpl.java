@@ -13,13 +13,13 @@ public class UserServiceImpl implements UserService {
     private DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
     private UserDAO userDao = daoFactory.getUserDao();
 
-    public User getUserByLogin(String userLogin) throws ServiceException {
+    public User getUserByLoginPassword(String userLogin, String userPassword) throws ServiceException {
 
-        User userByLogin = null;
+        User userByLogin;
         try {
-            userByLogin = userDao.getUserByLogin(userLogin);
+            userByLogin = userDao.getUserByLoginPassword(userLogin, userPassword);
         } catch (DAOException e) {
-            throw new ServiceException("Error in getUserByLogin.", e);
+            throw new ServiceException("Error in getUserByLoginPassword.", e);
         }
         return userByLogin;
     }

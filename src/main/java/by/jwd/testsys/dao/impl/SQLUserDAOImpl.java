@@ -25,9 +25,11 @@ public class SQLUserDAOImpl implements UserDAO {
             " from users INNER JOIN role ON users.role_id=role.id";
     private static final String INSERT_USER = "INSERT INTO users (login, password, first_name, last_name, role_id) " +
             "VALUES (?,?,?,?,?)";
+    private static final String SELECT_USER_BY_LOGIN_PASSWORD = "SELECT u.id,u.login,u.password,u.first_name,u.last_name," +
+            "role.title FROM users as u INNER JOIN role ON u.role_id=role.id WHERE u.login=? AND u.password=?";
+    private static final String SELECT_ROLE_ID = "SELECT id FROM role WHERE title=?";
     private static final String SELECT_USER_BY_LOGIN = "SELECT u.id,u.login,u.password,u.first_name,u.last_name," +
             "role.title FROM users as u INNER JOIN role ON u.role_id=role.id WHERE u.login=?";
-    private static final String SELECT_ROLE_ID = "SELECT id FROM role WHERE title=?";
 
 
     @Override
@@ -63,7 +65,7 @@ public class SQLUserDAOImpl implements UserDAO {
     @Override
     public boolean save(User user) throws DAOException {
 
-        if (isUserLoginExist(user.getLogin())) {
+        if (getUserByLogin(user.getLogin())==null) {
             return false;
         }
 
@@ -95,16 +97,17 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User getUserByLogin(String login) throws DAOException {
+    public User getUserByLoginPassword(String login, String password) throws DAOException {
         User user = null;
         Connection connection = null;
         try {
             connection = connectionPool.takeConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN);
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN_PASSWORD);
             preparedStatement.setString(1, login);
+            preparedStatement.setString(2, password);
 
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
+            if (resultSet.next()) {
                 user = parseUserFromDB(resultSet);
             }
 
@@ -123,7 +126,6 @@ public class SQLUserDAOImpl implements UserDAO {
         }
         return user;
     }
-
 
     private static User parseUserFromDB(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("id");
@@ -162,8 +164,29 @@ public class SQLUserDAOImpl implements UserDAO {
         return roleId;
     }
 
-    private boolean isUserLoginExist(String userLogin) throws DAOException {
-        return getUserByLogin(userLogin) != null;
+    public User getUserByLogin(String userLogin) throws DAOException {
+        User user=null;
+        Connection connection=null;
+        try {
+            connection = connectionPool.takeConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN);
+            preparedStatement.setString(1, userLogin);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                user = parseUserFromDB(resultSet);
+            }
+        } catch (ConnectionPoolException | SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    logger.log(Level.ERROR, "SQLException in close connection getRoleId");
+                }
+            }
+        }
+        return user;
     }
 
 
