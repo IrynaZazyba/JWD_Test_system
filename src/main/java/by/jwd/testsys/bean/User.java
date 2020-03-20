@@ -19,20 +19,21 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(int id, String login, String password, String firstName, String lastName, Role role){
-        this.id=id;
-        this.login=login;
-        this.password=password;
-        this.firstName=firstName;
-        this.lastName=lastName;
-        this.role=role;
+    public User(int id, String login, String password, String firstName, String lastName, Role role) {
+        this.id = id;
+        this.login = login;
+        this.firstName = firstName;
+        this.password = password;
+        this.lastName = lastName;
+        this.role = role;
     }
-    public User(String login, String password, String firstName, String lastName, Role role){
-        this.login=login;
-        this.password=password;
-        this.firstName=firstName;
-        this.lastName=lastName;
-        this.role=role;
+
+    public User(String login, String password, String firstName, String lastName, Role role) {
+        this.login = login;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
     }
 
     public final int getId() {
@@ -85,35 +86,34 @@ public class User implements Serializable {
     }
 
 
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null) return false;
-        if(getClass() != obj.getClass()) return false;
+        if (getClass() != obj.getClass()) return false;
         User other = (User) obj;
-        if(firstName ==null){
-            if(other.firstName !=null) return false;
-        } else{
-            if(!firstName.equals(other.firstName)) return false;
+        if (firstName == null) {
+            if (other.firstName != null) return false;
+        } else {
+            if (!firstName.equals(other.firstName)) return false;
         }
-        if(login==null){
-            if(other.login!=null) return false;
-        } else{
-            if(!login.equals(other.login)) return false;
+        if (login == null) {
+            if (other.login != null) return false;
+        } else {
+            if (!login.equals(other.login)) return false;
         }
-        if(password==null){
-            if(other.password!=null) return false;
-        } else{
-            if(!password.equals(other.password)) return false;
+        if (password == null) {
+            if (other.password != null) return false;
+        } else {
+            if (!password.equals(other.password)) return false;
         }
-        if(role==null){
-            if(other.role!=null) return false;
-        } else{
-            if(role!=other.role) return false;
+        if (role == null) {
+            if (other.role != null) return false;
+        } else {
+            if (role != other.role) return false;
         }
 
-      return true;
+        return true;
     }
 
     @Override

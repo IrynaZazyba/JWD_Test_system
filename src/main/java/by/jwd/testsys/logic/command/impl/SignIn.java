@@ -34,7 +34,6 @@ public class SignIn implements Command {
 
 
         UserService userService = ServiceFactory.getInstance().getUserService();
-        TestService testService = ServiceFactory.getInstance().getTestService();
         try {
             User userByLogin = userService.getUserByLoginPassword(login,password);
 
@@ -44,11 +43,7 @@ public class SignIn implements Command {
                 session.setAttribute(SessionAttrinbuteName.USER_LOGIN_SESSION_ATTRIBUTE, userByLogin.getLogin());
                 session.setAttribute(SessionAttrinbuteName.USER_ROLE_SESSION_ATTRIBUTE, userByLogin.getRole());
 
-
-                List<Type> testsType = testService.getAllTestsType();
-                request.setAttribute(RequestParameterName.TESTS_TYPE_LIST, testsType);
-
-                Command.forwardToPage(request, response, JspPageName.START_MENU_PAGE);
+                Command.redirectToPage(response,request.getContextPath()+"/test?command=show_main_page");
             } else {
                 request.setAttribute(RequestParameterName.SIGN_IN_ERROR, INVALID_PASSWORD_MESSAGE);
                 Command.forwardToPage(request, response, JspPageName.START_JSP_PAGE);

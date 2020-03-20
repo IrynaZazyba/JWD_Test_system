@@ -41,33 +41,35 @@ public class Controller extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher(JspPageName.START_MENU_PAGE);
-        HttpSession session = req.getSession(false);
-        if (requestDispatcher != null && session != null) {
-            if (session.getAttribute(SessionAttrinbuteName.USER_LOGIN_SESSION_ATTRIBUTE) == null) {
-                resp.sendRedirect("/test-system");
-            } else {
-
-                TestService testService = ServiceFactory.getInstance().getTestService();
-                List<Type> testsType = null;
-                try {
-                    testsType = testService.getAllTestsType();
-                    req.setAttribute(RequestParameterName.TESTS_TYPE_LIST, testsType);
-                } catch (ServiceException e) {
-                    resp.sendRedirect(JspPageName.ERROR_PAGE);
-                }
-
-                requestDispatcher.forward(req, resp);
-            }
-        } else {
-            resp.sendRedirect(JspPageName.ERROR_PAGE);
-        }
+        this.doPost(req,resp);
+//        RequestDispatcher requestDispatcher = req.getRequestDispatcher(JspPageName.START_MENU_PAGE);
+//        HttpSession session = req.getSession(false);
+//        if (requestDispatcher != null && session != null) {
+//            if (session.getAttribute(SessionAttrinbuteName.USER_LOGIN_SESSION_ATTRIBUTE) == null) {
+//                resp.sendRedirect("/test-system");
+//            } else {
+//
+//                TestService testService = ServiceFactory.getInstance().getTestService();
+//                List<Type> testsType = null;
+//                try {
+//                    testsType = testService.getAllTestsType();
+//                    req.setAttribute(RequestParameterName.TESTS_TYPE_LIST, testsType);
+//                } catch (ServiceException e) {
+//                    resp.sendRedirect(JspPageName.ERROR_PAGE);
+//                }
+//
+//                requestDispatcher.forward(req, resp);
+//            }
+//        } else {
+//            resp.sendRedirect(JspPageName.ERROR_PAGE);
+//        }
     }
 
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String commandName = req.getParameter(RequestParameterName.COMMAND_NAME);
+
         Command command = CommandProvider.getInstance().getCommand(commandName.toUpperCase());
         try {
             command.execute(req, resp);

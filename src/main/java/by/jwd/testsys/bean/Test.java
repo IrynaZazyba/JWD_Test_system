@@ -14,6 +14,11 @@ public class Test {
     private Type type;
     private Set<Question> questions;
 
+public Test(int id, String title){
+    this.id=id;
+    this.title=title;
+}
+
 
     public int getId() {
         return id;

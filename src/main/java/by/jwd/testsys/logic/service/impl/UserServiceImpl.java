@@ -29,9 +29,18 @@ public class UserServiceImpl implements UserService {
         try {
             isSaved = userDao.save(user);
         } catch (DAOException e) {
-            throw new ServiceException("Error in save user in DB.",e);
+            throw new ServiceException("Error in save user.", e);
         }
         return isSaved;
     }
 
+    public User getUserInfoToAccount(int id) throws ServiceException {
+        User userFromDB;
+        try {
+            userFromDB = userDao.getUserById(id);
+        } catch (DAOException e) {
+            throw new ServiceException("Error in getUserById().", e);
+        }
+        return userFromDB;
+    }
 }

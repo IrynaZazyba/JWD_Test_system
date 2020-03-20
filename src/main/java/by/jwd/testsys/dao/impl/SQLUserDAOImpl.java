@@ -30,7 +30,8 @@ public class SQLUserDAOImpl implements UserDAO {
     private static final String SELECT_ROLE_ID = "SELECT id FROM role WHERE title=?";
     private static final String SELECT_USER_BY_LOGIN = "SELECT u.id,u.login,u.password,u.first_name,u.last_name," +
             "role.title FROM users as u INNER JOIN role ON u.role_id=role.id WHERE u.login=?";
-
+    private static final String SELECT_USER_BY_ID = "SELECT u.id,u.login,u.password,u.first_name,u.last_name," +
+            "role.title FROM users as u INNER JOIN role ON u.role_id=role.id WHERE u.id=?";
 
     @Override
     public List<User> getAll() throws DAOException {
@@ -65,7 +66,7 @@ public class SQLUserDAOImpl implements UserDAO {
     @Override
     public boolean save(User user) throws DAOException {
 
-        if (getUserByLogin(user.getLogin())==null) {
+        if (getUserByLogin(user.getLogin()) == null) {
             return false;
         }
 
@@ -130,11 +131,11 @@ public class SQLUserDAOImpl implements UserDAO {
     private static User parseUserFromDB(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("id");
         String login = resultSet.getString("login");
-        String password = resultSet.getString("password");
+        String password=resultSet.getString("password");
         String firstName = resultSet.getString("first_name");
         String lastName = resultSet.getString("last_name");
         Role role = Role.valueOf(resultSet.getString("title").toUpperCase());
-        return new User(id, login, password, firstName, lastName, role);
+        return new User(id, login,password, firstName, lastName, role);
     }
 
     private int getRoleId(Role role) throws DAOSqlException {
@@ -165,8 +166,8 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     public User getUserByLogin(String userLogin) throws DAOException {
-        User user=null;
-        Connection connection=null;
+        User user = null;
+        Connection connection = null;
         try {
             connection = connectionPool.takeConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN);
@@ -177,7 +178,7 @@ public class SQLUserDAOImpl implements UserDAO {
             }
         } catch (ConnectionPoolException | SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             if (connection != null) {
                 try {
                     connection.close();
@@ -189,5 +190,24 @@ public class SQLUserDAOImpl implements UserDAO {
         return user;
     }
 
+    @Override
+    public User getUserById(int id) throws DAOException{
+        User userById = null;
+
+        try {
+            Connection connection = connectionPool.takeConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_ID);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                userById = parseUserFromDB(resultSet);
+            }
+        } catch (ConnectionPoolException | SQLException e) {
+            //todo
+            throw new DAOSqlException("SQLException in getUserById() method", e);
+
+        }
+        return userById;
+    }
 
 }

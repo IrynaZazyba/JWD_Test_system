@@ -11,6 +11,8 @@ public class RequestParameterName {
     public static final String SIGN_UP_ERROR="sign_up_error";
     public static final String SIGN_UP_SUCCESS_MESSAGE="success_message";
     public static final String TESTS_TYPE_LIST="tests_type";
+    public static final String USER_ACCOUNT_INFO="user_info";
+
 
 
 

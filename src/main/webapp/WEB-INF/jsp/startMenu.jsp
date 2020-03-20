@@ -12,8 +12,8 @@
 
 </head>
 <body>
-
 <div class="container-fluid cont">
+
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #e3f2fd;">
         <div class="row wight-100">
             <div class="col-2">
@@ -29,7 +29,8 @@
                     <ul class="navbar-nav mr-auto">
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Тесты</a>
+                            <a class="nav-link active"
+                               href="${pageContext.request.contextPath}/test?command=show_main_page">Тесты</a>
                         </li>
 
                         <c:if test="${sessionScope.user_role=='ADMIN'}">
@@ -55,63 +56,73 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-3">
-                <div class="row">
-                    <div class="col-2 p-0 icon-user">
-                        <i class="far fa-address-card fa-2x color-dodgerblue"></i>
-                    </div>
-                    <div class="col-auto m-t-15 ">${sessionScope.user_login}
-                    </div>
-                    <div class="col-4">
-                        <form action="test" method="POST" class="m-0">
-                            <input type="hidden" name="command" value="sign_out"/>
-                            <button type="submit" class="btn btn-outline-primary btn-md m-t-7">Sign out</button>
-                        </form>
-                    </div>
-                </div>
+
+
+            <div class="col-auto p-0 icon-user">
+                <a href="${pageContext.request.contextPath}/test?command=show_user_account"> <i
+                        class="far fa-address-card fa-2x color-dodgerblue"></i></a>
+            </div>
+            <div class="col-auto m-t-15">${sessionScope.user_login}
+            </div>
+
+            <div class="col-1">
+                <form action="test" method="POST" class="m-0">
+                    <input type="hidden" name="command" value="sign_out"/>
+                    <button type="submit" class="btn btn-outline-primary btn-md m-t-7">Sign out</button>
+                </form>
             </div>
         </div>
 
     </nav>
-    <div class="wrapper bor">
-        <nav id="sidebar">
-            <div class="sidebar-header">
-                <strong></strong>
+
+    <div class="row height-90">
+        <div class="col-2 background-gradient height-100">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <c:forEach var="item" items="${tests_type}">
+                    <a class="nav-link" id="v-pills-${item.id}-tab" data-toggle="pill" href="#v-pills-${item.id}"
+                       role="tab"
+                       aria-controls="v-pills-${item.id}" aria-selected="true">${item.title}</a>
+                </c:forEach>
+
             </div>
 
 
-            <div class="row p-l-15">
-                <div class="col-sm-2 p-0 bor">
-                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                        <c:forEach var="item" items="${tests_type}">
-                        <a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home"
-                               role="tab"
-                               aria-controls="v-pills-home" aria-selected="true">${item.title}</a>
-                        </c:forEach>
+        </div>
+        <div class="col-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                <c:forEach var="item" items="${tests_type}">
 
+                    <div class="tab-pane fade " id="v-pills-${item.id}" role="tabpanel"
+                         aria-labelledby="v-pills-${item.id}-tab">
 
+                        <div class="row m-t-15">
+                            <c:forEach var="itm" items="${item.tests}">
+                                <div class="col-auto">
+                                    <div class="card" style="width: 18rem;">
+                                            <%--                          <img src="..." class="card-img-top" alt="...">--%>
+                                        <div class="card-body">
+                                            <h5 class="card-title"><c:out value="${itm.title}"/>
+                                            </h5>
+                                            <p class="card-text">Some quick example text to build on the card title and
+                                                make
+                                                up the bulk of the card's content.</p>
+                                            <a href="#" class="btn btn-primary">Переход куда-нибудь</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
+
+                        </div>
                     </div>
-                </div>
-                <div class="col-sm-10 p-0">
-                    <div class="tab-content" id="v-pills-tabContent">
-                        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
-                             aria-labelledby="v-pills-home-tab">...
-                        </div>
-                        <div class="tab-pane fade" id="v-pills-profile" role="tabpanel"
-                             aria-labelledby="v-pills-profile-tab">...
-                        </div>
-                        <div class="tab-pane fade" id="v-pills-messages" role="tabpanel"
-                             aria-labelledby="v-pills-messages-tab">...
-                        </div>
-                        <div class="tab-pane fade" id="v-pills-settings" role="tabpanel"
-                             aria-labelledby="v-pills-settings-tab">...
-                        </div>
-                    </div>
-                </div>
+                </c:forEach>
+
             </div>
-        </nav>
-        <div id="content bor"></div>
+        </div>
+
     </div>
+</div>
+</div>
+<div id="content bor"></div>
 
 
 </div>

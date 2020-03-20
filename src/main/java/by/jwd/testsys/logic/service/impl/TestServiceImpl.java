@@ -9,6 +9,7 @@ import by.jwd.testsys.logic.service.ServiceException;
 import by.jwd.testsys.logic.service.TestService;
 
 import java.util.List;
+import java.util.Set;
 
 public class TestServiceImpl implements TestService {
 
@@ -26,4 +27,14 @@ public class TestServiceImpl implements TestService {
     }
 
 
+    public Set<Type> getTypeWithTests() {
+        Set<Type> testsType = null;
+
+        try {
+            testsType=typeDAO.getTypeWithTests();
+        } catch (DAOException e) {
+            e.printStackTrace();
+        }
+        return testsType;
+    }
 }

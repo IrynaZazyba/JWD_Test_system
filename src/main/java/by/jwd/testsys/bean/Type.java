@@ -2,10 +2,11 @@ package by.jwd.testsys.bean;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 public class Type implements Serializable {
-//todo
+    //todo
     private int id;
     private String title;
     private LocalDate deletedAt;
@@ -14,11 +15,18 @@ public class Type implements Serializable {
     public Type() {
     }
 
-    public Type(int id, String title, LocalDate deletedAt) {
+    public Type(int id, String title) {
         this.id = id;
         this.title = title;
-        this.deletedAt = deletedAt;
     }
+
+    public Type(int id, String title, Set<Test> tests) {
+        this.id = id;
+        this.title = title;
+        this.tests = new HashSet<>(tests);
+    }
+
+
 
     public int getId() {
         return id;
@@ -48,8 +56,11 @@ public class Type implements Serializable {
         return tests;
     }
 
-    public void setTests(Set<Test> tests) {
-        this.tests = tests;
+    public void setTests(Test test) {
+        if (tests == null) {
+            tests=new HashSet<>();
+        }
+        tests.add(test);
     }
 
     @Override
