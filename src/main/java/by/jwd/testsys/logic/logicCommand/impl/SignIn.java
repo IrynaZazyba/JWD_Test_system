@@ -1,14 +1,12 @@
-package by.jwd.testsys.logic.command.impl;
+package by.jwd.testsys.logic.logicCommand.impl;
 
-import by.jwd.testsys.bean.Type;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.JspPageName;
 import by.jwd.testsys.controller.RequestParameterName;
-import by.jwd.testsys.controller.SessionAttrinbuteName;
-import by.jwd.testsys.logic.command.Command;
-import by.jwd.testsys.logic.command.CommandException;
+import by.jwd.testsys.controller.SessionAttributeName;
+import by.jwd.testsys.logic.logicCommand.Command;
+import by.jwd.testsys.logic.logicCommand.CommandException;
 import by.jwd.testsys.logic.service.ServiceException;
-import by.jwd.testsys.logic.service.TestService;
 import by.jwd.testsys.logic.service.UserService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;
 import org.apache.logging.log4j.Level;
@@ -18,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 
 public class SignIn implements Command {
@@ -39,9 +36,9 @@ public class SignIn implements Command {
 
             if (userByLogin != null && userByLogin.getPassword().equals(password)) {
                 HttpSession session = request.getSession();
-                session.setAttribute(SessionAttrinbuteName.USER_ID_SESSION_ATTRIBUTE, userByLogin.getId());
-                session.setAttribute(SessionAttrinbuteName.USER_LOGIN_SESSION_ATTRIBUTE, userByLogin.getLogin());
-                session.setAttribute(SessionAttrinbuteName.USER_ROLE_SESSION_ATTRIBUTE, userByLogin.getRole());
+                session.setAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE, userByLogin.getId());
+                session.setAttribute(SessionAttributeName.USER_LOGIN_SESSION_ATTRIBUTE, userByLogin.getLogin());
+                session.setAttribute(SessionAttributeName.USER_ROLE_SESSION_ATTRIBUTE, userByLogin.getRole());
 
                 Command.redirectToPage(response,request.getContextPath()+"/test?command=show_main_page");
             } else {
@@ -50,9 +47,9 @@ public class SignIn implements Command {
             }
         } catch (ServiceException e) {
 
+
             logger.log(Level.ERROR, "Service Exception in sign in command.", e);
             Command.forwardToPage(request, response, JspPageName.ERROR_PAGE);
-
         }
     }
 }

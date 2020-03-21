@@ -10,5 +10,6 @@ public interface UserService {
 
     User getUserInfoToAccount(int id) throws ServiceException;
 
+    User editUserInfo(User user) throws ServiceException;
 
 }

@@ -1,14 +1,11 @@
-package by.jwd.testsys.logic.command.impl;
+package by.jwd.testsys.logic.logicCommand.impl;
 
 import by.jwd.testsys.bean.Type;
 import by.jwd.testsys.controller.JspPageName;
 import by.jwd.testsys.controller.RequestParameterName;
-import by.jwd.testsys.controller.SessionAttrinbuteName;
-import by.jwd.testsys.logic.command.Command;
-import by.jwd.testsys.logic.command.CommandException;
-import by.jwd.testsys.logic.service.ServiceException;
+import by.jwd.testsys.logic.logicCommand.Command;
+import by.jwd.testsys.logic.logicCommand.CommandException;
 import by.jwd.testsys.logic.service.TestService;
-import by.jwd.testsys.logic.service.UserService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;
 
 import javax.servlet.RequestDispatcher;
@@ -17,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 
 public class ShowMainPage implements Command {
@@ -47,6 +43,9 @@ public class ShowMainPage implements Command {
             }
 
 
+        }
+        else {
+            Command.forwardToPage(req, resp, JspPageName.ERROR_PAGE);
         }
     }
 }

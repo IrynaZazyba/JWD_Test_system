@@ -1,10 +1,11 @@
-package by.jwd.testsys.logic.command.impl;
+package by.jwd.testsys.logic.logicCommand.impl;
 
 import by.jwd.testsys.bean.User;
+import by.jwd.testsys.controller.JspPageName;
 import by.jwd.testsys.controller.RequestParameterName;
-import by.jwd.testsys.controller.SessionAttrinbuteName;
-import by.jwd.testsys.logic.command.Command;
-import by.jwd.testsys.logic.command.CommandException;
+import by.jwd.testsys.controller.SessionAttributeName;
+import by.jwd.testsys.logic.logicCommand.Command;
+import by.jwd.testsys.logic.logicCommand.CommandException;
 import by.jwd.testsys.logic.service.ServiceException;
 import by.jwd.testsys.logic.service.UserService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;
@@ -32,7 +33,7 @@ public class ShowUserPage implements Command {
         if (requestDispatcher != null && session != null) {
             try {
                 User userInfoToAccount = userService.getUserInfoToAccount((Integer) session.
-                        getAttribute(SessionAttrinbuteName.USER_ID_SESSION_ATTRIBUTE));
+                        getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE));
 
                 req.setAttribute(RequestParameterName.USER_ACCOUNT_INFO, userInfoToAccount);
 
@@ -45,6 +46,8 @@ public class ShowUserPage implements Command {
                 e.printStackTrace();
             }
 
+        }else {
+            Command.forwardToPage(req, resp, JspPageName.ERROR_PAGE);
         }
     }
 }

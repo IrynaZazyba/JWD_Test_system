@@ -9,7 +9,6 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="resources/fontawesome-free-5.12.1-web/css/all.css">
     <link rel="stylesheet" href="resources/css/style.css"/>
-
 </head>
 <body>
 <div class="container-fluid cont">
@@ -78,14 +77,14 @@
         <div class="col-2 background-gradient height-100">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
+
                 <a class="nav-link active" id="v-pills-test-tab" data-toggle="pill" href="#v-pills-test"
                    role="tab"
                    aria-controls="v-pills-test" aria-selected="true">Назначенные тесты</a>
 
-                <a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home"
+                <a class="nav-link " id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home"
                    role="tab"
                    aria-controls="v-pills-test" aria-selected="true">Настройки аккаунта</a>
-
             </div>
 
 
@@ -105,16 +104,16 @@
 
 
                             <div class="form">
-                                <form action="test" class="form-horizontal m-0" role="form" method="POST">
+                                <form id ="formElem"  enctype="multipart/form-data" accept-charset="UTF-8"
+                                      class="form-horizontal m-0" role="form">
                                     <input type="hidden" name="command" value="edit_user"/>
                                     <div class="form-group">
                                         <div>
 
-                                            <c:if test="${sign_up_error!=null}">
-                                                <div class="alert alert-danger" role="alert">
-                                                        ${sign_up_error}</div>
-                                            </c:if>
 
+                                            <div id="message">
+
+                                            </div>
 
                                         </div>
                                         <div class="form-group">
@@ -195,5 +194,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+<script src="resources/js/script.js"></script>
+
 </body>
 </html>

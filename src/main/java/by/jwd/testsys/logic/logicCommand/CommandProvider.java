@@ -1,6 +1,6 @@
-package by.jwd.testsys.logic.command;
+package by.jwd.testsys.logic.logicCommand;
 
-import by.jwd.testsys.logic.command.impl.*;
+import by.jwd.testsys.logic.logicCommand.impl.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +16,7 @@ public final class CommandProvider {
         repository.put(CommandName.SIGN_OUT, new SignOut());
         repository.put(CommandName.SIGN_UP, new SignUp());
         repository.put(CommandName.SHOW_MAIN_PAGE, new ShowMainPage());
-repository.put(CommandName.SHOW_USER_ACCOUNT,new ShowUserPage());
+        repository.put(CommandName.SHOW_USER_ACCOUNT, new ShowUserPage());
         repository.put(CommandName.WRONG_REQUEST, new WrongRequest());
     }
 

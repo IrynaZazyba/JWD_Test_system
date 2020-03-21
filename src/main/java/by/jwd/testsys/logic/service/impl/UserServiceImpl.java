@@ -3,6 +3,7 @@ package by.jwd.testsys.logic.service.impl;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.dao.UserDAO;
 import by.jwd.testsys.dao.exception.DAOException;
+import by.jwd.testsys.dao.exception.DAOSqlException;
 import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.factory.DAOFactoryProvider;
 import by.jwd.testsys.logic.service.ServiceException;
@@ -42,5 +43,16 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Error in getUserById().", e);
         }
         return userFromDB;
+    }
+
+    public User editUserInfo(User user) throws ServiceException {
+        User updatedUser;
+
+        try {
+            updatedUser = userDao.updateUser(user);
+        } catch (DAOSqlException e) {
+            throw new ServiceException("Error in editUserInfo().", e);
+        }
+        return updatedUser;
     }
 }

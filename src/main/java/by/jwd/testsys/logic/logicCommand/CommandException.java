@@ -1,4 +1,4 @@
-package by.jwd.testsys.logic.command;
+package by.jwd.testsys.logic.logicCommand;
 
 import java.io.Serializable;
 

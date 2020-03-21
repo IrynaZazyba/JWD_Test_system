@@ -1,6 +1,6 @@
 package by.jwd.testsys.controller;
 
-public class SessionAttrinbuteName {
+public class SessionAttributeName {
 
     public static final String USER_ID_SESSION_ATTRIBUTE = "user_id";
     public static final String USER_LOGIN_SESSION_ATTRIBUTE = "user_login";

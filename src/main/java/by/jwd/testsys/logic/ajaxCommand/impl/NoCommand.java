@@ -1,13 +1,13 @@
-package by.jwd.testsys.logic.command.impl;
+package by.jwd.testsys.logic.ajaxCommand.impl;
 
 import by.jwd.testsys.controller.JspPageName;
-import by.jwd.testsys.logic.command.Command;
-import by.jwd.testsys.logic.command.CommandException;
+import by.jwd.testsys.logic.logicCommand.Command;
+import by.jwd.testsys.logic.logicCommand.CommandException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class WrongRequest implements Command {
+public class NoCommand implements Command {
 
 
     @Override

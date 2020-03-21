@@ -1,10 +1,10 @@
-package by.jwd.testsys.logic.command.impl;
+package by.jwd.testsys.logic.logicCommand.impl;
 
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.JspPageName;
 import by.jwd.testsys.controller.RequestParameterName;
-import by.jwd.testsys.logic.command.Command;
-import by.jwd.testsys.logic.command.CommandException;
+import by.jwd.testsys.logic.logicCommand.Command;
+import by.jwd.testsys.logic.logicCommand.CommandException;
 import by.jwd.testsys.logic.service.ServiceException;
 import by.jwd.testsys.logic.service.UserService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;
@@ -58,7 +58,7 @@ public class SignUp implements Command {
                     Command.forwardToPage(request, response, JspPageName.START_JSP_PAGE);
                 }
             }  catch (ServiceException e) {
-                logger.log(Level.ERROR, "Service Exception in SignUp command.",e);
+                logger.log(Level.ERROR, "Service Exception in SignUp logicCommand.",e);
                 Command.forwardToPage(request, response, JspPageName.ERROR_PAGE);
             }
         }
