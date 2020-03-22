@@ -31,18 +31,14 @@ public class ShowMainPage implements Command {
         if (requestDispatcher != null && session != null) {
 
             try {
-//               List<Type> testsType = testService.getAllTestsType();
                 Set<Type>tests=testService.getTypeWithTests();
                 req.setAttribute(RequestParameterName.TESTS_TYPE_LIST, tests);
                 req.setAttribute("tests", tests);
 
                 requestDispatcher.forward(req, resp);
             } catch (ServletException | IOException e) {
-
                 throw new CommandException("Command exception ShowMainPage.",e);
             }
-
-
         }
         else {
             Command.forwardToPage(req, resp, JspPageName.ERROR_PAGE);

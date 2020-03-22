@@ -11,6 +11,7 @@ import by.jwd.testsys.logic.service.UserService;
 
 
 public class UserServiceImpl implements UserService {
+
     private DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
     private UserDAO userDao = daoFactory.getUserDao();
 

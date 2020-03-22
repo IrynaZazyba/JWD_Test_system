@@ -6,7 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Type implements Serializable {
-    //todo
+    private static final long serialVersionUID = -3178409370985417975L;
+
     private int id;
     private String title;
     private LocalDate deletedAt;

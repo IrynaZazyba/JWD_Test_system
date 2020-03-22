@@ -9,6 +9,9 @@ import by.jwd.testsys.logic.logicCommand.CommandException;
 import by.jwd.testsys.logic.service.ServiceException;
 import by.jwd.testsys.logic.service.UserService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -19,6 +22,7 @@ import java.io.IOException;
 
 public class ShowUserPage implements Command {
 
+    private Logger logger = LogManager.getLogger();
     private static final String JSP_PAGE_PATH = "WEB-INF/jsp/userAccount.jsp";
 
 
@@ -36,17 +40,13 @@ public class ShowUserPage implements Command {
                         getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE));
 
                 req.setAttribute(RequestParameterName.USER_ACCOUNT_INFO, userInfoToAccount);
-
                 requestDispatcher.forward(req, resp);
 
-            } catch (ServletException | IOException e) {
-                throw new CommandException("Command exception ShowMainPage.", e);
-            } catch (ServiceException e) {
-                //todo
-                e.printStackTrace();
+            } catch (ServletException | IOException | ServiceException e) {
+                logger.log(Level.ERROR, "Exception in showUserPage() command.");
+                throw new CommandException("Exception in showUserPage() command.", e);
             }
-
-        }else {
+        } else {
             Command.forwardToPage(req, resp, JspPageName.ERROR_PAGE);
         }
     }

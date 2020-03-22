@@ -6,6 +6,7 @@ import by.jwd.testsys.dao.TestTypeDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPool;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolException;
 import by.jwd.testsys.dao.exception.DAOException;
+import by.jwd.testsys.dao.exception.DAOSqlException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,13 +45,14 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
             }
         } catch (ConnectionPoolException | SQLException e) {
             logger.log(Level.ERROR, "Exception in SQLTypeDAOImpl getAll().");
-            throw new DAOException("Exception in SQLTypeDAOImpl getAll().");
+            throw new DAOSqlException("Exception in SQLTypeDAOImpl getAll().",e);
         }
 
         return typesFromDB;
     }
 
-    public Set<Type> getTypeWithTests() {
+    @Override
+    public Set<Type> getTypeWithTests() throws DAOException {
         Connection connection = null;
         Set<Type> typesFromDB = new HashSet<>();
 
@@ -72,14 +74,13 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
 
             }
         } catch (SQLException | ConnectionPoolException e) {
-            //todo
-            System.out.println("todo");
-            e.printStackTrace();
+            logger.log(Level.ERROR, "Exception in SQLTypeDAOImpl getTypeWithTests()method.");
+            throw new DAOSqlException("Exception in SQLTypeDAOImpl getTypeWithTests() method ", e);
         }
-        for(Type type:typesFromDB){
-            System.out.println(type.getId()+" "+type.getTitle());
-            for(Test test:type.getTests()){
-                System.out.println(test.getId()+" "+test.getTitle());
+        for (Type type : typesFromDB) {
+            System.out.println(type.getId() + " " + type.getTitle());
+            for (Test test : type.getTests()) {
+                System.out.println(test.getId() + " " + test.getTitle());
             }
 
         }

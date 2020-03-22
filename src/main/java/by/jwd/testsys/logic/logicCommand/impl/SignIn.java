@@ -46,8 +46,6 @@ public class SignIn implements Command {
                 Command.forwardToPage(request, response, JspPageName.START_JSP_PAGE);
             }
         } catch (ServiceException e) {
-
-
             logger.log(Level.ERROR, "Service Exception in sign in command.", e);
             Command.forwardToPage(request, response, JspPageName.ERROR_PAGE);
         }

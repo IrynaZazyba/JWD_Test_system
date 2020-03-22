@@ -238,6 +238,14 @@ public class SQLUserDAOImpl implements UserDAO {
         } catch (ConnectionPoolException | SQLException e) {
             logger.log(Level.ERROR, "Couldn't get data from DB, updateUser");
             throw new DAOSqlException("SQLException updateUser() method", e);
+        }finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    logger.log(Level.ERROR, "SQLException in close connection getRoleId");
+                }
+            }
         }
         return updatedUser;
     }

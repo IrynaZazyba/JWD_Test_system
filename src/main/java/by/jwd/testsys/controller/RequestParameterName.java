@@ -12,6 +12,10 @@ public class RequestParameterName {
     public static final String SIGN_UP_SUCCESS_MESSAGE="success_message";
     public static final String TESTS_TYPE_LIST="tests_type";
     public static final String USER_ACCOUNT_INFO="user_info";
+    public static final String LOGIN_INVALID="login_invalid";
+    public static final String PASSWORD_INVALID="password_invalid";
+    public static final String FIRST_NAME_INVALID="first_name_invalid";
+    public static final String LAST_NAME_INVALID="last_name_invalid";
 
 
 

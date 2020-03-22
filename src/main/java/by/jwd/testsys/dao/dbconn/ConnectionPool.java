@@ -44,7 +44,7 @@ public final class ConnectionPool {
         }
     }
 
-    public void initPoolData() throws ConnectionPoolException {
+    private void initPoolData() throws ConnectionPoolException {
         try {
             Class.forName(driverName);
             givenAwayConQueue = new ArrayBlockingQueue<Connection>(poolSize);
@@ -73,6 +73,7 @@ public final class ConnectionPool {
             logger.log(Level.ERROR, "Error closing the connection.", e);
         }
     }
+
 
     public Connection takeConnection() throws ConnectionPoolException {
 

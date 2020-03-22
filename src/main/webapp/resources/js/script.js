@@ -5,36 +5,40 @@
 formElem.onsubmit = async (e) => {
     e.preventDefault();
 
-    console.log(formElem);
-
     let response = await fetch("http://localhost:8080/test-system/ajax", {
         method: 'POST',
-        body: new FormData(formElem)
+        body: new FormData(formElem),
+
     });
 
     if (response.ok) {
         let json = await response.json();
+        console.log(json);
         document.getElementById('message').innerHTML = generateMessageDiv(json);
-
-        // setTimeout(function request() {
-        //     document.getElementById('edit_user_answer').remove();
-        // }, 2500);
     } else {
         alert("Ошибка HTTP: " + response.status);
     }
 
 
+    setTimeout(function request() {
+        document.getElementById('edit_user_answer').remove();
+    }, 2500);
+
 }
 
 
 function generateMessageDiv(json) {
-    let htmlCode;
+    let htmlCode = "";
+    console.log(json.status);
     if (json.status === 'ok') {
         htmlCode = "<div class=\"alert alert-success\" id=\"edit_user_answer\" role=\"alert\">" + json.message + "</div>";
-
     } else {
-        htmlCode = "<div class=\"alert alert-danger\" id=\"edit_user_answer\" role=\"alert\">" + json.message + "</div>";
-
+        console.log(json);
+        for (let mess of Object.keys(json)) {
+            if (mess !== "status") {
+                htmlCode = htmlCode + "<div class=\"alert alert-danger\" id=\"edit_user_" + mess + "\" role=\"alert\">" + json[mess] + "</div>";
+            }
+        }
     }
     return htmlCode;
 }

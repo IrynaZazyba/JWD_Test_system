@@ -110,7 +110,6 @@
                                     <div class="form-group">
                                         <div>
 
-
                                             <div id="message">
 
                                             </div>

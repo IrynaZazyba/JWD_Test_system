@@ -139,11 +139,25 @@
                                     <div class="form-group">
                                         <div>
 
-                                            <c:if test="${sign_up_error!=null}">
+                                            <c:if test="${login_invalid!=null}">
                                                 <div class="alert alert-danger" role="alert">
-                                                        ${sign_up_error}</div>
+                                                        ${login_invalid}</div>
                                             </c:if>
 
+                                            <c:if test="${password_invalid!=null}">
+                                                <div class="alert alert-danger" role="alert">
+                                                        ${password_invalid}</div>
+                                            </c:if>
+
+                                            <c:if test="${first_name_invalid!=null}">
+                                                <div class="alert alert-danger" role="alert">
+                                                        ${first_name_invalid}</div>
+                                            </c:if>
+
+                                            <c:if test="${last_name_invalid!=null}">
+                                                <div class="alert alert-danger" role="alert">
+                                                        ${last_name_invalid}</div>
+                                            </c:if>
 
                                         </div>
                                         <div class="form-group">

@@ -2,6 +2,7 @@ package by.jwd.testsys.logic.ajaxCommand.impl;
 
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.JspPageName;
+import by.jwd.testsys.controller.RequestParameterName;
 import by.jwd.testsys.controller.SessionAttributeName;
 import by.jwd.testsys.logic.ajaxCommand.AjaxCommand;
 import by.jwd.testsys.logic.logicCommand.Command;
@@ -10,6 +11,8 @@ import by.jwd.testsys.logic.service.ServiceException;
 import by.jwd.testsys.logic.service.UserService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;
 import by.jwd.testsys.logic.util.Role;
+import by.jwd.testsys.logic.validator.impl.UserValidatorImpl;
+import com.google.gson.Gson;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +21,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 public class EditUser implements AjaxCommand {
 
@@ -43,24 +46,33 @@ public class EditUser implements AjaxCommand {
 
             user.setId((Integer) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE));
             user.setRole((Role) session.getAttribute(SessionAttributeName.USER_ROLE_SESSION_ATTRIBUTE));
-            try {
 
-                //todo validate
-                User editedUser = userService.editUserInfo(user);
+            UserValidatorImpl userValidator = new UserValidatorImpl(user);
+            Map<String, String> userValidateAnswer = userValidator.validate();
 
-                if (editedUser != null) {
-                    answer = "{\"message\":\"Data was changed successfully.\",\"status\":\"ok\"}";
+            if (userValidateAnswer.size()!= 0) {
+                Gson gson=new Gson();
+                userValidateAnswer.put("status","error");
+                answer= gson.toJson(userValidateAnswer);
+                System.out.println(answer);
+                request.setAttribute(RequestParameterName.SIGN_UP_ERROR, "error");
 
-                } else {
-                    answer = "{\"message\":\"Data wasn't changed.\",\"status\":\"error\"}";
+            } else {
+                try {
+                    User editedUser = userService.editUserInfo(user);
+                    if (editedUser != null) {
+                        answer = "{\"message\":\"Data was changed successfully.\",\"status\":\"ok\"}";
+                    } else {
+                        answer = "{\"message\":\"Data wasn't changed.\",\"status\":\"error\"}";
+                    }
 
+
+                } catch (ServiceException e) {
+                    logger.log(Level.ERROR, "Service Exception in edit_user logicCommand.", e);
+                    Command.forwardToPage(request, response, JspPageName.ERROR_PAGE);
                 }
 
-            } catch (ServiceException e) {
-                logger.log(Level.ERROR, "Service Exception in edit_user logicCommand.", e);
-                Command.forwardToPage(request, response, JspPageName.ERROR_PAGE);
             }
-
         } else {
             Command.forwardToPage(request, response, JspPageName.ERROR_PAGE);
         }

@@ -47,7 +47,7 @@ public class AjaxLogicController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        System.out.println("here");
         String command = req.getParameter("command");
         String ajaxCommandName = req.getParameter(RequestParameterName.COMMAND_NAME);
 
