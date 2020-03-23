@@ -77,13 +77,6 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
             logger.log(Level.ERROR, "Exception in SQLTypeDAOImpl getTypeWithTests()method.");
             throw new DAOSqlException("Exception in SQLTypeDAOImpl getTypeWithTests() method ", e);
         }
-        for (Type type : typesFromDB) {
-            System.out.println(type.getId() + " " + type.getTitle());
-            for (Test test : type.getTests()) {
-                System.out.println(test.getId() + " " + test.getTitle());
-            }
-
-        }
 
         return typesFromDB;
     }

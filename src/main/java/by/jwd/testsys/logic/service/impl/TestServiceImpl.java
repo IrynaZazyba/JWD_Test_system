@@ -16,24 +16,25 @@ public class TestServiceImpl implements TestService {
     private DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
     private TestTypeDAO typeDAO = daoFactory.getTypeDao();
 
+    @Override
     public List<Type> getAllTestsType() throws ServiceException {
         List<Type> testsType = null;
         try {
             testsType = typeDAO.getAll();
         } catch (DAOException e) {
-            throw new ServiceException("Error in TestService from DAO", e);
+            throw new ServiceException("Error in TestService getAllTestsType() method", e);
         }
         return testsType;
     }
 
-
-    public Set<Type> getTypeWithTests() {
+    @Override
+    public Set<Type> getTypeWithTests() throws ServiceException {
         Set<Type> testsType = null;
 
         try {
-            testsType=typeDAO.getTypeWithTests();
+            testsType = typeDAO.getTypeWithTests();
         } catch (DAOException e) {
-            e.printStackTrace();
+            throw new ServiceException("Error in TestService getTypeWithTests() method", e);
         }
         return testsType;
     }

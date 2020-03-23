@@ -179,7 +179,8 @@ public class SQLUserDAOImpl implements UserDAO {
                 user = parseUserFromDB(resultSet);
             }
         } catch (ConnectionPoolException | SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.ERROR, "Couldn't get data from DB, getUserByLogin()");
+            throw new DAOSqlException("SQLException in getUserByLogin() method", e);
         } finally {
             if (connection != null) {
                 try {

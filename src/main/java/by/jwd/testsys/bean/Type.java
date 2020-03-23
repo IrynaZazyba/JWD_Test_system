@@ -27,8 +27,6 @@ public class Type implements Serializable {
         this.tests = new HashSet<>(tests);
     }
 
-
-
     public int getId() {
         return id;
     }
@@ -57,9 +55,13 @@ public class Type implements Serializable {
         return tests;
     }
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
     public void setTests(Test test) {
         if (tests == null) {
-            tests=new HashSet<>();
+            tests = new HashSet<>();
         }
         tests.add(test);
     }

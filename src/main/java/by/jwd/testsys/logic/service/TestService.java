@@ -8,7 +8,7 @@ import java.util.Set;
 public interface TestService {
 
     List<Type> getAllTestsType() throws ServiceException;
-    Set<Type> getTypeWithTests();
+    Set<Type> getTypeWithTests() throws ServiceException;
 
 
     }

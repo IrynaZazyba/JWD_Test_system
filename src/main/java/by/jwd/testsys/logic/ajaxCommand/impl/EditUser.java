@@ -54,7 +54,6 @@ public class EditUser implements AjaxCommand {
                 Gson gson=new Gson();
                 userValidateAnswer.put("status","error");
                 answer= gson.toJson(userValidateAnswer);
-                System.out.println(answer);
                 request.setAttribute(RequestParameterName.SIGN_UP_ERROR, "error");
 
             } else {

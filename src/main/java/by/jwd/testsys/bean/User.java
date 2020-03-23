@@ -92,6 +92,9 @@ public class User implements Serializable {
         this.role = role;
     }
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -103,6 +106,10 @@ public class User implements Serializable {
             if (other.firstName != null) return false;
         } else {
             if (!firstName.equals(other.firstName)) return false;
+        }if (lastName == null) {
+            if (other.lastName != null) return false;
+        } else {
+            if (!lastName.equals(other.lastName)) return false;
         }
         if (login == null) {
             if (other.login != null) return false;
