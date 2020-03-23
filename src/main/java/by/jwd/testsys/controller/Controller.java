@@ -11,12 +11,14 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
+@WebServlet(urlPatterns = "/test")
 public class Controller extends HttpServlet {
 
     private static final long serialVersionUID = -7674451632663324163L;
@@ -35,15 +37,18 @@ public class Controller extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.doPost(req,resp);
+        this.doPost(req, resp);
     }
 
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         String commandName = req.getParameter(RequestParameterName.COMMAND_NAME);
 
-        Command command = CommandProvider.getInstance().getCommand(commandName.toUpperCase());
+        CommandProvider commandProvider = CommandProvider.getInstance();
+        Command command = commandProvider.getCommand(commandName.toUpperCase());
+
         try {
             command.execute(req, resp);
         } catch (CommandException e) {

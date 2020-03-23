@@ -81,7 +81,8 @@
                 <c:forEach var="item" items="${tests_type}">
                     <a class="nav-link" id="v-pills-${item.id}-tab" data-toggle="pill" href="#v-pills-${item.id}"
                        role="tab"
-                       aria-controls="v-pills-${item.id}" aria-selected="true">${item.title}</a>
+                       aria-controls="v-pills-${item.id}" aria-selected="true">
+                        <c:out value="${item.title}"/></a>
                 </c:forEach>
 
             </div>

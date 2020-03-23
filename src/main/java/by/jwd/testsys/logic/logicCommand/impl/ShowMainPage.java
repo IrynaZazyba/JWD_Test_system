@@ -5,6 +5,7 @@ import by.jwd.testsys.controller.JspPageName;
 import by.jwd.testsys.controller.RequestParameterName;
 import by.jwd.testsys.logic.logicCommand.Command;
 import by.jwd.testsys.logic.logicCommand.CommandException;
+import by.jwd.testsys.logic.service.ServiceException;
 import by.jwd.testsys.logic.service.TestService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;
 
@@ -23,7 +24,7 @@ public class ShowMainPage implements Command {
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws CommandException {
-         TestService testService = ServiceFactory.getInstance().getTestService();
+        TestService testService = ServiceFactory.getInstance().getTestService();
 
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(JSP_PAGE_PATH);
         HttpSession session = req.getSession(false);
@@ -31,16 +32,15 @@ public class ShowMainPage implements Command {
         if (requestDispatcher != null && session != null) {
 
             try {
-                Set<Type>tests=testService.getTypeWithTests();
+                Set<Type> tests = testService.getTypeWithTests();
                 req.setAttribute(RequestParameterName.TESTS_TYPE_LIST, tests);
                 req.setAttribute("tests", tests);
 
                 requestDispatcher.forward(req, resp);
-            } catch (ServletException | IOException e) {
-                throw new CommandException("Command exception ShowMainPage.",e);
+            } catch (ServletException | IOException | ServiceException e) {
+                throw new CommandException("Command exception ShowMainPage.", e);
             }
-        }
-        else {
+        } else {
             Command.forwardToPage(req, resp, JspPageName.ERROR_PAGE);
         }
     }

@@ -60,7 +60,7 @@
             <div class="col-auto p-0 icon-user">
                 <i class="far fa-address-card fa-2x color-dodgerblue"></i>
             </div>
-            <div class="col-auto m-t-15">${sessionScope.user_login}
+            <div class="col-auto m-t-15"><c:out value="${sessionScope.user_login}>"/>
             </div>
 
             <div class="col-1">

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; UTF-8" pageEncoding="UTF-8" %>
 <html>
 <head>
+    <title>Welcome</title>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -58,11 +59,13 @@
                                 <div class="form-group">
                                     <div>
                                         <c:if test="${sign_in_error!=null}">
-                                            <div class="alert alert-danger" role="alert">${sign_in_error}</div>
+                                            <div class="alert alert-danger" role="alert">
+                                                <c:out value="${sign_in_error}"/></div>
                                         </c:if>
 
                                         <c:if test="${success_message!=null}">
-                                            <div class="alert alert-success" role="alert">${success_message}</div>
+                                            <div class="alert alert-success" role="alert">
+                                                <c:out value="${success_message}"/></div>
                                         </c:if>
 
 
@@ -141,22 +144,22 @@
 
                                             <c:if test="${login_invalid!=null}">
                                                 <div class="alert alert-danger" role="alert">
-                                                        ${login_invalid}</div>
+                                                    <c:out value="${login_invalid}"/></div>
                                             </c:if>
 
                                             <c:if test="${password_invalid!=null}">
                                                 <div class="alert alert-danger" role="alert">
-                                                        ${password_invalid}</div>
+                                                    <c:out value="${password_invalid}"/></div>
                                             </c:if>
 
                                             <c:if test="${first_name_invalid!=null}">
                                                 <div class="alert alert-danger" role="alert">
-                                                        ${first_name_invalid}</div>
+                                                    <c:out value="${first_name_invalid}"/></div>
                                             </c:if>
 
                                             <c:if test="${last_name_invalid!=null}">
                                                 <div class="alert alert-danger" role="alert">
-                                                        ${last_name_invalid}</div>
+                                                    <c:out value="${last_name_invalid}"/></div>
                                             </c:if>
 
                                         </div>

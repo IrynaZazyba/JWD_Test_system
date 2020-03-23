@@ -34,7 +34,7 @@ public class SignIn implements Command {
         try {
             User userByLogin = userService.getUserByLoginPassword(login,password);
 
-            if (userByLogin != null && userByLogin.getPassword().equals(password)) {
+            if (userByLogin != null) {
                 HttpSession session = request.getSession();
                 session.setAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE, userByLogin.getId());
                 session.setAttribute(SessionAttributeName.USER_LOGIN_SESSION_ATTRIBUTE, userByLogin.getLogin());

@@ -13,6 +13,10 @@ public class Answer implements Serializable {
     private LocalDate deletedAt;
     private Question question;
 
+    public Answer() {
+
+    }
+
     public int getId() {
         return id;
     }

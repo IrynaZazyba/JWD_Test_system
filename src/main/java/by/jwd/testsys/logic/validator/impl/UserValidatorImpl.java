@@ -6,6 +6,7 @@ import by.jwd.testsys.logic.validator.Validator;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public class UserValidatorImpl implements Validator {
 
@@ -18,7 +19,7 @@ public class UserValidatorImpl implements Validator {
     private static final String INVALID_PASSWORD_MESSAGE = "Your password is invalid. The password must contain 6-18" +
             " characters: upper and lower case letters, numbers, dashes and underscores!";
     private static final String INVALID_FIRST_NAME_MESSAGE = "First name is too long or contains numbers.";
-    private static final String INVALID_LAST_NAME_MESSAGE = "Last name is too long or contains numbers.";
+    private static final String INVALID_LAST_NAME_MESSAGE = "Last name is too long or contains numbers or symbols.";
 
 
     private User user;
@@ -29,21 +30,23 @@ public class UserValidatorImpl implements Validator {
 
     @Override
     public Map<String, String> validate() {
+
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("text");
         Map<String, String> validationResult = new HashMap<>();
 
 
-        if (user.getLogin() == null||!validateLogin(user.getLogin())) {
+        if (user.getLogin() == null || !validateLogin(user.getLogin())) {
             validationResult.put(RequestParameterName.LOGIN_INVALID, INVALID_LOGIN_MESSAGE);
         }
 
-        if (user.getPassword()==null||!validatePassword(user.getPassword())) {
+        if (user.getPassword() == null || !validatePassword(user.getPassword())) {
             validationResult.put(RequestParameterName.PASSWORD_INVALID, INVALID_PASSWORD_MESSAGE);
         }
-        if (user.getFirstName()==null||!validateName(user.getFirstName())) {
+        if (user.getFirstName() == null || !validateName(user.getFirstName())) {
             validationResult.put(RequestParameterName.FIRST_NAME_INVALID, INVALID_FIRST_NAME_MESSAGE);
         }
 
-        if (user.getLastName()==null||!validateName(user.getLastName())) {
+        if (user.getLastName() == null || !validateName(user.getLastName())) {
             validationResult.put(RequestParameterName.LAST_NAME_INVALID, INVALID_LAST_NAME_MESSAGE);
         }
 

@@ -18,6 +18,9 @@ public class Test implements Serializable {
     private Type type;
     private Set<Question> questions;
 
+    public Test() {
+    }
+
     public Test(int id, String title) {
         this.id = id;
         this.title = title;

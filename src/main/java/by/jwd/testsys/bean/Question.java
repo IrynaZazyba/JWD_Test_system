@@ -15,6 +15,10 @@ public class Question implements Serializable {
     private Test test;
     private Set<Answer> answers;
 
+    public Question(){
+
+    }
+
     public int getId() {
         return id;
     }

@@ -1,11 +1,17 @@
 package by.jwd.testsys.logic.filter;
 
 import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.annotation.WebInitParam;
 import java.io.IOException;
 
 /**
  * Sets character encoding for every request.
  */
+
+@WebFilter(urlPatterns = {"/*"},
+        initParams = {
+        @WebInitParam(name = "encoding", value = "UTF-8", description = "Encoding Param")})
 public class CharsetFilter implements Filter {
 
     private String defaultEncoding = "utf-8";
@@ -14,7 +20,7 @@ public class CharsetFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         String encoding = filterConfig.getInitParameter(ENCODING);
-        if(encoding != null){
+        if (encoding != null) {
             defaultEncoding = encoding;
         }
     }

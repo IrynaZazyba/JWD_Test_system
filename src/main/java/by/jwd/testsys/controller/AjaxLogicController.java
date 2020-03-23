@@ -10,13 +10,14 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-
+@WebServlet(urlPatterns = "/ajax")
 @MultipartConfig
 public class AjaxLogicController extends HttpServlet {
 
@@ -41,9 +42,11 @@ public class AjaxLogicController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-ы        String ajaxCommandName = req.getParameter(RequestParameterName.COMMAND_NAME);
+        String ajaxCommandName = req.getParameter(RequestParameterName.COMMAND_NAME);
 
-        AjaxCommand ajaxCommand = AjaxCommandProvider.getInstance().getAjaxCommand(ajaxCommandName.toUpperCase());
+        AjaxCommandProvider ajaxCommandProvider = AjaxCommandProvider.getInstance();
+        AjaxCommand ajaxCommand = ajaxCommandProvider.getAjaxCommand(ajaxCommandName.toUpperCase());
+
         try {
             String jsonAnswer = ajaxCommand.execute(req, resp);
             PrintWriter out = resp.getWriter();

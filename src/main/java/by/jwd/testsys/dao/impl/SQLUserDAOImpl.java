@@ -148,7 +148,7 @@ public class SQLUserDAOImpl implements UserDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ROLE_ID);
             preparedStatement.setString(1, role.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
+            if (resultSet.next()) {
                 roleId = resultSet.getInt(1);
             }
         } catch (SQLException | ConnectionPoolException e) {

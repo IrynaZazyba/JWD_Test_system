@@ -47,7 +47,6 @@ public class SignUp implements Command {
             try {
                 User user = new User(login, password, firstName, lastName, Role.USER);
                 boolean isSaved = userService.addUser(user);
-
                 if (isSaved) {
                     request.setAttribute(RequestParameterName.SIGN_UP_SUCCESS_MESSAGE, SUCCESS_SIGNUP_MESSAGE);
                     Command.forwardToPage(request, response, JspPageName.START_JSP_PAGE);
