@@ -12,9 +12,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 import java.io.IOException;
 
 
@@ -44,8 +42,8 @@ public class Controller extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String commandName = req.getParameter(RequestParameterName.COMMAND_NAME);
 
+        String commandName = req.getParameter(RequestParameterName.COMMAND_NAME);
         CommandProvider commandProvider = CommandProvider.getInstance();
         Command command = commandProvider.getCommand(commandName.toUpperCase());
 

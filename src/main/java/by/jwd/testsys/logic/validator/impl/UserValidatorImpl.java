@@ -4,9 +4,7 @@ import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.RequestParameterName;
 import by.jwd.testsys.logic.validator.Validator;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class UserValidatorImpl implements Validator {
 
@@ -31,19 +29,24 @@ public class UserValidatorImpl implements Validator {
     @Override
     public Map<String, String> validate() {
 
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("text");
-        Map<String, String> validationResult = new HashMap<>();
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("local");
+        Set<String> valid=new HashSet<>();
+       Map<String, String> validationResult = new HashMap<>();
 
 
         if (user.getLogin() == null || !validateLogin(user.getLogin())) {
             validationResult.put(RequestParameterName.LOGIN_INVALID, INVALID_LOGIN_MESSAGE);
+          //  valid.add(RequestParameterName.LOGIN_INVALID);
         }
 
         if (user.getPassword() == null || !validatePassword(user.getPassword())) {
             validationResult.put(RequestParameterName.PASSWORD_INVALID, INVALID_PASSWORD_MESSAGE);
+           // valid.add(RequestParameterName.PASSWORD_INVALID);
+
         }
         if (user.getFirstName() == null || !validateName(user.getFirstName())) {
-            validationResult.put(RequestParameterName.FIRST_NAME_INVALID, INVALID_FIRST_NAME_MESSAGE);
+          validationResult.put(RequestParameterName.FIRST_NAME_INVALID, INVALID_FIRST_NAME_MESSAGE);
+
         }
 
         if (user.getLastName() == null || !validateName(user.getLastName())) {

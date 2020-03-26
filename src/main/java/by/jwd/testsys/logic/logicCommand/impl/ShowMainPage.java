@@ -27,15 +27,15 @@ public class ShowMainPage implements Command {
         TestService testService = ServiceFactory.getInstance().getTestService();
 
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(JSP_PAGE_PATH);
-        HttpSession session = req.getSession(false);
-
+        HttpSession session = req.getSession();
+        System.out.println("!!!!!!!!!!!"+session.getAttribute("local"));
         if (requestDispatcher != null && session != null) {
 
             try {
                 Set<Type> tests = testService.getTypeWithTests();
                 req.setAttribute(RequestParameterName.TESTS_TYPE_LIST, tests);
                 req.setAttribute("tests", tests);
-
+                session.setAttribute("command", "show_main_page");
                 requestDispatcher.forward(req, resp);
             } catch (ServletException | IOException | ServiceException e) {
                 throw new CommandException("Command exception ShowMainPage.", e);

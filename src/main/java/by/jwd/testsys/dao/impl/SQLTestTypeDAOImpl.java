@@ -31,7 +31,7 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
     @Override
     public List<Type> getAll() throws DAOException {
 
-        Connection connection;
+        Connection connection=null;
         List<Type> typesFromDB = null;
         try {
             connection = connectionPool.takeConnection();
@@ -46,6 +46,14 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
         } catch (ConnectionPoolException | SQLException e) {
             logger.log(Level.ERROR, "Exception in SQLTypeDAOImpl getAll().");
             throw new DAOSqlException("Exception in SQLTypeDAOImpl getAll().",e);
+        }finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    logger.log(Level.ERROR, "SQLException in close connection getRoleId");
+                }
+            }
         }
 
         return typesFromDB;
@@ -76,6 +84,14 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
         } catch (SQLException | ConnectionPoolException e) {
             logger.log(Level.ERROR, "Exception in SQLTypeDAOImpl getTypeWithTests()method.");
             throw new DAOSqlException("Exception in SQLTypeDAOImpl getTypeWithTests() method ", e);
+        }finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    logger.log(Level.ERROR, "SQLException in close connection getRoleId");
+                }
+            }
         }
 
         return typesFromDB;

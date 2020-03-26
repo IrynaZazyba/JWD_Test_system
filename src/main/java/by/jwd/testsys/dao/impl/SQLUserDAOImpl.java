@@ -68,7 +68,7 @@ public class SQLUserDAOImpl implements UserDAO {
     @Override
     public boolean save(User user) throws DAOException {
 
-        if (getUserByLogin(user.getLogin()) == null) {
+        if (getUserByLogin(user.getLogin()) != null) {
             return false;
         }
 

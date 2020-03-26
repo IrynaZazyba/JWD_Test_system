@@ -44,7 +44,7 @@ public final class ConnectionPool {
         }
     }
 
-    private void initPoolData() throws ConnectionPoolException {
+    public void initPoolData() throws ConnectionPoolException {
         try {
             Class.forName(driverName);
             givenAwayConQueue = new ArrayBlockingQueue<Connection>(poolSize);
@@ -74,12 +74,20 @@ public final class ConnectionPool {
         }
     }
 
+    public void print(BlockingQueue<Connection> connections) {
+        for (Connection con : connections) {
+            System.out.println(con);
+        }
+    }
 
     public Connection takeConnection() throws ConnectionPoolException {
+        System.out.println("have");
+print(connectionQueue);
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println("away");
+print(givenAwayConQueue);
 
-        if (connectionQueue == null) {
-            initPoolData();
-        }
+        System.out.println("===============================");
 
         Connection connection = null;
         try {

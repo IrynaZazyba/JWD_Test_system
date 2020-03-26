@@ -3,7 +3,7 @@
 <html>
 <head>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+    <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -11,6 +11,23 @@
     <link rel="stylesheet" href="resources/css/style.css"/>
 </head>
 <body>
+<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setBundle basename="local" var="loc"/>
+<fmt:message bundle="${loc}" key="button.sign_out" var="button_sign_out"/>
+<fmt:message bundle="${loc}" key="nav-item.tests" var="nav_item_tests"/>
+<fmt:message bundle="${loc}" key="nav-item.admin" var="nav_item_admin"/>
+<fmt:message bundle="${loc}" key="nav-item.statistic" var="nav_item_statistic"/>
+<fmt:message bundle="${loc}" key="nav-item.about" var="nav_item_about"/>
+<fmt:message bundle="${loc}" key="nav-item.admin.tests" var="nav_item_admin_tests"/>
+<fmt:message bundle="${loc}" key="nav-item.admin.users" var="nav_item_admin_users"/>
+<fmt:message bundle="${loc}" key="nav-link.assigned_tests" var="nav_link_assigned_tests"/>
+<fmt:message bundle="${loc}" key="nav-link.account_settings" var="nav_link_account_settings"/>
+<fmt:message bundle="${loc}" key="label.field.login" var="lable_login"/>
+<fmt:message bundle="${loc}" key="label.field.password" var="lable_password"/>
+<fmt:message bundle="${loc}" key="label.field.first_name" var="lable_first_name"/>
+<fmt:message bundle="${loc}" key="label.field.last_name" var="lable_last_name"/>
+<fmt:message bundle="${loc}" key="button.save_changes" var="button_save_changes"/>
+
 <div class="container-fluid cont">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #e3f2fd;">
@@ -29,28 +46,27 @@
 
                         <li class="nav-item">
                             <a class="nav-link active"
-                               href="${pageContext.request.contextPath}/test?command=show_main_page">Тесты</a>
+                               href="${pageContext.request.contextPath}/test?command=show_main_page">${nav_item_tests}</a>
                         </li>
 
                         <c:if test="${sessionScope.user_role=='ADMIN'}">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Администрирование
-                                </a>
+${nav_item_admin}                                </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">Редактирование пользователей</a>
+                                    <a class="dropdown-item" href="#">${nav_item_admin_tests}</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Редактирование тестов</a>
+                                    <a class="dropdown-item" href="#">${nav_item_admin_users}</a>
                                 </div>
                             </li>
                         </c:if>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Статистика</a>
+                            <a class="nav-link" href="#">${nav_item_statistic}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">О нас</a>
+                            <a class="nav-link" href="#">${nav_item_about}</a>
                         </li>
                     </ul>
                 </div>
@@ -60,13 +76,13 @@
             <div class="col-auto p-0 icon-user">
                 <i class="far fa-address-card fa-2x color-dodgerblue"></i>
             </div>
-            <div class="col-auto m-t-15"><c:out value="${sessionScope.user_login}>"/>
+            <div class="col-auto m-t-15"><c:out value="${sessionScope.user_login}"/>
             </div>
 
             <div class="col-1">
                 <form action="test" method="POST" class="m-0">
                     <input type="hidden" name="command" value="sign_out"/>
-                    <button type="submit" class="btn btn-outline-primary btn-md m-t-7">Sign out</button>
+                    <button type="submit" class="btn btn-outline-primary btn-md m-t-7">${button_sign_out}</button>
                 </form>
             </div>
         </div>
@@ -80,11 +96,11 @@
 
                 <a class="nav-link active" id="v-pills-test-tab" data-toggle="pill" href="#v-pills-test"
                    role="tab"
-                   aria-controls="v-pills-test" aria-selected="true">Назначенные тесты</a>
+                   aria-controls="v-pills-test" aria-selected="true">${nav_link_assigned_tests}</a>
 
                 <a class="nav-link " id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home"
                    role="tab"
-                   aria-controls="v-pills-test" aria-selected="true">Настройки аккаунта</a>
+                   aria-controls="v-pills-test" aria-selected="true">${nav_link_account_settings}</a>
             </div>
 
 
@@ -104,7 +120,7 @@
 
 
                             <div class="form">
-                                <form id ="formElem"  enctype="multipart/form-data" accept-charset="UTF-8"
+                                <form id="formElem" enctype="multipart/form-data" accept-charset="UTF-8"
                                       class="form-horizontal m-0" role="form">
                                     <input type="hidden" name="command" value="edit_user"/>
                                     <div class="form-group">
@@ -118,38 +134,38 @@
                                         <div class="form-group">
                                             <div class="row">
 
-                                                <label class="col-sm-3 control-label">First name</label>
+                                                <label class="col-sm-3 control-label">${lable_first_name}</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" class="form-control" required
-                                                           name="first_name" value="${user_info.firstName}">
+                                                           name="first_name" value="${requestScope.user_info.firstName}">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="row">
-                                                <label class="col-sm-3 control-label">Last name</label>
+                                                <label class="col-sm-3 control-label">${lable_last_name}</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" class="form-control" required
-                                                           name="last_name" value="${user_info.lastName}">
+                                                           name="last_name" value="${requestScope.user_info.lastName}">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="row">
-                                                <label class="col-sm-3  control-label ">Login</label>
+                                                <label class="col-sm-3  control-label ">${lable_login}</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" class="form-control" required name="login"
-                                                           value="${user_info.login}">
+                                                           value="${requestScope.user_info.login}">
                                                 </div>
                                             </div>
 
                                         </div>
                                         <div class="form-group">
                                             <div class="row">
-                                                <label class="col-sm-3 control-label">Password</label>
+                                                <label class="col-sm-3 control-label">${lable_password}</label>
                                                 <div class="col-sm-9 ">
                                                     <input type="password" class="form-control" required
-                                                           name="password" value="${user_info.password}">
+                                                           name="password" value="${requestScope.user_info.password}">
                                                 </div>
                                             </div>
 
@@ -158,7 +174,7 @@
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-sm-offset-2 col-sm-10 p-top-7">
-                                                    <button type="submit" class="btn btn-outline-primary">Save changes
+                                                    <button type="submit" class="btn btn-outline-primary">${button_save_changes}
                                                     </button>
                                                 </div>
                                             </div>

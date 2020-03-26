@@ -1,4 +1,4 @@
-package by.jwd.testsys.logic.filter;
+package by.jwd.testsys.controller.filter;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -29,7 +29,6 @@ public class CharsetFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         servletRequest.setCharacterEncoding(defaultEncoding);
         servletResponse.setCharacterEncoding(defaultEncoding);
-
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

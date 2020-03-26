@@ -3,7 +3,7 @@
 <html>
 <head>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+    <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -12,6 +12,16 @@
 
 </head>
 <body>
+<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setBundle basename="local" var="loc"/>
+<fmt:message bundle="${loc}" key="button.sign_out" var="button_sign_out"/>
+<fmt:message bundle="${loc}" key="nav-item.tests" var="nav_item_tests"/>
+<fmt:message bundle="${loc}" key="nav-item.admin" var="nav_item_admin"/>
+<fmt:message bundle="${loc}" key="nav-item.statistic" var="nav_item_statistic"/>
+<fmt:message bundle="${loc}" key="nav-item.about" var="nav_item_about"/>
+<fmt:message bundle="${loc}" key="nav-item.admin.tests" var="nav_item_admin_tests"/>
+<fmt:message bundle="${loc}" key="nav-item.admin.users" var="nav_item_admin_users"/>
+
 <div class="container-fluid cont">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #e3f2fd;">
@@ -30,28 +40,28 @@
 
                         <li class="nav-item">
                             <a class="nav-link active"
-                               href="${pageContext.request.contextPath}/test?command=show_main_page">Тесты</a>
+                               href="${pageContext.request.contextPath}/test?command=show_main_page">${nav_item_tests}</a>
                         </li>
 
                         <c:if test="${sessionScope.user_role=='ADMIN'}">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Администрирование
+                                    ${nav_item_admin}
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">Редактирование пользователей</a>
+                                    <a class="dropdown-item" href="#">${nav_item_admin_tests}</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Редактирование тестов</a>
+                                    <a class="dropdown-item" href="#">${nav_item_admin_users}</a>
                                 </div>
                             </li>
                         </c:if>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Статистика</a>
+                            <a class="nav-link" href="#">${nav_item_statistic}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">О нас</a>
+                            <a class="nav-link" href="#">${nav_item_about}</a>
                         </li>
                     </ul>
                 </div>
@@ -62,23 +72,33 @@
                 <a href="${pageContext.request.contextPath}/test?command=show_user_account"> <i
                         class="far fa-address-card fa-2x color-dodgerblue"></i></a>
             </div>
-            <div class="col-auto m-t-15">${sessionScope.user_login}
+            <div class="col-auto m-t-15"><c:out value="${sessionScope.user_login}"/>
             </div>
-
             <div class="col-1">
                 <form action="test" method="POST" class="m-0">
                     <input type="hidden" name="command" value="sign_out"/>
-                    <button type="submit" class="btn btn-outline-primary btn-md m-t-7">Sign out</button>
+                    <button type="submit" class="btn btn-outline-primary btn-md m-t-7">${button_sign_out}</button>
+                </form>
+            </div>
+            <div class="col-2">
+                <form action="test" method="POST" class="m-0">
+                    <input type="hidden" name="command" value="change_language"/>
+                    <input type="hidden" name="local" value="ru"/>
+                    <button type="submit" class="btn btn-outline-primary btn-md m-t-7">ru</button>
+                </form>
+                <form action="test" method="POST" class="m-0">
+                    <input type="hidden" name="command" value="change_language"/>
+                    <input type="hidden" name="local" value="en"/>
+                    <button type="submit" class="btn btn-outline-primary btn-md m-t-7">en</button>
                 </form>
             </div>
         </div>
-
     </nav>
 
     <div class="row height-90">
         <div class="col-2 background-gradient height-100">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <c:forEach var="item" items="${tests_type}">
+                <c:forEach var="item" items="${requestScope.tests_type}">
                     <a class="nav-link" id="v-pills-${item.id}-tab" data-toggle="pill" href="#v-pills-${item.id}"
                        role="tab"
                        aria-controls="v-pills-${item.id}" aria-selected="true">
@@ -91,7 +111,7 @@
         </div>
         <div class="col-9">
             <div class="tab-content" id="v-pills-tabContent">
-                <c:forEach var="item" items="${tests_type}">
+                <c:forEach var="item" items="${requestScope.tests_type}">
 
                     <div class="tab-pane fade " id="v-pills-${item.id}" role="tabpanel"
                          aria-labelledby="v-pills-${item.id}-tab">
@@ -112,7 +132,6 @@
                                     </div>
                                 </div>
                             </c:forEach>
-
                         </div>
                     </div>
                 </c:forEach>
@@ -137,4 +156,5 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
 </body>
+
 </html>

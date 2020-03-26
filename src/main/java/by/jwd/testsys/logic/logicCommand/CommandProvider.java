@@ -18,6 +18,7 @@ public final class CommandProvider {
         repository.put(CommandName.SHOW_MAIN_PAGE, new ShowMainPage());
         repository.put(CommandName.SHOW_USER_ACCOUNT, new ShowUserPage());
         repository.put(CommandName.WRONG_REQUEST, new WrongRequest());
+        repository.put(CommandName.CHANGE_LANGUAGE, new ChangeLocal());
     }
 
     public static CommandProvider getInstance() {

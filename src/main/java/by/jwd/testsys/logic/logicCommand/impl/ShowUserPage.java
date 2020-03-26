@@ -32,14 +32,16 @@ public class ShowUserPage implements Command {
         UserService userService = ServiceFactory.getInstance().getUserService();
 
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(JSP_PAGE_PATH);
-        HttpSession session = req.getSession(false);
+        HttpSession session = req.getSession();
 
+        System.out.println("~~~~~~"+session.getAttribute("local"));
         if (requestDispatcher != null && session != null) {
             try {
                 User userInfoToAccount = userService.getUserInfoToAccount((Integer) session.
                         getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE));
 
                 req.setAttribute(RequestParameterName.USER_ACCOUNT_INFO, userInfoToAccount);
+                session.setAttribute("command","show_user_page");
                 requestDispatcher.forward(req, resp);
 
             } catch (ServletException | IOException | ServiceException e) {
