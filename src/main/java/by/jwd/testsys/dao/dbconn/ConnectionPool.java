@@ -74,21 +74,8 @@ public final class ConnectionPool {
         }
     }
 
-    public void print(BlockingQueue<Connection> connections) {
-        for (Connection con : connections) {
-            System.out.println(con);
-        }
-    }
 
     public Connection takeConnection() throws ConnectionPoolException {
-        System.out.println("have");
-print(connectionQueue);
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~");
-        System.out.println("away");
-print(givenAwayConQueue);
-
-        System.out.println("===============================");
-
         Connection connection = null;
         try {
             connection = connectionQueue.take();

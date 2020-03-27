@@ -24,7 +24,6 @@ public class ConnectionPoolListener implements ServletContextListener {
             ConnectionPoolFactory.getInstance().getMySqlConnectionPoolDAO().init();
         } catch (DAOException e) {
             logger.log(Level.ERROR, "Connection pool didn't initialize.");
-            //todo
         }
     }
 

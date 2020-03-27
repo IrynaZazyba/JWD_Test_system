@@ -28,6 +28,8 @@
 <fmt:message bundle="${loc}" key="label.field.first_name" var="lable_first_name"/>
 <fmt:message bundle="${loc}" key="label.field.last_name" var="lable_last_name"/>
 <fmt:message bundle="${loc}" key="button.save_changes" var="button_save_changes"/>
+<fmt:message bundle="${loc}" key="button.language_en" var="button_language_en"/>
+<fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
 
 <div class="container-fluid cont">
 
@@ -54,7 +56,7 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-${nav_item_admin}                                </a>
+                                        ${nav_item_admin} </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="#">${nav_item_admin_tests}</a>
                                     <div class="dropdown-divider"></div>
@@ -79,13 +81,33 @@ ${nav_item_admin}                                </a>
             </div>
             <div class="col-auto m-t-15"><c:out value="${sessionScope.user_login}"/>
             </div>
-
             <div class="col-1">
                 <form action="test" method="POST" class="m-0">
                     <input type="hidden" name="command" value="sign_out"/>
                     <button type="submit" class="btn btn-outline-primary btn-md m-t-7">${button_sign_out}</button>
                 </form>
             </div>
+            <div class="col-auto">
+                <div class="row">
+                    <div class="col p-0">
+                        <form action="test" method="POST" class="m-0">
+                            <input type="hidden" name="command" value="change_language"/>
+                            <input type="hidden" name="local" value="ru"/>
+                            <button type="submit"
+                                    class="btn btn-outline-info btn-md m-t-7">${button_language_ru}</button>
+                        </form>
+                    </div>
+                    <div class="col p-0">
+                        <form action="test" method="POST" class="m-0">
+                            <input type="hidden" name="command" value="change_language"/>
+                            <input type="hidden" name="local" value="en"/>
+                            <button type="submit"
+                                    class="btn btn-outline-info btn-md m-t-7">${button_language_en}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </nav>
@@ -138,7 +160,8 @@ ${nav_item_admin}                                </a>
                                                 <label class="col-sm-3 control-label">${lable_first_name}</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" class="form-control" required
-                                                           name="first_name" value="${requestScope.user_info.firstName}">
+                                                           name="first_name"
+                                                           value="${requestScope.user_info.firstName}">
                                                 </div>
                                             </div>
                                         </div>
@@ -175,7 +198,8 @@ ${nav_item_admin}                                </a>
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-sm-offset-2 col-sm-10 p-top-7">
-                                                    <button type="submit" class="btn btn-outline-primary">${button_save_changes}
+                                                    <button type="submit"
+                                                            class="btn btn-outline-primary">${button_save_changes}
                                                     </button>
                                                 </div>
                                             </div>

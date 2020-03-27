@@ -27,29 +27,28 @@ public class ShowUserPage implements Command {
 
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse resp) throws CommandException {
+    public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException,IOException {
 
         UserService userService = ServiceFactory.getInstance().getUserService();
 
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(JSP_PAGE_PATH);
         HttpSession session = req.getSession();
 
-        System.out.println("~~~~~~"+session.getAttribute("local"));
         if (requestDispatcher != null && session != null) {
             try {
-                User userInfoToAccount = userService.getUserInfoToAccount((Integer) session.
-                        getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE));
+                int userId =(Integer) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
+                User userInfoToAccount = userService.getUserInfoToAccount(userId);
 
                 req.setAttribute(RequestParameterName.USER_ACCOUNT_INFO, userInfoToAccount);
-                session.setAttribute("command","show_user_page");
+                session.setAttribute("command","show_user_account");
                 requestDispatcher.forward(req, resp);
 
-            } catch (ServletException | IOException | ServiceException e) {
+            } catch (ServiceException e) {
                 logger.log(Level.ERROR, "Exception in showUserPage() command.");
-                throw new CommandException("Exception in showUserPage() command.", e);
+                req.getRequestDispatcher(JspPageName.ERROR_PAGE).forward(req,resp);
             }
         } else {
-            Command.forwardToPage(req, resp, JspPageName.ERROR_PAGE);
+            req.getRequestDispatcher(JspPageName.ERROR_PAGE).forward(req,resp);
         }
     }
 }

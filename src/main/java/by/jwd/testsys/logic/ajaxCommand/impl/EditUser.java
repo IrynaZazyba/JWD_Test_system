@@ -69,12 +69,12 @@ public class EditUser implements AjaxCommand {
 
                 } catch (ServiceException e) {
                     logger.log(Level.ERROR, "Service Exception in edit_user logicCommand.", e);
-                    Command.forwardToPage(request, response, JspPageName.ERROR_PAGE);
+                    answer = "{\"message\":\"Data wasn't changed.\",\"status\":\"error\"}";
                 }
 
             }
         } else {
-            Command.forwardToPage(request, response, JspPageName.ERROR_PAGE);
+            answer = "{\"message\":\"Data wasn't changed.\",\"status\":\"error\"}";
         }
         return answer;
     }

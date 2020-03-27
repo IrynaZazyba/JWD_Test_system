@@ -17,8 +17,8 @@
     padding-left: 27px;
 }
 
-.color-dodgerblue{
-    color: dodgerblue;
+.color-icon{
+    color: #3EB489;
 }
 
 .p-top-7{
@@ -111,6 +111,36 @@
 .round{
     border-radius: 100px;
 }
+
+
+.body-background{
+    background-color: #f5fffe;
+}
+
+.color-white{
+    background-color: white;
+}
+
+.letter_style{
+    font-family: Arial,sans-serif;
+    font-style: normal;
+    font-weight: 500;
+}
+
+.text-center{
+    text-align: center;
+}
+
+.menu-color{
+    background: linear-gradient(45deg, #3EB489, #C5DDE8);
+
+}
+
+.p-t-25{
+    padding-top: 25px;
+}
+
+
 
 
 

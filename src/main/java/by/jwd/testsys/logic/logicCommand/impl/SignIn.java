@@ -13,10 +13,12 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 
 public class SignIn implements Command {
@@ -25,30 +27,30 @@ public class SignIn implements Command {
     private static Logger logger = LogManager.getLogger();
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String login = request.getParameter(RequestParameterName.USER_LOGIN_PARAMETER);
         String password = request.getParameter(RequestParameterName.USER_PASSWORD_PARAMETER);
 
 
-        UserService userService = ServiceFactory.getInstance().getUserService();
+        ServiceFactory serviceFactory = ServiceFactory.getInstance();
+        UserService userService = serviceFactory.getUserService();
         try {
-            User userByLogin = userService.getUserByLoginPassword(login,password);
+            User userByLogin = userService.getUserByLoginPassword(login, password);
 
             if (userByLogin != null) {
                 HttpSession session = request.getSession();
                 session.setAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE, userByLogin.getId());
                 session.setAttribute(SessionAttributeName.USER_LOGIN_SESSION_ATTRIBUTE, userByLogin.getLogin());
                 session.setAttribute(SessionAttributeName.USER_ROLE_SESSION_ATTRIBUTE, userByLogin.getRole());
-
-                Command.redirectToPage(response,request.getContextPath()+"/test?command=show_main_page");
+                response.sendRedirect(request.getContextPath() + "/test?command=show_main_page");
             } else {
                 request.setAttribute(RequestParameterName.SIGN_IN_ERROR, INVALID_PASSWORD_MESSAGE);
-                Command.forwardToPage(request, response, JspPageName.START_JSP_PAGE);
+                request.getRequestDispatcher(JspPageName.START_JSP_PAGE).forward(request, response);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Service Exception in sign in command.", e);
-            Command.forwardToPage(request, response, JspPageName.ERROR_PAGE);
+            request.getRequestDispatcher(JspPageName.ERROR_PAGE).forward(request, response);
         }
     }
 }

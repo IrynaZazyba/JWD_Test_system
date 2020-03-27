@@ -27,12 +27,79 @@
 <fmt:message bundle="${loc}" key="message.success_sign_up" var="message_success_sign_up"/>
 <fmt:message bundle="${loc}" key="nav-tabs.log_in" var="nav_tabs_log_in"/>
 <fmt:message bundle="${loc}" key="nav-tabs.sign_up" var="nav_tabs_sign_up"/>
+<fmt:message bundle="${loc}" key="nav-item.article" var="nav_item_articles"/>
+<fmt:message bundle="${loc}" key="message.start_page" var="message_start_page"/>
+<fmt:message bundle="${loc}" key="button.language_en" var="button_language_en"/>
+<fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
+<fmt:message bundle="${loc}" key="nav-item.about" var="nav_item_about_us"/>
 
 
-<div class="container size">
+
+
+
+
+<div class="container-fluid p-0">
+    <nav class="navbar navbar-expand-lg navbar-light menu-color">
+        <div class="row wight-100">
+            <div class="col-1">
+                <a class="navbar-brand" href="#"><h3>АСТ Тест</h3></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="col-10">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">${nav_item_articles}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">${nav_item_about_us}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="row">
+                    <div class="col p-0">
+                        <form action="test" method="POST" class="m-0">
+                            <input type="hidden" name="command" value="change_language"/>
+                            <input type="hidden" name="local" value="ru"/>
+                            <button type="submit" class="btn btn-outline-info btn-md m-t-7">${button_language_ru}</button>
+                        </form></div>
+                    <div class="col p-0">
+                        <form action="test" method="POST" class="m-0">
+                            <input type="hidden" name="command" value="change_language"/>
+                            <input type="hidden" name="local" value="en"/>
+                            <button type="submit" class="btn btn-outline-info btn-md m-t-7">${button_language_en}</button>
+                        </form></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
     <div class="row align-items-center">
-        <div class="col-3"></div>
-        <div class="col-5">
+        <div class="col-7">
+            <div class="row p-t-25">
+                <div class="col text-center p-t-25">
+                    <h4 class="letter_style">${message_start_page}</h4>
+                </div>
+            </div>
+            <div class="row p-t-25">
+                <div class="col"></div>
+                <div class="col">
+
+                    <img src="resources/img/main-page-image.png"></div>
+
+                <div class="col"></div>
+            </div>
+
+
+
+        </div>
+        <div class="col-4">
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <c:choose>
@@ -103,7 +170,7 @@
                                         <div class="row">
                                             <div class="col-sm-1"></div>
                                             <div class="col-sm-2 p-l-27">
-                                                <i class="fas fa-user fa-2x color-dodgerblue"></i>
+                                                <i class="fas fa-user fa-2x color-icon"></i>
                                             </div>
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" required name="login"></div>
@@ -123,7 +190,7 @@
                                             <div class="col-sm-1"></div>
 
                                             <div class="col-sm-2 p-l-27">
-                                                <i class="fas fa-unlock-alt fa-2x color-dodgerblue"></i>
+                                                <i class="fas fa-unlock-alt fa-2x color-icon"></i>
                                             </div>
                                             <div class="col-sm-7"><input type="password" class="form-control" required
                                                                          name="password"></div>
@@ -248,7 +315,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-3"></div>
+                <div class="col-1"></div>
 
             </div>
 

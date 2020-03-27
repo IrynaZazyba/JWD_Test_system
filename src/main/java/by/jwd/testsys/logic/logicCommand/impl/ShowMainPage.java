@@ -8,6 +8,9 @@ import by.jwd.testsys.logic.logicCommand.CommandException;
 import by.jwd.testsys.logic.service.ServiceException;
 import by.jwd.testsys.logic.service.TestService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -19,16 +22,17 @@ import java.util.Set;
 
 public class ShowMainPage implements Command {
 
+    private Logger logger = LogManager.getLogger();
     private static final String JSP_PAGE_PATH = "WEB-INF/jsp/startMenu.jsp";
 
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse resp) throws CommandException {
+    public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         TestService testService = ServiceFactory.getInstance().getTestService();
 
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(JSP_PAGE_PATH);
         HttpSession session = req.getSession();
-        System.out.println("!!!!!!!!!!!"+session.getAttribute("local"));
+
         if (requestDispatcher != null && session != null) {
 
             try {
@@ -37,11 +41,13 @@ public class ShowMainPage implements Command {
                 req.setAttribute("tests", tests);
                 session.setAttribute("command", "show_main_page");
                 requestDispatcher.forward(req, resp);
-            } catch (ServletException | IOException | ServiceException e) {
-                throw new CommandException("Command exception ShowMainPage.", e);
+            } catch (ServiceException e) {
+                logger.log(Level.ERROR, "Exception in ShowMainPage command.");
+                req.getRequestDispatcher(JspPageName.ERROR_PAGE).forward(req, resp);
             }
         } else {
-            Command.forwardToPage(req, resp, JspPageName.ERROR_PAGE);
+            //todo
+            req.getRequestDispatcher(JspPageName.ERROR_PAGE).forward(req, resp);
         }
     }
 }

@@ -21,6 +21,8 @@
 <fmt:message bundle="${loc}" key="nav-item.about" var="nav_item_about"/>
 <fmt:message bundle="${loc}" key="nav-item.admin.tests" var="nav_item_admin_tests"/>
 <fmt:message bundle="${loc}" key="nav-item.admin.users" var="nav_item_admin_users"/>
+<fmt:message bundle="${loc}" key="button.language_en" var="button_language_en"/>
+<fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
 
 <div class="container-fluid cont">
 
@@ -80,17 +82,21 @@
                     <button type="submit" class="btn btn-outline-primary btn-md m-t-7">${button_sign_out}</button>
                 </form>
             </div>
-            <div class="col-2">
-                <form action="test" method="POST" class="m-0">
-                    <input type="hidden" name="command" value="change_language"/>
-                    <input type="hidden" name="local" value="ru"/>
-                    <button type="submit" class="btn btn-outline-primary btn-md m-t-7">ru</button>
-                </form>
-                <form action="test" method="POST" class="m-0">
-                    <input type="hidden" name="command" value="change_language"/>
-                    <input type="hidden" name="local" value="en"/>
-                    <button type="submit" class="btn btn-outline-primary btn-md m-t-7">en</button>
-                </form>
+            <div class="col-auto">
+                <div class="row">
+                    <div class="col p-0">
+                        <form action="test" method="POST" class="m-0">
+                            <input type="hidden" name="command" value="change_language"/>
+                            <input type="hidden" name="local" value="ru"/>
+                            <button type="submit" class="btn btn-outline-info btn-md m-t-7">${button_language_ru}</button>
+                        </form></div>
+                    <div class="col p-0">
+                        <form action="test" method="POST" class="m-0">
+                            <input type="hidden" name="command" value="change_language"/>
+                            <input type="hidden" name="local" value="en"/>
+                            <button type="submit" class="btn btn-outline-info btn-md m-t-7">${button_language_en}</button>
+                        </form></div>
+                </div>
             </div>
         </div>
     </nav>

@@ -42,25 +42,24 @@ public class Controller extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-
+//todo зачем здесь форвард, можно не пробрасывать искл из execute
         String commandName = req.getParameter(RequestParameterName.COMMAND_NAME);
         CommandProvider commandProvider = CommandProvider.getInstance();
         Command command = commandProvider.getCommand(commandName.toUpperCase());
 
-        try {
+//        try {
             command.execute(req, resp);
-        } catch (CommandException e) {
-            logger.log(Level.ERROR, "Exception in doPost method");
-            RequestDispatcher requestDispatcher = req.getRequestDispatcher(JspPageName.ERROR_PAGE);
-            if (requestDispatcher != null) {
-                requestDispatcher.forward(req, resp);
-            }
-        }
+//        } catch (CommandException e) {
+//            logger.log(Level.ERROR, "Exception in doPost method");
+//            RequestDispatcher requestDispatcher = req.getRequestDispatcher(JspPageName.ERROR_PAGE);
+//            if (requestDispatcher != null) {
+//                requestDispatcher.forward(req, resp);
+//            }
+//        }
     }
 
     @Override
     public void destroy() {
-        ConnectionPool.getInstance().dispose();
         super.destroy();
     }
 
