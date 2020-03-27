@@ -13,7 +13,7 @@
 </head>
 <body>
 <fmt:setLocale value="${sessionScope.local}"/>
-<fmt:setBundle basename="local" var="loc"/>
+<fmt:setBundle basename="local/local" var="loc"/>
 <fmt:message bundle="${loc}" key="button.sign_out" var="button_sign_out"/>
 <fmt:message bundle="${loc}" key="nav-item.tests" var="nav_item_tests"/>
 <fmt:message bundle="${loc}" key="nav-item.admin" var="nav_item_admin"/>

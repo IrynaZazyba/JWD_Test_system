@@ -46,14 +46,15 @@ public class EditUser implements AjaxCommand {
 
             user.setId((Integer) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE));
             user.setRole((Role) session.getAttribute(SessionAttributeName.USER_ROLE_SESSION_ATTRIBUTE));
+            String locale = (String) session.getAttribute("local");
 
-            UserValidatorImpl userValidator = new UserValidatorImpl(user);
+            UserValidatorImpl userValidator = new UserValidatorImpl(user, locale);
             Map<String, String> userValidateAnswer = userValidator.validate();
 
-            if (userValidateAnswer.size()!= 0) {
-                Gson gson=new Gson();
-                userValidateAnswer.put("status","error");
-                answer= gson.toJson(userValidateAnswer);
+            if (userValidateAnswer.size() != 0) {
+                Gson gson = new Gson();
+                userValidateAnswer.put("status", "error");
+                answer = gson.toJson(userValidateAnswer);
                 request.setAttribute(RequestParameterName.SIGN_UP_ERROR, "error");
 
             } else {

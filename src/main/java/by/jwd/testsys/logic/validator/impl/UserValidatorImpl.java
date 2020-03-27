@@ -12,45 +12,41 @@ public class UserValidatorImpl implements Validator {
     private static final String PASSWORD_PATTERN = "[a-zA-Z0-9_-]{6,18}$";
     private static final String NAME_PATTERN = "^([a-zA-Z-]|[а-яА-Я-]){2,25}$";
 
-    private static final String INVALID_LOGIN_MESSAGE = "Your login is invalid! The login must contain 5-15" +
-            " characters: upper and lower case letters, numbers, dashes and underscores!";
-    private static final String INVALID_PASSWORD_MESSAGE = "Your password is invalid. The password must contain 6-18" +
-            " characters: upper and lower case letters, numbers, dashes and underscores!";
-    private static final String INVALID_FIRST_NAME_MESSAGE = "First name is too long or contains numbers.";
-    private static final String INVALID_LAST_NAME_MESSAGE = "Last name is too long or contains numbers or symbols.";
-
-
     private User user;
+    private Locale locale;
 
-    public UserValidatorImpl(User user) {
+    public UserValidatorImpl(User user, String locale) {
         this.user = user;
+        if (locale != null) {
+            this.locale = new Locale(locale);
+        } else {
+            this.locale = Locale.getDefault();
+        }
     }
 
     @Override
     public Map<String, String> validate() {
 
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("local");
-        Set<String> valid=new HashSet<>();
-       Map<String, String> validationResult = new HashMap<>();
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("local/local", locale);
+
+        Map<String, String> validationResult = new HashMap<>();
 
 
         if (user.getLogin() == null || !validateLogin(user.getLogin())) {
-            validationResult.put(RequestParameterName.LOGIN_INVALID, INVALID_LOGIN_MESSAGE);
-          //  valid.add(RequestParameterName.LOGIN_INVALID);
+            validationResult.put(RequestParameterName.LOGIN_INVALID, resourceBundle.getString("message.invalid_login"));
         }
 
         if (user.getPassword() == null || !validatePassword(user.getPassword())) {
-            validationResult.put(RequestParameterName.PASSWORD_INVALID, INVALID_PASSWORD_MESSAGE);
-           // valid.add(RequestParameterName.PASSWORD_INVALID);
+            validationResult.put(RequestParameterName.PASSWORD_INVALID, resourceBundle.getString("message.invalid_password"));
 
         }
         if (user.getFirstName() == null || !validateName(user.getFirstName())) {
-          validationResult.put(RequestParameterName.FIRST_NAME_INVALID, INVALID_FIRST_NAME_MESSAGE);
+            validationResult.put(RequestParameterName.FIRST_NAME_INVALID, resourceBundle.getString("message.invalid_first_name"));
 
         }
 
         if (user.getLastName() == null || !validateName(user.getLastName())) {
-            validationResult.put(RequestParameterName.LAST_NAME_INVALID, INVALID_LAST_NAME_MESSAGE);
+            validationResult.put(RequestParameterName.LAST_NAME_INVALID, resourceBundle.getString("message.invalid_last_name"));
         }
 
         return validationResult;

@@ -9,10 +9,11 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="resources/fontawesome-free-5.12.1-web/css/all.css">
     <link rel="stylesheet" href="resources/css/style.css"/>
+
 </head>
 <body>
 <fmt:setLocale value="${sessionScope.local}"/>
-<fmt:setBundle basename="local" var="loc"/>
+<fmt:setBundle basename="local/local" var="loc"/>
 <fmt:message bundle="${loc}" key="button.sign_out" var="button_sign_out"/>
 <fmt:message bundle="${loc}" key="nav-item.tests" var="nav_item_tests"/>
 <fmt:message bundle="${loc}" key="nav-item.admin" var="nav_item_admin"/>
@@ -210,6 +211,7 @@ ${nav_item_admin}                                </a>
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
 <script src="resources/js/script.js"></script>
+
 
 </body>
 </html>

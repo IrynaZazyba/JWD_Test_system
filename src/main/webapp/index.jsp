@@ -12,7 +12,7 @@
 </head>
 <body>
 <fmt:setLocale value="${sessionScope.local}"/>
-<fmt:setBundle basename="local" var="loc"/>
+<fmt:setBundle basename="local/local" var="loc"/>
 <fmt:message bundle="${loc}" key="label.field.login" var="lable_login"/>
 <fmt:message bundle="${loc}" key="label.field.password" var="lable_password"/>
 <fmt:message bundle="${loc}" key="label.field.first_name" var="lable_first_name"/>
@@ -25,6 +25,8 @@
 <fmt:message bundle="${loc}" key="message.invalid_last_name" var="message_invalid_last_name"/>
 <fmt:message bundle="${loc}" key="message.invalid_password" var="message_invalid_password"/>
 <fmt:message bundle="${loc}" key="message.success_sign_up" var="message_success_sign_up"/>
+<fmt:message bundle="${loc}" key="nav-tabs.log_in" var="nav_tabs_log_in"/>
+<fmt:message bundle="${loc}" key="nav-tabs.sign_up" var="nav_tabs_sign_up"/>
 
 
 <div class="container size">
@@ -36,24 +38,24 @@
                     <c:choose>
                         <c:when test="${not empty requestScope.sign_up_error}">
                             <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
-                               aria-controls="nav-home" aria-selected="false">Log in</a>
+                               aria-controls="nav-home" aria-selected="false">${nav_tabs_log_in}</a>
                         </c:when>
                         <c:when test="${requestScope.sign_up_error==null}">
                             <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
                                role="tab"
-                               aria-controls="nav-home" aria-selected="true">Log in</a>
+                               aria-controls="nav-home" aria-selected="true">${nav_tabs_log_in}</a>
                         </c:when>
                     </c:choose>
                     <c:choose>
                         <c:when test="${not empty requestScope.sign_up_error}">
                             <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab"
                                href="#nav-profile" role="tab"
-                               aria-controls="nav-profile" aria-selected="true">Sign up</a>
+                               aria-controls="nav-profile" aria-selected="true">${nav_tabs_sign_up}</a>
                         </c:when>
                         <c:when test="${requestScope.sign_up_error==null}">
                             <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
                                role="tab"
-                               aria-controls="nav-profile" aria-selected="false">Sign up</a>
+                               aria-controls="nav-profile" aria-selected="false">${nav_tabs_sign_up}</a>
                         </c:when>
                     </c:choose>
                 </div>
@@ -94,7 +96,8 @@
                                             <div class="col-sm-1"></div>
 
                                             <div class="col-sm-2"></div>
-                                            <div class="col-sm-7"><label class="control-label">${lable_login}</label></div>
+                                            <div class="col-sm-7"><label class="control-label">${lable_login}</label>
+                                            </div>
                                             <div class="col-sm-2"></div>
                                         </div>
                                         <div class="row">
@@ -133,7 +136,8 @@
                                         <div class="row">
                                             <div class="col-sm-3"></div>
                                             <div class="col-sm-7 p-top-7">
-                                                <button type="submit" class="btn btn-outline-primary">${button_sign_in}</button>
+                                                <button type="submit"
+                                                        class="btn btn-outline-primary">${button_sign_in}</button>
                                             </div>
                                             <div class="col-sm-2"></div>
                                         </div>
@@ -217,7 +221,8 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="row">
-                                                <label class="col-sm-2 p-l-27 control-label">${lable_password}</label></div>
+                                                <label class="col-sm-2 p-l-27 control-label">${lable_password}</label>
+                                            </div>
                                             <div class="row">
 
                                                 <div class="col-sm-12 p-right-27 p-l-27">
@@ -231,7 +236,8 @@
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-sm-offset-2 col-sm-10 p-l-27 p-top-7">
-                                                    <button type="submit" class="btn btn-outline-primary">${button_sign_up}
+                                                    <button type="submit"
+                                                            class="btn btn-outline-primary">${button_sign_up}
                                                     </button>
                                                 </div>
                                             </div>

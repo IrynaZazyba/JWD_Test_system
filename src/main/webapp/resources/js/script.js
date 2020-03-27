@@ -42,3 +42,4 @@ function generateMessageDiv(json) {
     }
     return htmlCode;
 }
+
