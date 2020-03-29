@@ -19,6 +19,7 @@ public final class CommandProvider {
         repository.put(CommandName.SHOW_USER_ACCOUNT, new ShowUserPage());
         repository.put(CommandName.WRONG_REQUEST, new WrongRequest());
         repository.put(CommandName.CHANGE_LANGUAGE, new ChangeLocal());
+        repository.put(CommandName.SHOW_START_PAGE, new ShowStartPage());
     }
 
     public static CommandProvider getInstance() {
@@ -29,13 +30,17 @@ public final class CommandProvider {
         CommandName commandName;
         Command command;
 
-        commandName = CommandName.valueOf(name.toUpperCase());
-        command = repository.get(commandName);
-
-        if (command == null) {
+        if (name == null) {
             command = repository.get(CommandName.WRONG_REQUEST);
-        }
+        } else {
 
+            commandName = CommandName.valueOf(name.toUpperCase());
+            command = repository.get(commandName);
+
+            if (command == null) {
+                command = repository.get(CommandName.WRONG_REQUEST);
+            }
+        }
         return command;
     }
 }

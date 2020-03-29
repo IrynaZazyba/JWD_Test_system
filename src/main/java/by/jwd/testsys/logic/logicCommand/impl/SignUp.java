@@ -4,7 +4,7 @@ import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.JspPageName;
 import by.jwd.testsys.controller.RequestParameterName;
 import by.jwd.testsys.logic.logicCommand.Command;
-import by.jwd.testsys.logic.logicCommand.CommandException;
+import by.jwd.testsys.logic.logicCommand.ForwardCommandException;
 import by.jwd.testsys.logic.service.ServiceException;
 import by.jwd.testsys.logic.service.UserService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;
@@ -20,13 +20,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 
 public class SignUp implements Command {
     private Logger logger = LogManager.getLogger();
-
-    private static final String ALREADY_EXISTS_LOGIN_MESSAGE = "Choose another login. Such login already exist!";
-    private static final String SUCCESS_SIGNUP_MESSAGE = "Sign up was successful! Please sign in";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -44,28 +42,48 @@ public class SignUp implements Command {
         UserValidatorImpl userValidator = new UserValidatorImpl(new User(login, password, firstName, lastName), locale);
         Map<String, String> userValidateAnswer = userValidator.validate();
 
+        viewPageWithError(userValidateAnswer, request, response);
 
-        if (userValidateAnswer.size() != 0) {
-            userValidateAnswer.forEach((k, v) -> request.setAttribute(k, v));
-            request.setAttribute(RequestParameterName.SIGN_UP_ERROR, "error");
-            request.getRequestDispatcher(JspPageName.START_JSP_PAGE).forward(request, response);
-        } else {
+        if (userValidateAnswer.size() == 0) {
 
             UserService userService = ServiceFactory.getInstance().getUserService();
-
             try {
                 User user = new User(login, password, firstName, lastName, Role.USER);
                 boolean isSaved = userService.addUser(user);
+
+
+                ResourceBundle resourceBundle = ResourceBundle.getBundle("local/local");
                 if (isSaved) {
-                    request.setAttribute(RequestParameterName.SIGN_UP_SUCCESS_MESSAGE, SUCCESS_SIGNUP_MESSAGE);
-                    request.getRequestDispatcher(JspPageName.START_JSP_PAGE).forward(request, response);
+                    request.setAttribute(RequestParameterName.SIGN_UP_SUCCESS_MESSAGE,
+                            resourceBundle.getString("message.success_sign_up"));
+                    forwardToPage(request, response, JspPageName.START_JSP_PAGE);
+
                 } else {
-                    request.setAttribute(RequestParameterName.SIGN_UP_ERROR, ALREADY_EXISTS_LOGIN_MESSAGE);
-                   request.getRequestDispatcher(JspPageName.START_JSP_PAGE).forward(request, response);
+                    request.setAttribute(RequestParameterName.SIGN_UP_ERROR,
+                            resourceBundle.getString("message.exists_login"));
+                    System.out.println(request.getContextPath());
+                    forwardToPage(request, response, JspPageName.START_JSP_PAGE);
+
                 }
-            } catch (ServiceException e) {
-                logger.log(Level.ERROR, "Service Exception in SignUp logicCommand.", e);
-                request.getRequestDispatcher(JspPageName.ERROR_PAGE).forward(request, response);
+
+            } catch (ServiceException | ForwardCommandException e) {
+                logger.log(Level.ERROR, e.getMessage());
+                response.sendRedirect(JspPageName.ERROR_PAGE);
+            }
+        }
+    }
+
+
+    private void viewPageWithError(Map<String, String> userValidateAnswer, HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        if (userValidateAnswer.size() != 0) {
+            userValidateAnswer.forEach((k, v) -> request.setAttribute(k, v));
+            request.setAttribute(RequestParameterName.SIGN_UP_ERROR, "error");
+            try {
+                forwardToPage(request, response, JspPageName.START_JSP_PAGE);
+            } catch (ForwardCommandException e) {
+                logger.log(Level.ERROR, e.getMessage());
+                response.sendRedirect(JspPageName.ERROR_PAGE);
             }
         }
     }

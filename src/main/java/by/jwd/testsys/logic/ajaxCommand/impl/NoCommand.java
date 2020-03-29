@@ -11,7 +11,6 @@ public class NoCommand implements AjaxCommand {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
-        //todo
         return "{\"status\":\"error\"}";
     }
 }

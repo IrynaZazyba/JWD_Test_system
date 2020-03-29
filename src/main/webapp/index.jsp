@@ -32,6 +32,7 @@
 <fmt:message bundle="${loc}" key="button.language_en" var="button_language_en"/>
 <fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
 <fmt:message bundle="${loc}" key="nav-item.about" var="nav_item_about_us"/>
+<fmt:message bundle="${loc}" key="message.exists_login" var="message_exists_login"/>
 
 
 
@@ -250,6 +251,12 @@
                                                 <div class="alert alert-danger" role="alert">
                                                     <c:out value="${message_invalid_last_name}"/></div>
                                             </c:if>
+
+                                            <c:if test="${not empty requestScope.sign_up_error}">
+                                                <div class="alert alert-danger" role="alert">
+                                                    <c:out value="${message_exists_login}"/></div>
+                                            </c:if>
+
 
                                         </div>
                                         <div class="form-group">

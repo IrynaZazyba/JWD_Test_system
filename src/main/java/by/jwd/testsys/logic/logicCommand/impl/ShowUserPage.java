@@ -6,6 +6,7 @@ import by.jwd.testsys.controller.RequestParameterName;
 import by.jwd.testsys.controller.SessionAttributeName;
 import by.jwd.testsys.logic.logicCommand.Command;
 import by.jwd.testsys.logic.logicCommand.CommandException;
+import by.jwd.testsys.logic.logicCommand.ForwardCommandException;
 import by.jwd.testsys.logic.service.ServiceException;
 import by.jwd.testsys.logic.service.UserService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;
@@ -27,28 +28,23 @@ public class ShowUserPage implements Command {
 
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException,IOException {
+    public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         UserService userService = ServiceFactory.getInstance().getUserService();
-
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher(JSP_PAGE_PATH);
         HttpSession session = req.getSession();
 
-        if (requestDispatcher != null && session != null) {
-            try {
-                int userId =(Integer) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
-                User userInfoToAccount = userService.getUserInfoToAccount(userId);
+        try {
+            int userId = (Integer) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
+            User userInfoToAccount = userService.getUserInfoToAccount(userId);
 
-                req.setAttribute(RequestParameterName.USER_ACCOUNT_INFO, userInfoToAccount);
-                session.setAttribute("command","show_user_account");
-                requestDispatcher.forward(req, resp);
+            req.setAttribute(RequestParameterName.USER_ACCOUNT_INFO, userInfoToAccount);
+            session.setAttribute("command", "show_user_account");
+            forwardToPage(req, resp, JSP_PAGE_PATH);
 
-            } catch (ServiceException e) {
-                logger.log(Level.ERROR, "Exception in showUserPage() command.");
-                req.getRequestDispatcher(JspPageName.ERROR_PAGE).forward(req,resp);
-            }
-        } else {
-            req.getRequestDispatcher(JspPageName.ERROR_PAGE).forward(req,resp);
+        } catch (ServiceException | ForwardCommandException e) {
+            logger.log(Level.ERROR, e.getMessage());
+            resp.sendRedirect(JspPageName.ERROR_PAGE);
         }
+
     }
 }

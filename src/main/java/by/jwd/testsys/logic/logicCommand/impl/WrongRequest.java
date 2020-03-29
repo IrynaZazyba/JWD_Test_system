@@ -13,6 +13,6 @@ public class WrongRequest implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(JspPageName.ERROR_PAGE).forward(request, response);
+        response.sendRedirect(JspPageName.START_JSP_PAGE);
     }
 }
