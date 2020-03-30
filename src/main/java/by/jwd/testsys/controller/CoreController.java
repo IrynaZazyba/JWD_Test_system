@@ -1,5 +1,6 @@
 package by.jwd.testsys.controller;
 
+import by.jwd.testsys.controller.parameters.RequestParameterName;
 import by.jwd.testsys.logic.core.Command;
 import by.jwd.testsys.logic.core.CommandProvider;
 
@@ -13,7 +14,7 @@ import java.io.IOException;
 
 
 @WebServlet(urlPatterns = "/test", name = "CoreController")
-public class Controller extends HttpServlet {
+public class CoreController extends HttpServlet {
 
     private static final long serialVersionUID = -7674451632663324163L;
 

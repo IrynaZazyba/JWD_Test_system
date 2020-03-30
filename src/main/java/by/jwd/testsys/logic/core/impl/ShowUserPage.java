@@ -1,9 +1,9 @@
 package by.jwd.testsys.logic.core.impl;
 
 import by.jwd.testsys.bean.User;
-import by.jwd.testsys.controller.JspPageName;
-import by.jwd.testsys.controller.RequestParameterName;
-import by.jwd.testsys.controller.SessionAttributeName;
+import by.jwd.testsys.controller.parameters.JspPageName;
+import by.jwd.testsys.controller.parameters.RequestParameterName;
+import by.jwd.testsys.controller.parameters.SessionAttributeName;
 import by.jwd.testsys.logic.core.Command;
 import by.jwd.testsys.logic.core.ForwardCommandException;
 import by.jwd.testsys.logic.service.ServiceException;

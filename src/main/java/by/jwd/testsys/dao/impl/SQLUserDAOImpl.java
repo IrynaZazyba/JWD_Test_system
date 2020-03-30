@@ -2,7 +2,8 @@ package by.jwd.testsys.dao.impl;
 
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.dao.UserDAO;
-import by.jwd.testsys.dao.dbconn.ConnectionPool;
+import by.jwd.testsys.dao.dbconn.factory.ConnectionPoolFactory;
+import by.jwd.testsys.dao.dbconn.impl.MySqlConnectionPoolDAOImpl;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolException;
 import by.jwd.testsys.dao.exception.DAOConnectionPoolException;
 import by.jwd.testsys.dao.exception.DAOException;
@@ -19,7 +20,8 @@ import java.util.List;
 public class SQLUserDAOImpl implements UserDAO {
 
     private static Logger logger = LogManager.getLogger();
-    private ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
+    private MySqlConnectionPoolDAOImpl connectionPool = connectionPoolFactory.getMySqlConnectionPoolDAO();
 
     private static final String SELECT_ALL_USERS = "SELECT id, login,password, first_name, last_name, role.title" +
             " from users INNER JOIN role ON users.role_id=role.id";
@@ -231,7 +233,7 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getFirstName());
             preparedStatement.setString(4, user.getLastName());
-            preparedStatement.setInt(5,getRoleId(user.getRole()));
+            preparedStatement.setInt(5, getRoleId(user.getRole()));
             preparedStatement.setInt(6, user.getId());
             preparedStatement.executeUpdate();
             updatedUser = user;
@@ -239,7 +241,7 @@ public class SQLUserDAOImpl implements UserDAO {
         } catch (ConnectionPoolException | SQLException e) {
             logger.log(Level.ERROR, "Couldn't get data from DB, updateUser");
             throw new DAOSqlException("SQLException updateUser() method", e);
-        }finally {
+        } finally {
             if (connection != null) {
                 try {
                     connection.close();

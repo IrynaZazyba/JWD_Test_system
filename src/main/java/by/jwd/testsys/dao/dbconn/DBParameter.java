@@ -1,6 +1,6 @@
 package by.jwd.testsys.dao.dbconn;
 
-final class DBParameter {
+public final class DBParameter {
 
     private DBParameter() {
     }

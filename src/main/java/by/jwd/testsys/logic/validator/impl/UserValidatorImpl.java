@@ -1,7 +1,7 @@
 package by.jwd.testsys.logic.validator.impl;
 
 import by.jwd.testsys.bean.User;
-import by.jwd.testsys.controller.RequestParameterName;
+import by.jwd.testsys.controller.parameters.RequestParameterName;
 import by.jwd.testsys.logic.validator.Validator;
 
 import java.util.*;

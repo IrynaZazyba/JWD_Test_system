@@ -1,5 +1,6 @@
 package by.jwd.testsys.controller;
 
+import by.jwd.testsys.controller.parameters.RequestParameterName;
 import by.jwd.testsys.logic.ajax.AjaxCommand;
 import by.jwd.testsys.logic.ajax.AjaxCommandProvider;
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +17,7 @@ import java.io.PrintWriter;
 
 @WebServlet(urlPatterns = "/ajax", name = "AjaxController")
 @MultipartConfig
-public class AjaxLogicController extends HttpServlet {
+public class AjaxController extends HttpServlet {
 
     private static final long serialVersionUID = 1071754507052524007L;
     private static Logger logger = LogManager.getLogger();
@@ -47,7 +48,6 @@ public class AjaxLogicController extends HttpServlet {
         String ajaxCommandName = request.getParameter(RequestParameterName.COMMAND_NAME);
         AjaxCommandProvider ajaxCommandProvider = AjaxCommandProvider.getInstance();
         AjaxCommand ajaxCommand = ajaxCommandProvider.getAjaxCommand(ajaxCommandName.toUpperCase());
-
 
         String jsonAnswer = ajaxCommand.execute(request, response);
         PrintWriter out = response.getWriter();

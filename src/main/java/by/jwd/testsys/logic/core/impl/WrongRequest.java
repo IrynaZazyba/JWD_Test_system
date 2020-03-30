@@ -1,6 +1,6 @@
 package by.jwd.testsys.logic.core.impl;
 
-import by.jwd.testsys.controller.JspPageName;
+import by.jwd.testsys.controller.parameters.JspPageName;
 import by.jwd.testsys.logic.core.Command;
 
 import javax.servlet.ServletException;

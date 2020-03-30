@@ -10,5 +10,4 @@ public interface TestService {
     List<Type> getAllTestsType() throws ServiceException;
     Set<Type> getTypeWithTests() throws ServiceException;
 
-
     }

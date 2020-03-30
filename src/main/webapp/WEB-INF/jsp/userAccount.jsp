@@ -209,16 +209,17 @@
                             </div><!-- form  -->
                         </div>
                     </div>
-                    <div class="tab-pane fade " id="v-pills-test" role="tabpanel" aria-labelledby="v-pills-test-tab">
-
-                    </div>
+                </div>
+                <div class="tab-pane fade " id="v-pills-test" role="tabpanel" aria-labelledby="v-pills-test-tab">
 
                 </div>
-            </div>
 
+            </div>
         </div>
 
     </div>
+
+</div>
 </div>
 </div>
 <div id="content bor"></div>

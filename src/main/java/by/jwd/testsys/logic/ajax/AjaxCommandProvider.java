@@ -23,13 +23,17 @@ public final class AjaxCommandProvider {
         AjaxCommandName ajaxCommandName;
         AjaxCommand ajaxCommand;
 
-        ajaxCommandName = AjaxCommandName.valueOf(name.toUpperCase());
-        ajaxCommand = repository.get(ajaxCommandName);
+        if (name != null) {
+            ajaxCommandName = AjaxCommandName.valueOf(name.toUpperCase());
+            ajaxCommand = repository.get(ajaxCommandName);
 
-        if (ajaxCommand == null) {
+            if (ajaxCommand == null) {
+                ajaxCommand = repository.get(AjaxCommandName.NO_COMMAND);
+            }
+        } else {
             ajaxCommand = repository.get(AjaxCommandName.NO_COMMAND);
-        }
 
+        }
         return ajaxCommand;
     }
 }

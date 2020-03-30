@@ -1,4 +1,4 @@
-package by.jwd.testsys.controller;
+package by.jwd.testsys.controller.parameters;
 
 public class RequestParameterName {
 
