@@ -2,8 +2,6 @@ package by.jwd.testsys.controller;
 
 import by.jwd.testsys.logic.logicCommand.Command;
 import by.jwd.testsys.logic.logicCommand.CommandProvider;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

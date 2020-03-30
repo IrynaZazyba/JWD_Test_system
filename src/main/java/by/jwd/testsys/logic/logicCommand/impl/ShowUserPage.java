@@ -5,7 +5,6 @@ import by.jwd.testsys.controller.JspPageName;
 import by.jwd.testsys.controller.RequestParameterName;
 import by.jwd.testsys.controller.SessionAttributeName;
 import by.jwd.testsys.logic.logicCommand.Command;
-import by.jwd.testsys.logic.logicCommand.CommandException;
 import by.jwd.testsys.logic.logicCommand.ForwardCommandException;
 import by.jwd.testsys.logic.service.ServiceException;
 import by.jwd.testsys.logic.service.UserService;
@@ -14,7 +13,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

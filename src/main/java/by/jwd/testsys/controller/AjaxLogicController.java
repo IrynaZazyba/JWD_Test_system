@@ -2,12 +2,9 @@ package by.jwd.testsys.controller;
 
 import by.jwd.testsys.logic.ajaxCommand.AjaxCommand;
 import by.jwd.testsys.logic.ajaxCommand.AjaxCommandProvider;
-import by.jwd.testsys.logic.logicCommand.CommandException;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -36,31 +33,28 @@ public class AjaxLogicController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.doPost(req, resp);
+        this.doProcess(req, resp);
     }
 
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String ajaxCommandName = req.getParameter(RequestParameterName.COMMAND_NAME);
+        this.doProcess(req, resp);
+    }
 
+
+    private void doProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String ajaxCommandName = request.getParameter(RequestParameterName.COMMAND_NAME);
         AjaxCommandProvider ajaxCommandProvider = AjaxCommandProvider.getInstance();
         AjaxCommand ajaxCommand = ajaxCommandProvider.getAjaxCommand(ajaxCommandName.toUpperCase());
 
-        try {
-            String jsonAnswer = ajaxCommand.execute(req, resp);
-            PrintWriter out = resp.getWriter();
-            resp.setContentType("application/json");
-            resp.setCharacterEncoding("UTF-8");
-            out.print(jsonAnswer);
-            out.flush();
-        } catch (CommandException e) {
-            logger.log(Level.ERROR, "Exception in doPost method");
-            RequestDispatcher requestDispatcher = req.getRequestDispatcher(JspPageName.ERROR_PAGE);
-            if (requestDispatcher != null) {
-                requestDispatcher.forward(req, resp);
-            }
-        }
+
+        String jsonAnswer = ajaxCommand.execute(request, response);
+        PrintWriter out = response.getWriter();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        out.print(jsonAnswer);
+        out.flush();
     }
 
     @Override

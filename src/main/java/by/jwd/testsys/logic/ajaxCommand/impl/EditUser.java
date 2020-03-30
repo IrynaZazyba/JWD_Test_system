@@ -3,7 +3,6 @@ package by.jwd.testsys.logic.ajaxCommand.impl;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.SessionAttributeName;
 import by.jwd.testsys.logic.ajaxCommand.AjaxCommand;
-import by.jwd.testsys.logic.logicCommand.CommandException;
 import by.jwd.testsys.logic.service.ServiceException;
 import by.jwd.testsys.logic.service.UserService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;
@@ -17,7 +16,9 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public class EditUser implements AjaxCommand {
 
@@ -25,7 +26,7 @@ public class EditUser implements AjaxCommand {
 
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) {
         String answer = null;
 
         String login = request.getParameter("login");
@@ -45,6 +46,8 @@ public class EditUser implements AjaxCommand {
         UserValidatorImpl userValidator = new UserValidatorImpl(user, locale);
         Map<String, String> userValidateAnswer = userValidator.validate();
 
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("local/local", Locale.forLanguageTag(locale));
+
         if (userValidateAnswer.size() != 0) {
             Gson gson = new Gson();
             userValidateAnswer.put("status", "error");
@@ -55,22 +58,25 @@ public class EditUser implements AjaxCommand {
             try {
                 User editedUser = userService.editUserInfo(user);
                 if (editedUser != null) {
-                    answer = "{\"message\":\"Data was changed successfully.\",\"status\":\"ok\"}";
+                    answer = "{\"message\":\""+resourceBundle.getString("message.json.user_edit_changed")+
+                            "\",\"status\":\"ok\"}";
+
                 } else {
-                    answer = "{\"message\":\"Data wasn't changed.\",\"status\":\"error\"}";
+                    answer = "{\"message\":\""+resourceBundle.getString("message.json.user_edit_error")+
+                            "\",\"status\":\"error\"}";
                 }
 
 
             } catch (ServiceException e) {
                 logger.log(Level.ERROR, e.getMessage());
-                answer = "{\"message\":\"Data wasn't changed.\",\"status\":\"error\"}";
+                answer = "{\"message\":\""+resourceBundle.getString("message.json.user_edit_error")+
+                        "\",\"status\":\"error\"}";
             }
 
         }
 
         return answer;
     }
-
 
 
 }

@@ -27,7 +27,7 @@ public class UserValidatorImpl implements Validator {
     @Override
     public Map<String, String> validate() {
 
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("local/local");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("local/local",locale);
 
         Map<String, String> validationResult = new HashMap<>();
 
