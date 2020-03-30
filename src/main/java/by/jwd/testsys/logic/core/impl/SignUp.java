@@ -1,10 +1,10 @@
-package by.jwd.testsys.logic.logicCommand.impl;
+package by.jwd.testsys.logic.core.impl;
 
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.JspPageName;
 import by.jwd.testsys.controller.RequestParameterName;
-import by.jwd.testsys.logic.logicCommand.Command;
-import by.jwd.testsys.logic.logicCommand.ForwardCommandException;
+import by.jwd.testsys.logic.core.Command;
+import by.jwd.testsys.logic.core.ForwardCommandException;
 import by.jwd.testsys.logic.service.ServiceException;
 import by.jwd.testsys.logic.service.UserService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;
@@ -61,7 +61,6 @@ public class SignUp implements Command {
                 } else {
                     request.setAttribute(RequestParameterName.SIGN_UP_ERROR,
                             resourceBundle.getString("message.exists_login"));
-                    System.out.println(request.getContextPath());
                     forwardToPage(request, response, JspPageName.START_JSP_PAGE);
 
                 }

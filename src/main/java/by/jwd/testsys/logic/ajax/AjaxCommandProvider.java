@@ -1,8 +1,6 @@
-package by.jwd.testsys.logic.ajaxCommand;
+package by.jwd.testsys.logic.ajax;
 
-import by.jwd.testsys.logic.ajaxCommand.impl.EditUser;
-import by.jwd.testsys.logic.logicCommand.Command;
-import by.jwd.testsys.logic.logicCommand.CommandName;
+import by.jwd.testsys.logic.ajax.impl.EditUser;
 
 import java.util.HashMap;
 import java.util.Map;

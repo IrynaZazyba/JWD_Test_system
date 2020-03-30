@@ -1,7 +1,7 @@
 package by.jwd.testsys.controller;
 
-import by.jwd.testsys.logic.ajaxCommand.AjaxCommand;
-import by.jwd.testsys.logic.ajaxCommand.AjaxCommandProvider;
+import by.jwd.testsys.logic.ajax.AjaxCommand;
+import by.jwd.testsys.logic.ajax.AjaxCommandProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(urlPatterns = "/ajax")
+@WebServlet(urlPatterns = "/ajax", name = "AjaxController")
 @MultipartConfig
 public class AjaxLogicController extends HttpServlet {
 

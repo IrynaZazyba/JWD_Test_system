@@ -1,6 +1,6 @@
-package by.jwd.testsys.logic.ajaxCommand.impl;
+package by.jwd.testsys.logic.ajax.impl;
 
-import by.jwd.testsys.logic.ajaxCommand.AjaxCommand;
+import by.jwd.testsys.logic.ajax.AjaxCommand;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

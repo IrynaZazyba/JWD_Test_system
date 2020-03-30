@@ -1,8 +1,8 @@
-package by.jwd.testsys.logic.ajaxCommand.impl;
+package by.jwd.testsys.logic.ajax.impl;
 
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.SessionAttributeName;
-import by.jwd.testsys.logic.ajaxCommand.AjaxCommand;
+import by.jwd.testsys.logic.ajax.AjaxCommand;
 import by.jwd.testsys.logic.service.ServiceException;
 import by.jwd.testsys.logic.service.UserService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;

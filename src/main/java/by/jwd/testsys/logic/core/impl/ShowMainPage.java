@@ -1,13 +1,12 @@
-package by.jwd.testsys.logic.logicCommand.impl;
+package by.jwd.testsys.logic.core.impl;
 
-import by.jwd.testsys.bean.User;
+import by.jwd.testsys.bean.Type;
 import by.jwd.testsys.controller.JspPageName;
 import by.jwd.testsys.controller.RequestParameterName;
-import by.jwd.testsys.controller.SessionAttributeName;
-import by.jwd.testsys.logic.logicCommand.Command;
-import by.jwd.testsys.logic.logicCommand.ForwardCommandException;
+import by.jwd.testsys.logic.core.Command;
+import by.jwd.testsys.logic.core.ForwardCommandException;
 import by.jwd.testsys.logic.service.ServiceException;
-import by.jwd.testsys.logic.service.UserService;
+import by.jwd.testsys.logic.service.TestService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -18,31 +17,28 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Set;
 
-public class ShowUserPage implements Command {
+public class ShowMainPage implements Command {
 
     private Logger logger = LogManager.getLogger();
-    private static final String JSP_PAGE_PATH = "WEB-INF/jsp/userAccount.jsp";
-
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        TestService testService = ServiceFactory.getInstance().getTestService();
 
-        UserService userService = ServiceFactory.getInstance().getUserService();
         HttpSession session = req.getSession();
 
         try {
-            int userId = (Integer) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
-            User userInfoToAccount = userService.getUserInfoToAccount(userId);
-
-            req.setAttribute(RequestParameterName.USER_ACCOUNT_INFO, userInfoToAccount);
-            session.setAttribute("command", "show_user_account");
-            forwardToPage(req, resp, JSP_PAGE_PATH);
+            Set<Type> tests = testService.getTypeWithTests();
+            req.setAttribute(RequestParameterName.TESTS_TYPE_LIST, tests);
+            req.setAttribute("tests", tests);
+            session.setAttribute("command", "show_main_page");
+            forwardToPage(req, resp, JspPageName.START_MENU_PAGE);
 
         } catch (ServiceException | ForwardCommandException e) {
             logger.log(Level.ERROR, e.getMessage());
             resp.sendRedirect(JspPageName.ERROR_PAGE);
         }
-
     }
 }

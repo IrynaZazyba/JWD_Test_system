@@ -18,7 +18,7 @@ public class CharsetFilter implements Filter {
     private static final String ENCODING = "encoding";
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
         String encoding = filterConfig.getInitParameter(ENCODING);
         if (encoding != null) {
             defaultEncoding = encoding;
