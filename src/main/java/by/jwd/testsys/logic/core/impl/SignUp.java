@@ -3,10 +3,12 @@ package by.jwd.testsys.logic.core.impl;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.parameters.JspPageName;
 import by.jwd.testsys.controller.parameters.RequestParameterName;
+import by.jwd.testsys.controller.parameters.SessionAttributeName;
 import by.jwd.testsys.logic.core.Command;
 import by.jwd.testsys.logic.core.ForwardCommandException;
-import by.jwd.testsys.logic.service.ServiceException;
 import by.jwd.testsys.logic.service.UserService;
+import by.jwd.testsys.logic.service.exception.ExistsUserException;
+import by.jwd.testsys.logic.service.exception.ServiceException;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;
 import by.jwd.testsys.logic.util.Role;
 import by.jwd.testsys.logic.validator.impl.UserValidatorImpl;
@@ -36,7 +38,7 @@ public class SignUp implements Command {
         HttpSession session = request.getSession();
         String locale = null;
         if (session != null) {
-            locale = (String) session.getAttribute("local");
+            locale = (String) session.getAttribute(SessionAttributeName.LANGUAGE_ATTRIBUTE);
         }
 
         UserValidatorImpl userValidator = new UserValidatorImpl(new User(login, password, firstName, lastName), locale);
@@ -48,31 +50,35 @@ public class SignUp implements Command {
 
             UserService userService = ServiceFactory.getInstance().getUserService();
             try {
+
                 User user = new User(login, password, firstName, lastName, Role.USER);
-                boolean isSaved = userService.addUser(user);
+                userService.registerUser(user);
 
+                setRequestParameter(request, RequestParameterName.SIGN_UP_SUCCESS_MESSAGE,
+                        "message.success_sign_up");
+                forwardToPage(request, response, JspPageName.START_JSP_PAGE);
 
-                ResourceBundle resourceBundle = ResourceBundle.getBundle("local/local");
-                if (isSaved) {
-                    request.setAttribute(RequestParameterName.SIGN_UP_SUCCESS_MESSAGE,
-                            resourceBundle.getString("message.success_sign_up"));
-                    forwardToPage(request, response, JspPageName.START_JSP_PAGE);
-
-                } else {
-                    request.setAttribute(RequestParameterName.SIGN_UP_ERROR,
-                            resourceBundle.getString("message.exists_login"));
-                    forwardToPage(request, response, JspPageName.START_JSP_PAGE);
-
-                }
 
             } catch (ServiceException | ForwardCommandException e) {
                 logger.log(Level.ERROR, e.getMessage());
                 response.sendRedirect(JspPageName.ERROR_PAGE);
+            } catch (ExistsUserException ex) {
+
+                setRequestParameter(request, RequestParameterName.SIGN_UP_ERROR,
+                        "message.exists_login");
+                try {
+                    forwardToPage(request, response, JspPageName.START_JSP_PAGE);
+                } catch (ForwardCommandException e) {
+                    logger.log(Level.ERROR, e.getMessage());
+                    response.sendRedirect(JspPageName.ERROR_PAGE);
+                }
+
             }
+
         }
     }
 
-
+    //todo name
     private void viewPageWithError(Map<String, String> userValidateAnswer, HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if (userValidateAnswer.size() != 0) {
@@ -85,6 +91,11 @@ public class SignUp implements Command {
                 response.sendRedirect(JspPageName.ERROR_PAGE);
             }
         }
+    }
+
+    private void setRequestParameter(HttpServletRequest request, String paramName, String paramValue) {
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("local/local");
+        request.setAttribute(paramName, resourceBundle.getString(paramValue));
     }
 
 }

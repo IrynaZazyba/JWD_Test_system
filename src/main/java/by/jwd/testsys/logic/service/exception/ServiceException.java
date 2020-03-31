@@ -1,4 +1,4 @@
-package by.jwd.testsys.logic.service;
+package by.jwd.testsys.logic.service.exception;
 
 import java.io.Serializable;
 

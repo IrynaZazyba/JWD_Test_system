@@ -3,7 +3,7 @@ package by.jwd.testsys.logic.ajax.impl;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.parameters.SessionAttributeName;
 import by.jwd.testsys.logic.ajax.AjaxCommand;
-import by.jwd.testsys.logic.service.ServiceException;
+import by.jwd.testsys.logic.service.exception.ServiceException;
 import by.jwd.testsys.logic.service.UserService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;
 import by.jwd.testsys.logic.util.Role;

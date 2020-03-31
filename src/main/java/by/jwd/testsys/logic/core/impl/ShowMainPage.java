@@ -3,9 +3,11 @@ package by.jwd.testsys.logic.core.impl;
 import by.jwd.testsys.bean.Type;
 import by.jwd.testsys.controller.parameters.JspPageName;
 import by.jwd.testsys.controller.parameters.RequestParameterName;
+import by.jwd.testsys.controller.parameters.SessionAttributeName;
 import by.jwd.testsys.logic.core.Command;
+import by.jwd.testsys.logic.core.CommandName;
 import by.jwd.testsys.logic.core.ForwardCommandException;
-import by.jwd.testsys.logic.service.ServiceException;
+import by.jwd.testsys.logic.service.exception.ServiceException;
 import by.jwd.testsys.logic.service.TestService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;
 import org.apache.logging.log4j.Level;
@@ -32,8 +34,7 @@ public class ShowMainPage implements Command {
         try {
             Set<Type> tests = testService.getTypeWithTests();
             req.setAttribute(RequestParameterName.TESTS_TYPE_LIST, tests);
-            req.setAttribute("tests", tests);
-            session.setAttribute("command", "show_main_page");
+            session.setAttribute(SessionAttributeName.COMMAND_NAME, CommandName.SHOW_MAIN_PAGE);
             forwardToPage(req, resp, JspPageName.START_MENU_PAGE);
 
         } catch (ServiceException | ForwardCommandException e) {

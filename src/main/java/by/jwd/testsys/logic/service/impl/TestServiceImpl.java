@@ -5,7 +5,7 @@ import by.jwd.testsys.dao.TestTypeDAO;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.factory.DAOFactoryProvider;
-import by.jwd.testsys.logic.service.ServiceException;
+import by.jwd.testsys.logic.service.exception.ServiceException;
 import by.jwd.testsys.logic.service.TestService;
 
 import java.util.List;

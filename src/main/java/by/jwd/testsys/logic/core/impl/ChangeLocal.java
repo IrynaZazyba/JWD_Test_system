@@ -1,5 +1,6 @@
 package by.jwd.testsys.logic.core.impl;
 
+import by.jwd.testsys.controller.parameters.SessionAttributeName;
 import by.jwd.testsys.logic.core.Command;
 
 import javax.servlet.ServletException;
@@ -16,10 +17,11 @@ public class ChangeLocal implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        session.setAttribute("local", request.getParameter("local"));
+        String local = request.getParameter(SessionAttributeName.LANGUAGE_ATTRIBUTE);
+        session.setAttribute(SessionAttributeName.LANGUAGE_ATTRIBUTE, local);
         String command;
-        if (session.getAttribute("command") != null) {
-            command = (String)session.getAttribute("command");
+        if (session.getAttribute(SessionAttributeName.COMMAND_NAME) != null) {
+            command = (String)session.getAttribute(SessionAttributeName.COMMAND_NAME);
             response.sendRedirect(request.getContextPath() + "/test?command=" + command);
         } else {
             response.sendRedirect(request.getContextPath());

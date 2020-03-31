@@ -48,14 +48,14 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
                 typesFromDB.add(new Type(typeId, typeTitle));
             }
         } catch (ConnectionPoolException | SQLException e) {
-            logger.log(Level.ERROR, "Exception in SQLTypeDAOImpl getAll().");
+            logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("Exception in SQLTypeDAOImpl getAll().", e);
         } finally {
             if (connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException e) {
-                    logger.log(Level.ERROR, "SQLException in close connection getRoleId");
+                    logger.log(Level.ERROR, e.getMessage());
                 }
             }
         }
@@ -86,14 +86,14 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
 
             }
         } catch (SQLException | ConnectionPoolException e) {
-            logger.log(Level.ERROR, "Exception in SQLTypeDAOImpl getTypeWithTests()method.");
+            logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("Exception in SQLTypeDAOImpl getTypeWithTests() method ", e);
         } finally {
             if (connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException e) {
-                    logger.log(Level.ERROR, "SQLException in close connection getRoleId");
+                    logger.log(Level.ERROR, e.getMessage());
                 }
             }
         }

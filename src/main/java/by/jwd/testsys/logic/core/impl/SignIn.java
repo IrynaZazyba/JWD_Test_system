@@ -6,7 +6,7 @@ import by.jwd.testsys.controller.parameters.RequestParameterName;
 import by.jwd.testsys.controller.parameters.SessionAttributeName;
 import by.jwd.testsys.logic.core.Command;
 import by.jwd.testsys.logic.core.ForwardCommandException;
-import by.jwd.testsys.logic.service.ServiceException;
+import by.jwd.testsys.logic.service.exception.ServiceException;
 import by.jwd.testsys.logic.service.UserService;
 import by.jwd.testsys.logic.service.factory.ServiceFactory;
 import org.apache.logging.log4j.Level;

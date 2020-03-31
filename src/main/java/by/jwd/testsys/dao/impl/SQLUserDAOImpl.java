@@ -52,8 +52,10 @@ public class SQLUserDAOImpl implements UserDAO {
                 usersFromDB.add(parseUserFromDB(resultSet));
             }
         } catch (ConnectionPoolException e) {
+            logger.log(Level.ERROR, e.getMessage());
             throw new DAOConnectionPoolException("ConnectionPool DAO exception", e);
         } catch (SQLException e) {
+            logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("SQLException in getAll() users method", e);
         } finally {
             if (connection != null) {
@@ -68,37 +70,42 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public boolean save(User user) throws DAOException {
-
-        if (getUserByLogin(user.getLogin()) != null) {
-            return false;
-        }
+    public User create(User user) throws DAOException {
 
         int id_role = getRoleId(user.getRole());
+
         Connection connection = null;
         try {
             connection = connectionPool.takeConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER);
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER,Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getFirstName());
             preparedStatement.setString(4, user.getLastName());
             preparedStatement.setInt(5, id_role);
             preparedStatement.executeUpdate();
+
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if(generatedKeys.next()){
+                user.setId(generatedKeys.getInt(1));
+            }
+
         } catch (ConnectionPoolException e) {
+            logger.log(Level.ERROR, e.getMessage());
             throw new DAOConnectionPoolException("ConnectionPool DAO exception", e);
         } catch (SQLException e) {
+            logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("SQLException in save() method", e);
         } finally {
             if (connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException e) {
-                    logger.log(Level.ERROR, "SQLException in close connection save");
+                    logger.log(Level.ERROR, e.getMessage());
                 }
             }
         }
-        return true;
+        return user;
     }
 
     @Override
@@ -117,15 +124,17 @@ public class SQLUserDAOImpl implements UserDAO {
             }
 
         } catch (ConnectionPoolException e) {
+            logger.log(Level.ERROR, e.getMessage());
             throw new DAOConnectionPoolException("ConnectionPool DAO exception", e);
         } catch (SQLException e) {
+            logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("SQLException in getUsersByLogin() method", e);
         } finally {
             if (connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException e) {
-                    logger.log(Level.ERROR, "SQLException in close connection getByLogin");
+                    logger.log(Level.ERROR, e.getMessage());
                 }
             }
         }
@@ -154,7 +163,7 @@ public class SQLUserDAOImpl implements UserDAO {
                 roleId = resultSet.getInt(1);
             }
         } catch (SQLException | ConnectionPoolException e) {
-            logger.log(Level.ERROR, "SQLException in DAO getRoleId() method");
+            logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("SQLException in getRoleId() method", e);
 
         } finally {
@@ -162,13 +171,14 @@ public class SQLUserDAOImpl implements UserDAO {
                 try {
                     connection.close();
                 } catch (SQLException e) {
-                    logger.log(Level.ERROR, "SQLException in close connection getRoleId");
+                    logger.log(Level.ERROR, e.getMessage());
                 }
             }
         }
         return roleId;
     }
 
+    @Override
     public User getUserByLogin(String userLogin) throws DAOException {
         User user = null;
         Connection connection = null;
@@ -181,14 +191,14 @@ public class SQLUserDAOImpl implements UserDAO {
                 user = parseUserFromDB(resultSet);
             }
         } catch (ConnectionPoolException | SQLException e) {
-            logger.log(Level.ERROR, "Couldn't get data from DB, getUserByLogin()");
+            logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("SQLException in getUserByLogin() method", e);
         } finally {
             if (connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException e) {
-                    logger.log(Level.ERROR, "SQLException in close connection getRoleId");
+                    logger.log(Level.ERROR, e.getMessage());
                 }
             }
         }
@@ -208,7 +218,7 @@ public class SQLUserDAOImpl implements UserDAO {
                 userById = parseUserFromDB(resultSet);
             }
         } catch (ConnectionPoolException | SQLException e) {
-            logger.log(Level.ERROR, "Couldn't get data from DB, getUserById()");
+            logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("SQLException in getUserById() method", e);
 
         } finally {
@@ -216,13 +226,14 @@ public class SQLUserDAOImpl implements UserDAO {
                 try {
                     connection.close();
                 } catch (SQLException e) {
-                    logger.log(Level.ERROR, "SQLException in close connection getRoleId");
+                    logger.log(Level.ERROR, e.getMessage());
                 }
             }
         }
         return userById;
     }
 
+    @Override
     public User updateUser(User user) throws DAOSqlException {
         Connection connection = null;
         User updatedUser = null;
@@ -239,18 +250,19 @@ public class SQLUserDAOImpl implements UserDAO {
             updatedUser = user;
 
         } catch (ConnectionPoolException | SQLException e) {
-            logger.log(Level.ERROR, "Couldn't get data from DB, updateUser");
+            logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("SQLException updateUser() method", e);
         } finally {
             if (connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException e) {
-                    logger.log(Level.ERROR, "SQLException in close connection getRoleId");
+                    logger.log(Level.ERROR, e.getMessage());
                 }
             }
         }
         return updatedUser;
     }
+
 
 }

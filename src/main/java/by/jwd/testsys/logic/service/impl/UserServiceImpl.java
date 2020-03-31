@@ -6,7 +6,8 @@ import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.factory.DAOFactoryProvider;
-import by.jwd.testsys.logic.service.ServiceException;
+import by.jwd.testsys.logic.service.exception.ExistsUserException;
+import by.jwd.testsys.logic.service.exception.ServiceException;
 import by.jwd.testsys.logic.service.UserService;
 
 
@@ -26,14 +27,22 @@ public class UserServiceImpl implements UserService {
         return userByLogin;
     }
 
-    public boolean addUser(User user) throws ServiceException {
-        boolean isSaved;
+    public User registerUser(User user) throws ServiceException,ExistsUserException{
+       User userCreated;
         try {
-            isSaved = userDao.save(user);
+            User userByLogin = userDao.getUserByLogin(user.getLogin());
+
+            if (userByLogin == null) {
+                userCreated=userDao.create(user);
+
+            } else {
+                throw new ExistsUserException("Such login alreadyExists.");
+            }
+
         } catch (DAOException e) {
             throw new ServiceException("Error in save user.", e);
         }
-        return isSaved;
+        return userCreated;
     }
 
     public User getUserInfoToAccount(int id) throws ServiceException {

@@ -27,7 +27,8 @@ public class ConnectionPoolListener implements ServletContextListener {
             connectionPoolDAO.initPoolData();
 
         } catch (ConnectionPoolException e) {
-            logger.log(Level.ERROR, "Connection pool didn't initialize.");
+            logger.log(Level.ERROR, e.getMessage());
+            throw new InitConnectionPoolRuntimeException("Connection pool didn't initialize.",e);
         }
     }
 

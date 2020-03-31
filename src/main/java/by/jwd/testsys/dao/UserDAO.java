@@ -10,7 +10,7 @@ public interface UserDAO {
 
     List<User> getAll() throws DAOException;
 
-    boolean save(User user) throws DAOException;
+    User create(User user) throws DAOException;
 
     User getUserByLoginPassword(String login, String password) throws DAOException;
 
@@ -18,5 +18,7 @@ public interface UserDAO {
 
     User updateUser(User user) throws DAOSqlException;
 
+    User getUserByLogin(String login) throws DAOException;
 
-    }
+
+}
