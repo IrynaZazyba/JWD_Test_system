@@ -3,16 +3,19 @@ package by.jwd.testsys.dao.impl;
 import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.bean.Type;
 import by.jwd.testsys.dao.TestTypeDAO;
-import by.jwd.testsys.dao.dbconn.factory.ConnectionPoolFactory;
-import by.jwd.testsys.dao.dbconn.impl.MySqlConnectionPoolDAOImpl;
+import by.jwd.testsys.dao.dbconn.ConnectionPoolDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolException;
+import by.jwd.testsys.dao.dbconn.factory.ConnectionPoolFactory;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -22,7 +25,7 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
 
     private static Logger logger = LogManager.getLogger();
     private ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
-    private MySqlConnectionPoolDAOImpl connectionPool = connectionPoolFactory.getMySqlConnectionPoolDAO();
+    private ConnectionPoolDAO connectionPool = connectionPoolFactory.getMySqlConnectionPoolDAO();
 
     private static final String SELECT_ALL_TYPES = "SELECT id, title from type WHERE deleted_at IS null";
     private static final String SELECT_TYPE_WITH_TESTS = "SELECT type.id as tp_id, type.title tp_title, test.id tt_id," +

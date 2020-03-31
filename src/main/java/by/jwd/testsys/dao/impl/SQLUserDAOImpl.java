@@ -2,9 +2,9 @@ package by.jwd.testsys.dao.impl;
 
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.dao.UserDAO;
-import by.jwd.testsys.dao.dbconn.factory.ConnectionPoolFactory;
-import by.jwd.testsys.dao.dbconn.impl.MySqlConnectionPoolDAOImpl;
+import by.jwd.testsys.dao.dbconn.ConnectionPoolDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolException;
+import by.jwd.testsys.dao.dbconn.factory.ConnectionPoolFactory;
 import by.jwd.testsys.dao.exception.DAOConnectionPoolException;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
@@ -21,7 +21,7 @@ public class SQLUserDAOImpl implements UserDAO {
 
     private static Logger logger = LogManager.getLogger();
     private ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
-    private MySqlConnectionPoolDAOImpl connectionPool = connectionPoolFactory.getMySqlConnectionPoolDAO();
+    private ConnectionPoolDAO connectionPool = connectionPoolFactory.getMySqlConnectionPoolDAO();
 
     private static final String SELECT_ALL_USERS = "SELECT id, login,password, first_name, last_name, role.title" +
             " from users INNER JOIN role ON users.role_id=role.id";
