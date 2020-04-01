@@ -41,11 +41,13 @@ public class SQLUserDAOImpl implements UserDAO {
     public List<User> getAll() throws DAOException {
         List<User> usersFromDB;
         Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
 
         try {
             connection = connectionPool.takeConnection();
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SELECT_ALL_USERS);
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(SELECT_ALL_USERS);
 
             usersFromDB = new ArrayList<>();
             while (resultSet.next()) {
@@ -58,13 +60,7 @@ public class SQLUserDAOImpl implements UserDAO {
             logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("SQLException in getAll() users method", e);
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    logger.log(Level.ERROR, "SQLException in return connection", e);
-                }
-            }
+            connectionPool.closeConnection(connection, statement, resultSet);
         }
         return usersFromDB;
     }
@@ -75,9 +71,11 @@ public class SQLUserDAOImpl implements UserDAO {
         int id_role = getRoleId(user.getRole());
 
         Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet generatedKeys = null;
         try {
             connection = connectionPool.takeConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER,Statement.RETURN_GENERATED_KEYS);
+            preparedStatement = connection.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getFirstName());
@@ -85,8 +83,8 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setInt(5, id_role);
             preparedStatement.executeUpdate();
 
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if(generatedKeys.next()){
+            generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
                 user.setId(generatedKeys.getInt(1));
             }
 
@@ -97,13 +95,7 @@ public class SQLUserDAOImpl implements UserDAO {
             logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("SQLException in save() method", e);
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    logger.log(Level.ERROR, e.getMessage());
-                }
-            }
+            connectionPool.closeConnection(connection, preparedStatement, generatedKeys);
         }
         return user;
     }
@@ -112,13 +104,15 @@ public class SQLUserDAOImpl implements UserDAO {
     public User getUserByLoginPassword(String login, String password) throws DAOException {
         User user = null;
         Connection connection = null;
+        PreparedStatement preparedStatement=null;
+        ResultSet resultSet=null;
         try {
             connection = connectionPool.takeConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN_PASSWORD);
+            preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN_PASSWORD);
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 user = parseUserFromDB(resultSet);
             }
@@ -130,13 +124,7 @@ public class SQLUserDAOImpl implements UserDAO {
             logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("SQLException in getUsersByLogin() method", e);
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    logger.log(Level.ERROR, e.getMessage());
-                }
-            }
+           connectionPool.closeConnection(connection, preparedStatement,resultSet);
         }
         return user;
     }
@@ -153,12 +141,14 @@ public class SQLUserDAOImpl implements UserDAO {
 
     private int getRoleId(Role role) throws DAOSqlException {
         Connection connection = null;
+        PreparedStatement preparedStatement=null;
+        ResultSet resultSet=null;
         int roleId = 0;
         try {
             connection = connectionPool.takeConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ROLE_ID);
+            preparedStatement = connection.prepareStatement(SELECT_ROLE_ID);
             preparedStatement.setString(1, role.toString());
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 roleId = resultSet.getInt(1);
             }
@@ -167,13 +157,7 @@ public class SQLUserDAOImpl implements UserDAO {
             throw new DAOSqlException("SQLException in getRoleId() method", e);
 
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    logger.log(Level.ERROR, e.getMessage());
-                }
-            }
+            connectionPool.closeConnection(connection, preparedStatement,resultSet);
         }
         return roleId;
     }
@@ -182,11 +166,13 @@ public class SQLUserDAOImpl implements UserDAO {
     public User getUserByLogin(String userLogin) throws DAOException {
         User user = null;
         Connection connection = null;
+        PreparedStatement preparedStatement=null;
+        ResultSet resultSet=null;
         try {
             connection = connectionPool.takeConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN);
+            preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN);
             preparedStatement.setString(1, userLogin);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 user = parseUserFromDB(resultSet);
             }
@@ -194,13 +180,7 @@ public class SQLUserDAOImpl implements UserDAO {
             logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("SQLException in getUserByLogin() method", e);
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    logger.log(Level.ERROR, e.getMessage());
-                }
-            }
+            connectionPool.closeConnection(connection, preparedStatement,resultSet);
         }
         return user;
     }
@@ -209,11 +189,13 @@ public class SQLUserDAOImpl implements UserDAO {
     public User getUserById(int id) throws DAOException {
         User userById = null;
         Connection connection = null;
+        PreparedStatement preparedStatement=null;
+        ResultSet resultSet=null;
         try {
             connection = connectionPool.takeConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_ID);
+            preparedStatement = connection.prepareStatement(SELECT_USER_BY_ID);
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 userById = parseUserFromDB(resultSet);
             }
@@ -222,13 +204,7 @@ public class SQLUserDAOImpl implements UserDAO {
             throw new DAOSqlException("SQLException in getUserById() method", e);
 
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    logger.log(Level.ERROR, e.getMessage());
-                }
-            }
+           connectionPool.closeConnection(connection, preparedStatement,resultSet);
         }
         return userById;
     }
@@ -236,10 +212,12 @@ public class SQLUserDAOImpl implements UserDAO {
     @Override
     public User updateUser(User user) throws DAOSqlException {
         Connection connection = null;
+        PreparedStatement preparedStatement=null;
+
         User updatedUser = null;
         try {
             connection = connectionPool.takeConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER);
+            preparedStatement = connection.prepareStatement(UPDATE_USER);
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getFirstName());
@@ -253,13 +231,7 @@ public class SQLUserDAOImpl implements UserDAO {
             logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("SQLException updateUser() method", e);
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    logger.log(Level.ERROR, e.getMessage());
-                }
-            }
+            connectionPool.closeConnection(connection,preparedStatement);
         }
         return updatedUser;
     }

@@ -10,4 +10,6 @@ public interface ConnectionPoolDAO {
     void dispose();
     Connection takeConnection() throws ConnectionPoolException;
     void closeConnection(Connection con, Statement stm, ResultSet resultSet);
+    void closeConnection(Connection con, Statement stm);
+
 }
