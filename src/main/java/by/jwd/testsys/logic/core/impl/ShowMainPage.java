@@ -34,7 +34,7 @@ public class ShowMainPage implements Command {
         try {
             Set<Type> tests = testService.getTypeWithTests();
             req.setAttribute(RequestParameterName.TESTS_TYPE_LIST, tests);
-            session.setAttribute(SessionAttributeName.COMMAND_NAME, CommandName.SHOW_MAIN_PAGE);
+            session.setAttribute(SessionAttributeName.COMMAND_NAME, CommandName.SHOW_MAIN_PAGE.toString());
             forwardToPage(req, resp, JspPageName.START_MENU_PAGE);
 
         } catch (ServiceException | ForwardCommandException e) {

@@ -16,12 +16,14 @@ public class ChangeLocal implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         String local = request.getParameter(SessionAttributeName.LANGUAGE_ATTRIBUTE);
         session.setAttribute(SessionAttributeName.LANGUAGE_ATTRIBUTE, local);
-        String command;
-        if (session.getAttribute(SessionAttributeName.COMMAND_NAME) != null) {
-            command = (String)session.getAttribute(SessionAttributeName.COMMAND_NAME);
+
+
+        String command = (String) session.getAttribute("command");
+
+        if (command != null) {
             response.sendRedirect(request.getContextPath() + "/test?command=" + command);
         } else {
             response.sendRedirect(request.getContextPath());
