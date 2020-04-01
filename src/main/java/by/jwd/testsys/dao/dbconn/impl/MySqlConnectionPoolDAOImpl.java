@@ -20,6 +20,7 @@ public final class MySqlConnectionPoolDAOImpl implements ConnectionPoolDAO {
     private static Logger logger = LogManager.getLogger();
     private BlockingQueue<Connection> connectionQueue;
     private BlockingQueue<Connection> givenAwayConQueue;
+    private Class<? extends PooledConnection> aClass;
     private String driverName;
     private String url;
     private String user;
@@ -49,6 +50,7 @@ public final class MySqlConnectionPoolDAOImpl implements ConnectionPoolDAO {
             for (int i = 0; i < poolSize; i++) {
                 Connection connection = DriverManager.getConnection(url, user, password);
                 PooledConnection pooledConnection = new PooledConnection(connection);
+                aClass = pooledConnection.getClass();
                 connectionQueue.add(pooledConnection);
             }
         } catch (SQLException e) {
@@ -85,17 +87,23 @@ public final class MySqlConnectionPoolDAOImpl implements ConnectionPoolDAO {
 
     public void closeConnection(Connection con, Statement st, ResultSet rs) {
         try {
-            con.close();
+            if (con != null && con.getClass() ==aClass) {
+                con.close();
+            }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Connection isn't return to thepool. ");
+            logger.log(Level.ERROR, "Connection isn't return to the pool.");
         }
         try {
-            rs.close();
+            if (rs != null) {
+                rs.close();
+            }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "ResultSet isn't closed.");
         }
         try {
-            st.close();
+            if (st != null) {
+                st.close();
+            }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Statement isn't closed.");
         }
@@ -103,12 +111,14 @@ public final class MySqlConnectionPoolDAOImpl implements ConnectionPoolDAO {
 
     public void closeConnection(Connection con, Statement st) {
         try {
-            con.close();
+            if(con!=null&&con.getClass()==aClass){
+            con.close();}
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Connection isn't return to thepool. ");
         }
         try {
-            st.close();
+            if(st!=null){
+            st.close();}
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Statement isn't closed.");
         }

@@ -36,11 +36,14 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
     public List<Type> getAll() throws DAOException {
 
         Connection connection = null;
-        List<Type> typesFromDB = null;
+        List<Type> typesFromDB;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
         try {
             connection = connectionPool.takeConnection();
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SELECT_ALL_TYPES);
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(SELECT_ALL_TYPES);
             typesFromDB = new ArrayList<>();
             while (resultSet.next()) {
                 int typeId = resultSet.getInt("id");
@@ -51,13 +54,7 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
             logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("Exception in SQLTypeDAOImpl getAll().", e);
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    logger.log(Level.ERROR, e.getMessage());
-                }
-            }
+            connectionPool.closeConnection(connection, statement, resultSet);
         }
 
         return typesFromDB;
@@ -67,11 +64,12 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
     public Set<Type> getTypeWithTests() throws DAOException {
         Connection connection = null;
         Set<Type> typesFromDB = new HashSet<>();
-
+        Statement statement=null;
+        ResultSet resultSet=null;
         try {
             connection = connectionPool.takeConnection();
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SELECT_TYPE_WITH_TESTS);
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(SELECT_TYPE_WITH_TESTS);
             while (resultSet.next()) {
                 Type type = parseType(resultSet);
                 typesFromDB.add(type);
@@ -89,13 +87,7 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
             logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("Exception in SQLTypeDAOImpl getTypeWithTests() method ", e);
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    logger.log(Level.ERROR, e.getMessage());
-                }
-            }
+           connectionPool.closeConnection(connection,statement,resultSet);
         }
 
         return typesFromDB;
