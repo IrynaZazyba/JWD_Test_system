@@ -40,24 +40,26 @@
 
 
 <div class="container-fluid p-0">
-    <nav class="navbar navbar-expand-lg navbar-light menu-color">
+    <nav class="navbar navbar-expand-lg navbar-light menu-color p-t-b-0">
         <div class="row wight-100">
-            <div class="col-1">
-                <a class="navbar-brand" href="#"><h3>АСТ Тест</h3></a>
+            <div class="col-2">
+                <a class="navbar-brand" href="#">
+                    <img alt="logo" class="logo-size" src="resources/img/logo.png">
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
             </div>
-            <div class="col-10">
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">${nav_item_articles}</a>
+            <div class="col-9">
+                <div class="collapse navbar-collapse start-page-nav-itm" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto start-page-nav-itm">
+                        <li class="nav-item p-l-15 p-r-15">
+                            <a class="nav-link start-nav-color height-100 item-start" href="#">${nav_item_articles}</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">${nav_item_about_us}</a>
+                        <li class="nav-item p-l-15 p-r-15">
+                            <a class="nav-link start-nav-color height-100 item-start" href="#">${nav_item_about_us}</a>
                         </li>
                     </ul>
                 </div>
@@ -68,13 +70,13 @@
                         <form action="test" method="POST" class="m-0">
                             <input type="hidden" name="command" value="change_language"/>
                             <input type="hidden" name="local" value="ru"/>
-                            <button type="submit" class="btn btn-outline-info btn-md m-t-7">${button_language_ru}</button>
+                            <button type="submit" class="btn btn-outline-info btn-md lang-button">${button_language_ru}</button>
                         </form></div>
                     <div class="col p-0">
                         <form action="test" method="POST" class="m-0">
                             <input type="hidden" name="command" value="change_language"/>
                             <input type="hidden" name="local" value="en"/>
-                            <button type="submit" class="btn btn-outline-info btn-md m-t-7">${button_language_en}</button>
+                            <button type="submit" class="btn btn-outline-info btn-md lang-button">${button_language_en}</button>
                         </form></div>
                 </div>
             </div>
@@ -105,23 +107,23 @@
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <c:choose>
                         <c:when test="${not empty requestScope.sign_up_error}">
-                            <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
+                            <a class="nav-item nav-link text-tab-start-form" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
                                aria-controls="nav-home" aria-selected="false">${nav_tabs_log_in}</a>
                         </c:when>
                         <c:when test="${requestScope.sign_up_error==null}">
-                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
+                            <a class="nav-item nav-link text-tab-start-form active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
                                role="tab"
                                aria-controls="nav-home" aria-selected="true">${nav_tabs_log_in}</a>
                         </c:when>
                     </c:choose>
                     <c:choose>
                         <c:when test="${not empty requestScope.sign_up_error}">
-                            <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab"
+                            <a class="nav-item nav-link text-tab-start-form active" id="nav-profile-tab" data-toggle="tab"
                                href="#nav-profile" role="tab"
                                aria-controls="nav-profile" aria-selected="true">${nav_tabs_sign_up}</a>
                         </c:when>
                         <c:when test="${requestScope.sign_up_error==null}">
-                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
+                            <a class="nav-item nav-link text-tab-start-form" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
                                role="tab"
                                aria-controls="nav-profile" aria-selected="false">${nav_tabs_sign_up}</a>
                         </c:when>
@@ -205,7 +207,7 @@
                                             <div class="col-sm-3"></div>
                                             <div class="col-sm-7 p-top-7">
                                                 <button type="submit"
-                                                        class="btn btn-outline-primary">${button_sign_in}</button>
+                                                        class="btn btn-outline-primary text-button-start-form">${button_sign_in}</button>
                                             </div>
                                             <div class="col-sm-2"></div>
                                         </div>
@@ -311,7 +313,7 @@
                                             <div class="row">
                                                 <div class="col-sm-offset-2 col-sm-10 p-l-27 p-top-7">
                                                     <button type="submit"
-                                                            class="btn btn-outline-primary">${button_sign_up}
+                                                            class="btn btn-outline-primary text-button-start-form">${button_sign_up}
                                                     </button>
                                                 </div>
                                             </div>

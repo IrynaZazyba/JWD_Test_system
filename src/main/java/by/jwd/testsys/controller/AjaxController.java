@@ -1,8 +1,8 @@
 package by.jwd.testsys.controller;
 
-import by.jwd.testsys.controller.parameters.RequestParameterName;
-import by.jwd.testsys.logic.ajax.AjaxCommand;
-import by.jwd.testsys.logic.ajax.AjaxCommandProvider;
+import by.jwd.testsys.controller.parameter.RequestParameterName;
+import by.jwd.testsys.controller.command.ajax.AjaxCommand;
+import by.jwd.testsys.controller.command.ajax.AjaxCommandProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -51,8 +51,8 @@ public class AjaxController extends HttpServlet {
 
         String jsonAnswer = ajaxCommand.execute(request, response);
         PrintWriter out = response.getWriter();
+        //todo filter?
         response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
         out.print(jsonAnswer);
         out.flush();
     }

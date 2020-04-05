@@ -1,52 +1,41 @@
 package by.jwd.testsys.logic.validator.impl;
 
 import by.jwd.testsys.bean.User;
-import by.jwd.testsys.controller.parameters.RequestParameterName;
-import by.jwd.testsys.logic.validator.Validator;
+import by.jwd.testsys.controller.parameter.RequestParameterName;
+import by.jwd.testsys.logic.validator.UserValidator;
+import by.jwd.testsys.logic.validator.util.InvalidParam;
 
 import java.util.*;
 
-public class UserValidatorImpl implements Validator {
+public class UserValidatorImpl implements UserValidator {
 
     private static final String LOGIN_PATTERN = "[a-zA-Z0-9-_]{5,15}$";
     private static final String PASSWORD_PATTERN = "[a-zA-Z0-9_-]{6,18}$";
     private static final String NAME_PATTERN = "^([a-zA-Z-]|[а-яА-Я-]){2,25}$";
 
-    private User user;
-    private Locale locale;
-
-    public UserValidatorImpl(User user, String locale) {
-        this.user = user;
-        if (locale != null) {
-            this.locale = new Locale(locale);
-        } else {
-            this.locale = Locale.getDefault();
-        }
+    public UserValidatorImpl() {
     }
-
     @Override
-    public Map<String, String> validate() {
+    public Set<String> validate(User user) {
 
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("local/local",locale);
-
-        Map<String, String> validationResult = new HashMap<>();
+        Set<String> validationResult = new HashSet<>();
 
 
         if (user.getLogin() == null || !validateLogin(user.getLogin())) {
-            validationResult.put(RequestParameterName.LOGIN_INVALID, resourceBundle.getString("message.invalid_login"));
+            validationResult.add(InvalidParam.INVALID_LOGIN.toString());
         }
 
         if (user.getPassword() == null || !validatePassword(user.getPassword())) {
-            validationResult.put(RequestParameterName.PASSWORD_INVALID, resourceBundle.getString("message.invalid_password"));
+            validationResult.add(InvalidParam.INVALID_PASSWORD.toString());
 
         }
         if (user.getFirstName() == null || !validateName(user.getFirstName())) {
-            validationResult.put(RequestParameterName.FIRST_NAME_INVALID, resourceBundle.getString("message.invalid_first_name"));
+            validationResult.add(InvalidParam.INVALID_FIRST_NAME.toString());
 
         }
 
         if (user.getLastName() == null || !validateName(user.getLastName())) {
-            validationResult.put(RequestParameterName.LAST_NAME_INVALID, resourceBundle.getString("message.invalid_last_name"));
+            validationResult.add(InvalidParam.INVALID_LAST_NAME.toString());
         }
 
         return validationResult;

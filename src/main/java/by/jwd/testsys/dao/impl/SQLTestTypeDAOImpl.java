@@ -24,7 +24,7 @@ import java.util.Set;
 public class SQLTestTypeDAOImpl implements TestTypeDAO {
 
     private static Logger logger = LogManager.getLogger();
-    private ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
+    private final ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
     private ConnectionPoolDAO connectionPool = connectionPoolFactory.getMySqlConnectionPoolDAO();
 
     private static final String SELECT_ALL_TYPES = "SELECT id, title from type WHERE deleted_at IS null";
@@ -71,11 +71,11 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(SELECT_TYPE_WITH_TESTS);
             while (resultSet.next()) {
-                Type type = parseType(resultSet);
+                Type type = buildType(resultSet);
                 typesFromDB.add(type);
 
                 int type_id = resultSet.getInt("type_id");
-                Test test = parseTest(resultSet);
+                Test test = buildTest(resultSet);
                 for (Type type1 : typesFromDB) {
                     if (type1.getId() == type_id) {
                         type1.setTests(test);
@@ -85,7 +85,7 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.log(Level.ERROR, e.getMessage());
-            throw new DAOSqlException("Exception in SQLTypeDAOImpl getTypeWithTests() method ", e);
+            throw new DAOSqlException("Exception in SQLTypeDAOImpl typeWithTests() method ", e);
         } finally {
            connectionPool.closeConnection(connection,statement,resultSet);
         }
@@ -94,14 +94,14 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
     }
 
 
-    private Type parseType(ResultSet resultSet) throws SQLException {
+    private Type buildType(ResultSet resultSet) throws SQLException {
         int idType = resultSet.getInt("tp_id");
         String titleType = resultSet.getString("tp_title");
         return new Type(idType, titleType);
 
     }
 
-    private Test parseTest(ResultSet resultSet) throws SQLException {
+    private Test buildTest(ResultSet resultSet) throws SQLException {
         int idTest = resultSet.getInt("tt_id");
         String titleTest = resultSet.getString("tt_title");
         return new Test(idTest, titleTest);

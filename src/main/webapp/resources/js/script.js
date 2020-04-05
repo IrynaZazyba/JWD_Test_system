@@ -16,7 +16,7 @@ formElem.onsubmit = async (e) => {
         console.log(json);
         document.getElementById('message').innerHTML = generateMessageDiv(json);
     } else {
-        alert("Ошибка HTTP: " + response.status);
+        alert("ERROR: " + response.status);
     }
 
 

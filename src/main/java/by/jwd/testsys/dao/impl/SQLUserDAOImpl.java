@@ -20,7 +20,7 @@ import java.util.List;
 public class SQLUserDAOImpl implements UserDAO {
 
     private static Logger logger = LogManager.getLogger();
-    private ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
+    private final ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
     private ConnectionPoolDAO connectionPool = connectionPoolFactory.getMySqlConnectionPoolDAO();
 
     private static final String SELECT_ALL_USERS = "SELECT id, login,password, first_name, last_name, role.title" +
@@ -51,7 +51,7 @@ public class SQLUserDAOImpl implements UserDAO {
 
             usersFromDB = new ArrayList<>();
             while (resultSet.next()) {
-                usersFromDB.add(parseUserFromDB(resultSet));
+                usersFromDB.add(buildUser(resultSet));
             }
         } catch (ConnectionPoolException e) {
             logger.log(Level.ERROR, e.getMessage());
@@ -114,7 +114,7 @@ public class SQLUserDAOImpl implements UserDAO {
 
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                user = parseUserFromDB(resultSet);
+                user = buildUser(resultSet);
             }
 
         } catch (ConnectionPoolException e) {
@@ -129,7 +129,7 @@ public class SQLUserDAOImpl implements UserDAO {
         return user;
     }
 
-    private static User parseUserFromDB(ResultSet resultSet) throws SQLException {
+    private static User buildUser(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("id");
         String login = resultSet.getString("login");
         String password = resultSet.getString("password");
@@ -162,6 +162,7 @@ public class SQLUserDAOImpl implements UserDAO {
         return roleId;
     }
 
+    //todo return id user
     @Override
     public User getUserByLogin(String userLogin) throws DAOException {
         User user = null;
@@ -174,7 +175,7 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setString(1, userLogin);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                user = parseUserFromDB(resultSet);
+                user = buildUser(resultSet);
             }
         } catch (ConnectionPoolException | SQLException e) {
             logger.log(Level.ERROR, e.getMessage());
@@ -197,7 +198,7 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                userById = parseUserFromDB(resultSet);
+                userById = buildUser(resultSet);
             }
         } catch (ConnectionPoolException | SQLException e) {
             logger.log(Level.ERROR, e.getMessage());

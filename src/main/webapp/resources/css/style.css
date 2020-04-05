@@ -1,3 +1,81 @@
+.text-tab-start-form.active {
+    color: #000000 !important;
+    /*#495057;*/
+    background-color: #87CABC !important;
+    border-color: #3EB489 #3EB489 #dee2e6 !important;
+    /*#dee2e6 #dee2e6 #fff;*/
+}
+
+.text-tab-start-form {
+    color: #3EB489;
+}
+
+.btn-sign-out {
+    color: black;
+    border-color: #3EB489;
+}
+
+.btn-sign-out:hover {
+    background-color: #FD3A5C;
+    border-color: #FD3A5C;
+}
+
+.text-button-start-form {
+    border: 2px solid #3EB489;
+    background-color: #ffffff;
+    color: black;
+}
+
+
+.lang-button {
+    margin-top: 15px;
+}
+
+.lang-button:hover {
+    background-color: #ffffff;
+    border-color: #3EB489;
+    color: black;
+}
+
+.text-button-start-form:hover {
+    border-color: #3EB489;
+    background-color: #3EB489;
+    color: black;
+
+}
+
+.logo-size {
+    height: 55px;
+}
+
+.start-nav-color {
+    color: #000000 !important;
+}
+
+li.nav-item:hover {
+    background-color: white;
+}
+
+.bor-nav-button {
+    border-left: 2px solid white;
+}
+
+.bor-last-button {
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+
+}
+
+.start-page-nav-itm {
+    height: 65px;
+}
+
+
+.p-t-b-0 {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
 .form form {
     width: 400px;
     margin: 0 auto;
@@ -13,133 +91,196 @@
     padding-top: 150px;
 }
 
-.p-l-27{
+.p-l-27 {
     padding-left: 27px;
 }
 
-.color-icon{
+.color-icon {
     color: #3EB489;
 }
 
-.p-top-7{
+.p-top-7 {
     padding-top: 7px;
 }
 
-.p-t-27{
+.p-t-27 {
     padding-top: 27px;
 }
 
-.p-left-7{
+.p-left-7 {
     padding-left: 27px;
 }
 
-.p-right-27{
+.p-right-27 {
     padding-right: 27px;
 }
 
-.p-r-0{
+.p-r-0 {
     padding-right: 0px;
 }
 
-.p-l-0{
+.p-l-0 {
     padding-left: 0px;
 }
 
-.cont{
+.cont {
     margin-left: 0;
     margin-right: 0;
-    height:100%;
+    height: 100%;
     width: 100%;
 }
 
-.p-0{
+.p-0 {
     padding: 0px;
 }
 
-.m-3-5-5-5{
+.m-3-5-5-5 {
     margin: 3px 5px 5px 5px;
 }
 
-.p-l-15{
+.p-l-15 {
     padding-left: 15px;
 }
 
-.wight-100{
+.p-r-15 {
+    padding-right: 15px;
+}
+
+.wight-100 {
     width: 100%;
 }
 
-.m-t-7{
+.m-t-7 {
     margin-top: 7px;
 }
 
-.m-0{
+.m-0 {
     margin: 0;
 }
 
-.icon-user{
-    margin-top: 10px;
+.m-t-17 {
+    margin-top: 17px;
 }
 
-.m-t-15{
+.icon-user {
+    margin-top: 19px;
+}
+
+.p-t-21 {
+    padding-top: 21px;
+}
+
+.m-t-15 {
     margin-top: 15px;
 }
 
-.txt-algn{
+
+.txt-algn {
     text-align: left;
 }
 
-.height-100{
-    height:100%;
+.height-100 {
+    height: 100%;
 }
 
-.background-gradient{
-    background: #ADD8E6;
+.background-gradient {
+    background: linear-gradient(to bottom, #49B791, #C5DDE8);
 
 }
 
-.height-90{
-    height:90%;
+
+.vertical-menu {
+    font-size: larger;
+    color: black;
 }
 
-.img-size{
+.vertical-menu:hover {
+    background-color: #ffffff;
+    color: black;
+
+}
+
+.vertical-menu.active {
+    background-color: #ffffff !important;
+    color: black !important;
+}
+
+.test-start-btn{
+    border-color: #FD3A5C;
+    text-decoration: none;
+    outline: none;
+    display: inline-block;
+    box-shadow: 0 0 40px 40px #FD3A5C inset, 0 0 0 0 #FD3A5C !important;
+
+
+    color: white;
+    transition: .15s ease-in-out;
+}
+.test-start-btn:hover {
+    box-shadow: 0 0 10px 0 #FD3A5C inset, 0 0 10px 4px #FD3A5C !important;
+    color: black !important;
+    background-color: white !important;
+    border-color: #FD3A5C;
+
+}
+
+
+
+
+
+.height-90 {
+    height: 90%;
+    width: 90%;
+
+}
+
+.img-size {
     width: 200px;
     height: 200px;
     display: block;
     margin: auto;
 }
 
-.round{
+.round {
     border-radius: 100px;
 }
 
 
-.body-background{
+.body-background {
     background-color: #f5fffe;
 }
 
-.color-white{
+.color-white {
     background-color: white;
 }
 
-.letter_style{
-    font-family: Arial,sans-serif;
+.letter_style {
+    font-family: Arial, sans-serif;
     font-style: normal;
     font-weight: 500;
 }
 
-.text-center{
+.text-center {
     text-align: center;
 }
 
-.menu-color{
+.menu-color {
     background: linear-gradient(45deg, #3EB489, #C5DDE8);
 
 }
 
-.p-t-25{
+.p-t-25 {
     padding-top: 25px;
 }
 
+.item-start {
+    padding-top: 19px;
+    font-size: larger;
+}
+
+.p-l-16 {
+    padding-left: 16px;
+}
 
 
 

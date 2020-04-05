@@ -91,21 +91,21 @@ public final class MySqlConnectionPoolDAOImpl implements ConnectionPoolDAO {
                 con.close();
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Connection isn't return to the pool.");
+            logger.log(Level.ERROR, "Connection isn't return to the pool.",e);
         }
         try {
             if (rs != null) {
                 rs.close();
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "ResultSet isn't closed.");
+            logger.log(Level.ERROR, "ResultSet isn't closed.",e);
         }
         try {
             if (st != null) {
                 st.close();
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Statement isn't closed.");
+            logger.log(Level.ERROR, "Statement isn't closed.",e);
         }
     }
 
@@ -114,13 +114,13 @@ public final class MySqlConnectionPoolDAOImpl implements ConnectionPoolDAO {
             if(con!=null&&con.getClass()==aClass){
             con.close();}
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Connection isn't return to thepool. ");
+            logger.log(Level.ERROR, "Connection isn't return to the pool.",e);
         }
         try {
             if(st!=null){
             st.close();}
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Statement isn't closed.");
+            logger.log(Level.ERROR, "Statement isn't closed.",e);
         }
     }
 
