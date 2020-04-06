@@ -31,97 +31,111 @@
 <fmt:message bundle="${loc}" key="button.language_en" var="button_language_en"/>
 <fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
 
-<div class="container-fluid cont">
+<div class="container-fluid p-0">
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #e3f2fd;">
-        <div class="row wight-100">
-            <div class="col-2">
-                <a class="navbar-brand" href="#"><h3>АСТ Тест</h3></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-            <div class="col-7">
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto">
+    <nav class="navbar navbar-expand-lg navbar-light  menu-color p-t-b-0 border-menu">
+        <a class="navbar-brand logo-color" href="#">
+            <img alt="logo" class="logo-size" src="resources/img/logo.png">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-                        <li class="nav-item">
-                            <a class="nav-link active"
-                               href="${pageContext.request.contextPath}/test?command=show_main_page">${nav_item_tests}</a>
-                        </li>
+        <div class="collapse navbar-collapse start-page-nav-itm max-w-nav" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto start-page-nav-itm">
 
-                        <c:if test="${sessionScope.user_role=='ADMIN'}">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        ${nav_item_admin} </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">${nav_item_admin_tests}</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">${nav_item_admin_users}</a>
-                                </div>
-                            </li>
-                        </c:if>
+                <li class="nav-item">
+                    <a class="nav-link  nav-vrl item-start"
+                       href="${pageContext.request.contextPath}/test?command=show_main_page">${nav_item_tests}</a>
+                </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">${nav_item_statistic}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">${nav_item_about}</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+                <c:if test="${sessionScope.user_role=='ADMIN'}">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle nav-vrl item-start" href="#" id="navbarDropdown"
+                           role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                ${nav_item_admin}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#">${nav_item_admin_tests}</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">${nav_item_admin_users}</a>
+                        </div>
+                    </li>
+                </c:if>
 
-
-            <div class="col-auto p-0 icon-user">
-                <i class="far fa-address-card fa-2x color-dodgerblue"></i>
-            </div>
-            <div class="col-auto m-t-15"><c:out value="${sessionScope.user_login}"/>
-            </div>
-            <div class="col-1">
-                <form action="test" method="POST" class="m-0">
-                    <input type="hidden" name="command" value="sign_out"/>
-                    <button type="submit" class="btn btn-outline-primary btn-md m-t-7">${button_sign_out}</button>
-                </form>
-            </div>
-            <div class="col-auto">
-                <div class="row">
-                    <div class="col p-0">
-                        <form action="test" method="POST" class="m-0">
-                            <input type="hidden" name="command" value="change_language"/>
-                            <input type="hidden" name="local" value="ru"/>
-                            <button type="submit"
-                                    class="btn btn-outline-info btn-md m-t-7">${button_language_ru}</button>
-                        </form>
-                    </div>
-                    <div class="col p-0">
-                        <form action="test" method="POST" class="m-0">
-                            <input type="hidden" name="command" value="change_language"/>
-                            <input type="hidden" name="local" value="en"/>
-                            <button type="submit"
-                                    class="btn btn-outline-info btn-md m-t-7">${button_language_en}</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
+                <li class="nav-item ">
+                    <a class="nav-link nav-vrl item-start" href="#">${nav_item_statistic}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link  nav-vrl item-start" href="#">${nav_item_about}</a>
+                </li>
+            </ul>
         </div>
+
+
+
+
+        <form action="test" method="POST" class="m-0">
+            <input type="hidden" name="command" value="change_language"/>
+            <input type="hidden" name="local" value="ru"/>
+            <button type="submit"
+                    class="btn ru"></button>
+        </form>
+
+        <form action="test" method="POST" class="m-0">
+            <input type="hidden" name="command" value="change_language"/>
+            <input type="hidden" name="local" value="en"/>
+            <button type="submit"
+                    class="btn en">
+
+            </button>
+        </form>
+
+
+
+
+        <ul class="navbar-nav mr-auto start-page-nav-itm p-l-21">
+
+            <li class="nav-item dropdown ">
+                <a class="nav-link dropdown-toggle user-detail " href="#" id="navbarDropdownUser" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="far fa-address-card fa-2x m-t-10"></i>
+                    <span class="user-name"><c:out value="${sessionScope.user_login}"/></span>
+                </a>
+
+
+                <div class="dropdown-menu p-t-b-0" aria-labelledby="navbarDropdown-User">
+                    <a class="dropdown-item user-drop-down p-t-b-5"
+                       href="${pageContext.request.contextPath}/test?command=show_user_account">
+                        Личный кабинет
+                    </a>
+                    <div class="dropdown-divider"></div>
+
+                    <form action="test" method="POST" class="m-0 txt-algn-center">
+                        <input type="hidden" name="command" value="sign_out"/>
+                        <button type="submit"
+                                class="btn btn-outline-primary btn-sign-out">${button_sign_out}</button>
+                    </form>
+
+                </div>
+            </li>
+        </ul>
 
     </nav>
 
     <div class="row height-90">
-        <div class="col-2 background-gradient height-100">
+        <div class="col-2 background-gradient height-100 p-l-15 p-r-0">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
 
-                <a class="nav-link active" id="v-pills-test-tab" data-toggle="pill" href="#v-pills-test"
+                <a class="nav-link active vertical-menu" id="v-pills-test-tab" data-toggle="pill" href="#v-pills-test"
                    role="tab"
                    aria-controls="v-pills-test" aria-selected="true">${nav_link_assigned_tests}</a>
 
-                <a class="nav-link " id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home"
+                <a class="nav-link vertical-menu " id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home"
                    role="tab"
                    aria-controls="v-pills-test" aria-selected="true">${nav_link_account_settings}</a>
             </div>
@@ -227,14 +241,11 @@
 
 </div>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
+        integrity=""        crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
+        integrity=""        crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
+        integrity=""        crossorigin="anonymous"></script>
 <script src="resources/js/script.js"></script>
 
 

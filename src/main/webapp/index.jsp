@@ -40,10 +40,8 @@
 
 
 <div class="container-fluid p-0">
-    <nav class="navbar navbar-expand-lg navbar-light menu-color p-t-b-0">
-        <div class="row wight-100">
-            <div class="col-2">
-                <a class="navbar-brand" href="#">
+    <nav class="navbar navbar-expand-lg navbar-light menu-color p-t-b-0 border-menu">
+                <a class="navbar-brand logo-color" href="#">
                     <img alt="logo" class="logo-size" src="resources/img/logo.png">
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -51,39 +49,40 @@
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-            </div>
-            <div class="col-9">
+
                 <div class="collapse navbar-collapse start-page-nav-itm" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto start-page-nav-itm">
-                        <li class="nav-item p-l-15 p-r-15">
-                            <a class="nav-link start-nav-color height-100 item-start" href="#">${nav_item_articles}</a>
+                        <li class="nav-item">
+                            <a class="nav-link start-nav-color height-100 nav-vrl item-start" href="#">${nav_item_articles}</a>
                         </li>
-                        <li class="nav-item p-l-15 p-r-15">
-                            <a class="nav-link start-nav-color height-100 item-start" href="#">${nav_item_about_us}</a>
+                        <li class="nav-item">
+                            <a class="nav-link start-nav-color height-100 nav-vrl item-start" href="#">${nav_item_about_us}</a>
                         </li>
                     </ul>
                 </div>
-            </div>
-            <div class="col-auto">
-                <div class="row">
-                    <div class="col p-0">
+
+
+
                         <form action="test" method="POST" class="m-0">
                             <input type="hidden" name="command" value="change_language"/>
                             <input type="hidden" name="local" value="ru"/>
-                            <button type="submit" class="btn btn-outline-info btn-md lang-button">${button_language_ru}</button>
-                        </form></div>
-                    <div class="col p-0">
+                            <button type="submit"
+                                    class="btn ru"></button>
+                        </form>
+
                         <form action="test" method="POST" class="m-0">
                             <input type="hidden" name="command" value="change_language"/>
                             <input type="hidden" name="local" value="en"/>
-                            <button type="submit" class="btn btn-outline-info btn-md lang-button">${button_language_en}</button>
-                        </form></div>
-                </div>
-            </div>
-        </div>
+                            <button type="submit"
+                                    class="btn en">
+
+                            </button>
+                        </form>
+
+
     </nav>
 
-    <div class="row align-items-center">
+    <div class="row align-items-center ">
         <div class="col-7">
             <div class="row p-t-25">
                 <div class="col text-center p-t-25">
@@ -334,14 +333,11 @@
 
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
+        integrity=""        crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
+        integrity=""        crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
+        integrity=""        crossorigin="anonymous" ></script>
 
 </body>
 </html>

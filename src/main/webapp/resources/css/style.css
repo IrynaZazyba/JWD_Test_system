@@ -1,9 +1,12 @@
 .text-tab-start-form.active {
     color: #000000 !important;
-    /*#495057;*/
     background-color: #87CABC !important;
     border-color: #3EB489 #3EB489 #dee2e6 !important;
-    /*#dee2e6 #dee2e6 #fff;*/
+}
+
+.body-img{
+    background-image: url("../img/img.jpg");
+    background-repeat: no-repeat;
 }
 
 .text-tab-start-form {
@@ -12,12 +15,17 @@
 
 .btn-sign-out {
     color: black;
-    border-color: #3EB489;
+    border: 1px solid white;
+    width: 100%;
 }
 
 .btn-sign-out:hover {
-    background-color: #FD3A5C;
-    border-color: #FD3A5C;
+    background-color:#D3D6DD;
+    border-color:#D3D6DD;
+}
+
+.txt-algn-center{
+    text-align: center;
 }
 
 .text-button-start-form {
@@ -26,10 +34,6 @@
     color: black;
 }
 
-
-.lang-button {
-    margin-top: 15px;
-}
 
 .lang-button:hover {
     background-color: #ffffff;
@@ -93,10 +97,6 @@ li.nav-item:hover {
 
 .p-l-27 {
     padding-left: 27px;
-}
-
-.color-icon {
-    color: #3EB489;
 }
 
 .p-top-7 {
@@ -183,55 +183,73 @@ li.nav-item:hover {
     height: 100%;
 }
 
-.background-gradient {
-    background: linear-gradient(to bottom, #49B791, #C5DDE8);
-
+.border-menu {
+    border-bottom: 2px solid #304960;
 }
 
+
+.background-gradient {
+    background-color: #304960;
+}
+
+.p-l-43 {
+    padding-left: 43px;
+}
+
+.logo-color {
+    background-color: #EDFFFF;
+}
 
 .vertical-menu {
     font-size: larger;
-    color: black;
+    color: white;
+    border-radius: 0rem !important;
 }
 
 .vertical-menu:hover {
-    background-color: #ffffff;
+    background-color: #EDFFFF;
     color: black;
 
 }
 
 .vertical-menu.active {
-    background-color: #ffffff !important;
+    background-color: #EDFFFF !important;
     color: black !important;
 }
 
-.test-start-btn{
-    border-color: #FD3A5C;
+.test-start-btn {
+    border-color: #508B00;
     text-decoration: none;
     outline: none;
     display: inline-block;
-    box-shadow: 0 0 40px 40px #FD3A5C inset, 0 0 0 0 #FD3A5C !important;
+    box-shadow: 0 0 40px 40px #508B00 inset, 0 0 0 0 #508B00 !important;
 
 
     color: white;
     transition: .15s ease-in-out;
 }
+
 .test-start-btn:hover {
-    box-shadow: 0 0 10px 0 #FD3A5C inset, 0 0 10px 4px #FD3A5C !important;
+    box-shadow: 0 0 10px 0 #383D1F inset, 0 0 10px 4px #383D1F!important;
     color: black !important;
     background-color: white !important;
-    border-color: #FD3A5C;
+    border-color: #383D1F;
 
 }
 
 
-
-
-
 .height-90 {
     height: 90%;
-    width: 90%;
+    width: 99%;
 
+}
+
+.p-l-21{
+    padding-left: 21px;
+}
+
+.max-w-nav{
+    max-width: 1000px;
 }
 
 .img-size {
@@ -265,9 +283,67 @@ li.nav-item:hover {
 }
 
 .menu-color {
-    background: linear-gradient(45deg, #3EB489, #C5DDE8);
+    background-image: url('../img/headers.jpg');
+}
+
+.user-detail {
+    height: 100%;
+    color: #4D4D52 !important;
+    background-color: #B3E1EE;
+}
+
+.user-name {
+    font-size: larger;
+    vertical-align: 5;
+    margin-left: 5px;
+}
+
+.en {
+    height: 20px;
+    background-size: contain;
+    background-image: url("../img/us.svg");
+    background-repeat: no-repeat;
+    margin-left: 5px;
 
 }
+
+.ru {
+    height: 20px;
+    background-size: contain;
+    background-image: url("../img/ru.svg");
+    background-repeat: no-repeat;
+    margin-left: 5px;
+
+}
+
+.m-r-15{
+    margin-right: 15px;
+}
+
+.user-drop-down:hover{
+    background-color: #B3E1EE;
+    color: black !important;
+}
+
+.p-t-b-5{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+
+
+.m-l-15{
+    margin-left: 15px;
+}
+
+.m-t-10 {
+    margin-top: 10px;
+}
+
+.p-l-35 {
+    padding-left: 35px;
+}
+
 
 .p-t-25 {
     padding-top: 25px;
@@ -278,8 +354,29 @@ li.nav-item:hover {
     font-size: larger;
 }
 
+.nav-vrl {
+    color: black !important;
+    padding: 19px 17px !important;
+}
+
+.nav-vrl:hover {
+    color: #ffffff !important;
+    background-color: #304960 !important;
+}
+
+.nav-vrl.active {
+    color: #ffffff !important;
+    background-color: #304960 !important;
+}
+
+
 .p-l-16 {
     padding-left: 16px;
+}
+
+.user-drop-down {
+    font-size: large;
+    color: black;
 }
 
 

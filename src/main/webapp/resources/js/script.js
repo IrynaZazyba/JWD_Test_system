@@ -2,6 +2,16 @@
  * Created by ladyi on 01.03.2020.
  */
 "use strict"
+
+
+$('a').on('click', function (e) {
+    $('#myTab a.active').removeClass('active');
+    $(this).tab('show');
+    console.log("fghj");
+})
+
+
+
 formElem.onsubmit = async (e) => {
     e.preventDefault();
 
@@ -42,4 +52,7 @@ function generateMessageDiv(json) {
     }
     return htmlCode;
 }
+
+
+
 

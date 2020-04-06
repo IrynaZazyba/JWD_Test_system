@@ -80,7 +80,7 @@ public class EditUser implements AjaxCommand {
         return answer;
     }
 
-    public Map<String,String> buildAnswer(Set<String> params, ResourceBundle bundle) {
+    private Map<String,String> buildAnswer(Set<String> params, ResourceBundle bundle) {
 
         Map<String, String> answer = new HashMap<>();
         for (String param : params) {
