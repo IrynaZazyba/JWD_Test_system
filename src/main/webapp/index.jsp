@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="resources/fontawesome-free-5.12.1-web/css/all.css">
 </head>
 <body>
+
+
 <fmt:setLocale value="${sessionScope.local}"/>
 <fmt:setBundle basename="local/local" var="loc"/>
 <fmt:message bundle="${loc}" key="label.field.login" var="lable_login"/>
@@ -33,7 +35,7 @@
 <fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
 <fmt:message bundle="${loc}" key="nav-item.about" var="nav_item_about_us"/>
 <fmt:message bundle="${loc}" key="message.exists_login" var="message_exists_login"/>
-
+<fmt:message bundle="${loc}" key="button.sign_out" var="button_sign_out"/>
 
 
 
@@ -41,7 +43,9 @@
 
 <div class="container-fluid p-0">
     <nav class="navbar navbar-expand-lg navbar-light menu-color p-t-b-0 border-menu">
-                <a class="navbar-brand logo-color" href="#">
+                <a class="navbar-brand logo-color"
+                href="${pageContext.request.contextPath}">
+
                     <img alt="logo" class="logo-size" src="resources/img/logo.png">
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -52,6 +56,12 @@
 
                 <div class="collapse navbar-collapse start-page-nav-itm" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto start-page-nav-itm">
+                        <c:if test="${not empty sessionScope.user_id}">
+                            <li class="nav-item">
+                                <a class="nav-link start-nav-color height-100 nav-vrl item-start"
+                                   href="${pageContext.request.contextPath}/test?command=show_main_page">Тесты</a>
+                            </li>
+                        </c:if>
                         <li class="nav-item">
                             <a class="nav-link start-nav-color height-100 nav-vrl item-start" href="#">${nav_item_articles}</a>
                         </li>
@@ -80,9 +90,41 @@
                         </form>
 
 
+        <c:if test="${not empty sessionScope.user_id}">
+        <ul class="navbar-nav mr-auto start-page-nav-itm p-l-21">
+
+            <li class="nav-item dropdown ">
+                <a class="nav-link dropdown-toggle user-detail " href="#" id="navbarDropdownUser" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="far fa-address-card fa-2x m-t-10"></i>
+                    <span class="user-name"><c:out value="${sessionScope.user_login}"/></span>
+                </a>
+
+
+                <div class="dropdown-menu p-t-b-0" aria-labelledby="navbarDropdown-User">
+                    <a class="dropdown-item user-drop-down p-t-b-5"
+                       href="${pageContext.request.contextPath}/test?command=show_user_account">
+                        Личный кабинет
+                    </a>
+                    <div class="dropdown-divider"></div>
+
+                    <form action="test" method="POST" class="m-0 txt-algn-center">
+                        <input type="hidden" name="command" value="sign_out"/>
+                        <button type="submit"
+                                class="btn btn-outline-primary btn-sign-out">${button_sign_out}</button>
+                    </form>
+
+                </div>
+            </li>
+        </ul>
+        </c:if>
+
+
     </nav>
 
     <div class="row align-items-center ">
+
+        <c:if test="${empty sessionScope.user_id}">
         <div class="col-7">
             <div class="row p-t-25">
                 <div class="col text-center p-t-25">
@@ -101,6 +143,30 @@
 
 
         </div>
+        </c:if>
+
+        <c:if test="${not empty sessionScope.user_id}">
+            <div class="col-12">
+                <div class="row p-t-25">
+                    <div class="col text-center p-t-25">
+                        <h4 class="letter_style">${message_start_page}</h4>
+                    </div>
+                </div>
+                <div class="row p-t-25">
+                    <div class="col"></div>
+                    <div class="col">
+
+                        <img src="resources/img/main-page-image.png"></div>
+
+                    <div class="col"></div>
+                </div>
+
+
+
+            </div>
+        </c:if>
+
+        <c:if test="${empty sessionScope.user_id}">
         <div class="col-4">
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -323,11 +389,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-1"></div>
 
             </div>
 
         </div>
+        </c:if>
+
+        <div class="col-1"></div>
+
     </div>
 </div>
 

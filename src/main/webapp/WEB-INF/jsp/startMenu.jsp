@@ -29,7 +29,7 @@
 
 
         <nav class="navbar navbar-expand-lg navbar-light  menu-color p-t-b-0 border-menu">
-                <a class="navbar-brand logo-color" href="#">
+                <a class="navbar-brand logo-color"  href="${pageContext.request.contextPath}">
                     <img alt="logo" class="logo-size" src="resources/img/logo.png">
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"

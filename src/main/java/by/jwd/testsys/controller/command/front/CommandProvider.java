@@ -26,11 +26,11 @@ public final class CommandProvider {
         return instance;
     }
 
-    public Command getCommand(String name) {
+    public Command getCommand(String name, String security) {
         CommandName commandName;
         Command command;
 
-        if (name == null) {
+        if (name == null||security!=null) {
             command = repository.get(CommandName.WRONG_REQUEST);
         } else {
 
