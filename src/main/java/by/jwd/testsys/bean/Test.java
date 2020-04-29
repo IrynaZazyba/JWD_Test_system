@@ -3,6 +3,7 @@ package by.jwd.testsys.bean;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,13 +18,50 @@ public class Test implements Serializable {
     private LocalDate deletedAt;
     private Type type;
     private Set<Question> questions;
+    private int countQuestion;
+    private Assignment assignment;
+
 
     public Test() {
+    }
+
+
+    public Test(int id, String title, int key, LocalTime duration, LocalDate deletedAt) {
+        this.id = id;
+        this.title = title;
+        this.key = key;
+        this.duration = duration;
+        this.deletedAt = deletedAt;
     }
 
     public Test(int id, String title) {
         this.id = id;
         this.title = title;
+    }
+
+    public Test(int id, String title, int countQuestion, int key,LocalTime duration) {
+        this.id = id;
+        this.title = title;
+        this.key = key;
+        this.duration = duration;
+        this.countQuestion=countQuestion;
+    }
+
+
+    public Assignment getAssignment() {
+        return assignment;
+    }
+
+    public void setAssignment(Assignment assignment) {
+        this.assignment = assignment;
+    }
+
+    public int getCountQuestion() {
+        return countQuestion;
+    }
+
+    public void setCountQuestion(int countQuestion) {
+        this.countQuestion = countQuestion;
     }
 
     public int getId() {
@@ -80,6 +118,13 @@ public class Test implements Serializable {
 
     public void setQuestions(Set<Question> questions) {
         this.questions = questions;
+    }
+
+    public void addQuestion(Question question) {
+        if (questions == null) {
+            questions = new HashSet<>();
+        }
+        questions.add(question);
     }
 
     public static long getSerialVersionUID() {

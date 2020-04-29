@@ -15,6 +15,7 @@ public class UserValidatorImpl implements UserValidator {
 
     public UserValidatorImpl() {
     }
+
     @Override
     public Set<String> validate(User user) {
 

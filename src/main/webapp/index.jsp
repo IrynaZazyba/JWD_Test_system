@@ -33,94 +33,14 @@
 <fmt:message bundle="${loc}" key="message.start_page" var="message_start_page"/>
 <fmt:message bundle="${loc}" key="button.language_en" var="button_language_en"/>
 <fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
-<fmt:message bundle="${loc}" key="nav-item.about" var="nav_item_about_us"/>
 <fmt:message bundle="${loc}" key="message.exists_login" var="message_exists_login"/>
 <fmt:message bundle="${loc}" key="button.sign_out" var="button_sign_out"/>
-
-
-
+<fmt:message bundle="${loc}" key="nav-item.about" var="nav_item_about"/>
 
 
 <div class="container-fluid p-0">
-    <nav class="navbar navbar-expand-lg navbar-light menu-color p-t-b-0 border-menu">
-                <a class="navbar-brand logo-color"
-                href="${pageContext.request.contextPath}">
 
-                    <img alt="logo" class="logo-size" src="resources/img/logo.png">
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse start-page-nav-itm" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto start-page-nav-itm">
-                        <c:if test="${not empty sessionScope.user_id}">
-                            <li class="nav-item">
-                                <a class="nav-link start-nav-color height-100 nav-vrl item-start"
-                                   href="${pageContext.request.contextPath}/test?command=show_main_page">Тесты</a>
-                            </li>
-                        </c:if>
-                        <li class="nav-item">
-                            <a class="nav-link start-nav-color height-100 nav-vrl item-start" href="#">${nav_item_articles}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link start-nav-color height-100 nav-vrl item-start" href="#">${nav_item_about_us}</a>
-                        </li>
-                    </ul>
-                </div>
-
-
-
-                        <form action="test" method="POST" class="m-0">
-                            <input type="hidden" name="command" value="change_language"/>
-                            <input type="hidden" name="local" value="ru"/>
-                            <button type="submit"
-                                    class="btn ru"></button>
-                        </form>
-
-                        <form action="test" method="POST" class="m-0">
-                            <input type="hidden" name="command" value="change_language"/>
-                            <input type="hidden" name="local" value="en"/>
-                            <button type="submit"
-                                    class="btn en">
-
-                            </button>
-                        </form>
-
-
-        <c:if test="${not empty sessionScope.user_id}">
-        <ul class="navbar-nav mr-auto start-page-nav-itm p-l-21">
-
-            <li class="nav-item dropdown ">
-                <a class="nav-link dropdown-toggle user-detail " href="#" id="navbarDropdownUser" role="button"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="far fa-address-card fa-2x m-t-10"></i>
-                    <span class="user-name"><c:out value="${sessionScope.user_login}"/></span>
-                </a>
-
-
-                <div class="dropdown-menu p-t-b-0" aria-labelledby="navbarDropdown-User">
-                    <a class="dropdown-item user-drop-down p-t-b-5"
-                       href="${pageContext.request.contextPath}/test?command=show_user_account">
-                        Личный кабинет
-                    </a>
-                    <div class="dropdown-divider"></div>
-
-                    <form action="test" method="POST" class="m-0 txt-algn-center">
-                        <input type="hidden" name="command" value="sign_out"/>
-                        <button type="submit"
-                                class="btn btn-outline-primary btn-sign-out">${button_sign_out}</button>
-                    </form>
-
-                </div>
-            </li>
-        </ul>
-        </c:if>
-
-
-    </nav>
+    <jsp:include page="WEB-INF/jsp/parts/nav-menu.jsp"/>
 
     <div class="row align-items-center ">
 
@@ -407,6 +327,8 @@
         integrity=""        crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity=""        crossorigin="anonymous" ></script>
+<script src="resources/js/script.js"></script>
+
 
 </body>
 </html>

@@ -43,7 +43,7 @@ public class SignIn implements Command {
                 session.setAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE, userByLogin.getId());
                 session.setAttribute(SessionAttributeName.USER_LOGIN_SESSION_ATTRIBUTE, userByLogin.getLogin());
                 session.setAttribute(SessionAttributeName.USER_ROLE_SESSION_ATTRIBUTE, userByLogin.getRole());
-                response.sendRedirect(request.getContextPath() + "/test?command=show_main_page");
+                response.sendRedirect(request.getContextPath());
             } else {
 
                 ResourceBundle resourceBundle = ResourceBundle.getBundle("local/local");

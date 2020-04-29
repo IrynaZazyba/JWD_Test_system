@@ -4,12 +4,12 @@
 "use strict"
 
 
-$('a').on('click', function (e) {
+$('li.nav-item a').on('click', function (e) {
+    // e.preventDefault();
     $('#myTab a.active').removeClass('active');
     $(this).tab('show');
     console.log("fghj");
 })
-
 
 
 formElem.onsubmit = async (e) => {
@@ -52,6 +52,116 @@ function generateMessageDiv(json) {
     }
     return htmlCode;
 }
+
+
+async function getQuestion() {
+
+
+    await sendAnswer();
+
+
+    let dataToGetQuestion = new FormData();
+    let test_id = document.getElementById("test_id").value;
+
+    if (document.getElementById("key_value") != null) {
+        let key = document.getElementById("key_value").value;
+        dataToGetQuestion.append("key", key);
+    }
+
+    dataToGetQuestion.append("command", "show_question");
+    dataToGetQuestion.append("test_id", test_id);
+
+    let response = await fetch("http://localhost:8080/test-system/ajax", {
+        method: 'POST',
+        body: dataToGetQuestion,
+
+    });
+
+
+    if (response.ok) {
+        if (document.getElementById('key') != null) {
+            document.getElementById('key').remove();
+            document.getElementById('conditions').remove();
+        }
+
+        let json = await response.json();
+
+        if (json.question != null) {
+            document.getElementById('quest').style.visibility = 'visible';
+            if (document.getElementById("js_quest") != null) {
+                let del = document.getElementById("js_quest");
+                del.parentNode.removeChild(del);
+            }
+            document.getElementById('quest').insertAdjacentHTML('afterbegin', generateCheckBox(json));
+        } else {
+
+            document.getElementById('complete').style.visibility = 'visible';
+            document.getElementById("exeTest").remove();
+            document.getElementById('complete').insertAdjacentHTML('afterbegin', generateButtonResult(json));
+
+        }
+
+    } else {
+
+        document.location.href = 'http://localhost:8080/test-system/errorPage.jsp';
+
+    }
+
+}
+
+function generateCheckBox(json) {
+
+    let htmlCode = "<div id=\"js_quest\"><h4 id=\"text_question\" class=\"name-test text-ctr\">" + json.question.question + "</h4><hr>" +
+        "<input type=\"hidden\" name=\"question_log_id\" value=\"" + json.question_log_id + "\">";
+
+    console.log(Object.keys(json.question.answers[0]));
+
+    for (let key of Object.keys(json.question.answers)) {
+        let idAnsw = json.question.answers[key].id;
+        htmlCode = htmlCode + "<div class=\"form-check check-box-style\">" +
+            "<input class=\"form-check-input \" name=\"answer\" type=\"checkbox\" value=\"" + idAnsw + "\" id=\"" + idAnsw + "\">" +
+            "<label class=\"form-check-label\" for=\"" + idAnsw + "\">" +
+            "<h5>" + json.question.answers[key].answer + "</h5>" +
+            "</label></div>";
+    }
+
+
+    return htmlCode + "</div>";
+
+}
+
+function generateButtonResult(json) {
+    return "<div class=\"row justify-content-center p-t-95\">" +
+        "<form action=\"ajax\" class=\"form-horizontal\" role=\"form\" method=\"POST\">" +
+        "<input type=\"hidden\" name=\"command\" value=\"get_result\"/>" +
+        "<input type=\"hidden\" name=\"assign_id\" value=\"" + json.assign_id + "\"/>" +
+        "<button type=\"submit\" class=\"card-exe-btn btn btn-outline-primary\">Show result</button>" +
+        "</form></div>"
+
+}
+
+async function sendAnswer() {
+
+    let startTest = document.getElementById("exeTest");
+
+    if (document.getElementById("js_quest") != null) {
+
+        let response = await fetch("http://localhost:8080/test-system/ajax", {
+            method: 'POST',
+            body: new FormData(startTest),
+
+        });
+
+        if (response.ok) {
+
+
+        } else {
+            console.log("error location");
+            document.location.href = 'http://localhost:8080/test-system/errorPage.jsp';
+        }
+    }
+}
+
 
 
 

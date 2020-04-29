@@ -17,7 +17,7 @@ public interface Command {
         if (requestDispatcher != null) {
             requestDispatcher.forward(request, response);
         } else {
-            throw new ForwardCommandException("Exception in forwardToPage() requestDispatcher==null.");
+            throw new ForwardCommandException("Exception in forwardToPage() requestDispatcher=null.");
         }
     }
 

@@ -15,10 +15,11 @@ public final class CommandProvider {
         repository.put(CommandName.SIGN_IN, new SignIn());
         repository.put(CommandName.SIGN_OUT, new SignOut());
         repository.put(CommandName.SIGN_UP, new SignUp());
-        repository.put(CommandName.SHOW_MAIN_PAGE, new ShowMainPage());
+        repository.put(CommandName.SHOW_TESTS_PAGE, new ShowTestsPage());
         repository.put(CommandName.SHOW_USER_ACCOUNT, new ShowUserPage());
         repository.put(CommandName.WRONG_REQUEST, new WrongRequest());
         repository.put(CommandName.CHANGE_LANGUAGE, new ChangeLocal());
+        repository.put(CommandName.SHOW_EXE_TEST_PAGE, new ShowExeTestPage());
 
     }
 

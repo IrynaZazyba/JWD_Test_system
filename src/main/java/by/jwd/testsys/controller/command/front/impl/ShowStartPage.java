@@ -27,19 +27,19 @@ public class ShowStartPage implements Command {
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        TestService testService = ServiceFactory.getInstance().getTestService();
-
-        HttpSession session = req.getSession();
-
-        try {
-            Set<Type> tests = testService.typeWithTests();
-            req.setAttribute(RequestParameterName.TESTS_TYPE_LIST, tests);
-            session.setAttribute(SessionAttributeName.COMMAND_NAME, CommandName.SHOW_MAIN_PAGE.toString());
-            forwardToPage(req, resp, JspPageName.START_MENU_PAGE);
-
-        } catch (ServiceException | ForwardCommandException e) {
-            logger.log(Level.ERROR,e.getMessage(),e);
-            resp.sendRedirect(JspPageName.ERROR_PAGE);
-        }
+//        TestService testService = ServiceFactory.getInstance().getTestService();
+//
+//        HttpSession session = req.getSession();
+//
+//        try {
+//            Set<Type> tests = testService.typeWithTests();
+//            req.setAttribute(RequestParameterName.TESTS_TYPE_LIST, tests);
+//            session.setAttribute(SessionAttributeName.COMMAND_NAME, CommandName.SHOW_TESTS_PAGE.toString());
+//            forwardToPage(req, resp, JspPageName.START_MENU_PAGE);
+//
+//        } catch (ServiceException | ForwardCommandException e) {
+//            logger.log(Level.ERROR,e.getMessage(),e);
+//            resp.sendRedirect(JspPageName.ERROR_PAGE);
+//        }
     }
 }

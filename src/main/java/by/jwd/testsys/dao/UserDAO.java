@@ -1,10 +1,13 @@
 package by.jwd.testsys.dao;
 
+import by.jwd.testsys.bean.Assignment;
+import by.jwd.testsys.bean.Result;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 
 import java.util.List;
+import java.util.Set;
 
 public interface UserDAO {
 
@@ -20,5 +23,8 @@ public interface UserDAO {
 
     User getUserByLogin(String login) throws DAOException;
 
+    Set<Assignment> getUserAssignment(int user_id);
+
+    Assignment getUserAssignmentByTestId(int user_id, int test_id);
 
 }

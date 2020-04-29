@@ -28,6 +28,7 @@ import java.util.ResourceBundle;
 public class SignUp implements Command {
     private static Logger logger = LogManager.getLogger();
 
+    //todo synchronized чтоб два не записались одновременно
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String login = request.getParameter(RequestParameterName.USER_LOGIN_PARAMETER);

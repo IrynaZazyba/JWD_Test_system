@@ -1,6 +1,9 @@
 package by.jwd.testsys.controller.command.ajax;
 
 import by.jwd.testsys.controller.command.ajax.impl.EditUser;
+import by.jwd.testsys.controller.command.ajax.impl.GetResult;
+import by.jwd.testsys.controller.command.ajax.impl.SaveAnswer;
+import by.jwd.testsys.controller.command.ajax.impl.ShowQuestion;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +16,10 @@ public final class AjaxCommandProvider {
 
     private AjaxCommandProvider() {
         repository.put(AjaxCommandName.EDIT_USER, new EditUser());
+        repository.put(AjaxCommandName.SHOW_QUESTION, new ShowQuestion());
+        repository.put(AjaxCommandName.GET_RESULT, new GetResult());
+        repository.put(AjaxCommandName.SAVE_ANSWER, new SaveAnswer());
+
     }
 
     public static AjaxCommandProvider getInstance() {

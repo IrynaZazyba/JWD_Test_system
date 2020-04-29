@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-@WebServlet(urlPatterns = "/test", name = "CoreController")
+@WebServlet(urlPatterns = "/test", name = "FrontController")
 public class FrontController extends HttpServlet {
 
     private static final long serialVersionUID = -7674451632663324163L;

@@ -21,7 +21,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Set;
 
-public class ShowMainPage implements Command {
+public class ShowTestsPage implements Command {
 
     private static Logger logger = LogManager.getLogger();
 
@@ -34,7 +34,7 @@ public class ShowMainPage implements Command {
         try {
             Set<Type> tests = testService.typeWithTests();
             req.setAttribute(RequestParameterName.TESTS_TYPE_LIST, tests);
-            session.setAttribute(SessionAttributeName.COMMAND_NAME, CommandName.SHOW_MAIN_PAGE.toString());
+            session.setAttribute(SessionAttributeName.COMMAND_NAME, CommandName.SHOW_TESTS_PAGE.toString());
             forwardToPage(req, resp, JspPageName.START_MENU_PAGE);
 
         } catch (ServiceException | ForwardCommandException e) {

@@ -1,5 +1,7 @@
 package by.jwd.testsys.dao.impl;
 
+import by.jwd.testsys.bean.Assignment;
+import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.dao.UserDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolDAO;
@@ -14,8 +16,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SQLUserDAOImpl implements UserDAO {
 
@@ -37,8 +42,15 @@ public class SQLUserDAOImpl implements UserDAO {
     private static final String UPDATE_USER = "UPDATE users SET login=?, password=?, first_name=?, last_name=?," +
             "role_id=? WHERE id=?";
 
+    private static final String SELECT_USER_ASSIGNMENT = "SELECT id, date, deadline, test_id " +
+            "FROM assignment where user_id=?";
+
+    private static final String SELECT_USER_ASSIGNMENT_BY_TEST_ID = "SELECT id, date, deadline " +
+            "FROM assignment where user_id=? AND test_id=?";
+
     @Override
     public List<User> getAll() throws DAOException {
+
         List<User> usersFromDB;
         Connection connection = null;
         Statement statement = null;
@@ -104,8 +116,8 @@ public class SQLUserDAOImpl implements UserDAO {
     public User getUserByLoginPassword(String login, String password) throws DAOException {
         User user = null;
         Connection connection = null;
-        PreparedStatement preparedStatement=null;
-        ResultSet resultSet=null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN_PASSWORD);
@@ -124,7 +136,7 @@ public class SQLUserDAOImpl implements UserDAO {
             logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("SQLException in getUsersByLogin() method", e);
         } finally {
-           connectionPool.closeConnection(connection, preparedStatement,resultSet);
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return user;
     }
@@ -141,8 +153,8 @@ public class SQLUserDAOImpl implements UserDAO {
 
     private int getRoleId(Role role) throws DAOSqlException {
         Connection connection = null;
-        PreparedStatement preparedStatement=null;
-        ResultSet resultSet=null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         int roleId = 0;
         try {
             connection = connectionPool.takeConnection();
@@ -157,7 +169,7 @@ public class SQLUserDAOImpl implements UserDAO {
             throw new DAOSqlException("SQLException in getRoleId() method", e);
 
         } finally {
-            connectionPool.closeConnection(connection, preparedStatement,resultSet);
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return roleId;
     }
@@ -167,8 +179,8 @@ public class SQLUserDAOImpl implements UserDAO {
     public User getUserByLogin(String userLogin) throws DAOException {
         User user = null;
         Connection connection = null;
-        PreparedStatement preparedStatement=null;
-        ResultSet resultSet=null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN);
@@ -181,7 +193,7 @@ public class SQLUserDAOImpl implements UserDAO {
             logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("SQLException in getUserByLogin() method", e);
         } finally {
-            connectionPool.closeConnection(connection, preparedStatement,resultSet);
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return user;
     }
@@ -190,8 +202,8 @@ public class SQLUserDAOImpl implements UserDAO {
     public User getUserById(int id) throws DAOException {
         User userById = null;
         Connection connection = null;
-        PreparedStatement preparedStatement=null;
-        ResultSet resultSet=null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(SELECT_USER_BY_ID);
@@ -205,7 +217,7 @@ public class SQLUserDAOImpl implements UserDAO {
             throw new DAOSqlException("SQLException in getUserById() method", e);
 
         } finally {
-           connectionPool.closeConnection(connection, preparedStatement,resultSet);
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return userById;
     }
@@ -213,7 +225,7 @@ public class SQLUserDAOImpl implements UserDAO {
     @Override
     public User updateUser(User user) throws DAOSqlException {
         Connection connection = null;
-        PreparedStatement preparedStatement=null;
+        PreparedStatement preparedStatement = null;
 
         User updatedUser = null;
         try {
@@ -232,10 +244,76 @@ public class SQLUserDAOImpl implements UserDAO {
             logger.log(Level.ERROR, e.getMessage());
             throw new DAOSqlException("SQLException updateUser() method", e);
         } finally {
-            connectionPool.closeConnection(connection,preparedStatement);
+            connectionPool.closeConnection(connection, preparedStatement);
         }
         return updatedUser;
     }
+
+    @Override
+    public Set<Assignment> getUserAssignment(int user_id) {
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Set<Assignment> assignments = new HashSet<>();
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_USER_ASSIGNMENT);
+            preparedStatement.setInt(1, user_id);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                User user = new User();
+                user.setId(user_id);
+                int id = resultSet.getInt("id");
+                LocalDate date = resultSet.getDate("date").toLocalDate();
+                LocalDate deadline = resultSet.getDate("deadline").toLocalDate();
+                int test_id = resultSet.getInt("test_id");
+                Test test = new Test();
+                test.setId(test_id);
+                Assignment assignment = new Assignment(id, user, date, deadline, test);
+                assignments.add(assignment);
+            }
+        } catch (ConnectionPoolException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
+        }
+        return assignments;
+    }
+
+
+    @Override
+    public Assignment getUserAssignmentByTestId(int user_id, int test_id) {
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Assignment assignment = null;
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_USER_ASSIGNMENT_BY_TEST_ID);
+            preparedStatement.setInt(1, user_id);
+            preparedStatement.setInt(2,test_id);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                User user = new User();
+                user.setId(user_id);
+                int id = resultSet.getInt("id");
+                LocalDate date = resultSet.getDate("date").toLocalDate();
+                LocalDate deadline = resultSet.getDate("deadline").toLocalDate();
+                Test test = new Test();
+                test.setId(test_id);
+                assignment = new Assignment(id, user, date, deadline, test);
+
+            }
+        } catch (ConnectionPoolException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
+        }
+        return assignment;
+    }
+
 
 
 }

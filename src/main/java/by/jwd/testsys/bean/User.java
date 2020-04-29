@@ -3,6 +3,7 @@ package by.jwd.testsys.bean;
 import by.jwd.testsys.logic.util.Role;
 
 import java.io.Serializable;
+import java.util.Set;
 
 public class User implements Serializable {
 
@@ -14,6 +15,8 @@ public class User implements Serializable {
     private String firstName;
     private String lastName;
     private Role role;
+    private Set<Assignment> assignment;
+
 
 
     public User() {
@@ -41,6 +44,14 @@ public class User implements Serializable {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public Set<Assignment> getAssignment() {
+        return assignment;
+    }
+
+    public void setAssignment(Set<Assignment> assignment) {
+        this.assignment = assignment;
     }
 
     public final int getId() {

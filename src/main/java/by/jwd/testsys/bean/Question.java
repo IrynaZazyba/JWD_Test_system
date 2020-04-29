@@ -2,6 +2,7 @@ package by.jwd.testsys.bean;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,6 +18,13 @@ public class Question implements Serializable {
 
     public Question(){
 
+    }
+
+    public void addAnswer(Answer answer){
+        if(answers==null){
+            answers=new HashSet<>();
+        }
+        answers.add(answer);
     }
 
     public int getId() {
