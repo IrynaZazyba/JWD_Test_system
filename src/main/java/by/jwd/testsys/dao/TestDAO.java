@@ -4,6 +4,8 @@ import by.jwd.testsys.bean.*;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,4 +29,6 @@ public interface TestDAO {
     Map<Integer, List<Integer>> getRightAnswersToQuestionByTestId(int testId) throws DAOSqlException;
 
     Integer getTestKey(int testId) throws DAOSqlException;
+
+    Timestamp getTestStartDateTime(int assignmentId) throws DAOSqlException;
 }

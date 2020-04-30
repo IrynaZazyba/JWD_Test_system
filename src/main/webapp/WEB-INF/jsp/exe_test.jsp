@@ -17,7 +17,18 @@
 </head>
 
 <body>
-
+<div class="row m-0">
+<div id="timer" class="row m-0" style="visibility: hidden">
+    <div id="countdown" class="countdown">
+        <div class="countdown-number">
+            <span class="minutes countdown-time"></span>
+            <span class="countdown-text">min</span>
+            <span class="seconds countdown-time"></span>
+            <span class="countdown-text">sec</span>
+        </div>
+    </div>
+</div>
+</div>
 
 <div class="row exe-main">
     <div class="col-2"></div>
@@ -63,7 +74,7 @@
                             </div>
                         </div>
                         <div id="quest" style="visibility: hidden">
-                        <button type="submit" class="card-exe-btn btn btn-right btn-outline-primary">Next</button>
+                            <button type="submit" class="card-exe-btn btn btn-right btn-outline-primary">Next</button>
                         </div>
 
                     </form>
@@ -74,7 +85,6 @@
                 </c:if>
             </div>
         </div>
-
 
 
     </div>

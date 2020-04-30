@@ -15,6 +15,8 @@ import com.google.gson.Gson;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,13 +25,14 @@ public class ShowQuestion implements AjaxCommand {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
+        String answer = null;
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         TestService testService = serviceFactory.getTestService();
         TestLogService testLogService = serviceFactory.getTestLogService();
 
 
         int test_id = Integer.parseInt(request.getParameter("test_id"));
-        Integer key = Integer.parseInt(request.getParameter("key"));
+        String key = request.getParameter("key");
 
         HttpSession session = request.getSession(false);
         int user_id = (int) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
@@ -37,30 +40,33 @@ public class ShowQuestion implements AjaxCommand {
 
         try {
 
-            //todo чтоб один раз только вынести вместе с проверкой assignment
-            if (key != null) {
-                testService.checkKey(key, test_id);
-            }
-            Assignment assignment = testService.exeTest(test_id, user_id);
+            Assignment assignment = testService.exeTest(test_id, user_id, key);
+
+            int questionLogId;
 
             Question questionByTestId = testService.getQuestionByTestId(assignment);
-            int questionLogId = 0;
+
 
             if (questionByTestId != null) {
                 questionLogId = testLogService.writeQuestionLog(questionByTestId.getId(), assignment.getId());
+
+                LocalDateTime startTestTime = testService.getStartTestTime(assignment.getId());
+                long time = Timestamp.valueOf(startTestTime).getTime();
 
                 Map<String, Object> map = new HashMap<>();
                 map.put("question", questionByTestId);
                 map.put("status", "ok");
                 map.put("question_log_id", questionLogId);
+                if(key!=null){
+                map.put("time_start", 30);}
                 Gson gson = new Gson();
-                return gson.toJson(map);
+                answer = gson.toJson(map);
             } else {
                 Map<String, Object> map = new HashMap<>();
                 map.put("assign_id", assignment.getId());
                 map.put("status", "ok");
                 Gson gson = new Gson();
-                return gson.toJson(map);
+                answer = gson.toJson(map);
             }
 
         } catch (TestLogServiceException | ImpossibleTestDataServiceException | TestServiceException e) {
@@ -70,6 +76,6 @@ public class ShowQuestion implements AjaxCommand {
             Gson gson = new Gson();
             return gson.toJson(map);
         }
-
+        return answer;
     }
 }

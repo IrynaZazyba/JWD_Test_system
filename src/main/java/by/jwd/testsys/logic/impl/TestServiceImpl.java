@@ -17,6 +17,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
@@ -61,7 +63,7 @@ public class TestServiceImpl implements TestService {
         Question question = null;
         try {
             int testId = assignment.getTest().getId();
-            if (checkResult(assignment.getId()) == null) {
+            if (getResult(assignment.getId()) == null) {
                 logger.log(Level.ERROR, "Incorrect data from client side");
                 throw new ImpossibleTestDataServiceException("Problem with params from client side");
             }
@@ -104,30 +106,38 @@ public class TestServiceImpl implements TestService {
 
     @Override
     //todo Переименовать
-    public Assignment exeTest(int testId, int userId) throws TestServiceException {
-
+    public Assignment exeTest(int testId, int userId, String key) throws TestServiceException {
         Assignment assignment = checkAssignment(userId, testId);
         if (assignment != null) {
 
-            Result result = checkResult(assignment.getId());
-            if (result == null) {
-                result = new Result();
-                logger.log(Level.INFO, LocalDateTime.now());
-                result.setDateStart(LocalDateTime.now());
-                result.setAssignment(assignment);
-                try {
-                    testDAO.insertResult(result);
-                } catch (DAOSqlException e) {
-                    throw new TestServiceException("DB problem", e);
-                }
+            try {
+                checkResult(assignment, key);
+            } catch (DAOSqlException e) {
+                throw new TestServiceException("DB problem", e);
             }
-
         }
+
         return assignment;
     }
 
+    private void checkResult(Assignment assignment, String key) throws TestServiceException, DAOSqlException {
+//todo exception
+        if (getResult(assignment.getId()) == null
+                && key != null
+                && checkKey(Integer.parseInt(key), assignment.getTest().getId())) {
+
+            Result testResult = testDAO.getTestResultByAssignmentId(assignment.getId());
+            if (testResult == null) {
+                testResult = new Result();
+                testResult.setDateStart(LocalDateTime.now());
+                testResult.setAssignment(assignment);
+                testDAO.insertResult(testResult);
+            }
+        }
+    }
+
     @Override
-    public Result checkResult(int assignmentId) throws TestServiceException {
+    public Result getResult(int assignmentId) throws TestServiceException {
         try {
             return testDAO.getTestResultByAssignmentId(assignmentId);
         } catch (DAOSqlException e) {
@@ -157,7 +167,7 @@ public class TestServiceImpl implements TestService {
     private void completeTest(Assignment assignment, LocalDateTime localDateTime) throws TestServiceException {
         try {
             testDAO.writeAssignment(assignment.getId(), true);
-            Result result = checkResult(assignment.getId());
+            Result result = getResult(assignment.getId());
             result = calculateResult(assignment, result, localDateTime);
             writeResultToDB(result);
         } catch (DAOSqlException e) {
@@ -205,5 +215,20 @@ public class TestServiceImpl implements TestService {
         testDAO.updateResult(result);
     }
 
+    @Override
+    public LocalDateTime getStartTestTime(int assignmentId) {
+        LocalDateTime localDateTime = null;
+        try {
+            Timestamp testStartDateTime = testDAO.getTestStartDateTime(assignmentId);
+            localDateTime = testStartDateTime.toLocalDateTime();
+            System.out.println("toLD " + localDateTime);
+            Duration duration = Duration.between(localDateTime, LocalDateTime.now());
+
+            System.out.println("duration " + duration);
+        } catch (DAOSqlException e) {
+            e.printStackTrace();
+        }
+        return localDateTime;
+    }
 
 }

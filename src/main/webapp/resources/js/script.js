@@ -87,11 +87,22 @@ async function getQuestion() {
         let json = await response.json();
 
         if (json.question != null) {
+
+
+            if (json.time_start!=null) {
+                console.log("timer null");
+                document.getElementById('timer').style.visibility = 'visible';
+                startTimer(json.time_start);
+            }
+
+
             document.getElementById('quest').style.visibility = 'visible';
             if (document.getElementById("js_quest") != null) {
                 let del = document.getElementById("js_quest");
                 del.parentNode.removeChild(del);
             }
+
+
             document.getElementById('quest').insertAdjacentHTML('afterbegin', generateCheckBox(json));
         } else {
 
@@ -141,6 +152,7 @@ function generateButtonResult(json) {
 }
 
 async function sendAnswer() {
+    console.log("send answer");
 
     let startTest = document.getElementById("exeTest");
 
@@ -153,6 +165,7 @@ async function sendAnswer() {
         });
 
         if (response.ok) {
+            console.log("ok");
 
 
         } else {
@@ -163,6 +176,43 @@ async function sendAnswer() {
 }
 
 
+function getTimeRemaining(endtime) {
+    let t = Date.parse(endtime) - Date.parse(new Date());
+    let seconds = Math.floor((t / 1000) % 60);
+    let minutes = Math.floor((t / 1000 / 60) % 60);
 
+    return {
+        'total': t,
+        'minutes': minutes,
+        'seconds': seconds
+    };
+}
+
+function initializeClock(id, endtime) {
+    let clock = document.getElementById(id);
+    let minutesSpan = clock.querySelector('.minutes');
+    let secondsSpan = clock.querySelector('.seconds');
+
+    function updateClock() {
+        let t = getTimeRemaining(endtime);
+
+        minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+        secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+        if (t.total <= 0) {
+            clearInterval(timeinterval);
+        }
+    }
+
+    updateClock();
+    let timeinterval = setInterval(updateClock, 1000);
+}
+
+function startTimer(deadlineTime) {
+
+    let deadline = new Date(Date.parse(new Date()) + deadlineTime * 60000); // for endless timer
+    initializeClock('countdown', deadline);
+
+}
 
 

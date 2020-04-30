@@ -5,6 +5,7 @@ import by.jwd.testsys.logic.exception.ImpossibleTestDataServiceException;
 import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.exception.TestServiceException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -18,9 +19,11 @@ public interface TestService {
 
     Test getTestInfo(int id) throws TestServiceException;
 
-    Assignment exeTest(int testId, int userId) throws TestServiceException;
+    Assignment exeTest(int testId, int userId,String key) throws TestServiceException;
 
-    Result checkResult(int assignmentId) throws TestServiceException;
+    Result getResult(int assignmentId) throws TestServiceException;
 
     boolean checkKey(Integer key, int testId) throws TestServiceException;
+
+    LocalDateTime getStartTestTime(int assignmentId);
 }
