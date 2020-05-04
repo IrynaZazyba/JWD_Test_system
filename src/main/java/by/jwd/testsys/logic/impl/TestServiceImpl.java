@@ -13,6 +13,7 @@ import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.ImpossibleTestDataServiceException;
 import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.exception.TestServiceException;
+import by.jwd.testsys.logic.exception.TimeIsOverServiceException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +22,7 @@ import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
 import java.util.*;
 
 public class TestServiceImpl implements TestService {
@@ -59,7 +61,7 @@ public class TestServiceImpl implements TestService {
 
 
     @Override
-    public Question getQuestionByTestId(Assignment assignment) throws TestServiceException, ImpossibleTestDataServiceException {
+    public Question getQuestionByTestId(Assignment assignment) throws TestServiceException, ImpossibleTestDataServiceException, TimeIsOverServiceException {
         Question question = null;
         try {
             int testId = assignment.getTest().getId();
@@ -71,6 +73,7 @@ public class TestServiceImpl implements TestService {
             question = testDAO.getQuestionByTestId(testId, assignment.getId());
 
             if (question != null) {
+                checkTestDuration(assignment);
                 Set<Answer> answersByQuestionId = testDAO.getAnswersByQuestionId(question.getId());
                 question.setAnswers(answersByQuestionId);
 
@@ -216,19 +219,40 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public LocalDateTime getStartTestTime(int assignmentId) {
+    public LocalDateTime getStartTestTime(int assignmentId) throws TestServiceException {
         LocalDateTime localDateTime = null;
         try {
             Timestamp testStartDateTime = testDAO.getTestStartDateTime(assignmentId);
             localDateTime = testStartDateTime.toLocalDateTime();
-            System.out.println("toLD " + localDateTime);
-            Duration duration = Duration.between(localDateTime, LocalDateTime.now());
 
-            System.out.println("duration " + duration);
         } catch (DAOSqlException e) {
-            e.printStackTrace();
+            throw new TestServiceException("DB problem", e);
         }
         return localDateTime;
+    }
+
+    @Override
+    public LocalTime getTestDuration(int assignmentId) throws TestServiceException {
+        LocalTime duration = null;
+        try {
+            duration = testDAO.getTestDuration(assignmentId);
+        } catch (DAOSqlException e) {
+            throw new TestServiceException("DB problem", e);
+        }
+        return duration;
+    }
+
+    private void checkTestDuration(Assignment assignment) throws TestServiceException, TimeIsOverServiceException {
+
+        int assignmentId = assignment.getId();
+        LocalTime testDuration = getTestDuration(assignmentId);
+        LocalDateTime startTestTime = getStartTestTime(assignmentId);
+        Duration duration = Duration.between(startTestTime, LocalDateTime.now());
+
+        if (duration.toSeconds() >= testDuration.toSecondOfDay()) {
+            throw new TimeIsOverServiceException("Time is over");
+        }
+
     }
 
 }

@@ -79,6 +79,8 @@ async function getQuestion() {
 
 
     if (response.ok) {
+
+
         if (document.getElementById('key') != null) {
             document.getElementById('key').remove();
             document.getElementById('conditions').remove();
@@ -86,37 +88,56 @@ async function getQuestion() {
 
         let json = await response.json();
 
-        if (json.question != null) {
+        if (json.time_is_over != null) {
+            console.log("time_is_over" + json.time_is_over);
+            hideQuestion();
+            document.getElementById('complete').insertAdjacentHTML('beforeend', generateButtonResult());
+            document.getElementById("timeIsEnded").style.visibility = 'visible';
+            document.getElementById("countdown").className = "hidden";
 
-
-            if (json.time_start!=null) {
-                console.log("timer null");
-                document.getElementById('timer').style.visibility = 'visible';
-                startTimer(json.time_start);
-            }
-
-
-            document.getElementById('quest').style.visibility = 'visible';
-            if (document.getElementById("js_quest") != null) {
-                let del = document.getElementById("js_quest");
-                del.parentNode.removeChild(del);
-            }
-
-
-            document.getElementById('quest').insertAdjacentHTML('afterbegin', generateCheckBox(json));
         } else {
 
-            document.getElementById('complete').style.visibility = 'visible';
-            document.getElementById("exeTest").remove();
-            document.getElementById('complete').insertAdjacentHTML('afterbegin', generateButtonResult(json));
+            if (json.question != null) {
+
+                if (json.duration != null) {
+                    document.getElementById('timer').style.visibility = 'visible';
+                    startTimer(json.duration);
+                }
+
+
+                document.getElementById('quest').style.visibility = 'visible';
+                if (document.getElementById("js_quest") != null) {
+                    let del = document.getElementById("js_quest");
+                    del.parentNode.removeChild(del);
+                }
+
+                document.getElementById("card-body").insertAdjacentHTML('afterbegin', generateHiddenAssignIdInput(json));
+                document.getElementById('quest').insertAdjacentHTML('afterbegin', generateCheckBox(json));
+            } else {
+
+                document.getElementById('complete').style.visibility = 'visible';
+                document.getElementById("exeTest").remove();
+                document.getElementById('complete').insertAdjacentHTML('afterbegin', generateButtonResult());
+
+            }
 
         }
-
     } else {
 
         document.location.href = 'http://localhost:8080/test-system/errorPage.jsp';
 
     }
+
+}
+
+
+function hideQuestion() {
+    document.getElementById('complete').style.visibility = 'visible';
+    document.getElementById("exeTest").remove();
+}
+
+function generateHiddenAssignIdInput(json) {
+    return "<input type=\"hidden\" id=\"assign_id\" name=\"assign_id\" value=\"" + json.assign_id + "\">";
 
 }
 
@@ -141,11 +162,12 @@ function generateCheckBox(json) {
 
 }
 
-function generateButtonResult(json) {
+function generateButtonResult() {
+    let assignId = document.getElementById("assign_id").value;
     return "<div class=\"row justify-content-center p-t-95\">" +
         "<form action=\"ajax\" class=\"form-horizontal\" role=\"form\" method=\"POST\">" +
         "<input type=\"hidden\" name=\"command\" value=\"get_result\"/>" +
-        "<input type=\"hidden\" name=\"assign_id\" value=\"" + json.assign_id + "\"/>" +
+        "<input type=\"hidden\" name=\"assign_id\" value=\"" + assignId + "\"/>" +
         "<button type=\"submit\" class=\"card-exe-btn btn btn-outline-primary\">Show result</button>" +
         "</form></div>"
 
@@ -166,7 +188,7 @@ async function sendAnswer() {
 
         if (response.ok) {
             console.log("ok");
-
+//todo
 
         } else {
             console.log("error location");
@@ -194,23 +216,27 @@ function initializeClock(id, endtime) {
     let secondsSpan = clock.querySelector('.seconds');
 
     function updateClock() {
-        let t = getTimeRemaining(endtime);
-
-        minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
-        secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+        var t = getTimeRemaining(endtime);
 
         if (t.total <= 0) {
+            hideQuestion();
+            document.getElementById('complete').insertAdjacentHTML('beforeend', generateButtonResult());
+            document.getElementById("timeIsEnded").style.visibility = 'visible';
+            document.getElementById("countdown").className = "hidden";
             clearInterval(timeinterval);
+            return true;
         }
+        minutesSpan.innerHTML = ("0" + t.minutes).slice(-2);
+        secondsSpan.innerHTML = ("0" + t.seconds).slice(-2);
     }
 
     updateClock();
-    let timeinterval = setInterval(updateClock, 1000);
+    var timeinterval = setInterval(updateClock, 1000);
 }
 
 function startTimer(deadlineTime) {
 
-    let deadline = new Date(Date.parse(new Date()) + deadlineTime * 60000); // for endless timer
+    let deadline = new Date(Date.parse(new Date()) + deadlineTime / 60 * 60000); // for endless timer
     initializeClock('countdown', deadline);
 
 }

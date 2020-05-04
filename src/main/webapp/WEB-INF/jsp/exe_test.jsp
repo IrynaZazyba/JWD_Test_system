@@ -4,12 +4,15 @@
 <head>
 
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
     <title>Welcome</title>
 
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="resources/css/style.css"/>
+    <link rel="stylesheet" href="resources/css/timer.css"/>
     <link rel="stylesheet" href="resources/fontawesome-free-5.12.1-web/css/all.css">
     <link rel="stylesheet" type="text/css" href="resources/css/test-card.css">
     <link rel="stylesheet" type="text/css" href="resources/css/exe-card.css">
@@ -17,6 +20,10 @@
 </head>
 
 <body>
+<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setBundle basename="local/local" var="loc"/>
+<fmt:message bundle="${loc}" key="message.json.time_is_over" var="message_time_is_over"/>
+
 <div class="row m-0">
 <div id="timer" class="row m-0" style="visibility: hidden">
     <div id="countdown" class="countdown">
@@ -39,7 +46,7 @@
                 <div class="ribbon ribbon-top-type-left"><span>ribbon</span></div>
 
             </div>
-            <div class="card-body mb-2 card-test">
+            <div id="card-body" class="card-body mb-2 card-test">
 
                 <div id="conditions" class="text-ctr">
                     <h3>На выполнение теста отведено ${requestScope.duration} минут. Количество
@@ -80,7 +87,8 @@
                     </form>
 
                     <div id="complete" style="visibility: hidden">
-
+                        <div  id="timeIsEnded"class="alert alert-danger" role="alert"  style="visibility: hidden">
+                       ${message_time_is_over}</div>
                     </div>
                 </c:if>
             </div>

@@ -53,6 +53,8 @@ public class SQLTestDAOImpl implements TestDAO {
 
     private static final String SELECT_START_TEST_DATE_TIME = "SELECT date_start FROM `result` WHERE assignment_id=?";
 
+    private static final String SELECT_TEST_TIME = "SELECT time FROM `test` WHERE id=(" +
+            "SELECT test_id FROM assignment WHERE id=?)";
 
     @Override
     public Question getQuestionByTestId(int id, int assigment_id) throws DAOException {
@@ -375,6 +377,33 @@ public class SQLTestDAOImpl implements TestDAO {
         }
 
         return dateStart;
+    }
+
+    @Override
+    public LocalTime getTestDuration(int assignmentId) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        LocalTime duration = null;
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_TEST_TIME);
+            preparedStatement.setInt(1, assignmentId);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                Time time = resultSet.getTime("time");
+                duration = time.toLocalTime();
+            }
+        } catch (ConnectionPoolException e) {
+            logger.log(Level.ERROR, "ConnectionPoolException in SQLTestLogDAOImpl method getTestStartDateTime", e);
+            throw new DAOSqlException("Exception in SQLTestLogDAOImpl method getTestStartDateTime", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestLogDAOImpl method getTestStartDateTime", e);
+            throw new DAOSqlException("Exception in SQLTestLogDAOImpl method getTestStartDateTime", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+        }
+        return duration;
     }
 
 
