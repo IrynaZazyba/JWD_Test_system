@@ -223,33 +223,33 @@ public class SQLTestDAOImpl implements TestDAO {
         }
     }
 
-    @Override
-    public Result getTestResultByAssignmentId(int assignmentId) throws DAOSqlException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        Result result = null;
-        try {
-            connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(SELECT_RESULT_BY_ASSIGNMENT_ID);
-            preparedStatement.setInt(1, assignmentId);
-            resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                result = new Result();
-                result.setId(resultSet.getInt("id"));
-            }
-        } catch (ConnectionPoolException e) {
-            logger.log(Level.ERROR, "ConnectionPoolException in SQLTestLogDAOImpl method getTestResultByAssignmentId", e);
-            throw new DAOSqlException("Exception in SQLTestLogDAOImpl method getTestResultByAssignmentId", e);
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "SQLException in SQLTestLogDAOImpl method getTestResultByAssignmentId", e);
-            throw new DAOSqlException("Exception in SQLTestLogDAOImpl method getTestResultByAssignmentId", e);
-        } finally {
-            connectionPool.closeConnection(connection, preparedStatement, resultSet);
-
-        }
-        return result;
-    }
+//    @Override
+//    public Result getTestResultByAssignmentId(int assignmentId) throws DAOSqlException {
+//        Connection connection = null;
+//        PreparedStatement preparedStatement = null;
+//        ResultSet resultSet = null;
+//        Result result = null;
+//        try {
+//            connection = connectionPool.takeConnection();
+//            preparedStatement = connection.prepareStatement(SELECT_RESULT_BY_ASSIGNMENT_ID);
+//            preparedStatement.setInt(1, assignmentId);
+//            resultSet = preparedStatement.executeQuery();
+//            if (resultSet.next()) {
+//                result = new Result();
+//                result.setId(resultSet.getInt("id"));
+//            }
+//        } catch (ConnectionPoolException e) {
+//            logger.log(Level.ERROR, "ConnectionPoolException in SQLTestLogDAOImpl method getTestResultByAssignmentId", e);
+//            throw new DAOSqlException("Exception in SQLTestLogDAOImpl method getTestResultByAssignmentId", e);
+//        } catch (SQLException e) {
+//            logger.log(Level.ERROR, "SQLException in SQLTestLogDAOImpl method getTestResultByAssignmentId", e);
+//            throw new DAOSqlException("Exception in SQLTestLogDAOImpl method getTestResultByAssignmentId", e);
+//        } finally {
+//            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+//
+//        }
+//        return result;
+//    }
 
 
     @Override

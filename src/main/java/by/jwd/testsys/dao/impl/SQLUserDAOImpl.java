@@ -42,10 +42,13 @@ public class SQLUserDAOImpl implements UserDAO {
     private static final String UPDATE_USER = "UPDATE users SET login=?, password=?, first_name=?, last_name=?," +
             "role_id=? WHERE id=?";
 
-    private static final String SELECT_USER_ASSIGNMENT = "SELECT id, date, deadline, test_id " +
+    private static final String SELECT_USER_ASSIGNMENT_BY_USER_ID = "SELECT id, date, deadline, test_id " +
             "FROM assignment where user_id=?";
 
-    private static final String SELECT_USER_ASSIGNMENT_BY_TEST_ID = "SELECT id, date, deadline " +
+    private static final String SELECT_USER_ASSIGNMENT_BY_ASSIGNMENT_ID = "SELECT id, date, deadline, test_id " +
+            "FROM assignment where id=?";
+
+    private static final String SELECT_USER_ASSIGNMENT_BY_TEST_ID = "SELECT id, date, deadline, test_id " +
             "FROM assignment where user_id=? AND test_id=?";
 
     @Override
@@ -227,7 +230,7 @@ public class SQLUserDAOImpl implements UserDAO {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
-        User updatedUser = null;
+        User updatedUser;
         try {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(UPDATE_USER);
@@ -254,23 +257,18 @@ public class SQLUserDAOImpl implements UserDAO {
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         Set<Assignment> assignments = new HashSet<>();
         try {
             connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(SELECT_USER_ASSIGNMENT);
+            preparedStatement = connection.prepareStatement(SELECT_USER_ASSIGNMENT_BY_USER_ID);
             preparedStatement.setInt(1, user_id);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 User user = new User();
                 user.setId(user_id);
-                int id = resultSet.getInt("id");
-                LocalDate date = resultSet.getDate("date").toLocalDate();
-                LocalDate deadline = resultSet.getDate("deadline").toLocalDate();
-                int test_id = resultSet.getInt("test_id");
-                Test test = new Test();
-                test.setId(test_id);
-                Assignment assignment = new Assignment(id, user, date, deadline, test);
+                Assignment assignment = buildAssignment(resultSet);
+                assignment.setUser(user);
                 assignments.add(assignment);
             }
         } catch (ConnectionPoolException | SQLException e) {
@@ -287,23 +285,19 @@ public class SQLUserDAOImpl implements UserDAO {
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         Assignment assignment = null;
         try {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(SELECT_USER_ASSIGNMENT_BY_TEST_ID);
             preparedStatement.setInt(1, user_id);
-            preparedStatement.setInt(2,test_id);
+            preparedStatement.setInt(2, test_id);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 User user = new User();
                 user.setId(user_id);
-                int id = resultSet.getInt("id");
-                LocalDate date = resultSet.getDate("date").toLocalDate();
-                LocalDate deadline = resultSet.getDate("deadline").toLocalDate();
-                Test test = new Test();
-                test.setId(test_id);
-                assignment = new Assignment(id, user, date, deadline, test);
+                assignment = buildAssignment(resultSet);
+                assignment.setUser(user);
 
             }
         } catch (ConnectionPoolException | SQLException e) {
@@ -314,6 +308,40 @@ public class SQLUserDAOImpl implements UserDAO {
         return assignment;
     }
 
+    @Override
+    public Assignment getUserAssignmentByAssignmentId(int assignmentId) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet;
+        Assignment assignment = null;
 
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_USER_ASSIGNMENT_BY_ASSIGNMENT_ID);
+            preparedStatement.setInt(1, assignmentId);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                assignment = buildAssignment(resultSet);
+            }
+        } catch (ConnectionPoolException | SQLException e) {
+            logger.log(Level.ERROR, e.getMessage());
+            throw new DAOSqlException("SQLException  SQLUserDAOImppl getUserAssignmentByAssignmentId() method", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
+        }
+        return assignment;
+    }
+
+    private Assignment buildAssignment(ResultSet resultSet) throws SQLException {
+
+        int id = resultSet.getInt("id");
+        LocalDate date = resultSet.getDate("date").toLocalDate();
+        LocalDate deadline = resultSet.getDate("deadline").toLocalDate();
+        int testId = resultSet.getInt("test_id");
+        Test test = new Test();
+        test.setId(testId);
+
+        return new Assignment(id, date, deadline, test);
+    }
 
 }

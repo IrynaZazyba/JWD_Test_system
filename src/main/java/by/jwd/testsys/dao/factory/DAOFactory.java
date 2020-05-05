@@ -1,9 +1,6 @@
 package by.jwd.testsys.dao.factory;
 
-import by.jwd.testsys.dao.TestDAO;
-import by.jwd.testsys.dao.TestLogDAO;
-import by.jwd.testsys.dao.TestTypeDAO;
-import by.jwd.testsys.dao.UserDAO;
+import by.jwd.testsys.dao.*;
 
 public interface DAOFactory {
 
@@ -12,4 +9,6 @@ public interface DAOFactory {
     TestDAO getTestDao();
 
     TestLogDAO getTestLogDao();
+
+    TestResultDAO getTestResultDao();
 }

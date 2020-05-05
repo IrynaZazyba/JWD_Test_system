@@ -27,4 +27,5 @@ public interface UserDAO {
 
     Assignment getUserAssignmentByTestId(int user_id, int test_id);
 
+    Assignment getUserAssignmentByAssignmentId(int assignmentId) throws DAOSqlException;
 }

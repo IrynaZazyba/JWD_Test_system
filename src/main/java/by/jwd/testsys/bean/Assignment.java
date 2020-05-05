@@ -13,13 +13,20 @@ public class Assignment {
 
     private TestLog testLog;
 
-    public Assignment(){
+    public Assignment() {
 
     }
 
     public Assignment(int id, User user, LocalDate asgmtDate, LocalDate deadline, Test test) {
         this.id = id;
         this.user = user;
+        this.asgmtDate = asgmtDate;
+        this.deadline = deadline;
+        this.test = test;
+    }
+
+    public Assignment(int id, LocalDate asgmtDate, LocalDate deadline, Test test) {
+        this.id = id;
         this.asgmtDate = asgmtDate;
         this.deadline = deadline;
         this.test = test;

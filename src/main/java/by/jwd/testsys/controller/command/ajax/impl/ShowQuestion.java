@@ -16,10 +16,7 @@ import com.google.gson.Gson;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoField;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +40,7 @@ public class ShowQuestion implements AjaxCommand {
         Assignment assignment=null;
         try {
 
-            assignment = testService.exeTest(test_id, user_id, key);
+            assignment = testService.checkAssignment(test_id, user_id, key);
             int questionLogId;
             Question questionByTestId = testService.getQuestionByTestId(assignment);
 

@@ -117,6 +117,7 @@ async function getQuestion() {
 
                 document.getElementById('complete').style.visibility = 'visible';
                 document.getElementById("exeTest").remove();
+                document.getElementById("countdown").className = "hidden";
                 document.getElementById('complete').insertAdjacentHTML('afterbegin', generateButtonResult());
 
             }
@@ -165,7 +166,7 @@ function generateCheckBox(json) {
 function generateButtonResult() {
     let assignId = document.getElementById("assign_id").value;
     return "<div class=\"row justify-content-center p-t-95\">" +
-        "<form action=\"ajax\" class=\"form-horizontal\" role=\"form\" method=\"POST\">" +
+        "<form action=\"test\" class=\"form-horizontal\" role=\"form\" method=\"GET\">" +
         "<input type=\"hidden\" name=\"command\" value=\"get_result\"/>" +
         "<input type=\"hidden\" name=\"assign_id\" value=\"" + assignId + "\"/>" +
         "<button type=\"submit\" class=\"card-exe-btn btn btn-outline-primary\">Show result</button>" +

@@ -1,14 +1,9 @@
 package by.jwd.testsys.dao.factory.impl;
 
-import by.jwd.testsys.dao.TestDAO;
-import by.jwd.testsys.dao.TestLogDAO;
-import by.jwd.testsys.dao.TestTypeDAO;
-import by.jwd.testsys.dao.UserDAO;
+import by.jwd.testsys.dao.*;
 import by.jwd.testsys.dao.factory.DAOFactory;
-import by.jwd.testsys.dao.impl.SQLTestDAOImpl;
-import by.jwd.testsys.dao.impl.SQLTestLogDAOImpl;
-import by.jwd.testsys.dao.impl.SQLTestTypeDAOImpl;
-import by.jwd.testsys.dao.impl.SQLUserDAOImpl;
+import by.jwd.testsys.dao.impl.*;
+import by.jwd.testsys.logic.TestResultService;
 
 public class SQLDAOFactory implements DAOFactory {
 
@@ -17,6 +12,7 @@ public class SQLDAOFactory implements DAOFactory {
     private final static TestTypeDAO typeDao = new SQLTestTypeDAOImpl();
     private final static TestDAO testDao = new SQLTestDAOImpl();
     private final static TestLogDAO testLogDao = new SQLTestLogDAOImpl();
+    private final static TestResultDAO testResultDao = new SQLTestResultDAOImpl();
 
 
     private SQLDAOFactory() {
@@ -44,6 +40,11 @@ public class SQLDAOFactory implements DAOFactory {
     @Override
     public TestLogDAO getTestLogDao() {
         return testLogDao;
+    }
+
+    @Override
+    public TestResultDAO getTestResultDao() {
+        return testResultDao;
     }
 
 }

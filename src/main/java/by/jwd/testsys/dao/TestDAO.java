@@ -23,7 +23,7 @@ public interface TestDAO {
 
     void updateResult(Result result) throws DAOSqlException;
 
-    Result getTestResultByAssignmentId(int assignmentId) throws DAOSqlException;
+   // Result getTestResultByAssignmentId(int assignmentId) throws DAOSqlException;
 
     void writeAssignment(int assignmentId, boolean isCompleted) throws DAOSqlException;
 

@@ -1,5 +1,6 @@
 package by.jwd.testsys.logic.impl;
 
+import by.jwd.testsys.bean.Assignment;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.dao.UserDAO;
 import by.jwd.testsys.dao.exception.DAOException;
@@ -21,6 +22,7 @@ public class UserServiceImpl implements UserService {
     private final DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
     private UserDAO userDao = daoFactory.getUserDao();
 
+    @Override
     public User userByLoginPassword(String userLogin, String userPassword) throws ServiceException {
 
         User userByLogin;
@@ -32,6 +34,7 @@ public class UserServiceImpl implements UserService {
         return userByLogin;
     }
 
+    @Override
     public User registerUser(User user) throws ServiceException, ExistsUserException {
         User userCreated;
         try {
@@ -50,6 +53,7 @@ public class UserServiceImpl implements UserService {
         return userCreated;
     }
 
+    @Override
     public User userInfoToAccount(int id) throws ServiceException {
         User userFromDB;
         try {
@@ -60,6 +64,7 @@ public class UserServiceImpl implements UserService {
         return userFromDB;
     }
 
+    @Override
     public User editUserInfo(User user) throws ServiceException, InvalidUserDataException {
         User updatedUser;
 
@@ -68,9 +73,7 @@ public class UserServiceImpl implements UserService {
 
         Set<String> validateResult = userValidator.validate(user);
 
-        if (validateResult.size() !=0) {
-            System.out.println(validateResult!=null);
-
+        if (validateResult.size() != 0) {
             throw new InvalidUserDataException("Invalid user data.", validateResult);
         }
 
@@ -81,4 +84,6 @@ public class UserServiceImpl implements UserService {
         }
         return updatedUser;
     }
+
+
 }

@@ -1,19 +1,18 @@
 package by.jwd.testsys.logic.impl;
 
 import by.jwd.testsys.bean.*;
-import by.jwd.testsys.dao.TestDAO;
-import by.jwd.testsys.dao.TestLogDAO;
-import by.jwd.testsys.dao.TestTypeDAO;
-import by.jwd.testsys.dao.UserDAO;
+import by.jwd.testsys.dao.*;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.factory.DAOFactoryProvider;
+import by.jwd.testsys.logic.TestResultService;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.ImpossibleTestDataServiceException;
 import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.exception.TestServiceException;
 import by.jwd.testsys.logic.exception.TimeIsOverServiceException;
+import by.jwd.testsys.logic.factory.ServiceFactory;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +21,6 @@ import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Period;
 import java.util.*;
 
 public class TestServiceImpl implements TestService {
@@ -31,13 +29,13 @@ public class TestServiceImpl implements TestService {
     private final DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
     private TestTypeDAO typeDAO = daoFactory.getTypeDao();
     private TestDAO testDAO = daoFactory.getTestDao();
+    private TestResultDAO testResultDAO = daoFactory.getTestResultDao();
     private UserDAO userDAO = daoFactory.getUserDao();
-    private TestLogDAO testLogDAO = daoFactory.getTestLogDao();
 
 
     @Override
     public List<Type> allTestsType() throws ServiceException {
-        List<Type> testsType = null;
+        List<Type> testsType;
         try {
             testsType = typeDAO.getAll();
         } catch (DAOException e) {
@@ -48,7 +46,7 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public Set<Type> typeWithTests() throws ServiceException {
-        Set<Type> testsType = null;
+        Set<Type> testsType;
 
         try {
             testsType = typeDAO.getTypeWithTests();
@@ -62,10 +60,11 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public Question getQuestionByTestId(Assignment assignment) throws TestServiceException, ImpossibleTestDataServiceException, TimeIsOverServiceException {
-        Question question = null;
+        Question question;
         try {
             int testId = assignment.getTest().getId();
-            if (getResult(assignment.getId()) == null) {
+            Result testResult = testResultDAO.getTestResult(assignment);
+            if (testResult == null) {
                 logger.log(Level.ERROR, "Incorrect data from client side");
                 throw new ImpossibleTestDataServiceException("Problem with params from client side");
             }
@@ -91,7 +90,7 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public Test getTestInfo(int id) throws TestServiceException {
-        Test test = null;
+        Test test;
         try {
             Test dbTest = testDAO.getTestInfo(id);
             Set<Question> questions = dbTest.getQuestions();
@@ -109,12 +108,17 @@ public class TestServiceImpl implements TestService {
 
     @Override
     //todo Переименовать
-    public Assignment exeTest(int testId, int userId, String key) throws TestServiceException {
+    public Assignment checkAssignment(int testId, int userId, String key) throws TestServiceException {
         Assignment assignment = checkAssignment(userId, testId);
         if (assignment != null) {
 
             try {
-                checkResult(assignment, key);
+
+                //todo норм ли один сервис вызывать в другом?
+                ServiceFactory serviceFactory = ServiceFactory.getInstance();
+                TestResultService testResultService = serviceFactory.getTestResultService();
+
+                testResultService.checkResult(assignment, key);
             } catch (DAOSqlException e) {
                 throw new TestServiceException("DB problem", e);
             }
@@ -123,30 +127,6 @@ public class TestServiceImpl implements TestService {
         return assignment;
     }
 
-    private void checkResult(Assignment assignment, String key) throws TestServiceException, DAOSqlException {
-//todo exception
-        if (getResult(assignment.getId()) == null
-                && key != null
-                && checkKey(Integer.parseInt(key), assignment.getTest().getId())) {
-
-            Result testResult = testDAO.getTestResultByAssignmentId(assignment.getId());
-            if (testResult == null) {
-                testResult = new Result();
-                testResult.setDateStart(LocalDateTime.now());
-                testResult.setAssignment(assignment);
-                testDAO.insertResult(testResult);
-            }
-        }
-    }
-
-    @Override
-    public Result getResult(int assignmentId) throws TestServiceException {
-        try {
-            return testDAO.getTestResultByAssignmentId(assignmentId);
-        } catch (DAOSqlException e) {
-            throw new TestServiceException("DB problem", e);
-        }
-    }
 
     @Override
     public boolean checkKey(Integer key, int testId) throws TestServiceException {
@@ -170,57 +150,25 @@ public class TestServiceImpl implements TestService {
     private void completeTest(Assignment assignment, LocalDateTime localDateTime) throws TestServiceException {
         try {
             testDAO.writeAssignment(assignment.getId(), true);
-            Result result = getResult(assignment.getId());
-            result = calculateResult(assignment, result, localDateTime);
-            writeResultToDB(result);
+            Result result = testResultDAO.getTestResult(assignment);
+
+            //todo норм ли один сервис вызывать в другом?
+            ServiceFactory serviceFactory = ServiceFactory.getInstance();
+            TestResultService testResultService = serviceFactory.getTestResultService();
+
+
+            result = testResultService.calculateResult(assignment, result, localDateTime);
+            testResultService.writeResultToDB(result);
         } catch (DAOSqlException e) {
             throw new TestServiceException("DB problem", e);
         }
 
     }
 
-    private Result calculateResult(Assignment assignment, Result result, LocalDateTime localDateTime) throws TestServiceException {
-
-        try {
-            TestLog testLogByAssignmentId = testLogDAO.getTestLog(assignment.getId());
-
-            Map<Integer, List<Integer>> rightAnswersToQuestionByTestId = testDAO.
-                    getRightAnswersToQuestionByTestId(assignment.getTest().getId());
-
-            Map<Integer, List<Integer>> userAnswerMap = testLogByAssignmentId.getQuestionAnswerMap();
-
-            int countRight = 0;
-
-            for (Map.Entry<Integer, List<Integer>> entry : userAnswerMap.entrySet()) {
-                Integer questionId = entry.getKey();
-                List<Integer> value = entry.getValue();
-                Collections.sort(value);
-
-                for (Map.Entry<Integer, List<Integer>> rightEntry : rightAnswersToQuestionByTestId.entrySet()) {
-                    List<Integer> rightAnswersList = rightEntry.getValue();
-                    Collections.sort(rightAnswersList);
-                    if (rightEntry.getKey().equals(questionId) && value.equals(rightAnswersList)) {
-                        countRight++;
-                        break;
-                    }
-                }
-            }
-            System.out.println(countRight);
-            result.setDateEnd(localDateTime);
-            result.setRightCountQuestion(countRight);
-        } catch (DAOSqlException e) {
-            throw new TestServiceException("DB problem", e);
-        }
-        return result;
-    }
-
-    private void writeResultToDB(Result result) throws DAOSqlException {
-        testDAO.updateResult(result);
-    }
 
     @Override
     public LocalDateTime getStartTestTime(int assignmentId) throws TestServiceException {
-        LocalDateTime localDateTime = null;
+        LocalDateTime localDateTime;
         try {
             Timestamp testStartDateTime = testDAO.getTestStartDateTime(assignmentId);
             localDateTime = testStartDateTime.toLocalDateTime();
@@ -233,7 +181,7 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public LocalTime getTestDuration(int assignmentId) throws TestServiceException {
-        LocalTime duration = null;
+        LocalTime duration;
         try {
             duration = testDAO.getTestDuration(assignmentId);
         } catch (DAOSqlException e) {
@@ -255,4 +203,15 @@ public class TestServiceImpl implements TestService {
 
     }
 
+    @Override
+    public Assignment getAssignment(int assignmentId) throws TestServiceException {
+        Assignment testAssignment = null;
+        try {
+            testAssignment = userDAO.getUserAssignmentByAssignmentId(assignmentId);
+        } catch (DAOSqlException e) {
+            throw new TestServiceException("DB problem", e);
+        }
+        return testAssignment;
+
+    }
 }

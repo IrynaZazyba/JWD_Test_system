@@ -21,13 +21,13 @@ public interface TestService {
 
     Test getTestInfo(int id) throws TestServiceException;
 
-    Assignment exeTest(int testId, int userId,String key) throws TestServiceException;
-
-    Result getResult(int assignmentId) throws TestServiceException;
+    Assignment checkAssignment(int testId, int userId, String key) throws TestServiceException;
 
     boolean checkKey(Integer key, int testId) throws TestServiceException;
 
     LocalDateTime getStartTestTime(int assignmentId) throws TestServiceException;
 
     LocalTime getTestDuration(int assignmentId) throws TestServiceException;
+
+    Assignment getAssignment(int assignmentId) throws TestServiceException;
 }
