@@ -10,17 +10,26 @@ public class Result {
     private int rightCountQuestion;
     private int testId;
     private Assignment assignment;
+    private int countTestQuestion;
 
 
+    public Result() {
+    }
 
-    public Result(){}
+    public Result(int id, LocalDateTime dateStart, LocalDateTime dateEnd, int countRight, Assignment assignment) {
+        this.id = id;
+        this.dateStart = dateStart;
+        this.dateEnd = dateEnd;
+        this.rightCountQuestion = countRight;
+        this.assignment = assignment;
+    }
 
-    public Result(int id, LocalDateTime dateStart, LocalDateTime dateEnd, int countRight, Assignment assignment){
-        this.id=id;
-        this.dateStart=dateStart;
-        this.dateEnd=dateEnd;
-        this.rightCountQuestion=countRight;
-        this.assignment=assignment;
+    public int getCountTestQuestion() {
+        return countTestQuestion;
+    }
+
+    public void setCountTestQuestion(int countTestQuestion) {
+        this.countTestQuestion = countTestQuestion;
     }
 
     public Assignment getAssignment() {

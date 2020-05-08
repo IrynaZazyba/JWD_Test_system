@@ -93,8 +93,7 @@ public class TestServiceImpl implements TestService {
         Test test;
         try {
             Test dbTest = testDAO.getTestInfo(id);
-            Set<Question> questions = dbTest.getQuestions();
-            int countQuestion = questions.size();
+            int countQuestion = testDAO.getCountQuestion(dbTest.getId());
             String title = dbTest.getTitle();
             LocalTime duration = dbTest.getDuration();
             int key = dbTest.getKey();

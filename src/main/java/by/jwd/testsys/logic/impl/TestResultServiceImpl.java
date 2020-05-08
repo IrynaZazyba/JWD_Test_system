@@ -17,7 +17,6 @@ import by.jwd.testsys.logic.factory.ServiceFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +32,7 @@ public class TestResultServiceImpl implements TestResultService {
     private TestDAO testDAO = daoFactory.getTestDao();
 
 
+    //todo надо ли или из дао тянуть
     @Override
     public Result getResult(Assignment assignment) throws TestServiceException {
         try {
@@ -83,6 +83,7 @@ public class TestResultServiceImpl implements TestResultService {
 //todo exception
         Result result = testResultDAO.getTestResult(assignment);
 
+        int testId = assignment.getTest().getId();
         //todo норм ли один сервис вызывать в другом?
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         TestService testService = serviceFactory.getTestService();
@@ -90,37 +91,35 @@ public class TestResultServiceImpl implements TestResultService {
 
         if (result == null
                 && key != null
-                && testService.checkKey(Integer.parseInt(key), assignment.getTest().getId())) {
+                && testService.checkKey(Integer.parseInt(key), testId)) {
 
+            //todo зачем два раза проверять на null
             Result testResult = testResultDAO.getTestResult(assignment);
             if (testResult == null) {
                 testResult = new Result();
                 testResult.setDateStart(LocalDateTime.now());
                 testResult.setAssignment(assignment);
-                testDAO.insertResult(testResult);
+                int countQuestion = testDAO.getCountQuestion(testId);
+                testResult.setCountTestQuestion(countQuestion);
+                testResultDAO.insertResult(testResult);
             }
         }
     }
 
     @Override
     public void writeResultToDB(Result result) throws DAOSqlException {
-        testDAO.updateResult(result);
+        testResultDAO.updateResult(result);
     }
 
     @Override
     public double calculatePercentageOfCorrectAnswers(Result result, Test test) {
 
-        ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        TestService testService = serviceFactory.getTestService();
-        double percentageOfCorrectAnswers;
-
-
         int countQuestion = test.getCountQuestion();
+        return (result.getRightCountQuestion() * 100) / countQuestion;
 
-        percentageOfCorrectAnswers = (result.getRightCountQuestion()*100)/countQuestion;
-
-
-        return percentageOfCorrectAnswers;
     }
+
+
+
 
 }

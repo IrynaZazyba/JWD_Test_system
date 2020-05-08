@@ -9,17 +9,15 @@ import by.jwd.testsys.controller.parameter.JspPageName;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.logic.TestResultService;
 import by.jwd.testsys.logic.TestService;
-import by.jwd.testsys.logic.UserService;
 import by.jwd.testsys.logic.exception.TestServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
-import org.apache.logging.log4j.Level;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class GetResult implements Command {
+public class DisplayStatistic implements Command {
 
 
     @Override

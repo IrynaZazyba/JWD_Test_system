@@ -19,11 +19,7 @@ public interface TestDAO {
 
     Test getTestInfo(int id) throws DAOException;
 
-    void insertResult(Result result) throws DAOSqlException;
-
-    void updateResult(Result result) throws DAOSqlException;
-
-   // Result getTestResultByAssignmentId(int assignmentId) throws DAOSqlException;
+    int getCountQuestion(int testId) throws DAOSqlException;
 
     void writeAssignment(int assignmentId, boolean isCompleted) throws DAOSqlException;
 

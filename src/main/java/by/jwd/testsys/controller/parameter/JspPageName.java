@@ -10,6 +10,8 @@ public final class JspPageName {
     public static final String START_MENU_PAGE = "WEB-INF/jsp/tests.jsp";
     public static final String START_JSP_PAGE = "index.jsp";
     public static final String TEST_RESULT_PAGE = "WEB-INF/jsp/result.jsp";
+    public static final String JSP_PAGE_PATH = "WEB-INF/jsp/userAccount.jsp";
+
 
 }
 

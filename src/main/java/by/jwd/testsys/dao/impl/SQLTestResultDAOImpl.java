@@ -23,6 +23,12 @@ public class SQLTestResultDAOImpl implements TestResultDAO {
     private final static String SELECT_TEST_RESULT = "SELECT id, date_start,date_end,right_count_quest FROM `result`" +
             " where assignment_id=?";
 
+
+    private static final String INSERT_RESULT = "INSERT INTO `result`(`date_start`,`right_count_quest`," +
+            "`all_count_question`, `assignment_id`) VALUES (?,?,?,?)";
+
+    private static final String UPDATE_RESULT_TABLE = "UPDATE result SET date_end=?,right_count_quest=? WHERE id=?";
+
     @Override
     public Result getTestResult(Assignment assignment) throws DAOSqlException {
         Connection connection = null;
@@ -39,7 +45,9 @@ public class SQLTestResultDAOImpl implements TestResultDAO {
                 Timestamp date_start = resultSet.getTimestamp("date_start");
                 LocalDateTime dateStart = date_start.toLocalDateTime();
                 Timestamp date_end = resultSet.getTimestamp("date_end");
-                LocalDateTime dateEnd = date_end.toLocalDateTime();
+                LocalDateTime dateEnd=null;
+                if(date_end!=null){
+                dateEnd = date_end.toLocalDateTime();}
                 int rightCountQuestions = resultSet.getInt("right_count_quest");
 
                 result = new Result(id, dateStart, dateEnd, rightCountQuestions,assignment);
@@ -49,11 +57,70 @@ public class SQLTestResultDAOImpl implements TestResultDAO {
             logger.log(Level.ERROR, "ConnectionPoolException in SQLTestResultDAOImpl method getTestResult", e);
             throw new DAOSqlException("Exception in SQLTestResultDAOImpl method getTestResult", e);
         } catch (SQLException e) {
+            //todo
             e.printStackTrace();
         } finally {
-            connectionPool.closeConnection(connection, preparedStatement);
+            connectionPool.closeConnection(connection, preparedStatement,resultSet);
         }
         return result;
 
     }
+
+
+    @Override
+    public void insertResult(Result result) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(INSERT_RESULT);
+
+            Timestamp timestamp = Timestamp.valueOf(result.getDateStart());
+            preparedStatement.setTimestamp(1, timestamp);
+            preparedStatement.setInt(2, result.getRightCountQuestion());
+            preparedStatement.setInt(3,result.getCountTestQuestion());
+            preparedStatement.setInt(4, result.getAssignment().getId());
+            preparedStatement.executeUpdate();
+
+        } catch (ConnectionPoolException e) {
+            logger.log(Level.ERROR, "ConnectionPoolException in SQLTestResultDAOImpl method insertResult", e);
+            throw new DAOSqlException("Exception in SQLTestResultDAOImpl method insertResult", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestResultDAOImpl method insertResult", e);
+            throw new DAOSqlException("Exception in SQLTestResultDAOImpl method insertResult", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
+
+        }
+
+    }
+
+
+    @Override
+    public void updateResult(Result result) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(UPDATE_RESULT_TABLE);
+            Timestamp timestamp = Timestamp.valueOf(result.getDateEnd());
+            preparedStatement.setTimestamp(1, timestamp);
+            preparedStatement.setInt(2, result.getRightCountQuestion());
+            preparedStatement.setInt(3, result.getId());
+            preparedStatement.executeUpdate();
+        } catch (ConnectionPoolException e) {
+            logger.log(Level.ERROR, "ConnectionPoolException in SQLTestLogDAOImpl method updateResult", e);
+            throw new DAOSqlException("Exception in SQLTestLogDAOImpl method updateResult", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestLogDAOImpl method updateResult", e);
+            throw new DAOSqlException("Exception in SQLTestLogDAOImpl method updateResult", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
+
+        }
+    }
+
+
+
+
 }
