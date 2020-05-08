@@ -57,7 +57,7 @@
             <c:if test="${not empty sessionScope.user_id}">
                 <li class="nav-item ">
                     <a class="nav-link nav-vrl item-start"
-                       href="#">${nav_item_statistic}</a>
+                       href="${pageContext.request.contextPath}/test?command=display_statistic">${nav_item_statistic}</a>
                 </li>
             </c:if>
 

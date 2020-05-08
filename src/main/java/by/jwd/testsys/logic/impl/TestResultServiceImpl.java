@@ -1,9 +1,6 @@
 package by.jwd.testsys.logic.impl;
 
-import by.jwd.testsys.bean.Assignment;
-import by.jwd.testsys.bean.Result;
-import by.jwd.testsys.bean.Test;
-import by.jwd.testsys.bean.TestLog;
+import by.jwd.testsys.bean.*;
 import by.jwd.testsys.dao.TestDAO;
 import by.jwd.testsys.dao.TestLogDAO;
 import by.jwd.testsys.dao.TestResultDAO;
@@ -21,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class TestResultServiceImpl implements TestResultService {
 
@@ -119,7 +117,14 @@ public class TestResultServiceImpl implements TestResultService {
 
     }
 
-
+    @Override
+    public Set<Statistic> getUserTestStatistic(int userId) throws TestServiceException {
+        try {
+            return testResultDAO.getUserTestStatistic(userId);
+        } catch (DAOSqlException e) {
+            throw new TestServiceException("DB problem", e);
+        }
+    }
 
 
 }

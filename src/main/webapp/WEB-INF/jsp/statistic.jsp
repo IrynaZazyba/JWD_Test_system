@@ -30,6 +30,21 @@
 
     <jsp:include page="parts/nav-menu.jsp"/>
 
+    <c:forEach var="item" items="${requestScope.statisticSet}">
+        <div><c:out value="${item.testTitle}"/>
+            <c:out value="${item.timeOnTest}"/>
+            <c:out value="${item.testStart}"/>
+            <c:out value="${item.testEnd}"/>
+            <c:out value="${item.rightCountQuestion}"/>
+            <c:out value="${item.allCountQuestion}"/>
+
+
+
+        </div>
+
+
+    </c:forEach>
+
 
 </div>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

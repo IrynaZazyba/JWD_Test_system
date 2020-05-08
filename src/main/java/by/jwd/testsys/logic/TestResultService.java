@@ -2,11 +2,13 @@ package by.jwd.testsys.logic;
 
 import by.jwd.testsys.bean.Assignment;
 import by.jwd.testsys.bean.Result;
+import by.jwd.testsys.bean.Statistic;
 import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 import by.jwd.testsys.logic.exception.TestServiceException;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 public interface TestResultService {
 
@@ -20,4 +22,6 @@ public interface TestResultService {
     void writeResultToDB(Result result) throws DAOSqlException;
 
     double calculatePercentageOfCorrectAnswers(Result result, Test test);
+
+    Set<Statistic> getUserTestStatistic(int userId) throws TestServiceException;
 }
