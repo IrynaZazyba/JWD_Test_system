@@ -53,8 +53,9 @@ public class SQLTestDAOImpl implements TestDAO {
             "WHERE test_id=?";
 
     public static final String GET_ASSIGNMENT_TESTS ="SELECT test.id as t_id, test.title as t_title, test.time as t_time," +
-            " type.title as type_title FROM test inner join assignment on test.id=assignment.test_id " +
-            "inner join type on type.id=test.type_id WHERE user_id=? and completed is null";
+            " count(question.id) as count_quest, type.title as type_title FROM test inner join question on question.test_id=test.id " +
+            "INNER JOIN assignment on assignment.test_id=test.id inner join type on test.type_id=type.id where assignment.user_id =? " +
+            "and completed is null group BY test.id";
 
     @Override
     public Set<Test> getAssignmentTest(int userId) throws DAOSqlException {
@@ -72,9 +73,10 @@ public class SQLTestDAOImpl implements TestDAO {
                 String testTitle = resultSet.getString("t_title");
                 LocalTime testTime= resultSet.getTime("t_time").toLocalTime();
                 String typeTitle=resultSet.getString("type_title");
+                int countQuestion=resultSet.getInt("count_quest");
                 Type testType=new Type();
                 testType.setTitle(typeTitle);
-                Test test = new Test(testId, testTitle,testType,testTime);
+                Test test = new Test(testId, testTitle,testType,testTime,countQuestion);
                 assignmentTests.add(test);
             }
 
