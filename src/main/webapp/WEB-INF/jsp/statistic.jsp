@@ -39,7 +39,6 @@
             <c:out value="${item.allCountQuestion}"/>
 
 
-
         </div>
 
 

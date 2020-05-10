@@ -57,6 +57,16 @@ public class TestServiceImpl implements TestService {
         return testsType;
     }
 
+    @Override
+    public Set<Test> getUserAssignmentTests(int userId) throws ServiceException {
+        Set<Test> assignmentTest = null;
+        try {
+            assignmentTest = testDAO.getAssignmentTest(userId);
+        } catch (DAOSqlException e) {
+            throw new ServiceException("Error in TestService typeWithTests() method", e);
+        }
+        return assignmentTest;
+    }
 
     @Override
     public Question getQuestionByTestId(Assignment assignment) throws TestServiceException, ImpossibleTestDataServiceException, TimeIsOverServiceException {

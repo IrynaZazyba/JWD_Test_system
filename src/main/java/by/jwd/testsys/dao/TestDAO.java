@@ -13,6 +13,8 @@ import java.util.Set;
 
 public interface TestDAO {
 
+    Set<Test> getAssignmentTest(int userId) throws DAOSqlException;
+
     Question getQuestionByTestId(int id, int assignment_id) throws DAOException;
 
     Set<Answer> getAnswersByQuestionId(int id) throws DAOSqlException;

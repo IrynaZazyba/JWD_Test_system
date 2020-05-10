@@ -23,7 +23,6 @@ import java.util.Set;
 
 public class ShowTestsPage implements Command {
 
-    private static Logger logger = LogManager.getLogger();
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,7 +37,6 @@ public class ShowTestsPage implements Command {
             forwardToPage(req, resp, JspPageName.START_MENU_PAGE);
 
         } catch (ServiceException | ForwardCommandException e) {
-            logger.log(Level.ERROR,e.getMessage(),e);
             resp.sendRedirect(JspPageName.ERROR_PAGE);
         }
     }

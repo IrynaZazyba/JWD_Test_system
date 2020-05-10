@@ -47,6 +47,12 @@ public class Test implements Serializable {
         this.countQuestion=countQuestion;
     }
 
+    public Test(int id, String title, Type testType,LocalTime duration) {
+        this.id = id;
+        this.title = title;
+        this.duration = duration;
+        this.type=testType;
+    }
 
     public Assignment getAssignment() {
         return assignment;

@@ -1,9 +1,6 @@
 package by.jwd.testsys.dao.impl;
 
-import by.jwd.testsys.bean.Answer;
-import by.jwd.testsys.bean.Question;
-import by.jwd.testsys.bean.Result;
-import by.jwd.testsys.bean.Test;
+import by.jwd.testsys.bean.*;
 import by.jwd.testsys.dao.TestDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolException;
@@ -54,6 +51,45 @@ public class SQLTestDAOImpl implements TestDAO {
 
     public static final String GET_COUNT_QUESTION_BY_TEST_ID = "SELECT count(id) as count_question FROM `question` " +
             "WHERE test_id=?";
+
+    public static final String GET_ASSIGNMENT_TESTS ="SELECT test.id as t_id, test.title as t_title, test.time as t_time," +
+            " type.title as type_title FROM test inner join assignment on test.id=assignment.test_id " +
+            "inner join type on type.id=test.type_id WHERE user_id=? and completed is null";
+
+    @Override
+    public Set<Test> getAssignmentTest(int userId) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Set<Test> assignmentTests = new HashSet<>();
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(GET_ASSIGNMENT_TESTS);
+            preparedStatement.setInt(1, userId);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int testId = resultSet.getInt("t_id");
+                String testTitle = resultSet.getString("t_title");
+                LocalTime testTime= resultSet.getTime("t_time").toLocalTime();
+                String typeTitle=resultSet.getString("type_title");
+                Type testType=new Type();
+                testType.setTitle(typeTitle);
+                Test test = new Test(testId, testTitle,testType,testTime);
+                assignmentTests.add(test);
+            }
+
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("Exception in SQLTestDAOImpl method getAssignmentTest", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getAssignmentTest", e);
+            throw new DAOSqlException("Exception in SQLTestDAOImpl method getAssignmentTest", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+
+        }
+        return assignmentTests;
+    }
+
 
     @Override
     public Question getQuestionByTestId(int id, int assigment_id) throws DAOException {
@@ -180,7 +216,7 @@ public class SQLTestDAOImpl implements TestDAO {
             logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getCountQuestion", e);
             throw new DAOSqlException("Exception in SQLTestDAOImpl method getCountQuestion", e);
         } finally {
-            connectionPool.closeConnection(connection, preparedStatement,resultSet);
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return countQuestion;
     }

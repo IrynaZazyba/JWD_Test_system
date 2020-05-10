@@ -9,6 +9,7 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="resources/fontawesome-free-5.12.1-web/css/all.css">
     <link rel="stylesheet" href="resources/css/style.css"/>
+    <link rel="stylesheet" href="resources/css/test-card.css"/>
 
 </head>
 <body>
@@ -135,6 +136,39 @@
                 </div>
                 <div class="tab-pane fade " id="v-pills-test" role="tabpanel" aria-labelledby="v-pills-test-tab">
 
+
+                    <div class="row m-t-35">
+                        <c:forEach var="item" items="${requestScope.userAssignedTests}">
+                            <div class="col-2 card-main">
+                                <div class="card-section card-section-third border rounded">
+                                    <div class="card-header card-header-third rounded">
+                                        <div class="ribbon ribbon-top-type-left"><span></span></div>
+                                        <div class="ribbon-type ribbon-top-asgmt-left"><span>${item.type.title}</span>
+                                        </div>
+
+                                    </div>
+                                    <div class="card-body text-center mb-2 card-test">
+                                        <h5 class="name-test">${item.title}</h5>
+                                        <hr>
+
+                                        <p class="card-text time-quest">10 min</p>
+                                        <p class="card-text time-quest">30 questions</p>
+
+
+                                    </div>
+                                    <form method="GET" action="test">
+                                        <input type="hidden" name="command" value="show_exe_test_page"/>
+                                        <input type="hidden" name="test_id" value="${item.id}"/>
+                                        <button type="submit"
+                                                class="card-btn btn btn-outline-primary d-block mx-auto">
+                                            Get started
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                    </div>
                 </div>
 
             </div>

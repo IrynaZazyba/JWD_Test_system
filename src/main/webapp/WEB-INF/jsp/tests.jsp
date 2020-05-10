@@ -79,19 +79,6 @@
                                         </form>
                                     </div>
                                 </div>
-                                <%--                                <div class="col-auto">--%>
-                                <%--                                    <div class="card" style="width: 18rem;">--%>
-                                <%--                                            &lt;%&ndash;                          <img src="..." class="card-img-top" alt="...">&ndash;%&gt;--%>
-                                <%--                                        <div class="card-body">--%>
-                                <%--                                            <h5 class="card-title"><c:out value="${itm.title}"/>--%>
-                                <%--                                            </h5>--%>
-                                <%--                                            <p class="card-text">Some quick example text to build on the card title and--%>
-                                <%--                                                make--%>
-                                <%--                                                up the bulk of the card's content.</p>--%>
-                                <%--                                            <a href="#" class="btn btn-primary test-start-btn">Переход куда-нибудь</a>--%>
-                                <%--                                        </div>--%>
-                                <%--                                    </div>--%>
-                                <%--                                </div>--%>
                             </c:forEach>
                         </div>
                     </div>
