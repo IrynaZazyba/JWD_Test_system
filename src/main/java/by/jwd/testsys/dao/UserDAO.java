@@ -23,9 +23,9 @@ public interface UserDAO {
 
     User getUserByLogin(String login) throws DAOException;
 
-    Set<Assignment> getUserAssignment(int user_id);
+    Set<Assignment> getUserAssignment(int user_id) throws DAOSqlException;
 
-    Assignment getUserAssignmentByTestId(int user_id, int test_id);
+    Assignment getUserAssignmentByTestId(int user_id, int test_id) throws DAOSqlException;
 
     Assignment getUserAssignmentByAssignmentId(int assignmentId) throws DAOSqlException;
 }

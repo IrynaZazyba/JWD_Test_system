@@ -54,9 +54,11 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
                 String typeTitle = resultSet.getString("title");
                 typesFromDB.add(new Type(typeId, typeTitle));
             }
-        } catch (ConnectionPoolException | SQLException e) {
-            logger.log(Level.ERROR, e.getMessage());
-            throw new DAOSqlException("Exception in SQLTypeDAOImpl getAll().", e);
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestTypeDAOImpl getAll() method.", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestTypeDAOImpl getAll() method",e);
+            throw new DAOSqlException("SQLException in SQLTestTypeDAOImpl getAll() method.", e);
         } finally {
             connectionPool.closeConnection(connection, statement, resultSet);
         }
@@ -85,11 +87,13 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
                         type1.setTests(test);
                     }
                 }
-
             }
-        } catch (SQLException | ConnectionPoolException e) {
-            logger.log(Level.ERROR, e.getMessage());
-            throw new DAOSqlException("Exception in SQLTypeDAOImpl typeWithTests() method ", e);
+        }  catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestTypeDAOImpl getTypeWithTests() method.", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestTypeDAOImpl getTypeWithTests() method",e);
+            throw new DAOSqlException("SQLException in SQLTestTypeDAOImpl getTypeWithTests() method.", e);
+
         } finally {
            connectionPool.closeConnection(connection,statement,resultSet);
         }
