@@ -33,7 +33,7 @@ public class ShowTestsPage implements Command {
         try {
             Set<Type> tests = testService.typeWithTests();
             req.setAttribute(RequestParameterName.TESTS_TYPE_LIST, tests);
-            session.setAttribute(SessionAttributeName.COMMAND_NAME, CommandName.SHOW_TESTS_PAGE.toString());
+            session.setAttribute(SessionAttributeName.QUERY_STRING, req.getQueryString());
             forwardToPage(req, resp, JspPageName.START_MENU_PAGE);
 
         } catch (ServiceException | ForwardCommandException e) {

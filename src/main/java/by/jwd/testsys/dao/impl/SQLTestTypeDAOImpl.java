@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,9 +29,12 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
     private ConnectionPoolDAO connectionPool = connectionPoolFactory.getMySqlConnectionPoolDAO();
 
     private static final String SELECT_ALL_TYPES = "SELECT id, title from type WHERE deleted_at IS null";
-    private static final String SELECT_TYPE_WITH_TESTS = "SELECT type.id as tp_id, type.title tp_title, test.id tt_id," +
-            " test.title tt_title, test.type_id FROM type INNER JOIN test ON test.type_id=type.id " +
-            "WHERE type.deleted_at IS null AND test.deleted_at IS null";
+
+    private static final String SELECT_TYPE_WITH_TESTS = "SELECT type.id as tp_id, type.title tp_title, " +
+            "test.time as t_time,test.id tt_id, test.title tt_title, test.type_id, count(question.id) as count_quest " +
+            "FROM type INNER JOIN test ON test.type_id=type.id inner join question on question.test_id=test.id " +
+            "WHERE type.deleted_at IS null AND test.deleted_at IS null AND question.deleted_at is null " +
+            "group by test.id;";
 
     @Override
     public List<Type> getAll() throws DAOException {
@@ -104,6 +108,8 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
     private Test buildTest(ResultSet resultSet) throws SQLException {
         int idTest = resultSet.getInt("tt_id");
         String titleTest = resultSet.getString("tt_title");
-        return new Test(idTest, titleTest);
+        LocalTime testDuration=resultSet.getTime("t_time").toLocalTime();
+        int countQuestion = resultSet.getInt("count_quest");
+        return new Test(idTest, titleTest,testDuration,countQuestion);
     }
 }

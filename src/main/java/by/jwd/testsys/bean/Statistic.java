@@ -1,8 +1,10 @@
 package by.jwd.testsys.bean;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
 
 public class Statistic implements Serializable {
 
@@ -12,6 +14,7 @@ public class Statistic implements Serializable {
     private LocalTime timeOnTest;
     private LocalDateTime testStart;
     private LocalDateTime testEnd;
+    private long minutesSpentOnTest;
     private int rightCountQuestion;
     private int allCountQuestion;
 
@@ -25,6 +28,8 @@ public class Statistic implements Serializable {
         this.testEnd = testEnd;
         this.rightCountQuestion = rightCountQuestion;
         this.allCountQuestion = allCountQuestion;
+        Duration duration=Duration.between(testStart,testEnd);
+        this.minutesSpentOnTest= Math.abs(duration.toMinutes());
     }
 
     public String getTestTitle() {
@@ -73,5 +78,13 @@ public class Statistic implements Serializable {
 
     public void setAllCountQuestion(int allCountQuestion) {
         this.allCountQuestion = allCountQuestion;
+    }
+
+    public long getMinutesSpentOnTest() {
+        return minutesSpentOnTest;
+    }
+
+    public void setMinutesSpentOnTest(long minutesSpentOnTest) {
+        this.minutesSpentOnTest = minutesSpentOnTest;
     }
 }

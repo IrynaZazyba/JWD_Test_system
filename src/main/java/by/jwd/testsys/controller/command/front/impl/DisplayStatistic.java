@@ -32,7 +32,7 @@ public class DisplayStatistic implements Command {
             TestResultService testResultService = serviceFactory.getTestResultService();
             Set<Statistic> userTestStatistic = testResultService.getUserTestStatistic(userId);
             request.setAttribute("statisticSet", userTestStatistic);
-
+            session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
             forwardToPage(request, response, JspPageName.STATISTIC_PAGE);
         } catch (ForwardCommandException | TestServiceException e) {
             response.sendRedirect(JspPageName.ERROR_PAGE);

@@ -25,16 +25,16 @@
 <fmt:message bundle="${loc}" key="message.json.time_is_over" var="message_time_is_over"/>
 
 <div class="row m-0">
-<div id="timer" class="row m-0" style="visibility: hidden">
-    <div id="countdown" class="countdown">
-        <div class="countdown-number">
-            <span class="minutes countdown-time"></span>
-            <span class="countdown-text">min</span>
-            <span class="seconds countdown-time"></span>
-            <span class="countdown-text">sec</span>
+    <div id="timer" class="row m-0" style="visibility: hidden">
+        <div id="countdown" class="countdown">
+            <div class="countdown-number">
+                <span class="minutes countdown-time"></span>
+                <span class="countdown-text">min</span>
+                <span class="seconds countdown-time"></span>
+                <span class="countdown-text">sec</span>
+            </div>
         </div>
     </div>
-</div>
 </div>
 
 <div class="row exe-main">
@@ -52,45 +52,45 @@
                     <h3>На выполнение теста отведено ${requestScope.duration} минут. Количество
                         вопросов ${requestScope.count_question}</h3></div>
 
-                <c:if test="${not empty requestScope.key}">
 
-                    <form onsubmit="getQuestion(); return false" id="exeTest" enctype="multipart/form-data"
-                          accept-charset="UTF-8" class="key-form" role="form">
-                        <input type="hidden" name="command" value="save_answer"/>
-                        <input type="hidden" id="test_id" name="test_id" value="${requestScope.test_id}"/>
-
+                <form onsubmit="getQuestion(); return false" id="exeTest" enctype="multipart/form-data"
+                      accept-charset="UTF-8" class="key-form" role="form">
+                    <input type="hidden" name="command" value="save_answer"/>
+                    <input type="hidden" id="test_id" name="test_id" value="${requestScope.test_id}"/>
+                    <c:if test="${not empty requestScope.key}">
                         <div id="key" class="text-ctr">
 
                             <div class="form-group">
                                 <div class="row justify-content-center">
 
-                                    <label class="col-sm-3 control-label p-0">Введите ключ</label>
+                                    <label class="col-sm-3 text-ctr control-label p-0">Введите ключ</label>
                                     <div class="col-sm-3">
                                         <input id="key_value" type="text" class="form-control" required
                                                name="key">
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="row justify-content-center">
-                                    <div class="col-sm-offset-2 col-sm-10 p-top-95">
-                                        <button type="submit" class="card-exe-btn btn btn-outline-primary">Запустить
-                                        </button>
-                                    </div>
-                                </div>
+                        </div>
+                    </c:if>
+                    <div class="form-group">
+                        <div class="row justify-content-center">
+                            <div class="col-sm-offset-2 col-sm-10 p-top-95">
+                                <button type="submit" class="card-exe-btn btn btn-outline-primary">Запустить
+                                </button>
                             </div>
                         </div>
-                        <div id="quest" style="visibility: hidden">
-                            <button type="submit" class="card-exe-btn btn btn-right btn-outline-primary">Next</button>
-                        </div>
-
-                    </form>
-
-                    <div id="complete" style="visibility: hidden">
-                        <div  id="timeIsEnded"class="alert alert-danger" role="alert"  style="visibility: hidden">
-                       ${message_time_is_over}</div>
                     </div>
-                </c:if>
+                    <div id="quest" style="visibility: hidden">
+                        <button type="submit" class="card-exe-btn btn btn-right btn-outline-primary">Next</button>
+                    </div>
+
+                </form>
+
+                <div id="complete" style="visibility: hidden">
+                    <div id="timeIsEnded" class="alert alert-danger" role="alert" style="visibility: hidden">
+                        ${message_time_is_over}</div>
+                </div>
+
             </div>
         </div>
 

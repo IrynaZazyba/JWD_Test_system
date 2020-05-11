@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 public class Test implements Serializable {
@@ -52,6 +51,13 @@ public class Test implements Serializable {
         this.title = title;
         this.duration = duration;
         this.type=testType;
+        this.countQuestion=countQuestion;
+    }
+
+    public Test(int id, String title,LocalTime duration, int countQuestion) {
+        this.id = id;
+        this.title = title;
+        this.duration = duration;
         this.countQuestion=countQuestion;
     }
 

@@ -55,7 +55,7 @@ public class SQLTestDAOImpl implements TestDAO {
     public static final String GET_ASSIGNMENT_TESTS ="SELECT test.id as t_id, test.title as t_title, test.time as t_time," +
             " count(question.id) as count_quest, type.title as type_title FROM test inner join question on question.test_id=test.id " +
             "INNER JOIN assignment on assignment.test_id=test.id inner join type on test.type_id=type.id where assignment.user_id =? " +
-            "and completed is null group BY test.id";
+            "and completed is null and question.deleted_at is null group BY test.id";
 
     @Override
     public Set<Test> getAssignmentTest(int userId) throws DAOSqlException {

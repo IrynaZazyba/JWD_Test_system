@@ -38,7 +38,7 @@ public class ShowUserPage implements Command {
             User userInfoToAccount = userService.userInfoToAccount(userId);
 
             req.setAttribute(RequestParameterName.USER_ACCOUNT_INFO, userInfoToAccount);
-            session.setAttribute(SessionAttributeName.COMMAND_NAME, CommandName.SHOW_USER_ACCOUNT.toString());
+            session.setAttribute(SessionAttributeName.QUERY_STRING,req.getQueryString());
             Set<Test> userAssignedTests=testService.getUserAssignmentTests(userId);
             req.setAttribute("userAssignedTests",userAssignedTests);
             forwardToPage(req, resp, JspPageName.JSP_PAGE_PATH);

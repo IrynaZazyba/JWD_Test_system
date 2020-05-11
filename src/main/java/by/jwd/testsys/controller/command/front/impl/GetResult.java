@@ -7,6 +7,7 @@ import by.jwd.testsys.controller.command.front.Command;
 import by.jwd.testsys.controller.command.front.ForwardCommandException;
 import by.jwd.testsys.controller.parameter.JspPageName;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
+import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.TestResultService;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.UserService;
@@ -17,6 +18,7 @@ import org.apache.logging.log4j.Level;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class GetResult implements Command {
@@ -29,6 +31,7 @@ public class GetResult implements Command {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         TestResultService testResultService = serviceFactory.getTestResultService();
         TestService testService = serviceFactory.getTestService();
+        HttpSession session = request.getSession();
 
 
         try {
@@ -40,7 +43,7 @@ public class GetResult implements Command {
 
             request.setAttribute("percentage", percentageOfCorrectAnswers);
             request.setAttribute(RequestParameterName.TEST_NAME, testInfo.getTitle());
-
+            session.setAttribute(SessionAttributeName.COMMAND_NAME, request.getQueryString());
             forwardToPage(request, response, JspPageName.TEST_RESULT_PAGE);
 
         } catch (ForwardCommandException | TestServiceException e) {

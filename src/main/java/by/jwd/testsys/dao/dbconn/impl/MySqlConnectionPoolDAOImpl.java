@@ -80,6 +80,7 @@ public final class MySqlConnectionPoolDAOImpl implements ConnectionPoolDAO {
             connection = connectionQueue.take();
             givenAwayConQueue.add(connection);
         } catch (InterruptedException e) {
+            logger.log(Level.ERROR,"InterruptedException in takeConnection() method", e);
             throw new ConnectionPoolException("Error connecting to the data source.", e);
         }
         return connection;

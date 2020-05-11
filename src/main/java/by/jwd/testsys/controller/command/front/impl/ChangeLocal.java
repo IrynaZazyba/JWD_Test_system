@@ -21,10 +21,10 @@ public class ChangeLocal implements Command {
         session.setAttribute(SessionAttributeName.LANGUAGE_ATTRIBUTE, local);
 
 
-        String command = (String) session.getAttribute(SessionAttributeName.COMMAND_NAME);
+        String queryString = (String) session.getAttribute(SessionAttributeName.QUERY_STRING);
 
-        if (command != null) {
-            response.sendRedirect(request.getContextPath() + "/test?command=" + command);
+        if (queryString != null) {
+            response.sendRedirect(request.getContextPath() + "/test?"+queryString);
         } else {
             response.sendRedirect(request.getContextPath());
         }

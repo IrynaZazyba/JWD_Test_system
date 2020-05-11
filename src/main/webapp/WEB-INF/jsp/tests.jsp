@@ -64,8 +64,8 @@
                                             <h5 class="name-test">${itm.title}</h5>
                                             <hr>
 
-                                            <p class="card-text time-quest">10 min</p>
-                                            <p class="card-text time-quest">30 questions</p>
+                                            <p class="card-text time-quest">${itm.duration} min</p>
+                                            <p class="card-text time-quest">${itm.countQuestion} questions</p>
 
 
                                         </div>
