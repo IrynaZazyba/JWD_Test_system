@@ -6,10 +6,7 @@ import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.TestLogService;
 import by.jwd.testsys.logic.TestService;
-import by.jwd.testsys.logic.exception.ImpossibleTestDataServiceException;
-import by.jwd.testsys.logic.exception.TestLogServiceException;
-import by.jwd.testsys.logic.exception.TestServiceException;
-import by.jwd.testsys.logic.exception.TimeIsOverServiceException;
+import by.jwd.testsys.logic.exception.*;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import com.google.gson.Gson;
 
@@ -40,16 +37,14 @@ public class ShowQuestion implements AjaxCommand {
         Assignment assignment=null;
         try {
 
-            assignment = testService.checkAssignment(test_id, user_id, key);
+            assignment = testService.checkPermission(test_id, user_id, key);
             int questionLogId;
             Question questionByTestId = testService.getQuestionByTestId(assignment);
 
 
             if (questionByTestId != null) {
                 questionLogId = testLogService.writeQuestionLog(questionByTestId.getId(), assignment.getId());
-
                 LocalTime testTime = testService.getTestDuration(assignment.getId());
-
                 long time = testTime.toSecondOfDay();
 
                 Map<String, Object> map = new HashMap<>();
@@ -80,6 +75,9 @@ public class ShowQuestion implements AjaxCommand {
             map.put("assign_id", assignment.getId());
             Gson gson = new Gson();
             return gson.toJson(map);
+        } catch (InvalidKeyException e) {
+            //todo если ключ неверный
+            System.out.println("!!!!!!! неверный ключ");
         }
         return answer;
     }

@@ -77,31 +77,21 @@ public class TestResultServiceImpl implements TestResultService {
     }
 
     @Override
-    public void checkResult(Assignment assignment, String key) throws TestServiceException, DAOSqlException {
-//todo exception
+    public void checkResult(Assignment assignment) throws TestServiceException, DAOSqlException {
+//todo exception DAO пробрасывать нельзя
         Result result = testResultDAO.getTestResult(assignment);
 
         int testId = assignment.getTest().getId();
-        //todo норм ли один сервис вызывать в другом?
-        ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        TestService testService = serviceFactory.getTestService();
 
-
-        if (result == null
-                && key != null
-                && testService.checkKey(Integer.parseInt(key), testId)) {
-
-            //todo зачем два раза проверять на null
-            Result testResult = testResultDAO.getTestResult(assignment);
-            if (testResult == null) {
-                testResult = new Result();
-                testResult.setDateStart(LocalDateTime.now());
-                testResult.setAssignment(assignment);
-                int countQuestion = testDAO.getCountQuestion(testId);
-                testResult.setCountTestQuestion(countQuestion);
-                testResultDAO.insertResult(testResult);
-            }
+        if (result == null) {
+            result = new Result();
+            result.setDateStart(LocalDateTime.now());
+            result.setAssignment(assignment);
+            int countQuestion = testDAO.getCountQuestion(testId);
+            result.setCountTestQuestion(countQuestion);
+            testResultDAO.insertResult(result);
         }
+
     }
 
     @Override

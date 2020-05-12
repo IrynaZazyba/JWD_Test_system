@@ -17,7 +17,7 @@ public interface TestResultService {
 
     Result calculateResult(Assignment assignment, Result result, LocalDateTime localDateTime) throws TestServiceException;
 
-    void checkResult(Assignment assignment, String key) throws TestServiceException, DAOSqlException;
+    void checkResult(Assignment assignment) throws TestServiceException, DAOSqlException;
 
     void writeResultToDB(Result result) throws DAOSqlException;
 

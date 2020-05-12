@@ -23,7 +23,9 @@ public interface TestDAO {
 
     int getCountQuestion(int testId) throws DAOSqlException;
 
-    void writeAssignment(int assignmentId, boolean isCompleted) throws DAOSqlException;
+    void updateAssignment(int assignmentId, boolean isCompleted) throws DAOSqlException;
+
+    Integer writeAssignment(Assignment assignment) throws DAOSqlException;
 
     Map<Integer, List<Integer>> getRightAnswersToQuestionByTestId(int testId) throws DAOSqlException;
 

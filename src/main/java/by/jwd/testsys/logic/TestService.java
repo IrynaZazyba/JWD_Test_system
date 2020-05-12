@@ -1,10 +1,7 @@
 package by.jwd.testsys.logic;
 
 import by.jwd.testsys.bean.*;
-import by.jwd.testsys.logic.exception.ImpossibleTestDataServiceException;
-import by.jwd.testsys.logic.exception.ServiceException;
-import by.jwd.testsys.logic.exception.TestServiceException;
-import by.jwd.testsys.logic.exception.TimeIsOverServiceException;
+import by.jwd.testsys.logic.exception.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -23,9 +20,11 @@ public interface TestService {
 
     Test getTestInfo(int id) throws TestServiceException;
 
-    Assignment checkAssignment(int testId, int userId, String key) throws TestServiceException;
+    Assignment checkPermission(int testId, int userId, String key) throws TestServiceException, InvalidKeyException;
 
     boolean checkKey(Integer key, int testId) throws TestServiceException;
+
+    Integer getTestKey(int testId) throws TestServiceException;
 
     LocalDateTime getStartTestTime(int assignmentId) throws TestServiceException;
 

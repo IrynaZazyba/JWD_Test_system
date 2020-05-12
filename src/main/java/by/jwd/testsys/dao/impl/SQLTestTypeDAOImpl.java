@@ -31,10 +31,10 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
     private static final String SELECT_ALL_TYPES = "SELECT id, title from type WHERE deleted_at IS null";
 
     private static final String SELECT_TYPE_WITH_TESTS = "SELECT type.id as tp_id, type.title tp_title, " +
-            "test.time as t_time,test.id tt_id, test.title tt_title, test.type_id, count(question.id) as count_quest " +
+            "test.time as tt_time,test.id tt_id, test.title tt_title, count(question.id) as count_quest " +
             "FROM type INNER JOIN test ON test.type_id=type.id inner join question on question.test_id=test.id " +
             "WHERE type.deleted_at IS null AND test.deleted_at IS null AND question.deleted_at is null " +
-            "group by test.id;";
+            "and test.key is null group by test.id;";
 
     @Override
     public List<Type> getAll() throws DAOException {
@@ -80,7 +80,7 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
                 Type type = buildType(resultSet);
                 typesFromDB.add(type);
 
-                int type_id = resultSet.getInt("type_id");
+                int type_id = resultSet.getInt("tp_id");
                 Test test = buildTest(resultSet);
                 for (Type type1 : typesFromDB) {
                     if (type1.getId() == type_id) {
@@ -112,7 +112,7 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
     private Test buildTest(ResultSet resultSet) throws SQLException {
         int idTest = resultSet.getInt("tt_id");
         String titleTest = resultSet.getString("tt_title");
-        LocalTime testDuration=resultSet.getTime("t_time").toLocalTime();
+        LocalTime testDuration=resultSet.getTime("tt_time").toLocalTime();
         int countQuestion = resultSet.getInt("count_quest");
         return new Test(idTest, titleTest,testDuration,countQuestion);
     }

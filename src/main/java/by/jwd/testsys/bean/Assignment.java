@@ -32,6 +32,13 @@ public class Assignment {
         this.test = test;
     }
 
+    public Assignment(User user, LocalDate asgmtDate,LocalDate deadline, Test test) {
+        this.user = user;
+        this.asgmtDate = asgmtDate;
+        this.deadline=deadline;
+        this.test = test;
+    }
+
     public int getId() {
         return id;
     }
@@ -46,14 +53,6 @@ public class Assignment {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public LocalDate getAssgmtDate() {
-        return asgmtDate;
-    }
-
-    public void setAssgmtDate(LocalDate assgmtDate) {
-        this.asgmtDate = assgmtDate;
     }
 
     public LocalDate getDeadline() {
