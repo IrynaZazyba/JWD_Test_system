@@ -72,11 +72,13 @@
                             </div>
                         </div>
                     </c:if>
-                    <div class="form-group">
-                        <div class="row justify-content-center">
-                            <div class="col-sm-offset-2 col-sm-10 p-top-95">
-                                <button type="submit" class="card-exe-btn btn btn-outline-primary">Запустить
-                                </button>
+                    <div id="exeButton">
+                        <div class="form-group">
+                            <div class="row justify-content-center">
+                                <div class="col-sm-offset-2 col-sm-10 p-top-95">
+                                    <button type="submit" class="card-exe-btn btn btn-outline-primary">Запустить
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

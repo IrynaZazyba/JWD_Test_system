@@ -16,15 +16,19 @@ public interface TestService {
 
     Set<Test> getUserAssignmentTests(int userId) throws ServiceException;
 
-    Question getQuestionByTestId(Assignment assignment) throws TestServiceException, ImpossibleTestDataServiceException, TimeIsOverServiceException;
+    Question getQuestionByTestId(Assignment assignment) throws TestServiceException, TimeIsOverServiceException;
 
     Test getTestInfo(int id) throws TestServiceException;
 
-    Assignment checkPermission(int testId, int userId, String key) throws TestServiceException, InvalidKeyException;
+    Assignment receiveTestAssignment(int testId, int userId) throws TestServiceException, InvalidKeyException;
+
+    void checkPermission(int userId, int testId, String key) throws TestServiceException, InvalidKeyException, InvalidUserDataException;
 
     boolean checkKey(Integer key, int testId) throws TestServiceException;
 
     Integer getTestKey(int testId) throws TestServiceException;
+
+    void completeTest(Assignment assignment, LocalDateTime localDateTime) throws TestServiceException;
 
     LocalDateTime getStartTestTime(int assignmentId) throws TestServiceException;
 

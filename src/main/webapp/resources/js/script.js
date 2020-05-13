@@ -81,10 +81,15 @@ async function getQuestion() {
     if (response.ok) {
 
 
+        if (document.getElementById('conditions') != null) {
+            document.getElementById('conditions').remove();
+            document.getElementById('exeButton').remove();
+        }
+
         if (document.getElementById('key') != null) {
             document.getElementById('key').remove();
-            document.getElementById('conditions').remove();
         }
+
 
         let json = await response.json();
 
@@ -104,8 +109,8 @@ async function getQuestion() {
                     startTimer(json.duration);
                 }
 
-
                 document.getElementById('quest').style.visibility = 'visible';
+
                 if (document.getElementById("js_quest") != null) {
                     let del = document.getElementById("js_quest");
                     del.parentNode.removeChild(del);

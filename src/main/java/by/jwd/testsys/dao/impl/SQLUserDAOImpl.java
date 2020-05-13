@@ -49,7 +49,7 @@ public class SQLUserDAOImpl implements UserDAO {
             "FROM assignment where id=?";
 
     private static final String SELECT_USER_ASSIGNMENT_BY_TEST_ID = "SELECT id, date, deadline, test_id " +
-            "FROM assignment where user_id=? AND test_id=?";
+            "FROM assignment where user_id=? AND test_id=? AND completed='0'";
 
     @Override
     public List<User> getAll() throws DAOException {

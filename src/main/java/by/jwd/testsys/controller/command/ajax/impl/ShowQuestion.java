@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,10 +35,11 @@ public class ShowQuestion implements AjaxCommand {
         HttpSession session = request.getSession(false);
         int user_id = (int) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
 
-        Assignment assignment=null;
+        Assignment assignment = null;
         try {
 
-            assignment = testService.checkPermission(test_id, user_id, key);
+            testService.checkPermission(user_id, test_id, key);
+            assignment = testService.receiveTestAssignment(test_id, user_id);
             int questionLogId;
             Question questionByTestId = testService.getQuestionByTestId(assignment);
 
@@ -57,13 +59,17 @@ public class ShowQuestion implements AjaxCommand {
                 Gson gson = new Gson();
                 answer = gson.toJson(map);
             } else {
+
+                LocalDateTime testEndTime = LocalDateTime.now();
+                testService.completeTest(assignment, testEndTime);
+
                 Map<String, Object> map = new HashMap<>();
                 map.put("assign_id", assignment.getId());
                 Gson gson = new Gson();
                 answer = gson.toJson(map);
             }
 
-        } catch (TestLogServiceException | ImpossibleTestDataServiceException | TestServiceException e) {
+        } catch (TestLogServiceException | TestServiceException |InvalidUserDataException e) {
             response.setStatus(500);
             Map<String, Object> map = new HashMap<>();
             map.put("page", "errorPage.jsp");
@@ -71,7 +77,7 @@ public class ShowQuestion implements AjaxCommand {
             return gson.toJson(map);
         } catch (TimeIsOverServiceException e) {
             Map<String, Object> map = new HashMap<>();
-            map.put("time_is_over","true");
+            map.put("time_is_over", "true");
             map.put("assign_id", assignment.getId());
             Gson gson = new Gson();
             return gson.toJson(map);

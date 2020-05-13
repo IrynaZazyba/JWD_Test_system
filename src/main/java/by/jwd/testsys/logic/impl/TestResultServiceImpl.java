@@ -8,9 +8,7 @@ import by.jwd.testsys.dao.exception.DAOSqlException;
 import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.factory.DAOFactoryProvider;
 import by.jwd.testsys.logic.TestResultService;
-import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.TestServiceException;
-import by.jwd.testsys.logic.factory.ServiceFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,8 +39,8 @@ public class TestResultServiceImpl implements TestResultService {
     }
 
     @Override
-    public Result calculateResult(Assignment assignment, Result result, LocalDateTime localDateTime) throws TestServiceException {
-
+    public Result calculateResult(Assignment assignment) throws TestServiceException {
+        Result result = null;
         try {
             TestLog testLogByAssignmentId = testLogDAO.getTestLog(assignment.getId());
 
@@ -68,7 +66,7 @@ public class TestResultServiceImpl implements TestResultService {
                 }
             }
             System.out.println(countRight);
-            result.setDateEnd(localDateTime);
+            result = testResultDAO.getTestResult(assignment);
             result.setRightCountQuestion(countRight);
         } catch (DAOSqlException e) {
             throw new TestServiceException("DB problem", e);
@@ -77,25 +75,38 @@ public class TestResultServiceImpl implements TestResultService {
     }
 
     @Override
-    public void checkResult(Assignment assignment) throws TestServiceException, DAOSqlException {
-//todo exception DAO пробрасывать нельзя
-        Result result = testResultDAO.getTestResult(assignment);
+    public Result createResult(Assignment assignment) throws TestServiceException {
 
+        //todo builder
         int testId = assignment.getTest().getId();
 
-        if (result == null) {
-            result = new Result();
-            result.setDateStart(LocalDateTime.now());
-            result.setAssignment(assignment);
-            int countQuestion = testDAO.getCountQuestion(testId);
+        Result result = new Result();
+        result.setDateStart(LocalDateTime.now());
+        result.setAssignment(assignment);
+        int countQuestion = 0;
+        try {
+            countQuestion = testDAO.getCountQuestion(testId);
             result.setCountTestQuestion(countQuestion);
+
+        } catch (DAOSqlException e) {
+            throw new TestServiceException("DB problem", e);
+        }
+
+        return result;
+    }
+
+    @Override
+    public void writeResult(Result result) throws TestServiceException {
+        try {
             testResultDAO.insertResult(result);
+        } catch (DAOSqlException e) {
+            throw new TestServiceException("DB problem", e);
         }
 
     }
 
     @Override
-    public void writeResultToDB(Result result) throws DAOSqlException {
+    public void updateResult(Result result) throws DAOSqlException {
         testResultDAO.updateResult(result);
     }
 

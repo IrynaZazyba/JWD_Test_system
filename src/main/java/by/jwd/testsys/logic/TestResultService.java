@@ -7,7 +7,6 @@ import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 import by.jwd.testsys.logic.exception.TestServiceException;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 public interface TestResultService {
@@ -15,11 +14,13 @@ public interface TestResultService {
 
     Result getResult(Assignment assignment) throws TestServiceException;
 
-    Result calculateResult(Assignment assignment, Result result, LocalDateTime localDateTime) throws TestServiceException;
+    Result calculateResult(Assignment assignment) throws TestServiceException;
 
-    void checkResult(Assignment assignment) throws TestServiceException, DAOSqlException;
+    Result createResult(Assignment assignment) throws TestServiceException;
 
-    void writeResultToDB(Result result) throws DAOSqlException;
+    void writeResult(Result result) throws TestServiceException;
+
+    void updateResult(Result result) throws DAOSqlException;
 
     double calculatePercentageOfCorrectAnswers(Result result, Test test);
 

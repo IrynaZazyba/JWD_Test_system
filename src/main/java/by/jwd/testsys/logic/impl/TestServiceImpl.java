@@ -67,26 +67,17 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Question getQuestionByTestId(Assignment assignment) throws TestServiceException, ImpossibleTestDataServiceException, TimeIsOverServiceException {
+    //todo assign
+    public Question getQuestionByTestId(Assignment assignment) throws TestServiceException, TimeIsOverServiceException {
         Question question;
         try {
             int testId = assignment.getTest().getId();
-//            Result testResult = testResultDAO.getTestResult(assignment);
-//            if (testResult == null) {
-//                logger.log(Level.ERROR, "Incorrect data from client side");
-//                throw new ImpossibleTestDataServiceException("Problem with params from client side");
-//            }
-
             question = testDAO.getQuestionByTestId(testId, assignment.getId());
 
             if (question != null) {
                 checkTestDuration(assignment);
                 Set<Answer> answersByQuestionId = testDAO.getAnswersByQuestionId(question.getId());
                 question.setAnswers(answersByQuestionId);
-
-            } else {
-                LocalDateTime testEnded = LocalDateTime.now();
-                completeTest(assignment, testEnded);
             }
 
         } catch (DAOException e) {
@@ -114,47 +105,73 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    //todo Переименовать
-    public Assignment checkPermission(int testId, int userId, String key) throws TestServiceException, InvalidKeyException {
+    public Assignment receiveTestAssignment(int testId, int userId) throws TestServiceException, InvalidKeyException {
 
+
+        //todo validate key
         Assignment assignment = null;
         try {
             assignment = checkAssignment(userId, testId);
 
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
             TestResultService testResultService = serviceFactory.getTestResultService();
+
             Integer testKey = testDAO.getTestKey(testId);
+            Result result = null;
 
-            if (testKey != 0 && assignment != null) {
-                Result result = testResultService.getResult(assignment);
-
-                if (result == null) {
-                    boolean b = checkKey(Integer.parseInt(key), testId);
-                    if (!b) {
-                        logger.log(Level.ERROR, "Invalid key");
-                        throw new InvalidKeyException("Invalid key");
-                    }
-                    testResultService.checkResult(assignment);
-
-                }
-            } else if(assignment==null){
-                    Test test = new Test();
-                    test.setId(testId);
-                    User user = new User();
-                    user.setId(userId);
-                    assignment = new Assignment(user, LocalDate.now(), LocalDate.now().plusDays(7), test);
-                    Integer integer = testDAO.writeAssignment(assignment);
-                    assignment.setId(integer);
-                    testResultService.checkResult(assignment);
+            if (assignment == null && testKey == 0) {
+                Test test = new Test();
+                test.setId(testId);
+                User user = new User();
+                user.setId(userId);
+                assignment = new Assignment(user, LocalDate.now(), LocalDate.now().plusDays(7), test);
+                Integer integer = testDAO.writeAssignment(assignment);
+                assignment.setId(integer);
+                result = testResultService.createResult(assignment);
+                testResultService.writeResult(result);
             }
+
         } catch (DAOSqlException e) {
             throw new TestServiceException("DB problem", e);
         }
 
-
         return assignment;
     }
 
+    @Override
+    public void checkPermission(int userId, int testId, String key) throws TestServiceException, InvalidKeyException, InvalidUserDataException {
+
+        ServiceFactory serviceFactory = ServiceFactory.getInstance();
+        TestResultService testResultService = serviceFactory.getTestResultService();
+
+        Assignment assignment = null;
+        try {
+            assignment = checkAssignment(userId, testId);
+            Integer testKey = testDAO.getTestKey(testId);
+            Result result = null;
+
+
+            if (testKey != 0 && assignment == null) {
+                throw new InvalidUserDataException("Impossible user operation");
+            }
+
+            if (testKey != 0 && assignment != null && testResultService.getResult(assignment) == null) {
+
+                if (!checkKey(Integer.parseInt(key), testId)) {
+                    logger.log(Level.ERROR, "Invalid key");
+                    throw new InvalidKeyException("Invalid key");
+                }
+
+                result = testResultService.createResult(assignment);
+                testResultService.writeResult(result);
+            }
+
+
+        } catch (DAOSqlException e) {
+            throw new TestServiceException("DB problem", e);
+        }
+
+    }
 
     @Override
     public boolean checkKey(Integer key, int testId) throws TestServiceException {
@@ -185,18 +202,18 @@ public class TestServiceImpl implements TestService {
 
     }
 
-    private void completeTest(Assignment assignment, LocalDateTime localDateTime) throws TestServiceException {
+    @Override
+    public void completeTest(Assignment assignment, LocalDateTime localDateTime) throws TestServiceException {
         try {
             testDAO.updateAssignment(assignment.getId(), true);
-            Result result = testResultDAO.getTestResult(assignment);
 
             //todo норм ли один сервис вызывать в другом?
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
             TestResultService testResultService = serviceFactory.getTestResultService();
 
-
-            result = testResultService.calculateResult(assignment, result, localDateTime);
-            testResultService.writeResultToDB(result);
+            Result result = testResultService.calculateResult(assignment);
+            result.setDateEnd(localDateTime);
+            testResultService.updateResult(result);
         } catch (DAOSqlException e) {
             throw new TestServiceException("DB problem", e);
         }
