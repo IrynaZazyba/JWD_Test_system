@@ -68,7 +68,7 @@ async function getQuestion() {
         dataToGetQuestion.append("key", key);
     }
 
-    if(document.getElementById("conditions")!=null){
+    if (document.getElementById("conditions") != null) {
         dataToGetQuestion.append("test_started", "true");
     }
     dataToGetQuestion.append("command", "show_question");
@@ -100,10 +100,10 @@ async function getQuestion() {
         if (json.time_is_over != null) {
             console.log("time_is_over" + json.time_is_over);
             hideQuestion();
+            document.getElementById("card-body").insertAdjacentHTML('afterbegin', generateHiddenAssignIdInput(json));
             document.getElementById('complete').insertAdjacentHTML('beforeend', generateButtonResult());
             document.getElementById("timeIsEnded").style.visibility = 'visible';
             document.getElementById("countdown").className = "hidden";
-
 
         } else {
 
@@ -175,6 +175,7 @@ function generateCheckBox(json) {
 
 function generateButtonResult() {
     let assignId = document.getElementById("assign_id").value;
+
     return "<div class=\"row justify-content-center p-t-95\">" +
         "<form action=\"test\" class=\"form-horizontal\" role=\"form\" method=\"GET\">" +
         "<input type=\"hidden\" name=\"command\" value=\"get_result\"/>" +
