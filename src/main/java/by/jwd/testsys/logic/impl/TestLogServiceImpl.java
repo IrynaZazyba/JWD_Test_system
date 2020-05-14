@@ -16,9 +16,6 @@ import java.util.Set;
 
 public class TestLogServiceImpl implements TestLogService {
 
-    //todo нужно ли
-    private final static Logger logger = LogManager.getLogger();
-
     private final DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
     private TestLogDAO testLogDAO = daoFactory.getTestLogDao();
 

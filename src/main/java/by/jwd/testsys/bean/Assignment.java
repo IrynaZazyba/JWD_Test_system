@@ -9,6 +9,7 @@ public class Assignment {
     private LocalDate asgmtDate;
     private LocalDate deadline;
     private Test test;
+    private boolean isComplete;
 
 
     private TestLog testLog;
@@ -25,11 +26,13 @@ public class Assignment {
         this.test = test;
     }
 
-    public Assignment(int id, LocalDate asgmtDate, LocalDate deadline, Test test) {
+    public Assignment(int id, LocalDate asgmtDate, LocalDate deadline, Test test, boolean isComplete) {
         this.id = id;
         this.asgmtDate = asgmtDate;
         this.deadline = deadline;
         this.test = test;
+        this.isComplete=isComplete;
+
     }
 
     public Assignment(User user, LocalDate asgmtDate,LocalDate deadline, Test test) {
@@ -37,6 +40,7 @@ public class Assignment {
         this.asgmtDate = asgmtDate;
         this.deadline=deadline;
         this.test = test;
+        this.isComplete=isComplete;
     }
 
     public int getId() {
@@ -85,5 +89,13 @@ public class Assignment {
 
     public void setAsgmtDate(LocalDate asgmtDate) {
         this.asgmtDate = asgmtDate;
+    }
+
+    public boolean isComplete() {
+        return isComplete;
+    }
+
+    public void setComplete(boolean complete) {
+        isComplete = complete;
     }
 }

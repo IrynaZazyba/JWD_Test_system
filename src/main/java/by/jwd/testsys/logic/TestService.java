@@ -35,4 +35,8 @@ public interface TestService {
     LocalTime getTestDuration(int assignmentId) throws TestServiceException;
 
     Assignment getAssignment(int assignmentId) throws TestServiceException;
+
+    double calculatePercentageOfCorrectAnswers(Assignment assignment, Test test) throws TestServiceException;
+
+    Set<Statistic> getUserTestStatistic(int userId) throws TestServiceException;
 }

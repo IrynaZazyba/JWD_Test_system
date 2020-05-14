@@ -28,7 +28,7 @@ public class ShowQuestion implements AjaxCommand {
         TestService testService = serviceFactory.getTestService();
         TestLogService testLogService = serviceFactory.getTestLogService();
 
-
+        String test_started = request.getParameter("test_started");
         int test_id = Integer.parseInt(request.getParameter("test_id"));
         String key = request.getParameter("key");
 
@@ -53,7 +53,7 @@ public class ShowQuestion implements AjaxCommand {
                 map.put("question", questionByTestId);
                 map.put("assign_id", assignment.getId());
                 map.put("question_log_id", questionLogId);
-                if (key != null) {
+                if (test_started!= null) {
                     map.put("duration", time);
                 }
                 Gson gson = new Gson();
@@ -69,7 +69,7 @@ public class ShowQuestion implements AjaxCommand {
                 answer = gson.toJson(map);
             }
 
-        } catch (TestLogServiceException | TestServiceException |InvalidUserDataException e) {
+        } catch (TestLogServiceException | TestServiceException | InvalidUserDataException e) {
             response.setStatus(500);
             Map<String, Object> map = new HashMap<>();
             map.put("page", "errorPage.jsp");

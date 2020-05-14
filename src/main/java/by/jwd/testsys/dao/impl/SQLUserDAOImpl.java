@@ -7,7 +7,6 @@ import by.jwd.testsys.dao.UserDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolException;
 import by.jwd.testsys.dao.dbconn.factory.ConnectionPoolFactory;
-import by.jwd.testsys.dao.exception.DAOConnectionPoolException;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 import by.jwd.testsys.logic.util.Role;
@@ -42,13 +41,13 @@ public class SQLUserDAOImpl implements UserDAO {
     private static final String UPDATE_USER = "UPDATE users SET login=?, password=?, first_name=?, last_name=?," +
             "role_id=? WHERE id=?";
 
-    private static final String SELECT_USER_ASSIGNMENT_BY_USER_ID = "SELECT id, date, deadline, test_id " +
+    private static final String SELECT_USER_ASSIGNMENT_BY_USER_ID = "SELECT id, date, deadline, test_id, completed " +
             "FROM assignment where user_id=?";
 
-    private static final String SELECT_USER_ASSIGNMENT_BY_ASSIGNMENT_ID = "SELECT id, date, deadline, test_id " +
-            "FROM assignment where id=?";
+    private static final String SELECT_USER_ASSIGNMENT_BY_ASSIGNMENT_ID = "SELECT id, date, deadline, test_id, " +
+            "completed FROM assignment where id=?";
 
-    private static final String SELECT_USER_ASSIGNMENT_BY_TEST_ID = "SELECT id, date, deadline, test_id " +
+    private static final String SELECT_USER_ASSIGNMENT_BY_TEST_ID = "SELECT id, date, deadline, test_id, completed " +
             "FROM assignment where user_id=? AND test_id=? AND completed='0'";
 
     @Override
@@ -351,8 +350,9 @@ public class SQLUserDAOImpl implements UserDAO {
         int testId = resultSet.getInt("test_id");
         Test test = new Test();
         test.setId(testId);
+        boolean completed = resultSet.getBoolean("completed");
 
-        return new Assignment(id, date, deadline, test);
+        return new Assignment(id, date, deadline, test, completed);
     }
 
 }

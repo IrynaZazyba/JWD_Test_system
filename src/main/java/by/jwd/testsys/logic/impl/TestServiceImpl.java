@@ -6,10 +6,8 @@ import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.factory.DAOFactoryProvider;
-import by.jwd.testsys.logic.TestResultService;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.*;
-import by.jwd.testsys.logic.factory.ServiceFactory;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +17,10 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class TestServiceImpl implements TestService {
     private final static Logger logger = LogManager.getLogger();
@@ -28,6 +29,7 @@ public class TestServiceImpl implements TestService {
     private TestTypeDAO typeDAO = daoFactory.getTypeDao();
     private TestDAO testDAO = daoFactory.getTestDao();
     private TestResultDAO testResultDAO = daoFactory.getTestResultDao();
+    private TestLogDAO testLogDAO = daoFactory.getTestLogDao();
     private UserDAO userDAO = daoFactory.getUserDao();
 
 
@@ -113,9 +115,6 @@ public class TestServiceImpl implements TestService {
         try {
             assignment = checkAssignment(userId, testId);
 
-            ServiceFactory serviceFactory = ServiceFactory.getInstance();
-            TestResultService testResultService = serviceFactory.getTestResultService();
-
             Integer testKey = testDAO.getTestKey(testId);
             Result result = null;
 
@@ -127,8 +126,8 @@ public class TestServiceImpl implements TestService {
                 assignment = new Assignment(user, LocalDate.now(), LocalDate.now().plusDays(7), test);
                 Integer integer = testDAO.writeAssignment(assignment);
                 assignment.setId(integer);
-                result = testResultService.createResult(assignment);
-                testResultService.writeResult(result);
+                result = createResult(assignment);
+                writeResult(result);
             }
 
         } catch (DAOSqlException e) {
@@ -141,9 +140,6 @@ public class TestServiceImpl implements TestService {
     @Override
     public void checkPermission(int userId, int testId, String key) throws TestServiceException, InvalidKeyException, InvalidUserDataException {
 
-        ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        TestResultService testResultService = serviceFactory.getTestResultService();
-
         Assignment assignment = null;
         try {
             assignment = checkAssignment(userId, testId);
@@ -155,15 +151,16 @@ public class TestServiceImpl implements TestService {
                 throw new InvalidUserDataException("Impossible user operation");
             }
 
-            if (testKey != 0 && assignment != null && testResultService.getResult(assignment) == null) {
+            if (testKey != 0 && assignment != null && getResult(assignment) == null) {
 
                 if (!checkKey(Integer.parseInt(key), testId)) {
                     logger.log(Level.ERROR, "Invalid key");
                     throw new InvalidKeyException("Invalid key");
                 }
 
-                result = testResultService.createResult(assignment);
-                testResultService.writeResult(result);
+                //todo builder
+                result = createResult(assignment);
+                writeResult(result);
             }
 
 
@@ -207,13 +204,9 @@ public class TestServiceImpl implements TestService {
         try {
             testDAO.updateAssignment(assignment.getId(), true);
 
-            //todo норм ли один сервис вызывать в другом?
-            ServiceFactory serviceFactory = ServiceFactory.getInstance();
-            TestResultService testResultService = serviceFactory.getTestResultService();
-
-            Result result = testResultService.calculateResult(assignment);
+            Result result = calculateResult(assignment);
             result.setDateEnd(localDateTime);
-            testResultService.updateResult(result);
+            updateResult(result);
         } catch (DAOSqlException e) {
             throw new TestServiceException("DB problem", e);
         }
@@ -269,4 +262,106 @@ public class TestServiceImpl implements TestService {
         return testAssignment;
 
     }
+
+    @Override
+    public double calculatePercentageOfCorrectAnswers(Assignment assignment, Test test) throws TestServiceException {
+
+        Result result = null;
+        try {
+            result = getResult(assignment);
+            int countQuestion = test.getCountQuestion();
+            return (result.getRightCountQuestion() * 100) / countQuestion;
+        } catch (TestServiceException e) {
+            throw new TestServiceException("DB problem", e);
+        }
+
+    }
+
+    @Override
+    public Set<Statistic> getUserTestStatistic(int userId) throws TestServiceException {
+        try {
+            return testResultDAO.getUserTestStatistic(userId);
+        } catch (DAOSqlException e) {
+            throw new TestServiceException("DB problem", e);
+        }
+    }
+
+
+    private Result calculateResult(Assignment assignment) throws TestServiceException {
+        Result result = null;
+        try {
+            TestLog testLogByAssignmentId = testLogDAO.getTestLog(assignment.getId());
+
+            Map<Integer, List<Integer>> rightAnswersToQuestionByTestId = testDAO.
+                    getRightAnswersToQuestionByTestId(assignment.getTest().getId());
+
+            Map<Integer, List<Integer>> userAnswerMap = testLogByAssignmentId.getQuestionAnswerMap();
+
+            int countRight = 0;
+
+            for (Map.Entry<Integer, List<Integer>> entry : userAnswerMap.entrySet()) {
+                Integer questionId = entry.getKey();
+                List<Integer> value = entry.getValue();
+                Collections.sort(value);
+
+                for (Map.Entry<Integer, List<Integer>> rightEntry : rightAnswersToQuestionByTestId.entrySet()) {
+                    List<Integer> rightAnswersList = rightEntry.getValue();
+                    Collections.sort(rightAnswersList);
+                    if (rightEntry.getKey().equals(questionId) && value.equals(rightAnswersList)) {
+                        countRight++;
+                        break;
+                    }
+                }
+            }
+            System.out.println(countRight);
+            result = testResultDAO.getTestResult(assignment);
+            result.setRightCountQuestion(countRight);
+        } catch (DAOSqlException e) {
+            throw new TestServiceException("DB problem", e);
+        }
+        return result;
+    }
+
+
+    private Result getResult(Assignment assignment) throws TestServiceException {
+        try {
+            return testResultDAO.getTestResult(assignment);
+        } catch (DAOSqlException e) {
+            throw new TestServiceException("DB problem", e);
+        }
+    }
+
+    private void writeResult(Result result) throws TestServiceException {
+        try {
+            testResultDAO.insertResult(result);
+        } catch (DAOSqlException e) {
+            throw new TestServiceException("DB problem", e);
+        }
+
+    }
+
+    private void updateResult(Result result) throws DAOSqlException {
+        testResultDAO.updateResult(result);
+    }
+
+    private Result createResult(Assignment assignment) throws TestServiceException {
+
+        //todo builder
+        int testId = assignment.getTest().getId();
+
+        Result result = new Result();
+        result.setDateStart(LocalDateTime.now());
+        result.setAssignment(assignment);
+        int countQuestion = 0;
+        try {
+            countQuestion = testDAO.getCountQuestion(testId);
+            result.setCountTestQuestion(countQuestion);
+
+        } catch (DAOSqlException e) {
+            throw new TestServiceException("DB problem", e);
+        }
+
+        return result;
+    }
+
 }

@@ -68,8 +68,12 @@ async function getQuestion() {
         dataToGetQuestion.append("key", key);
     }
 
+    if(document.getElementById("conditions")!=null){
+        dataToGetQuestion.append("test_started", "true");
+    }
     dataToGetQuestion.append("command", "show_question");
     dataToGetQuestion.append("test_id", test_id);
+
 
     let response = await fetch("http://localhost:8080/test-system/ajax", {
         method: 'POST',
@@ -99,6 +103,7 @@ async function getQuestion() {
             document.getElementById('complete').insertAdjacentHTML('beforeend', generateButtonResult());
             document.getElementById("timeIsEnded").style.visibility = 'visible';
             document.getElementById("countdown").className = "hidden";
+
 
         } else {
 

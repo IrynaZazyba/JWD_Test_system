@@ -3,7 +3,6 @@ package by.jwd.testsys.dao.factory.impl;
 import by.jwd.testsys.dao.*;
 import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.impl.*;
-import by.jwd.testsys.logic.TestResultService;
 
 public class SQLDAOFactory implements DAOFactory {
 
