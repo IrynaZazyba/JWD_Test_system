@@ -1,12 +1,15 @@
 package by.jwd.testsys.logic.validator.factory;
 
-import by.jwd.testsys.logic.validator.UserValidator;
-import by.jwd.testsys.logic.validator.impl.UserValidatorImpl;
+        import by.jwd.testsys.logic.validator.TestValidator;
+        import by.jwd.testsys.logic.validator.UserValidator;
+        import by.jwd.testsys.logic.validator.impl.TestValidatorImpl;
+        import by.jwd.testsys.logic.validator.impl.UserValidatorImpl;
 
 public class ValidatorFactory {
 
     private static ValidatorFactory instance = new ValidatorFactory();
-    private static UserValidatorImpl userValidator = new UserValidatorImpl();
+    private static UserValidator userValidator = new UserValidatorImpl();
+    private static TestValidator testValidator = new TestValidatorImpl();
 
     private ValidatorFactory() {
     }
@@ -19,4 +22,7 @@ public class ValidatorFactory {
         return userValidator;
     }
 
+    public TestValidator getTestValidator() {
+        return testValidator;
+    }
 }

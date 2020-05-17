@@ -8,6 +8,8 @@ import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.factory.DAOFactoryProvider;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.*;
+import by.jwd.testsys.logic.validator.TestValidator;
+import by.jwd.testsys.logic.validator.factory.ValidatorFactory;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class TestServiceImpl implements TestService {
+
     private final static Logger logger = LogManager.getLogger();
 
     private final DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
@@ -31,6 +34,8 @@ public class TestServiceImpl implements TestService {
     private TestResultDAO testResultDAO = daoFactory.getTestResultDao();
     private TestLogDAO testLogDAO = daoFactory.getTestLogDao();
     private UserDAO userDAO = daoFactory.getUserDao();
+    private ValidatorFactory validatorFactory = ValidatorFactory.getInstance();
+    private TestValidator testValidator = validatorFactory.getTestValidator();
 
 
     @Override
@@ -97,7 +102,7 @@ public class TestServiceImpl implements TestService {
             int countQuestion = testDAO.getCountQuestion(dbTest.getId());
             String title = dbTest.getTitle();
             LocalTime duration = dbTest.getDuration();
-            int key = dbTest.getKey();
+            String key = dbTest.getKey();
 
             test = new Test(id, title, countQuestion, key, duration);
         } catch (DAOException e) {
@@ -107,18 +112,16 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Assignment receiveTestAssignment(int testId, int userId) throws TestServiceException, InvalidKeyException {
+    public Assignment receiveTestAssignment(int testId, int userId) throws TestServiceException {
 
-
-        //todo validate key
         Assignment assignment = null;
         try {
             assignment = checkAssignment(userId, testId);
 
-            Integer testKey = testDAO.getTestKey(testId);
+            String testKey = testDAO.getTestKey(testId);
             Result result = null;
 
-            if (assignment == null && testKey == 0) {
+            if (assignment == null && testKey == null) {
                 Test test = new Test();
                 test.setId(testId);
                 User user = new User();
@@ -138,24 +141,35 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public void checkPermission(int userId, int testId, String key) throws TestServiceException, InvalidKeyException, InvalidUserDataException {
+    public void checkPermission(int userId, int testId, String key) throws TestServiceException, InvalidUserDataException, InvalidTestKeyException {
+
+        String validationResult = null;
+
+        if (key != null) {
+            validationResult = testValidator.validate(key);
+            if (validationResult != null) {
+                throw new InvalidTestKeyException("Invalid user data.", validationResult);
+            }
+        }
+
+
 
         Assignment assignment = null;
         try {
             assignment = checkAssignment(userId, testId);
-            Integer testKey = testDAO.getTestKey(testId);
+            String testKey = testDAO.getTestKey(testId);
             Result result = null;
 
 
-            if (testKey != 0 && assignment == null) {
+            if (testKey != null && assignment == null) {
                 throw new InvalidUserDataException("Impossible user operation");
             }
 
-            if (testKey != 0 && assignment != null && getResult(assignment) == null) {
+            if (testKey != null && assignment != null && getResult(assignment) == null) {
 
-                if (!checkKey(Integer.parseInt(key), testId)) {
+                if (!checkKey(key, testId)) {
                     logger.log(Level.ERROR, "Invalid key");
-                    throw new InvalidKeyException("Invalid key");
+                    throw new InvalidTestKeyException("Invalid key");
                 }
 
                 //todo builder
@@ -171,10 +185,10 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public boolean checkKey(Integer key, int testId) throws TestServiceException {
+    public boolean checkKey(String key, int testId) throws TestServiceException {
         boolean isValid = false;
         try {
-            Integer testKey = testDAO.getTestKey(testId);
+            String testKey = testDAO.getTestKey(testId);
             if (testKey.equals(key)) {
                 isValid = true;
             }
@@ -188,15 +202,38 @@ public class TestServiceImpl implements TestService {
         return userDAO.getUserAssignmentByTestId(userId, testId);
     }
 
-    @Override
-    public Integer getTestKey(int testId) throws TestServiceException {
+//    @Override
+//    public String getTestKey(int testId) throws TestServiceException {
+//
+//        try {
+//            return testDAO.getTestKey(testId);
+//        } catch (DAOSqlException e) {
+//            throw new TestServiceException("DB problem", e);
+//        }
+//
+//    }
 
+    @Override
+    public long calculateTestDuration(Assignment assignment) throws TestServiceException, TimeIsOverServiceException {
+
+        long testDurationSeconds;
         try {
-            return testDAO.getTestKey(testId);
+            LocalTime testDuration = testDAO.getTestDuration(assignment.getId());
+            Result result = getResult(assignment);
+            LocalDateTime dateStart = result.getDateStart();
+            Duration duration = Duration.between(dateStart, LocalDateTime.now());
+
+            testDurationSeconds = testDuration.toSecondOfDay() - duration.toSeconds();
+
+            if (testDurationSeconds <= 0) {
+                throw new TimeIsOverServiceException("Time is over");
+            }
+
         } catch (DAOSqlException e) {
             throw new TestServiceException("DB problem", e);
         }
 
+        return testDurationSeconds;
     }
 
     @Override
@@ -227,6 +264,8 @@ public class TestServiceImpl implements TestService {
         return localDateTime;
     }
 
+
+    //todo
     @Override
     public LocalTime getTestDuration(int assignmentId) throws TestServiceException {
         LocalTime duration;

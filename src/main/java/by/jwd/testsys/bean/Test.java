@@ -12,7 +12,7 @@ public class Test implements Serializable {
 
     private int id;
     private String title;
-    private int key;
+    private String key;
     private LocalTime duration;
     private LocalDate deletedAt;
     private Type type;
@@ -25,7 +25,7 @@ public class Test implements Serializable {
     }
 
 
-    public Test(int id, String title, int key, LocalTime duration, LocalDate deletedAt) {
+    public Test(int id, String title, String key, LocalTime duration, LocalDate deletedAt) {
         this.id = id;
         this.title = title;
         this.key = key;
@@ -38,7 +38,7 @@ public class Test implements Serializable {
         this.title = title;
     }
 
-    public Test(int id, String title, int countQuestion, int key,LocalTime duration) {
+    public Test(int id, String title, int countQuestion, String key,LocalTime duration) {
         this.id = id;
         this.title = title;
         this.key = key;
@@ -93,11 +93,11 @@ public class Test implements Serializable {
         this.title = title;
     }
 
-    public int getKey() {
+    public String getKey() {
         return key;
     }
 
-    public void setKey(int key) {
+    public void setKey(String key) {
         this.key = key;
     }
 
@@ -192,7 +192,7 @@ public class Test implements Serializable {
         int result = 1;
         result = result * prime + id;
         result = result * prime + ((title == null) ? 0 : title.hashCode());
-        result = result * prime + key;
+        result = result * prime + ((key == null) ? 0 : key.hashCode());
         result = result * prime + ((duration == null) ? 0 : duration.hashCode());
         result = result * prime + ((deletedAt == null) ? 0 : deletedAt.hashCode());
         result = result * prime + ((type == null) ? 0 : type.hashCode());

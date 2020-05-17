@@ -28,7 +28,6 @@ public class ShowQuestion implements AjaxCommand {
         TestService testService = serviceFactory.getTestService();
         TestLogService testLogService = serviceFactory.getTestLogService();
 
-        String test_started = request.getParameter("test_started");
         int test_id = Integer.parseInt(request.getParameter("test_id"));
         String key = request.getParameter("key");
 
@@ -40,22 +39,25 @@ public class ShowQuestion implements AjaxCommand {
 
             testService.checkPermission(user_id, test_id, key);
             assignment = testService.receiveTestAssignment(test_id, user_id);
+
+
             int questionLogId;
             Question questionByTestId = testService.getQuestionByTestId(assignment);
 
 
             if (questionByTestId != null) {
                 questionLogId = testLogService.writeQuestionLog(questionByTestId.getId(), assignment.getId());
-                LocalTime testTime = testService.getTestDuration(assignment.getId());
-                long time = testTime.toSecondOfDay();
+
+
+                long time= testService.calculateTestDuration(assignment);
+
+                System.out.println("time "+time);
 
                 Map<String, Object> map = new HashMap<>();
                 map.put("question", questionByTestId);
                 map.put("assign_id", assignment.getId());
                 map.put("question_log_id", questionLogId);
-                if (test_started!= null) {
-                    map.put("duration", time);
-                }
+                map.put("duration", time);
                 Gson gson = new Gson();
                 answer = gson.toJson(map);
             } else {
@@ -81,9 +83,12 @@ public class ShowQuestion implements AjaxCommand {
             map.put("assign_id", assignment.getId());
             Gson gson = new Gson();
             return gson.toJson(map);
-        } catch (InvalidKeyException e) {
+        } catch (InvalidTestKeyException e) {
             //todo если ключ неверный
-            System.out.println("!!!!!!! неверный ключ");
+            Map<String, Object> map = new HashMap<>();
+            map.put("invalid_key", "true");
+            Gson gson = new Gson();
+            return gson.toJson(map);
         }
         return answer;
     }

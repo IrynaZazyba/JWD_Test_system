@@ -22,7 +22,9 @@ public class SaveAnswer implements AjaxCommand {
         int question_log_id = Integer.parseInt(request.getParameter("question_log_id"));
         String[] answersId = request.getParameterValues("answer");
         try {
-            testService.writeUserAnswer(question_log_id, answersId);
+            if (answersId != null) {
+                testService.writeUserAnswer(question_log_id, answersId);
+            }
 
         } catch (TestLogServiceException e) {
             response.setStatus(500);

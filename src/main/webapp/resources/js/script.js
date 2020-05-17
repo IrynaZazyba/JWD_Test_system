@@ -85,19 +85,10 @@ async function getQuestion() {
     if (response.ok) {
 
 
-        if (document.getElementById('conditions') != null) {
-            document.getElementById('conditions').remove();
-            document.getElementById('exeButton').remove();
-        }
-
-        if (document.getElementById('key') != null) {
-            document.getElementById('key').remove();
-        }
-
-
         let json = await response.json();
 
         if (json.time_is_over != null) {
+            hideKeyConditions();
             console.log("time_is_over" + json.time_is_over);
             hideQuestion();
             document.getElementById("card-body").insertAdjacentHTML('afterbegin', generateHiddenAssignIdInput(json));
@@ -105,11 +96,20 @@ async function getQuestion() {
             document.getElementById("timeIsEnded").style.visibility = 'visible';
             document.getElementById("countdown").className = "hidden";
 
+        } else if (json.invalid_key) {
+            document.getElementById("invalid_key").style.visibility = 'visible';
+
         } else {
+
+            hideKeyConditions();
+            // скрыть неверный ключ сообщ
+            if (document.getElementById("invalid_key")!=null&&document.getElementById("invalid_key").style.visibility === 'visible') {
+                document.getElementById("invalid_key").remove();
+            }
 
             if (json.question != null) {
 
-                if (json.duration != null) {
+                if (json.duration != null && document.getElementById("timer").style.visibility === 'hidden') {
                     document.getElementById('timer').style.visibility = 'visible';
                     startTimer(json.duration);
                 }
@@ -253,4 +253,16 @@ function startTimer(deadlineTime) {
 
 }
 
+function hideKeyConditions() {
+
+    if (document.getElementById('conditions') != null) {
+        document.getElementById('conditions').remove();
+        document.getElementById('exeButton').remove();
+    }
+
+    if (document.getElementById('key') != null) {
+        document.getElementById('key').remove();
+    }
+
+}
 

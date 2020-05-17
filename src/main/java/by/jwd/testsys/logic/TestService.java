@@ -20,13 +20,15 @@ public interface TestService {
 
     Test getTestInfo(int id) throws TestServiceException;
 
-    Assignment receiveTestAssignment(int testId, int userId) throws TestServiceException, InvalidKeyException;
+    Assignment receiveTestAssignment(int testId, int userId) throws TestServiceException;
 
-    void checkPermission(int userId, int testId, String key) throws TestServiceException, InvalidKeyException, InvalidUserDataException;
+    void checkPermission(int userId, int testId, String key) throws TestServiceException, InvalidUserDataException, InvalidTestKeyException;
 
-    boolean checkKey(Integer key, int testId) throws TestServiceException;
+    boolean checkKey(String key, int testId) throws TestServiceException;
 
-    Integer getTestKey(int testId) throws TestServiceException;
+//    Integer getTestKey(int testId) throws TestServiceException;
+
+    long calculateTestDuration(Assignment assignment) throws TestServiceException, TimeIsOverServiceException;
 
     void completeTest(Assignment assignment, LocalDateTime localDateTime) throws TestServiceException;
 

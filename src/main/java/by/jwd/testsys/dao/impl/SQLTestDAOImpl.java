@@ -55,7 +55,7 @@ public class SQLTestDAOImpl implements TestDAO {
     private static final String GET_ASSIGNMENT_TESTS = "SELECT test.id as t_id, test.title as t_title, test.time as t_time," +
             " count(question.id) as count_quest, type.title as type_title FROM test inner join question on question.test_id=test.id " +
             "INNER JOIN assignment on assignment.test_id=test.id inner join type on test.type_id=type.id where assignment.user_id =? " +
-            "and completed is null and question.deleted_at is null group BY test.id";
+            "and completed is false and question.deleted_at is null group BY test.id";
 
     public static final String WRITE_ASSIGNMENT = "INSERT INTO `assignment`" +
             " (`date`,`deadline`, `test_id`, `user_id`, `completed`) " +
@@ -73,14 +73,7 @@ public class SQLTestDAOImpl implements TestDAO {
             preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int testId = resultSet.getInt("t_id");
-                String testTitle = resultSet.getString("t_title");
-                LocalTime testTime = resultSet.getTime("t_time").toLocalTime();
-                String typeTitle = resultSet.getString("type_title");
-                int countQuestion = resultSet.getInt("count_quest");
-                Type testType = new Type();
-                testType.setTitle(typeTitle);
-                Test test = new Test(testId, testTitle, testType, testTime, countQuestion);
+                Test test = buildTest(resultSet);
                 assignmentTests.add(test);
             }
 
@@ -180,7 +173,7 @@ public class SQLTestDAOImpl implements TestDAO {
 
                     LocalTime time = resultSet.getTime("time").toLocalTime();
 
-                    int key = resultSet.getInt("key");
+                    String key = resultSet.getString("key");
                     test = new Test(id, title, key, time, deleted_at);
                 }
             }
@@ -249,7 +242,7 @@ public class SQLTestDAOImpl implements TestDAO {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet generatedKeys = null;
-        Integer assignmentId=null;
+        Integer assignmentId = null;
         try {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(WRITE_ASSIGNMENT, Statement.RETURN_GENERATED_KEYS);
@@ -296,8 +289,6 @@ public class SQLTestDAOImpl implements TestDAO {
                     questionAnswers.put(q_id, listAnswers);
                 }
             }
-            //todo удалить
-            questionAnswers.forEach((k, v) -> System.out.println("~~~" + k + " " + v));
         } catch (ConnectionPoolException e) {
             throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method getRightAnswersToQuestionByTestId", e);
         } catch (SQLException e) {
@@ -311,11 +302,11 @@ public class SQLTestDAOImpl implements TestDAO {
     }
 
     @Override
-    public Integer getTestKey(int testId) throws DAOSqlException {
+    public String getTestKey(int testId) throws DAOSqlException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        Integer key = null;
+        String key = null;
         try {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(SELECT_KEY_TO_TEST);
@@ -323,7 +314,7 @@ public class SQLTestDAOImpl implements TestDAO {
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                key = resultSet.getInt("key");
+                key = resultSet.getString("key");
             }
         } catch (ConnectionPoolException e) {
             throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method getTestKey()", e);
@@ -337,12 +328,6 @@ public class SQLTestDAOImpl implements TestDAO {
         return key;
     }
 
-
-    private Test buildTest(ResultSet resultSet) throws SQLException {
-        int idTest = resultSet.getInt("tt_id");
-        String titleTest = resultSet.getString("tt_title");
-        return new Test(idTest, titleTest);
-    }
 
     @Override
     public Timestamp getTestStartDateTime(int assignmentId) throws DAOSqlException {
@@ -399,14 +384,14 @@ public class SQLTestDAOImpl implements TestDAO {
     }
 
 
-    //todo
-    private Question buildQuestion(ResultSet resultSet) {
-        Question question = null;
-        return question;
-    }
-
-    private Answer buildAnswer(ResultSet resultSet) {
-        Answer answer = null;
-        return answer;
+    private Test buildTest(ResultSet resultSet) throws SQLException {
+        int testId = resultSet.getInt("t_id");
+        String testTitle = resultSet.getString("t_title");
+        LocalTime testTime = resultSet.getTime("t_time").toLocalTime();
+        String typeTitle = resultSet.getString("type_title");
+        int countQuestion = resultSet.getInt("count_quest");
+        Type testType = new Type();
+        testType.setTitle(typeTitle);
+        return new Test(testId, testTitle, testType, testTime, countQuestion);
     }
 }

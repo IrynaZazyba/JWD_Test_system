@@ -38,7 +38,7 @@ public class ShowExeTestPage implements Command {
         req.setAttribute("title", test.getTitle());
         req.setAttribute("test_id", test.getId());
 
-        if (test.getKey() != 0) {
+        if (test.getKey() != null) {
             req.setAttribute("key", "exist");
         }
 

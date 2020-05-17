@@ -29,7 +29,7 @@ public interface TestDAO {
 
     Map<Integer, List<Integer>> getRightAnswersToQuestionByTestId(int testId) throws DAOSqlException;
 
-    Integer getTestKey(int testId) throws DAOSqlException;
+    String getTestKey(int testId) throws DAOSqlException;
 
     Timestamp getTestStartDateTime(int assignmentId) throws DAOSqlException;
 

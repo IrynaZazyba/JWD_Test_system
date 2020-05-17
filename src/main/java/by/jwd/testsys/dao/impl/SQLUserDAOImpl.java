@@ -48,7 +48,7 @@ public class SQLUserDAOImpl implements UserDAO {
             "completed FROM assignment where id=?";
 
     private static final String SELECT_USER_ASSIGNMENT_BY_TEST_ID = "SELECT id, date, deadline, test_id, completed " +
-            "FROM assignment where user_id=? AND test_id=? AND completed='0'";
+            "FROM assignment where user_id=? AND test_id=? AND completed is false";
 
     @Override
     public List<User> getAll() throws DAOException {

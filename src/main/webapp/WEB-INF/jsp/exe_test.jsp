@@ -23,6 +23,7 @@
 <fmt:setLocale value="${sessionScope.local}"/>
 <fmt:setBundle basename="local/local" var="loc"/>
 <fmt:message bundle="${loc}" key="message.json.time_is_over" var="message_time_is_over"/>
+<fmt:message bundle="${loc}" key="test.message.invalid_key" var="message_invalid_key"/>
 
 <div class="row m-0">
     <div id="timer" class="row m-0" style="visibility: hidden">
@@ -58,6 +59,11 @@
                     <input type="hidden" name="command" value="save_answer"/>
                     <input type="hidden" id="test_id" name="test_id" value="${requestScope.test_id}"/>
                     <c:if test="${not empty requestScope.key}">
+
+
+                        <div id="invalid_key" class="alert alert-danger" role="alert" style="visibility: hidden">
+                                ${message_invalid_key}</div>
+
                         <div id="key" class="text-ctr">
 
                             <div class="form-group">
