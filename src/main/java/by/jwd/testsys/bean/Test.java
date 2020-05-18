@@ -20,6 +20,8 @@ public class Test implements Serializable {
     private int countQuestion;
     private Assignment assignment;
 
+    private boolean started;
+    private int flag;
 
     public Test() {
     }
@@ -38,27 +40,27 @@ public class Test implements Serializable {
         this.title = title;
     }
 
-    public Test(int id, String title, int countQuestion, String key,LocalTime duration) {
+    public Test(int id, String title, int countQuestion, String key, LocalTime duration) {
         this.id = id;
         this.title = title;
         this.key = key;
         this.duration = duration;
-        this.countQuestion=countQuestion;
+        this.countQuestion = countQuestion;
     }
 
-    public Test(int id, String title, Type testType,LocalTime duration, int countQuestion) {
+    public Test(int id, String title, Type testType, LocalTime duration, int countQuestion) {
         this.id = id;
         this.title = title;
         this.duration = duration;
-        this.type=testType;
-        this.countQuestion=countQuestion;
+        this.type = testType;
+        this.countQuestion = countQuestion;
     }
 
-    public Test(int id, String title,LocalTime duration, int countQuestion) {
+    public Test(int id, String title, LocalTime duration, int countQuestion) {
         this.id = id;
         this.title = title;
         this.duration = duration;
-        this.countQuestion=countQuestion;
+        this.countQuestion = countQuestion;
     }
 
     public Assignment getAssignment() {
@@ -210,5 +212,23 @@ public class Test implements Serializable {
                 ", deletedAt=" + deletedAt +
                 ", type=" + type +
                 ", questions=" + questions;
+    }
+
+
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
+
+    public boolean isStarted() {
+        return started;
+    }
+
+    public void setStarted(boolean started) {
+        this.started = started;
     }
 }

@@ -29,9 +29,9 @@ public class ShowTestsPage implements Command {
         TestService testService = ServiceFactory.getInstance().getTestService();
 
         HttpSession session = req.getSession();
-
+        int userId = (int) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
         try {
-            Set<Type> tests = testService.typeWithTests();
+            Set<Type> tests = testService.typeWithTests(userId);
             req.setAttribute(RequestParameterName.TESTS_TYPE_LIST, tests);
             session.setAttribute(SessionAttributeName.QUERY_STRING, req.getQueryString());
             forwardToPage(req, resp, JspPageName.START_MENU_PAGE);

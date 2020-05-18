@@ -50,11 +50,28 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Set<Type> typeWithTests() throws ServiceException {
+    public Set<Type> typeWithTests(int userId) throws ServiceException {
         Set<Type> testsType;
 
         try {
             testsType = typeDAO.getTypeWithTests();
+
+            for (Type testType : testsType) {
+                Set<Test> tests = testType.getTests();
+                for (Test test : tests) {
+                    int testId = test.getId();
+                    Assignment userAssignment = userDAO.getUserAssignmentByTestId(userId, testId);
+                    if (userAssignment != null) {
+                        Result testResult = testResultDAO.getTestResult(userAssignment);
+                        test.setStarted(testResult != null);
+                        test.setFlag(1);
+                    } else {
+                        test.setStarted(false);
+                        test.setFlag(0);
+
+                    }
+                }
+            }
 
         } catch (DAOException e) {
             throw new ServiceException("Error in TestService typeWithTests() method", e);
@@ -153,7 +170,6 @@ public class TestServiceImpl implements TestService {
         }
 
 
-
         Assignment assignment = null;
         try {
             assignment = checkAssignment(userId, testId);
@@ -202,16 +218,6 @@ public class TestServiceImpl implements TestService {
         return userDAO.getUserAssignmentByTestId(userId, testId);
     }
 
-//    @Override
-//    public String getTestKey(int testId) throws TestServiceException {
-//
-//        try {
-//            return testDAO.getTestKey(testId);
-//        } catch (DAOSqlException e) {
-//            throw new TestServiceException("DB problem", e);
-//        }
-//
-//    }
 
     @Override
     public long calculateTestDuration(Assignment assignment) throws TestServiceException, TimeIsOverServiceException {

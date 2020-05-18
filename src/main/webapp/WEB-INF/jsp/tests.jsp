@@ -26,6 +26,8 @@
 <fmt:message bundle="${loc}" key="button.language_en" var="button_language_en"/>
 <fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
 <fmt:message bundle="${loc}" key="button.test.get_started" var="button_get_started"/>
+<fmt:message bundle="${loc}" key="button.test.continue" var="button_continue"/>
+
 
 <div class="container-fluid p-0">
 
@@ -70,14 +72,37 @@
 
 
                                         </div>
-                                        <form method="GET" action="test">
-                                            <input type="hidden" name="command" value="show_exe_test_page"/>
-                                            <input type="hidden" name="test_id" value="${itm.id}"/>
+
+
+                                        <c:if test="${itm.flag==0}">
+
+                                            <form method="GET" action="test">
+                                                <input type="hidden" name="command" value="show_exe_test_page"/>
+                                                <input type="hidden" name="test_id" value="${itm.id}"/>
+                                                <button type="submit"
+                                                        class="card-btn btn btn-outline-primary d-block mx-auto">
+                                                        ${button_get_started}
+                                                </button>
+                                            </form>
+
+                                        </c:if>
+                                        <c:if test="${itm.flag==1}">
+
+                                            <form onsubmit="getContinuedQuestion(); return false" id="exeTest" enctype="multipart/form-data"
+                                            accept-charset="UTF-8" class="key-form" role="form">
+                                            <input type="hidden" name="command" value="save_answer"/>
+                                            <input type="hidden" id="test_id" name="test_id"
+                                                   value="${itm.id}"/>
+
+
                                             <button type="submit"
                                                     class="card-btn btn btn-outline-primary d-block mx-auto">
-                                                ${button_get_started}
+                                                    ${button_continue}
                                             </button>
-                                        </form>
+                                            </form>
+
+                                        </c:if>
+
                                     </div>
                                 </div>
                             </c:forEach>

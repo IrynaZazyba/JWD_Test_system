@@ -163,7 +163,7 @@
                                         <input type="hidden" name="test_id" value="${item.id}"/>
                                         <button type="submit"
                                                 class="card-btn btn btn-outline-primary d-block mx-auto">
-                                            ${button_get_started}
+                                            ${button_get_started }
                                         </button>
                                     </form>
                                 </div>

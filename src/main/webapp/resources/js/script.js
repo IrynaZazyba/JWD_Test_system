@@ -103,7 +103,7 @@ async function getQuestion() {
 
             hideKeyConditions();
             // скрыть неверный ключ сообщ
-            if (document.getElementById("invalid_key")!=null&&document.getElementById("invalid_key").style.visibility === 'visible') {
+            if (document.getElementById("invalid_key") != null && document.getElementById("invalid_key").style.visibility === 'visible') {
                 document.getElementById("invalid_key").remove();
             }
 
@@ -266,3 +266,18 @@ function hideKeyConditions() {
 
 }
 
+async function getContinuedQuestion() {
+
+    let dataToGetQuestion = new FormData();
+
+    dataToGetQuestion.append("command", "get_empty_question_page");
+
+    let response = await fetch("http://localhost:8080/test-system/test", {
+        method: 'POST',
+        body: dataToGetQuestion,
+
+    });
+
+    getQuestion();
+
+}
