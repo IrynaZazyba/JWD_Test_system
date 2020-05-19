@@ -224,7 +224,7 @@ public class Test implements Serializable {
         this.flag = flag;
     }
 
-    public boolean isStarted() {
+    public boolean getStarted() {
         return started;
     }
 

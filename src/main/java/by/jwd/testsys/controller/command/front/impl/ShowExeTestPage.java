@@ -20,7 +20,6 @@ import java.io.IOException;
 
 public class ShowExeTestPage implements Command {
 
-    private static Logger logger = LogManager.getLogger();
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -37,10 +36,9 @@ public class ShowExeTestPage implements Command {
 
 
             Result result = testService.checkResult(user_id, testId);
-            if (result == null) {
+            test = testService.getTestInfo(testId);
+            test.setStarted(result!=null);
 
-                test = testService.getTestInfo(testId);
-            }
             req.setAttribute("test_info", test);
 
 

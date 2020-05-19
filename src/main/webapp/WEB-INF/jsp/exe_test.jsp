@@ -57,64 +57,74 @@
             <div id="card-body" class="card-body mb-2 card-test">
 
 
-                <c:if test="${not empty requestScope.test_info}">
-                <div id="conditions" class="text-ctr">
-                    <h3> ${requestScope.test_info.duration} ${message_test_duration}
-                            ${message_number_question} ${requestScope.test_info.countQuestion}</h3></div>
-                </c:if>
+                <c:if test="${!requestScope.test_info.started}">
+                    <div id="conditions" class="text-ctr">
+                        <h3> ${requestScope.test_info.duration} ${message_test_duration}
+                                ${message_number_question} ${requestScope.test_info.countQuestion}</h3></div>
 
-                <form onsubmit="getQuestion(); return false" id="exeTest" enctype="multipart/form-data"
-                      accept-charset="UTF-8" class="key-form" role="form">
-                    <input type="hidden" name="command" value="save_answer"/>
-                    <input type="hidden" id="test_id" name="test_id" value="${requestScope.test_info.id}"/>
-                    <c:if test="${not empty requestScope.test_info.key}">
+                    <form onsubmit="getQuestion(); return false" id="exeTest" enctype="multipart/form-data"
+                          accept-charset="UTF-8" class="key-form" role="form">
+                        <input type="hidden" name="command" value="save_answer"/>
+                        <input type="hidden" id="test_id" name="test_id" value="${requestScope.test_info.id}"/>
 
 
-                        <div id="invalid_key" class="alert alert-danger" role="alert" style="visibility: hidden">
-                                ${message_invalid_key}</div>
+                        <c:if test="${not empty requestScope.test_info.key}">
 
-                        <div id="key" class="text-ctr">
+                            <div id="invalid_key" class="alert alert-danger" role="alert" style="visibility: hidden">
+                                    ${message_invalid_key}</div>
 
-                            <div class="form-group">
-                                <div class="row justify-content-center">
+                            <div id="key" class="text-ctr">
 
-                                    <label class="col-sm-3 text-ctr control-label p-0">${input_enter_key}</label>
-                                    <div class="col-sm-3">
-                                        <input id="key_value" type="text" class="form-control" required
-                                               name="key">
+                                <div class="form-group">
+                                    <div class="row justify-content-center">
+
+                                        <label class="col-sm-3 text-ctr control-label p-0">${input_enter_key}</label>
+                                        <div class="col-sm-3">
+                                            <input id="key_value" type="text" class="form-control" required
+                                                   name="key">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    <div id="exeButton">
-                        <div class="form-group">
-                            <div class="row justify-content-center">
-                                <div class="col-sm-offset-2 col-sm-10 p-top-95">
-                                    <button type="submit" class="card-exe-btn btn btn-outline-primary">${button_start}
-                                    </button>
+                            <div id="exeButton">
+                                <div class="form-group">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-offset-2 col-sm-10 p-top-95">
+                                            <button type="submit"
+                                                    class="card-exe-btn btn btn-outline-primary">${button_start}
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                        </c:if>
+                        <div id="quest" style="visibility: hidden">
+                            <button type="submit"
+                                    class="card-exe-btn btn btn-right btn-outline-primary">${button_next}</button>
                         </div>
+
+                    </form>
+
+                </c:if>
+
+                <c:if test="${requestScope.test_info.started}">
+                    <form onsubmit="getQuestion(); return false" id="exeTest" enctype="multipart/form-data"
+                          accept-charset="UTF-8" class="key-form" role="form">
+                        <input type="hidden" name="command" value="save_answer"/>
+                        <input type="hidden" id="test_id" name="test_id" value="${requestScope.test_info.id}"/>
+                        <div id="quest" style="visibility: hidden">
+                            <button type="submit"
+                                    class="card-exe-btn btn btn-right btn-outline-primary">${button_next}</button>
+                        </div>
+
+                    </form>
+
+                    <div id="complete" style="visibility: hidden">
+                        <div id="timeIsEnded" class="alert alert-danger" role="alert" style="visibility: hidden">
+                                ${message_time_is_over}</div>
                     </div>
-                    </c:if>
-
-                    <c:if test="${requestScope.test_info==null}">
-                        <script>
-                            let a = getQuestion();
-                        </script>
-
-                    </c:if>
-                    <div id="quest" style="visibility: hidden">
-                        <button type="submit"
-                                class="card-exe-btn btn btn-right btn-outline-primary">${button_next}</button>
-                    </div>
-
-                </form>
-
-                <div id="complete" style="visibility: hidden">
-                    <div id="timeIsEnded" class="alert alert-danger" role="alert" style="visibility: hidden">
-                        ${message_time_is_over}</div>
-                </div>
+                    <script>let a=getQuestion();</script>
+                </c:if>
 
             </div>
         </div>

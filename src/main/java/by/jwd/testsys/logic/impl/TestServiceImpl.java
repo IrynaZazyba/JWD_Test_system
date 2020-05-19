@@ -64,11 +64,8 @@ public class TestServiceImpl implements TestService {
                     if (userAssignment != null) {
                         Result testResult = testResultDAO.getTestResult(userAssignment);
                         test.setStarted(testResult != null);
-                        test.setFlag(1);
                     } else {
                         test.setStarted(false);
-                        test.setFlag(0);
-
                     }
                 }
             }
@@ -84,6 +81,7 @@ public class TestServiceImpl implements TestService {
         Set<Test> assignmentTest = null;
         try {
             assignmentTest = testDAO.getAssignmentTest(userId);
+
         } catch (DAOSqlException e) {
             throw new ServiceException("Error in TestService typeWithTests() method", e);
         }
