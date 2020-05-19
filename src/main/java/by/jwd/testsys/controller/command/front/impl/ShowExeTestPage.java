@@ -1,8 +1,11 @@
 package by.jwd.testsys.controller.command.front.impl;
 
+import by.jwd.testsys.bean.Result;
 import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.controller.command.front.Command;
 import by.jwd.testsys.controller.command.front.ForwardCommandException;
+import by.jwd.testsys.controller.parameter.JspPageName;
+import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.TestServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
@@ -12,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class ShowExeTestPage implements Command {
@@ -25,30 +29,26 @@ public class ShowExeTestPage implements Command {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         TestService testService = serviceFactory.getTestService();
 
-        //todo
+        HttpSession session = req.getSession(false);
+        int user_id = (int) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
+
         Test test = null;
         try {
-            test = testService.getTestInfo(testId);
-        } catch (TestServiceException e) {
-            e.printStackTrace();
-        }
-
-        req.setAttribute("count_question", test.getCountQuestion());
-        req.setAttribute("duration", test.getDuration());
-        req.setAttribute("title", test.getTitle());
-        req.setAttribute("test_id", test.getId());
-
-        if (test.getKey() != null) {
-            req.setAttribute("key", "exist");
-        }
 
 
-        try {
+            Result result = testService.checkResult(user_id, testId);
+            if (result == null) {
+
+                test = testService.getTestInfo(testId);
+            }
+            req.setAttribute("test_info", test);
+
+
             forwardToPage(req, resp, "WEB-INF/jsp/exe_test.jsp");
-        } catch (ForwardCommandException e) {
-            //todo
-            e.printStackTrace();
+        } catch (TestServiceException | ForwardCommandException e) {
+            resp.sendRedirect(JspPageName.ERROR_PAGE);
         }
+
 
     }
 }

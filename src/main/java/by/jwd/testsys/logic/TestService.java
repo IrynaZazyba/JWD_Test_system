@@ -41,4 +41,6 @@ public interface TestService {
     double calculatePercentageOfCorrectAnswers(Assignment assignment, Test test) throws TestServiceException;
 
     Set<Statistic> getUserTestStatistic(int userId) throws TestServiceException;
+
+    Result checkResult(int userId, int testId) throws TestServiceException;
 }

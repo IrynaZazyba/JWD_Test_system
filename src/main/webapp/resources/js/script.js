@@ -264,6 +264,7 @@ function hideKeyConditions() {
         document.getElementById('key').remove();
     }
 
+
 }
 
 async function getContinuedQuestion() {

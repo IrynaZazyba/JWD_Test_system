@@ -115,6 +115,7 @@ public class TestServiceImpl implements TestService {
     public Test getTestInfo(int id) throws TestServiceException {
         Test test;
         try {
+            //todo Просто довавить данные в полученный тест
             Test dbTest = testDAO.getTestInfo(id);
             int countQuestion = testDAO.getCountQuestion(dbTest.getId());
             String title = dbTest.getTitle();
@@ -365,6 +366,21 @@ public class TestServiceImpl implements TestService {
             throw new TestServiceException("DB problem", e);
         }
         return result;
+    }
+
+    @Override
+    public Result checkResult(int userId, int testId) throws TestServiceException {
+
+        Result testResult = null;
+        try {
+            Assignment userAssignmentByTestId = userDAO.getUserAssignmentByTestId(userId, testId);
+            if (userAssignmentByTestId != null) {
+                testResult = testResultDAO.getTestResult(userAssignmentByTestId);
+            }
+        } catch (DAOSqlException e) {
+            throw new TestServiceException("DB problem", e);
+        }
+        return testResult;
     }
 
 

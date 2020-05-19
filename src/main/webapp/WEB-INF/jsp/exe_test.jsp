@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="resources/fontawesome-free-5.12.1-web/css/all.css">
     <link rel="stylesheet" type="text/css" href="resources/css/test-card.css">
     <link rel="stylesheet" type="text/css" href="resources/css/exe-card.css">
+    <script src="resources/js/script.js"></script>
+
 
 </head>
 
@@ -24,6 +26,11 @@
 <fmt:setBundle basename="local/local" var="loc"/>
 <fmt:message bundle="${loc}" key="message.json.time_is_over" var="message_time_is_over"/>
 <fmt:message bundle="${loc}" key="test.message.invalid_key" var="message_invalid_key"/>
+<fmt:message bundle="${loc}" key="test.run_page.button.next" var="button_next"/>
+<fmt:message bundle="${loc}" key="test.run_page.button.start" var="button_start"/>
+<fmt:message bundle="${loc}" key="test.run_page.input.enter_key" var="input_enter_key"/>
+<fmt:message bundle="${loc}" key="test.run_page.message.duration_test" var="message_test_duration"/>
+<fmt:message bundle="${loc}" key="test.run_page.message.number_question" var="message_number_question"/>
 
 <div class="row m-0">
     <div id="timer" class="row m-0" style="visibility: hidden">
@@ -43,22 +50,24 @@
     <div class="col-7 card-main-exe">
         <div class="card-section card-section-exe border rounded">
             <div class="card-header card-header-exe rounded">
-                <div class="ribbon-type ribbon-top-asgmt-left"><span>${requestScope.title}</span></div>
+                <div class="ribbon-type ribbon-top-asgmt-left"><span>${requestScope.test_info.title}</span></div>
                 <div class="ribbon ribbon-top-type-left"><span>ribbon</span></div>
 
             </div>
             <div id="card-body" class="card-body mb-2 card-test">
 
-                <div id="conditions" class="text-ctr">
-                    <h3>На выполнение теста отведено ${requestScope.duration} минут. Количество
-                        вопросов ${requestScope.count_question}</h3></div>
 
+                <c:if test="${not empty requestScope.test_info}">
+                <div id="conditions" class="text-ctr">
+                    <h3> ${requestScope.test_info.duration} ${message_test_duration}
+                            ${message_number_question} ${requestScope.test_info.countQuestion}</h3></div>
+                </c:if>
 
                 <form onsubmit="getQuestion(); return false" id="exeTest" enctype="multipart/form-data"
                       accept-charset="UTF-8" class="key-form" role="form">
                     <input type="hidden" name="command" value="save_answer"/>
-                    <input type="hidden" id="test_id" name="test_id" value="${requestScope.test_id}"/>
-                    <c:if test="${not empty requestScope.key}">
+                    <input type="hidden" id="test_id" name="test_id" value="${requestScope.test_info.id}"/>
+                    <c:if test="${not empty requestScope.test_info.key}">
 
 
                         <div id="invalid_key" class="alert alert-danger" role="alert" style="visibility: hidden">
@@ -69,7 +78,7 @@
                             <div class="form-group">
                                 <div class="row justify-content-center">
 
-                                    <label class="col-sm-3 text-ctr control-label p-0">Введите ключ</label>
+                                    <label class="col-sm-3 text-ctr control-label p-0">${input_enter_key}</label>
                                     <div class="col-sm-3">
                                         <input id="key_value" type="text" class="form-control" required
                                                name="key">
@@ -77,19 +86,27 @@
                                 </div>
                             </div>
                         </div>
-                    </c:if>
                     <div id="exeButton">
                         <div class="form-group">
                             <div class="row justify-content-center">
                                 <div class="col-sm-offset-2 col-sm-10 p-top-95">
-                                    <button type="submit" class="card-exe-btn btn btn-outline-primary">Запустить
+                                    <button type="submit" class="card-exe-btn btn btn-outline-primary">${button_start}
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    </c:if>
+
+                    <c:if test="${requestScope.test_info==null}">
+                        <script>
+                            let a = getQuestion();
+                        </script>
+
+                    </c:if>
                     <div id="quest" style="visibility: hidden">
-                        <button type="submit" class="card-exe-btn btn btn-right btn-outline-primary">Next</button>
+                        <button type="submit"
+                                class="card-exe-btn btn btn-right btn-outline-primary">${button_next}</button>
                     </div>
 
                 </form>
@@ -117,7 +134,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
-<script src="resources/js/script.js"></script>
 
 
 </body>
