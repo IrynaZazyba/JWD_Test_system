@@ -1,5 +1,6 @@
 package by.jwd.testsys.controller.command.front.impl;
 
+import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.bean.Type;
 import by.jwd.testsys.controller.parameter.JspPageName;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
@@ -32,10 +33,12 @@ public class ShowTestsPage implements Command {
         int userId = (int) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
         try {
 
-
             Set<Type> tests = testService.typeWithTests(userId);
             req.setAttribute(RequestParameterName.TESTS_TYPE_LIST, tests);
+            Set<Test> userAssignedTests=testService.getUserAssignmentTests(userId);
+            req.setAttribute("userAssignedTests",userAssignedTests);
             session.setAttribute(SessionAttributeName.QUERY_STRING, req.getQueryString());
+
             forwardToPage(req, resp, JspPageName.START_MENU_PAGE);
 
         } catch (ServiceException | ForwardCommandException e) {

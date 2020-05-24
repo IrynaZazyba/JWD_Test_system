@@ -42,11 +42,6 @@
         <div class="col-2 background-gradient height-100 p-l-15 p-r-0">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
-
-                <a class="nav-link active vertical-menu" id="v-pills-test-tab" data-toggle="pill" href="#v-pills-test"
-                   role="tab"
-                   aria-controls="v-pills-test" aria-selected="true">${nav_link_assigned_tests}</a>
-
                 <a class="nav-link vertical-menu " id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home"
                    role="tab"
                    aria-controls="v-pills-test" aria-selected="true">${nav_link_account_settings}</a>
@@ -136,43 +131,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade " id="v-pills-test" role="tabpanel" aria-labelledby="v-pills-test-tab">
-
-
-                    <div class="row m-t-35">
-                        <c:forEach var="item" items="${requestScope.userAssignedTests}">
-                            <div class="col-2 card-main">
-                                <div class="card-section card-section-third border rounded">
-                                    <div class="card-header card-header-third rounded">
-                                        <div class="ribbon ribbon-top-type-left"><span></span></div>
-                                        <div class="ribbon-type ribbon-top-asgmt-left"><span>${item.type.title}</span>
-                                        </div>
-
-                                    </div>
-                                    <div class="card-body text-center mb-2 card-test">
-                                        <h5 class="name-test">${item.title}</h5>
-                                        <hr>
-
-                                        <p class="card-text time-quest">${item.duration} min</p>
-                                        <p class="card-text time-quest">${item.countQuestion}questions</p>
-
-
-                                    </div>
-                                    <form method="GET" action="test">
-                                        <input type="hidden" name="command" value="show_exe_test_page"/>
-                                        <input type="hidden" name="test_id" value="${item.id}"/>
-                                        <button type="submit"
-                                                class="card-btn btn btn-outline-primary d-block mx-auto">
-                                            ${button_get_started }
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </c:forEach>
-                    </div>
-                    </div>
-                </div>
-
             </div>
         </div>
 

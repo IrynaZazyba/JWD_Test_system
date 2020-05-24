@@ -30,8 +30,6 @@ public class ShowUserPage implements Command {
 
         ServiceFactory serviceFactory=ServiceFactory.getInstance();
         UserService userService = serviceFactory.getUserService();
-        TestService testService = serviceFactory.getTestService();
-
 
         try {
             int userId = (Integer) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
@@ -39,8 +37,6 @@ public class ShowUserPage implements Command {
 
             req.setAttribute(RequestParameterName.USER_ACCOUNT_INFO, userInfoToAccount);
             session.setAttribute(SessionAttributeName.QUERY_STRING,req.getQueryString());
-            Set<Test> userAssignedTests=testService.getUserAssignmentTests(userId);
-            req.setAttribute("userAssignedTests",userAssignedTests);
             forwardToPage(req, resp, JspPageName.JSP_PAGE_PATH);
 
         } catch (ServiceException | ForwardCommandException e) {
