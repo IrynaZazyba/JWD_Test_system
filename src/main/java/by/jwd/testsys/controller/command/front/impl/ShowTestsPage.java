@@ -32,7 +32,6 @@ public class ShowTestsPage implements Command {
         HttpSession session = req.getSession();
         int userId = (int) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
         try {
-
             Set<Type> tests = testService.typeWithTests(userId);
             req.setAttribute(RequestParameterName.TESTS_TYPE_LIST, tests);
             Set<Test> userAssignedTests=testService.getUserAssignmentTests(userId);
