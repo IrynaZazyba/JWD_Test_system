@@ -283,10 +283,7 @@ async function getContinuedQuestion() {
 
 }
 
-/* Add calendar to assign test */
-$('.mydate').daterangepicker({
-    singleDatePicker: true,
-    locale: {
-        format: 'DD.MM.YYYY'
-    }
-});
+
+
+
+

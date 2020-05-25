@@ -1,19 +1,21 @@
 package by.jwd.testsys.logic.impl;
 
-import by.jwd.testsys.bean.Assignment;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.dao.UserDAO;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.factory.DAOFactoryProvider;
+import by.jwd.testsys.logic.UserService;
 import by.jwd.testsys.logic.exception.ExistsUserException;
 import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.exception.ServiceException;
-import by.jwd.testsys.logic.UserService;
 import by.jwd.testsys.logic.validator.UserValidator;
 import by.jwd.testsys.logic.validator.factory.ValidatorFactory;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 
@@ -85,6 +87,16 @@ public class UserServiceImpl implements UserService {
         return updatedUser;
     }
 
+    @Override
+    public Set<User> getStudents() throws ServiceException {
+        Set<User> students;
+        try {
+            students = userDao.getUserWithRoleUser();
+        } catch (DAOSqlException e) {
+            throw new ServiceException("Error in getUserWithRoleUser().", e);
+        }
+        return students;
+    }
 
 
 

@@ -3,6 +3,7 @@ package by.jwd.testsys.logic;
 import by.jwd.testsys.bean.*;
 import by.jwd.testsys.logic.exception.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -43,4 +44,8 @@ public interface TestService {
     Set<Statistic> getUserTestStatistic(int userId) throws TestServiceException;
 
     Result checkResult(int userId, int testId) throws TestServiceException;
+
+    Set<Test> getTestByTypeId(int typeId) throws TestServiceException;
+
+    Set<User> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws ServiceException;
 }

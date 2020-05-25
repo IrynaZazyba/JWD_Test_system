@@ -34,4 +34,6 @@ public interface TestDAO {
     Timestamp getTestStartDateTime(int assignmentId) throws DAOSqlException;
 
     LocalTime getTestDuration(int assignmentId) throws DAOSqlException;
+
+    Set<Test> getTests(int typeId) throws DAOSqlException;
 }

@@ -6,18 +6,19 @@ import by.jwd.testsys.bean.User;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
 public interface UserDAO {
 
-    List<User> getAll() throws DAOException;
+    List<User> getAll() throws DAOSqlException;
 
-    User create(User user) throws DAOException;
+    User create(User user) throws DAOSqlException;
 
-    User getUserByLoginPassword(String login, String password) throws DAOException;
+    User getUserByLoginPassword(String login, String password) throws DAOSqlException;
 
-    User getUserById(int id) throws DAOException;
+    User getUserById(int id) throws DAOSqlException;
 
     User updateUser(User user) throws DAOSqlException;
 
@@ -28,4 +29,8 @@ public interface UserDAO {
     Assignment getUserAssignmentByTestId(int user_id, int test_id) throws DAOSqlException;
 
     Assignment getUserAssignmentByAssignmentId(int assignmentId) throws DAOSqlException;
+
+    Set<User> getUserWithRoleUser() throws DAOSqlException;
+
+     void insertNewAssignment(LocalDate assignmentDate, LocalDate deadline, int testId,List<Integer> usersId) throws DAOSqlException;
 }

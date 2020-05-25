@@ -35,6 +35,7 @@
 <fmt:message bundle="${loc}" key="statistic.table.time_spend_on_test" var="table_time_spend_on_test"/>
 <fmt:message bundle="${loc}" key="statistic.table.count_right_answer" var="table_count_right_answer"/>
 <fmt:message bundle="${loc}" key="statistic.table.result" var="table_result"/>
+<fmt:message bundle="${loc}" key="assignment.exists" var="exists_assignment"/>
 
 
 <div class="container-fluid p-0">
@@ -45,30 +46,40 @@
 
 
     <div style="width: 500px; margin: 0 auto">
-        <form>
+        <div id="attention" style="visibility: hidden">
+            <div class="alert alert-danger" id="existsAssignment" role="alert">
+                ${exists_assignment}
+            </div>
 
+
+        </div>
+        <form name="assign" id="assign" onsubmit="assignUser(); return false;" enctype="multipart/form-data"
+              accept-charset="UTF-8" class="key-form" role="form">
+            <input type="hidden" name="command" value="assign_test"/>
             <div class="form-group">
                 <label for="testType">Example select</label>
-                <select class="form-control" id="testType">
+                <select class="form-control" name="testTypeId" id="testType">
+                    <option selected>Choose...</option>
                     <c:forEach var="item" items="${requestScope.type_tests}">
-                        <option>${item.title}</option>
+                        <option value="${item.id}">${item.title}</option>
                     </c:forEach>
                 </select>
             </div>
             <div class="form-group">
                 <label for="testTitle">Example select</label>
-                <select class="form-control" id="testTitle">
-                    <option>1</option>
+                <select class="form-control" name="testId" id="testTitle">
+                    <option selected>Choose...</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="students">Example multiple select</label>
-                <select multiple class="form-control" id="students">
-                    <option>1</option>
+                <select multiple class="form-control" name="users" id="students">
+                    <c:forEach var="user" items="${requestScope.users}">
+                        <option value="${user.id}">${user.firstName} ${user.lastName}</option>
+                    </c:forEach>
                 </select>
             </div>
-            <input type="date" class="form-control" class="mydate" name="date" placeholder="Дата">
-
+            <input id="date" type="date" class="form-control" class="mydate" name="date" placeholder="Дата">
             <button type="submit" class="btn btn-outline-primary card-btn">Submit</button>
         </form>
     </div>
@@ -80,8 +91,7 @@
         integrity="" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="" crossorigin="anonymous"></script>
-<script src="resources/js/script.js"></script>
-
+<script src="resources/js/adminScript.js"></script>
 
 </body>
 

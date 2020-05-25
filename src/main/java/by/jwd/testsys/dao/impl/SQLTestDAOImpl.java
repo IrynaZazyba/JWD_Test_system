@@ -57,9 +57,11 @@ public class SQLTestDAOImpl implements TestDAO {
             "INNER JOIN assignment on assignment.test_id=test.id inner join type on test.type_id=type.id where assignment.user_id =? " +
             "and completed is false and question.deleted_at is null group BY test.id";
 
-    public static final String WRITE_ASSIGNMENT = "INSERT INTO `assignment`" +
+    private static final String WRITE_ASSIGNMENT = "INSERT INTO `assignment`" +
             " (`date`,`deadline`, `test_id`, `user_id`, `completed`) " +
             "VALUES (?,?,?,?,?)";
+
+    private static final String SELECT_TESTS_BY_TYPE_ID = "SELECT id, title FROM `test` WHERE type_id=? and deleted_at is null";
 
     @Override
     public Set<Test> getAssignmentTest(int userId) throws DAOSqlException {
@@ -342,8 +344,6 @@ public class SQLTestDAOImpl implements TestDAO {
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 dateStart = resultSet.getTimestamp("date_start");
-                System.out.println(dateStart);
-
             }
         } catch (ConnectionPoolException e) {
             throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method getTestStartDateTime()", e);
@@ -383,6 +383,35 @@ public class SQLTestDAOImpl implements TestDAO {
         return duration;
     }
 
+    @Override
+    public Set<Test> getTests(int typeId) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Set<Test> tests = new HashSet<>();
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_TESTS_BY_TYPE_ID);
+            preparedStatement.setInt(1, typeId);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String title = resultSet.getString("title");
+                Test test = new Test(id, title);
+                tests.add(test);
+            }
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method getTests()", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getTests()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method getTests()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+        }
+
+        return tests;
+    }
 
     private Test buildTest(ResultSet resultSet) throws SQLException {
         int testId = resultSet.getInt("t_id");

@@ -19,10 +19,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TestServiceImpl implements TestService {
 
@@ -381,6 +378,17 @@ public class TestServiceImpl implements TestService {
         return testResult;
     }
 
+    @Override
+    public Set<Test> getTestByTypeId(int typeId) throws TestServiceException {
+        Set<Test> tests = null;
+        try {
+            tests = testDAO.getTests(typeId);
+        } catch (DAOSqlException e) {
+            throw new TestServiceException("DB problem", e);
+        }
+        return tests;
+    }
+
 
     private Result getResult(Assignment assignment) throws TestServiceException {
         try {
@@ -422,5 +430,31 @@ public class TestServiceImpl implements TestService {
 
         return result;
     }
+
+    @Override
+    public Set<User> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws ServiceException {
+
+        List<Integer> usersId = new ArrayList<>();
+        Set<User> usersWithExistsAssignment = new HashSet<>();
+
+        try {
+            for (String id : assignUsersId) {
+                int userId = Integer.parseInt(id);
+                Assignment assignment = checkAssignment(userId, testId);
+                if (assignment == null) {
+                    usersId.add(userId);
+                } else {
+                    User userById = userDAO.getUserById(userId);
+                    usersWithExistsAssignment.add(userById);
+                }
+            }
+            userDAO.insertNewAssignment(LocalDate.now(), deadline, testId, usersId);
+        } catch (DAOSqlException e) {
+            throw new ServiceException("Error in getUserWithRoleUser().", e);
+        }
+
+        return usersWithExistsAssignment;
+    }
+
 
 }
