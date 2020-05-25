@@ -25,6 +25,7 @@
 <fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
 <fmt:message bundle="${loc}" key="button.test.get_started" var="button_get_started"/>
 <fmt:message bundle="${loc}" key="button.test.continue" var="button_continue"/>
+<fmt:message bundle="${loc}" key="nav-link.assigned_tests" var="assigned_test"/>
 
 
 <div class="container-fluid p-0">
@@ -38,7 +39,7 @@
                 <a class="nav-link vertical-menu" id="v-pills-assigned_test-tab" data-toggle="pill"
                    href="#v-pills-assigned_test"
                    role="tab"
-                   aria-controls="v-pills-assigned_test" aria-selected="true">Назначенные тесты</a>
+                   aria-controls="v-pills-assigned_test" aria-selected="true">${assigned_test}</a>
 
                 <c:forEach var="item" items="${requestScope.tests_type}">
                     <a class="nav-link vertical-menu" id="v-pills-${item.id}-tab" data-toggle="pill"

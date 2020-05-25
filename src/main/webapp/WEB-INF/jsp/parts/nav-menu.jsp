@@ -17,6 +17,7 @@
 <fmt:message bundle="${loc}" key="button.language_en" var="button_language_en"/>
 <fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
 <fmt:message bundle="${loc}" key="nav-item.article" var="nav_item_articles"/>
+<fmt:message bundle="${loc}" key="nav-item.assign_test" var="assign_test"/>
 
 
 
@@ -39,7 +40,12 @@
                 </li>
             </c:if>
 
+
             <c:if test="${sessionScope.user_role=='ADMIN'}">
+                <li class="nav-item">
+                    <a class="nav-link nav-vrl item-start"
+                       href="${pageContext.request.contextPath}/test?command=assign_test">${assign_test}</a>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle nav-vrl item-start" href="#" id="navbarDropdown"
                        role="button" role="tab"

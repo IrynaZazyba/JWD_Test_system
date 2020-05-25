@@ -23,6 +23,7 @@ public final class CommandProvider {
         repository.put(CommandName.DISPLAY_STATISTIC, new DisplayStatistic());
         repository.put(CommandName.SHOW_USER_ASSIGNMENT, new ShowUserAssignment());
         repository.put(CommandName.SHOW_EXE_TEST_PAGE, new ShowExeTestPage());
+        repository.put(CommandName.ASSIGN_TEST, new ShowAdminAssignTest());
 
     }
 
