@@ -20,6 +20,11 @@ async function changeOption() {
 
     let typeId = type.value;
 
+    let jsOptions = document.querySelectorAll("#testTitle > .js");
+    if (jsOptions.length > 0) {
+        jsOptions.forEach(element => element.remove());
+    }
+
     let response = await fetch("http://localhost:8080/test-system/ajax?command=get_tests&typeId=" + typeId, {
         method: 'GET',
     });
@@ -34,21 +39,21 @@ async function changeOption() {
 function generateOptionSelect(json) {
     let options = "";
     for (let key in json.tests) {
-        options = options + "<option value=" + json.tests[key].id + ">" + json.tests[key].title + "</option>";
+        options = options + "<option class=\"js\" value=" + json.tests[key].id + ">" + json.tests[key].title + "</option>";
     }
     return options;
 }
 
 async function assignUser() {
 
-    if (document.getElementById("alert").style.visibility === 'visible') {
+    if (document.getElementById("alert").style.display === 'block') {
         document.getElementById("existsAssignment").innerHTML = '';
-        document.getElementById("alert").style.visibility = 'hidden';
+        document.getElementById("alert").style.display = 'none';
     }
 
-    if (document.getElementById("success").style.visibility === 'visible') {
+    if (document.getElementById("success").style.display === 'block') {
         document.getElementById("successMessage").innerHTML = '';
-        document.getElementById("success").style.visibility = 'hidden';
+        document.getElementById("success").style.display = 'none';
     }
 
     let startTest = document.getElementById("assign");
@@ -62,14 +67,16 @@ async function assignUser() {
         console.log("ok");
         let json = await response.json();
         if (json.existsAssignment.length != 0) {
-            document.getElementById("alert").style.visibility = 'visible';
+            document.getElementById("alert").style.display = 'block';
             document.getElementById("existsAssignment").insertAdjacentHTML('afterbegin', generateAssignmentResultMessage(json.existsAssignment));
         }
         if (json.successAssignment.length != 0) {
-            document.getElementById("success").style.visibility = 'visible';
+            document.getElementById("success").style.display = 'block';
             document.getElementById("successMessage").insertAdjacentHTML('afterbegin', generateAssignmentResultMessage(json.successAssignment));
         }
-
+    } else {
+        console.log("409");
+        document.getElementById('date').classList.add('is-invalid');
     }
 
 }

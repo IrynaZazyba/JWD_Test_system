@@ -5,6 +5,7 @@ import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.command.front.Command;
 import by.jwd.testsys.controller.command.front.ForwardCommandException;
 import by.jwd.testsys.controller.parameter.JspPageName;
+import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.UserService;
 import by.jwd.testsys.logic.exception.ServiceException;
@@ -13,6 +14,7 @@ import by.jwd.testsys.logic.factory.ServiceFactory;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -27,6 +29,7 @@ public class ShowAdminAssignTest implements Command {
         ServiceFactory serviceFactory=ServiceFactory.getInstance();
         TestService testService =serviceFactory.getTestService();
         UserService userService = serviceFactory.getUserService();
+        HttpSession session = request.getSession(false);
 
         try {
             List<Type> typeWithTests = testService.allTestsType();
@@ -35,6 +38,8 @@ public class ShowAdminAssignTest implements Command {
             Set<User> students = userService.getStudents();
             request.setAttribute("users", students);
             request.setAttribute("dateNow", LocalDate.now());
+
+            session.setAttribute(SessionAttributeName.QUERY_STRING,request.getQueryString());
 
             forwardToPage(request, response, JspPageName.ADMIN_PAGE_ASSIGN_TEST);
         } catch (ForwardCommandException | ServiceException e) {

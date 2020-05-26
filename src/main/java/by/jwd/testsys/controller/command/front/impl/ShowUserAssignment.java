@@ -24,18 +24,20 @@ public class ShowUserAssignment implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        HttpSession session = request.getSession();
-        int userId = (Integer) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
-
-        ServiceFactory serviceFactory=ServiceFactory.getInstance();
-        TestService testService = serviceFactory.getTestService();
-
-        try {
-            Set<Test> userAssignedTests=testService.getUserAssignmentTests(userId);
-            request.setAttribute("userAssignedTests",userAssignedTests);
-        } catch (ServiceException e) {
-            response.sendRedirect(JspPageName.ERROR_PAGE);
-        }
+//        HttpSession session = request.getSession();
+//        int userId = (Integer) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
+//
+//        ServiceFactory serviceFactory=ServiceFactory.getInstance();
+//        TestService testService = serviceFactory.getTestService();
+//
+//        try {
+//            Set<Test> userAssignedTests=testService.getUserAssignmentTests(userId);
+//            request.setAttribute("userAssignedTests",userAssignedTests);
+//            session.setAttribute(SessionAttributeName.QUERY_STRING,request.getQueryString());
+//
+//        } catch (ServiceException e) {
+//            response.sendRedirect(JspPageName.ERROR_PAGE);
+//        }
 
 
     }

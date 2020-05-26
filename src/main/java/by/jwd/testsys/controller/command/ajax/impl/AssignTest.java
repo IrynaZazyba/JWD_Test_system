@@ -41,7 +41,7 @@ public class AssignTest implements AjaxCommand {
             //todo
             e.printStackTrace();
         } catch (DateOutOfRangeException e) {
-            //todo отправить сообщ о невалидной дате
+            response.setStatus(409);
         }
         return answer;
     }
