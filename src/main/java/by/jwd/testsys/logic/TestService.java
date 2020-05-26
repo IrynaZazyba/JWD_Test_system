@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface TestService {
@@ -47,5 +48,5 @@ public interface TestService {
 
     Set<Test> getTestByTypeId(int typeId) throws TestServiceException;
 
-    Set<User> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws ServiceException;
+    Map<String,Set<User>> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws ServiceException, DateOutOfRangeException;
 }

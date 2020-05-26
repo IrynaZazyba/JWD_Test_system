@@ -41,6 +41,16 @@ function generateOptionSelect(json) {
 
 async function assignUser() {
 
+    if (document.getElementById("alert").style.visibility === 'visible') {
+        document.getElementById("existsAssignment").innerHTML = '';
+        document.getElementById("alert").style.visibility = 'hidden';
+    }
+
+    if (document.getElementById("success").style.visibility === 'visible') {
+        document.getElementById("successMessage").innerHTML = '';
+        document.getElementById("success").style.visibility = 'hidden';
+    }
+
     let startTest = document.getElementById("assign");
     let response = await fetch("http://localhost:8080/test-system/ajax", {
         method: 'POST',
@@ -49,19 +59,25 @@ async function assignUser() {
     });
 
     if (response.ok) {
-        console.log("ok")
+        console.log("ok");
         let json = await response.json();
-        if(json.hasOwnProperty('users')) {
-            document.getElementById("attention").style.visibility = 'visible';
-            document.getElementById("existsAssignment").insertAdjacentHTML('beforeend', generateAlertDangerMessage(json));
+        if (json.existsAssignment.length != 0) {
+            document.getElementById("alert").style.visibility = 'visible';
+            document.getElementById("existsAssignment").insertAdjacentHTML('afterbegin', generateAssignmentResultMessage(json.existsAssignment));
         }
+        if (json.successAssignment.length != 0) {
+            document.getElementById("success").style.visibility = 'visible';
+            document.getElementById("successMessage").insertAdjacentHTML('afterbegin', generateAssignmentResultMessage(json.successAssignment));
+        }
+
     }
+
 }
 
-function  generateAlertDangerMessage(json) {
-    let message="";
-    for(let key in json.users){
-        message=json.users[key].firstName+" "+json.users[key].lastName+"</br>";
+function generateAssignmentResultMessage(users) {
+    let message = "";
+    for (let key in users) {
+        message = message + "<span>" + users[key].firstName + " " + users[key].lastName + "</span></br>";
     }
     return message;
 

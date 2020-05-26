@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -33,6 +34,7 @@ public class ShowAdminAssignTest implements Command {
             request.setAttribute("type_tests",typeWithTests);
             Set<User> students = userService.getStudents();
             request.setAttribute("users", students);
+            request.setAttribute("dateNow", LocalDate.now());
 
             forwardToPage(request, response, JspPageName.ADMIN_PAGE_ASSIGN_TEST);
         } catch (ForwardCommandException | ServiceException e) {

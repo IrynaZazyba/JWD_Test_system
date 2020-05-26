@@ -432,10 +432,17 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Set<User> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws ServiceException {
+    public Map<String, Set<User>> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws ServiceException, DateOutOfRangeException {
 
         List<Integer> usersId = new ArrayList<>();
-        Set<User> usersWithExistsAssignment = new HashSet<>();
+        Map<String, Set<User>> assignmentResult = new HashMap<>();
+        Set<User> existsAssignment = new HashSet<>();
+        Set<User> successAssignment = new HashSet<>();
+
+        if (!isWithinRange(deadline)) {
+            //todo logger
+            throw new DateOutOfRangeException("Deadline date isn't valid");
+        }
 
         try {
             for (String id : assignUsersId) {
@@ -443,18 +450,26 @@ public class TestServiceImpl implements TestService {
                 Assignment assignment = checkAssignment(userId, testId);
                 if (assignment == null) {
                     usersId.add(userId);
+                    User user = userDAO.getUserById(userId);
+                    successAssignment.add(user);
                 } else {
                     User userById = userDAO.getUserById(userId);
-                    usersWithExistsAssignment.add(userById);
+                    existsAssignment.add(userById);
                 }
             }
+
+            assignmentResult.put("successAssignment", successAssignment);
+            assignmentResult.put("existsAssignment", existsAssignment);
             userDAO.insertNewAssignment(LocalDate.now(), deadline, testId, usersId);
         } catch (DAOSqlException e) {
             throw new ServiceException("Error in getUserWithRoleUser().", e);
         }
 
-        return usersWithExistsAssignment;
+        return assignmentResult;
     }
 
+    boolean isWithinRange(LocalDate deadline) {
+        return deadline.isAfter(LocalDate.now());
+    }
 
 }

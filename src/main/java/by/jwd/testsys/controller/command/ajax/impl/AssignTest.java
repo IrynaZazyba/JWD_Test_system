@@ -4,6 +4,7 @@ import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.UserService;
+import by.jwd.testsys.logic.exception.DateOutOfRangeException;
 import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import com.google.gson.Gson;
@@ -26,22 +27,21 @@ public class AssignTest implements AjaxCommand {
         String[] usersId = request.getParameterValues("users");
 
         String answer = null;
-        Map<String, Object> responseParams = new HashMap<>();
+        Map<String, Set<User>> assignmentResult;
         Gson gson = new Gson();
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         TestService testService = serviceFactory.getTestService();
 
         try {
-            Set<User> users = testService.assignTestToUsers(testId, deadline, usersId);
-            if (users.size() != 0) {
-                responseParams.put("users", users);
-            }
-            answer = gson.toJson(responseParams);
+            assignmentResult = testService.assignTestToUsers(testId, deadline, usersId);
+            answer = gson.toJson(assignmentResult);
 
         } catch (ServiceException e) {
             //todo
             e.printStackTrace();
+        } catch (DateOutOfRangeException e) {
+            //todo отправить сообщ о невалидной дате
         }
         return answer;
     }
