@@ -12,6 +12,7 @@ import java.io.IOException;
 
 public class ChangeLocal implements Command {
 
+    private final static String CONTROLLER_ROUTE= "/test?";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -24,7 +25,7 @@ public class ChangeLocal implements Command {
         String queryString = (String) session.getAttribute(SessionAttributeName.QUERY_STRING);
 
         if (queryString != null) {
-            response.sendRedirect(request.getContextPath() + "/test?"+queryString);
+            response.sendRedirect(request.getContextPath() + CONTROLLER_ROUTE+queryString);
         } else {
             response.sendRedirect(request.getContextPath());
         }

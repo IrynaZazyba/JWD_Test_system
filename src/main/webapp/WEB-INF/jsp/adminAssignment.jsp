@@ -95,7 +95,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="students"><c:out value="${lable_users}"/></label>
-                                    <select multiple class="form-control" name="users" id="students">
+                                    <select multiple class="form-control" name="assigned_users" id="students">
                                         <c:forEach var="user" items="${requestScope.users}">
                                             <option value="${user.id}">${user.firstName} ${user.lastName}</option>
                                         </c:forEach>

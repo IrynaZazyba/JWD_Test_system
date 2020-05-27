@@ -5,6 +5,7 @@ import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.command.front.Command;
 import by.jwd.testsys.controller.command.front.ForwardCommandException;
 import by.jwd.testsys.controller.parameter.JspPageName;
+import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.UserService;
@@ -34,10 +35,10 @@ public class ShowAdminAssignTest implements Command {
         try {
             List<Type> typeWithTests = testService.allTestsType();
 
-            request.setAttribute("type_tests",typeWithTests);
+            request.setAttribute(RequestParameterName.LIST_TYPE_WITH_TESTS,typeWithTests);
             Set<User> students = userService.getStudents();
-            request.setAttribute("users", students);
-            request.setAttribute("dateNow", LocalDate.now());
+            request.setAttribute(RequestParameterName.SET_STUDENTS, students);
+            request.setAttribute(RequestParameterName.CURRENT_DATE, LocalDate.now());
 
             session.setAttribute(SessionAttributeName.QUERY_STRING,request.getQueryString());
 

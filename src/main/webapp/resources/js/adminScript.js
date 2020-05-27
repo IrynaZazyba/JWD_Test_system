@@ -33,6 +33,8 @@ async function changeOption() {
     if (response.ok) {
         let json = await response.json();
         document.getElementById("testTitle").insertAdjacentHTML('beforeend', generateOptionSelect(json));
+    }else{
+        //todo сообщение
     }
 }
 

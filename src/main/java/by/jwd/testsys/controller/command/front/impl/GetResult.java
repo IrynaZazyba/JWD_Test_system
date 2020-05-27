@@ -42,7 +42,7 @@ public class GetResult implements Command {
 
             double percentageOfCorrectAnswers = testService.calculatePercentageOfCorrectAnswers(assignment, testInfo);
 
-            request.setAttribute("percentage", percentageOfCorrectAnswers);
+            request.setAttribute(RequestParameterName.PERCENTAGE_CORRECT_ANSWERS, percentageOfCorrectAnswers);
             request.setAttribute(RequestParameterName.TEST_NAME, testInfo.getTitle());
             session.setAttribute(SessionAttributeName.COMMAND_NAME, request.getQueryString());
             forwardToPage(request, response, JspPageName.TEST_RESULT_PAGE);

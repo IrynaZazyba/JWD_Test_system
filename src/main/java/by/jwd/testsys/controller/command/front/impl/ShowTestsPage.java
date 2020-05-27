@@ -35,7 +35,7 @@ public class ShowTestsPage implements Command {
             Set<Type> tests = testService.typeWithTests(userId);
             req.setAttribute(RequestParameterName.TESTS_TYPE_LIST, tests);
             Set<Test> userAssignedTests=testService.getUserAssignmentTests(userId);
-            req.setAttribute("userAssignedTests",userAssignedTests);
+            req.setAttribute(RequestParameterName.USER_ASSIGNMENT,userAssignedTests);
             session.setAttribute(SessionAttributeName.QUERY_STRING, req.getQueryString());
 
             forwardToPage(req, resp, JspPageName.START_MENU_PAGE);

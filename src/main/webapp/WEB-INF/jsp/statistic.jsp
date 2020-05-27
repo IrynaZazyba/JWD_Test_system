@@ -58,7 +58,7 @@
                 <tbody>
                 <br/>
                 <c:set var="num" value="1" scope="page"/>
-                <c:forEach var="item" items="${requestScope.statisticSet}">
+                <c:forEach var="item" items="${requestScope.userTestStatistic}">
                     <tr>
                         <td><c:out value="${item.testTitle}"/></td>
                         <td><tags:localDateTime date="${item.testStart}"/></td>

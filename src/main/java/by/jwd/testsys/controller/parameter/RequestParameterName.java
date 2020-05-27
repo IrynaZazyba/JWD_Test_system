@@ -20,8 +20,16 @@ public final class RequestParameterName {
     public static final String FIRST_NAME_INVALID = "first_name_invalid";
     public static final String LAST_NAME_INVALID = "last_name_invalid";
     public static final String ASSIGNMENT_ID = "assign_id";
-    public static final String TEST_NAME="test_name";
-
-
-
+    public static final String TEST_NAME = "test_name";
+    public static final String TEST_TYPE_ID = "typeId";
+    public static final String LIST_TYPE_WITH_TESTS = "type_tests";
+    public static final String SET_STUDENTS = "users";
+    public static final String CURRENT_DATE = "dateNow";
+    public static final String TEST_ID = "testId";
+    public static final String DEADLINE_DATE = "date";
+    public static final String ASSIGNED_USERS = "assigned_users";
+    public static final String USER_ASSIGNMENT = "userAssignedTests";
+    public static final String USER_TESTS_STATISTIC = "userTestStatistic";
+    public static final String PERCENTAGE_CORRECT_ANSWERS = "percentage";
+    public static final String TEST_INFO = "testInfo";
 }

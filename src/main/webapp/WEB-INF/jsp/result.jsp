@@ -31,7 +31,7 @@
     <jsp:include page="parts/nav-menu.jsp"/>
 
     <c:out value="${requestScope.test_name}"/>
-    <c:out value="${requestScope.percentage}%"/>
+    <c:out value="${requestScope.percentage}"/>
 
 </div>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

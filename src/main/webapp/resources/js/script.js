@@ -4,12 +4,12 @@
 "use strict"
 
 
-$('li.nav-item a').on('click', function (e) {
-    // e.preventDefault();
-    $('#myTab a.active').removeClass('active');
-    $(this).tab('show');
-    console.log("fghj");
-})
+// $('li.nav-item a').on('click', function (e) {
+//     // e.preventDefault();
+//     $('#myTab a.active').removeClass('active');
+//     $(this).tab('show');
+//     console.log("fghj");
+// })
 
 
 formElem.onsubmit = async (e) => {
@@ -61,7 +61,7 @@ async function getQuestion() {
 
 
     let dataToGetQuestion = new FormData();
-    let test_id = document.getElementById("test_id").value;
+    let test_id = document.getElementById("testId").value;
 
     if (document.getElementById("key_value") != null) {
         let key = document.getElementById("key_value").value;
@@ -72,7 +72,7 @@ async function getQuestion() {
         dataToGetQuestion.append("test_started", "true");
     }
     dataToGetQuestion.append("command", "show_question");
-    dataToGetQuestion.append("test_id", test_id);
+    dataToGetQuestion.append("testId", test_id);
 
 
     let response = await fetch("http://localhost:8080/test-system/ajax", {

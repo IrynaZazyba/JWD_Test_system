@@ -5,12 +5,11 @@ import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.controller.command.front.Command;
 import by.jwd.testsys.controller.command.front.ForwardCommandException;
 import by.jwd.testsys.controller.parameter.JspPageName;
+import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.TestServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +22,8 @@ public class ShowExeTestPage implements Command {
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int testId = Integer.parseInt(req.getParameter("test_id"));
+
+        int testId = Integer.parseInt(req.getParameter(RequestParameterName.TEST_ID));
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         TestService testService = serviceFactory.getTestService();
@@ -38,11 +38,11 @@ public class ShowExeTestPage implements Command {
             Result result = testService.checkResult(user_id, testId);
             test = testService.getTestInfo(testId);
             test.setStarted(result!=null);
+            System.out.println("test started"+test.getStarted());
+            req.setAttribute(RequestParameterName.TEST_INFO, test);
 
-            req.setAttribute("test_info", test);
 
-
-            forwardToPage(req, resp, "WEB-INF/jsp/exe_test.jsp");
+            forwardToPage(req, resp, JspPageName.EXE_TEST_PAGE);
         } catch (TestServiceException | ForwardCommandException e) {
             resp.sendRedirect(JspPageName.ERROR_PAGE);
         }

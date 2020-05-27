@@ -3,6 +3,7 @@ package by.jwd.testsys.controller.command.ajax.impl;
 import by.jwd.testsys.bean.Assignment;
 import by.jwd.testsys.bean.Question;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
+import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.TestLogService;
 import by.jwd.testsys.logic.TestService;
@@ -27,7 +28,7 @@ public class ShowQuestion implements AjaxCommand {
         TestService testService = serviceFactory.getTestService();
         TestLogService testLogService = serviceFactory.getTestLogService();
 
-        int test_id = Integer.parseInt(request.getParameter("test_id"));
+        int test_id = Integer.parseInt(request.getParameter(RequestParameterName.TEST_ID));
         String key = request.getParameter("key");
 
         HttpSession session = request.getSession(false);

@@ -50,25 +50,25 @@
     <div class="col-7 card-main-exe">
         <div class="card-section card-section-exe border rounded">
             <div class="card-header card-header-exe rounded">
-                <div class="ribbon-type ribbon-top-asgmt-left"><span>${requestScope.test_info.title}</span></div>
+                <div class="ribbon-type ribbon-top-asgmt-left"><span>${requestScope.testInfo.title}</span></div>
                 <div class="ribbon ribbon-top-type-left"><span>ribbon</span></div>
 
             </div>
             <div id="card-body" class="card-body mb-2 card-test">
 
 
-                <c:if test="${!requestScope.test_info.started}">
+                <c:if test="${!requestScope.testInfo.started}">
                     <div id="conditions" class="text-ctr">
-                        <h3> ${requestScope.test_info.duration} ${message_test_duration}
-                                ${message_number_question} ${requestScope.test_info.countQuestion}</h3></div>
+                        <h3> ${requestScope.testInfo.duration} ${message_test_duration}
+                                ${message_number_question} ${requestScope.testInfo.countQuestion}</h3></div>
 
                     <form onsubmit="getQuestion(); return false" id="exeTest" enctype="multipart/form-data"
                           accept-charset="UTF-8" class="key-form" role="form">
                         <input type="hidden" name="command" value="save_answer"/>
-                        <input type="hidden" id="test_id" name="test_id" value="${requestScope.test_info.id}"/>
+                        <input type="hidden" id="testId" name="test_id" value="${requestScope.testInfo.id}"/>
 
 
-                        <c:if test="${not empty requestScope.test_info.key}">
+                        <c:if test="${not empty requestScope.testInfo.key}">
 
                             <div id="invalid_key" class="alert alert-danger" role="alert" style="visibility: hidden">
                                     ${message_invalid_key}</div>
@@ -86,32 +86,37 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="exeButton">
-                                <div class="form-group">
-                                    <div class="row justify-content-center">
-                                        <div class="col-sm-offset-2 col-sm-10 p-top-95">
-                                            <button type="submit"
-                                                    class="card-exe-btn btn btn-outline-primary">${button_start}
-                                            </button>
-                                        </div>
+
+                        </c:if>
+                        <div id="exeButton">
+                            <div class="form-group">
+                                <div class="row justify-content-center">
+                                    <div class="col-sm-offset-2 col-sm-10 p-top-95">
+                                        <button type="submit"
+                                                class="card-exe-btn btn btn-outline-primary">${button_start}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                        </c:if>
+                        </div>
                         <div id="quest" style="visibility: hidden">
                             <button type="submit"
                                     class="card-exe-btn btn btn-right btn-outline-primary">${button_next}</button>
                         </div>
 
                     </form>
+                    <div id="complete" style="visibility: hidden">
+                        <div id="timeIsEnded" class="alert alert-danger" role="alert" style="visibility: hidden">
+                                ${message_time_is_over}</div>
+                    </div>
 
                 </c:if>
 
-                <c:if test="${requestScope.test_info.started}">
+                <c:if test="${requestScope.testInfo.started}">
                     <form onsubmit="getQuestion(); return false" id="exeTest" enctype="multipart/form-data"
                           accept-charset="UTF-8" class="key-form" role="form">
                         <input type="hidden" name="command" value="save_answer"/>
-                        <input type="hidden" id="test_id" name="test_id" value="${requestScope.test_info.id}"/>
+                        <input type="hidden" id="testId" name="test_id" value="${requestScope.testInfo.id}"/>
                         <div id="quest" style="visibility: hidden">
                             <button type="submit"
                                     class="card-exe-btn btn btn-right btn-outline-primary">${button_next}</button>
@@ -123,7 +128,7 @@
                         <div id="timeIsEnded" class="alert alert-danger" role="alert" style="visibility: hidden">
                                 ${message_time_is_over}</div>
                     </div>
-                    <script>let a=getQuestion();</script>
+                    <script>let a = getQuestion();</script>
                 </c:if>
 
             </div>

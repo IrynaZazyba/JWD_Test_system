@@ -78,7 +78,7 @@
                                 </div>
                                 <form method="GET" action="test">
                                     <input type="hidden" name="command" value="show_exe_test_page"/>
-                                    <input type="hidden" name="test_id" value="${item.id}"/>
+                                    <input type="hidden" name="testId" value="${item.id}"/>
                                     <button type="submit"
                                             class="card-btn btn btn-outline-primary d-block mx-auto">
                                             ${button_get_started }
@@ -123,7 +123,7 @@
 
                                             <form method="GET" action="test">
                                                 <input type="hidden" name="command" value="show_exe_test_page"/>
-                                                <input type="hidden" name="test_id" value="${itm.id}"/>
+                                                <input type="hidden" name="testId" value="${itm.id}"/>
                                                 <button type="submit"
                                                         class="card-btn btn btn-outline-primary d-block mx-auto">
                                                         ${button_get_started}
@@ -136,7 +136,7 @@
                                             <form onsubmit="getContinuedQuestion(); return false" id="exeTest" enctype="multipart/form-data"
                                             accept-charset="UTF-8" class="key-form" role="form">
                                             <input type="hidden" name="command" value="save_answer"/>
-                                            <input type="hidden" id="test_id" name="test_id"
+                                            <input type="hidden" id="testId" name="testId"
                                                    value="${itm.id}"/>
 
 

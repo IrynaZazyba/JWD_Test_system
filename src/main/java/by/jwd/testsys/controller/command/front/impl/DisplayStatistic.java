@@ -4,6 +4,7 @@ import by.jwd.testsys.bean.Statistic;
 import by.jwd.testsys.controller.command.front.Command;
 import by.jwd.testsys.controller.command.front.ForwardCommandException;
 import by.jwd.testsys.controller.parameter.JspPageName;
+import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.TestServiceException;
@@ -30,7 +31,7 @@ public class DisplayStatistic implements Command {
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
             TestService testService = serviceFactory.getTestService();
             Set<Statistic> userTestStatistic = testService.getUserTestStatistic(userId);
-            request.setAttribute("statisticSet", userTestStatistic);
+            request.setAttribute(RequestParameterName.USER_TESTS_STATISTIC, userTestStatistic);
             session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
             forwardToPage(request, response, JspPageName.STATISTIC_PAGE);
         } catch (ForwardCommandException | TestServiceException e) {
