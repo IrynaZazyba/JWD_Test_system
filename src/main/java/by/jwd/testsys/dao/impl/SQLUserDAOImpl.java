@@ -58,7 +58,7 @@ public class SQLUserDAOImpl implements UserDAO {
 
     private static final String SELECT_USERS_WITH_ASSIGNMENT_BY_TEST_ID = "SELECT assignment.id as asgn_id, date, " +
             "deadline,users.id as u_id, first_name, last_name, completed FROM `assignment` inner join users " +
-            "on users.id=assignment.user_id WHERE test_id=? AND completed=?";
+            "on users.id=assignment.user_id WHERE test_id=?";
 
 
     @Override
@@ -422,9 +422,14 @@ public class SQLUserDAOImpl implements UserDAO {
 
         try {
             connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(SELECT_USERS_WITH_ASSIGNMENT_BY_TEST_ID);
-            preparedStatement.setInt(1, testId);
-            preparedStatement.setBoolean(2, isCompleted);
+            if (isCompleted) {
+                preparedStatement = connection.prepareStatement(SELECT_USERS_WITH_ASSIGNMENT_BY_TEST_ID);
+                preparedStatement.setInt(1, testId);
+            } else {
+                preparedStatement = connection.prepareStatement(SELECT_USERS_WITH_ASSIGNMENT_BY_TEST_ID + " AND completed=?");
+                preparedStatement.setInt(1, testId);
+                preparedStatement.setBoolean(2, isCompleted);
+            }
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int user_id = resultSet.getInt("u_id");
