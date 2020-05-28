@@ -17,7 +17,7 @@ public final class AjaxCommandProvider {
         repository.put(AjaxCommandName.SAVE_ANSWER, new SaveAnswer());
         repository.put(AjaxCommandName.GET_TESTS, new GetTests());
         repository.put(AjaxCommandName.ASSIGN_TEST, new AssignTest());
-
+        repository.put(AjaxCommandName.GET_ASSIGNED_USERS, new GetAssignedUsers());
     }
 
     public static AjaxCommandProvider getInstance() {

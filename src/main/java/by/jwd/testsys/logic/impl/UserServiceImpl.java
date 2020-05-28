@@ -15,6 +15,7 @@ import by.jwd.testsys.logic.validator.factory.ValidatorFactory;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -98,7 +99,16 @@ public class UserServiceImpl implements UserService {
         return students;
     }
 
-
+    @Override
+    public Set<User> getUsersWithAssignment(int testId, boolean isCompleted) throws ServiceException {
+        Set<User> users = new HashSet<>();
+        try {
+           users=userDao.getUsersWithAssignmentByTestId(testId, isCompleted);
+        } catch (DAOSqlException e) {
+            throw new ServiceException("Error in getUserWithRoleUser().", e);
+        }
+        return users;
+    }
 
 
 }

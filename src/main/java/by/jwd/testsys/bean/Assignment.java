@@ -25,6 +25,12 @@ public class Assignment {
         this.deadline = deadline;
         this.test = test;
     }
+    public Assignment(int id, LocalDate asgmtDate, LocalDate deadline, boolean isComplete) {
+        this.id = id;
+        this.asgmtDate = asgmtDate;
+        this.deadline = deadline;
+        this.isComplete=isComplete;
+    }
 
     public Assignment(int id, LocalDate asgmtDate, LocalDate deadline, Test test, boolean isComplete) {
         this.id = id;

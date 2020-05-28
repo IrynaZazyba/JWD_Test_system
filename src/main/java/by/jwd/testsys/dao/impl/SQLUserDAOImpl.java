@@ -56,6 +56,11 @@ public class SQLUserDAOImpl implements UserDAO {
     private static final String INSERT_NEW_ASSIGNMENT = "INSERT INTO `assignment` (`date`, `deadline`, `test_id`, " +
             "`user_id`, `completed`) VALUES (?,?,?,?, false)";
 
+    private static final String SELECT_USERS_WITH_ASSIGNMENT_BY_TEST_ID = "SELECT assignment.id as asgn_id, date, " +
+            "deadline,users.id as u_id, first_name, last_name, completed FROM `assignment` inner join users " +
+            "on users.id=assignment.user_id WHERE test_id=? AND completed=?";
+
+
     @Override
     public List<User> getAll() throws DAOSqlException {
 
@@ -377,14 +382,14 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void insertNewAssignment(LocalDate assignmentDate, LocalDate deadline, int testId,List<Integer> usersId) throws DAOSqlException {
+    public void insertNewAssignment(LocalDate assignmentDate, LocalDate deadline, int testId, List<Integer> usersId) throws DAOSqlException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(INSERT_NEW_ASSIGNMENT);
             connection.setAutoCommit(false);
-            for (Integer id:usersId) {
+            for (Integer id : usersId) {
                 preparedStatement.setDate(1, Date.valueOf(assignmentDate));
                 preparedStatement.setDate(2, Date.valueOf(deadline));
                 preparedStatement.setInt(3, testId);
@@ -406,6 +411,51 @@ public class SQLUserDAOImpl implements UserDAO {
             }
             throw new DAOSqlException("ConnectionPoolException in SQLUserDAOImpl insertNewAssignment() method", e);
         }
+    }
+
+    @Override
+    public Set<User> getUsersWithAssignmentByTestId(int testId, boolean isCompleted) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Set<User> users = new HashSet<>();
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_USERS_WITH_ASSIGNMENT_BY_TEST_ID);
+            preparedStatement.setInt(1, testId);
+            preparedStatement.setBoolean(2, isCompleted);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int user_id = resultSet.getInt("u_id");
+                String first_name = resultSet.getString("first_name");
+                String last_name = resultSet.getString("last_name");
+                User user = new User(user_id, first_name, last_name, new HashSet<Assignment>());
+                int asgn_id = resultSet.getInt("asgn_id");
+                Date date = resultSet.getDate("date");
+                Date deadline = resultSet.getDate("deadline");
+                boolean completed = resultSet.getBoolean("completed");
+                Assignment assignment = new Assignment(asgn_id, date.toLocalDate(), deadline.toLocalDate(), completed);
+                if (users.add(user)) {
+                    user.getAssignment().add(assignment);
+                } else {
+                    for (User findUser : users) {
+                        if (findUser.getId() == user.getId()) {
+                            findUser.getAssignment().add(assignment);
+                        }
+                    }
+                }
+            }
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method getUsersWithAssignmentByTestId()", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getUsersWithAssignmentByTestId()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method getUsersWithAssignmentByTestId()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+        }
+
+        return users;
     }
 
     private Assignment buildAssignment(ResultSet resultSet) throws SQLException {

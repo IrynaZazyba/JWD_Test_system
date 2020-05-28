@@ -33,7 +33,7 @@ async function changeOption() {
     if (response.ok) {
         let json = await response.json();
         document.getElementById("testTitle").insertAdjacentHTML('beforeend', generateOptionSelect(json));
-    }else{
+    } else {
         //todo сообщение
     }
 }
@@ -89,6 +89,75 @@ function generateAssignmentResultMessage(users) {
         message = message + "<span>" + users[key].firstName + " " + users[key].lastName + "</span></br>";
     }
     return message;
+}
 
+
+async function showUsersAssignedToTest() {
+
+    let formData = document.getElementById('displayUsers');
+
+    let response = await fetch("http://localhost:8080/test-system/ajax?command=get_assigned_users", {
+        method: 'POST',
+        body: new FormData(formData),
+    });
+
+
+    if (response.ok) {
+        document.getElementById("usersAssignment").innerHTML = "";
+        let json = await response.json();
+        document.getElementById("usersAssignment").insertAdjacentHTML('afterbegin', generateUsersAssignmentTable(json.setUsers));
+    } else {
+        //todo сообщение
+    }
 
 }
+
+function generateUsersAssignmentTable(users) {
+    let html = "";
+
+    console.log(generateDate(users[0].assignment[0].asgmtDate));
+
+    users.forEach(user => {
+        user.assignment.forEach(assign =>
+            html = html+"</br>" + generateDate(assign.deadline) + " / " + generateDate(assign.asgmtDate) + " / " + assign.isComplete + " / " +
+                user.firstName + " / " + user.lastName
+        )
+    });
+
+    return html;
+}
+
+
+let formDisplayType = document.forms.displayUsers;
+let testType = formDisplayType.elements.type;
+testType.onchange = changeOptionFormDisplay;
+
+
+async function changeOptionFormDisplay() {
+
+    let typeId = testType.value;
+
+    let jsOptions = document.querySelectorAll("#test > .js");
+    if (jsOptions.length > 0) {
+        jsOptions.forEach(element => element.remove());
+    }
+
+    let response = await fetch("http://localhost:8080/test-system/ajax?command=get_tests&typeId=" + typeId, {
+        method: 'GET',
+    });
+
+
+    if (response.ok) {
+        let json = await response.json();
+        document.getElementById("test").insertAdjacentHTML('beforeend', generateOptionSelect(json));
+    } else {
+        //todo сообщение
+    }
+}
+
+
+function generateDate(objDate) {
+    return " " + objDate.day + "." + objDate.month + "." + objDate.year;
+}
+
+

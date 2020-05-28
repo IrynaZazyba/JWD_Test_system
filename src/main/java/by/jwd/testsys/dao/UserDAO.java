@@ -1,7 +1,6 @@
 package by.jwd.testsys.dao;
 
 import by.jwd.testsys.bean.Assignment;
-import by.jwd.testsys.bean.Result;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
@@ -32,5 +31,8 @@ public interface UserDAO {
 
     Set<User> getUserWithRoleUser() throws DAOSqlException;
 
-     void insertNewAssignment(LocalDate assignmentDate, LocalDate deadline, int testId,List<Integer> usersId) throws DAOSqlException;
+    void insertNewAssignment(LocalDate assignmentDate, LocalDate deadline, int testId, List<Integer> usersId) throws DAOSqlException;
+
+    Set<User> getUsersWithAssignmentByTestId(int testId, boolean isCompleted) throws DAOSqlException;
+
 }

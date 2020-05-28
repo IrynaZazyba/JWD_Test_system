@@ -21,4 +21,5 @@ public interface UserService {
 
     Set<User> getStudents() throws ServiceException;
 
+    Set<User> getUsersWithAssignment(int testId, boolean isCompleted) throws ServiceException;
 }

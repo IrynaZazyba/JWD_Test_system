@@ -63,7 +63,7 @@
 
             </div>
         </div>
-        <div class="col-9">
+        <div class="col-10">
             <div class="tab-content" id="v-pills-tabContent">
 
                 <div class="tab-pane fade active show " id="v-pills-assigned_test" role="tabpanel"
@@ -131,8 +131,48 @@
 
                 <div class="tab-pane fade " id="v-pills-assigned_users" role="tabpanel"
                      aria-labelledby="v-pills-assigned_users-tab">
-xfcgvhjbkml
+                    <div class="row">
 
+                        <form id="displayUsers" enctype="multipart/form-data" class="form-width100"
+                              onsubmit="showUsersAssignedToTest();return false;"
+                              accept-charset="UTF-8" class="key-form" role="form">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label for="type">Test type</label>
+                                        <select class="form-control" id="type">
+                                            <option selected>choose</option>
+                                            <c:forEach var="item" items="${requestScope.type_tests}">
+                                                <option value="${item.id}">${item.title}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label for="test">Test</label>
+                                        <select class="form-control" name="testId" id="test">
+                                            <option selected>choose</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="form-group form-check">
+                                        <input type="checkbox" name="completed" class="form-check-input"
+                                               id="exampleCheck1">
+                                        <label class="form-check-label" for="exampleCheck1">завершенные</label>
+                                    </div>
+                                </div>
+                                <div class="col-1">
+                                    <button type="submit" class="btn btn-outline-primary card-btn">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="row" id="usersAssignment">
+
+
+                    </div>
                 </div>
 
             </div>
