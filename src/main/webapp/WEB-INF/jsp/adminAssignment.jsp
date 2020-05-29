@@ -129,7 +129,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade " id="v-pills-assigned_users" role="tabpanel"
+                <div class="tab-pane fade m-27" id="v-pills-assigned_users" role="tabpanel"
                      aria-labelledby="v-pills-assigned_users-tab">
                     <div class="row">
 
@@ -157,20 +157,36 @@
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <div class="form-group form-check">
+                                    <div class="form-group form-check m-t-27 p-top-7">
                                         <input type="checkbox" name="completed" class="form-check-input"
                                                id="exampleCheck1">
                                         <label class="form-check-label" for="exampleCheck1">завершенные</label>
                                     </div>
                                 </div>
-                                <div class="col-1">
-                                    <button type="submit" class="btn btn-outline-primary card-btn">Submit</button>
+                                <div class="col-1 p-top-7">
+                                    <button type="submit" class="btn btn-outline-primary card-btn m-t-27">Submit</button>
                                 </div>
                             </div>
                         </form>
                     </div>
-                    <div class="row" id="usersAssignment">
+                    <div class="row m-t-15">
+                        <div class="col-10" id="usersAssignment" style="display: none;">
+                            <table class="table table-sm">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th scope="col">Имя</th>
+                                    <th scope="col">Фамилия</th>
+                                    <th scope="col">Дата назначения</th>
+                                    <th scope="col">Выполнить до</th>
+                                    <th scope="col">Редактировать</th>
+                                </tr>
+                                </thead>
+                                <tbody id="jsData">
 
+                                </tbody>
+                            </table>
+                        </div>
 
                     </div>
                 </div>

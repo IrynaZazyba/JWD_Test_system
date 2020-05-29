@@ -55,7 +55,7 @@ public class ShowQuestion implements AjaxCommand {
 
                 Map<String, Object> map = new HashMap<>();
                 map.put("question", questionByTestId);
-                map.put("assign_id", assignment.getId());
+                map.put("assignId", assignment.getId());
                 map.put("question_log_id", questionLogId);
                 map.put("duration", time);
                 Gson gson = new Gson();
@@ -66,7 +66,7 @@ public class ShowQuestion implements AjaxCommand {
                 testService.completeTest(assignment, testEndTime);
 
                 Map<String, Object> map = new HashMap<>();
-                map.put("assign_id", assignment.getId());
+                map.put("assignId", assignment.getId());
                 Gson gson = new Gson();
                 answer = gson.toJson(map);
             }
@@ -80,7 +80,7 @@ public class ShowQuestion implements AjaxCommand {
         } catch (TimeIsOverServiceException e) {
             Map<String, Object> map = new HashMap<>();
             map.put("time_is_over", "true");
-            map.put("assign_id", assignment.getId());
+            map.put("assignId", assignment.getId());
             Gson gson = new Gson();
             return gson.toJson(map);
         } catch (InvalidTestKeyException e) {

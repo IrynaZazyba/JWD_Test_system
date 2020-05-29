@@ -55,13 +55,15 @@ public class SQLTestDAOImpl implements TestDAO {
     private static final String GET_ASSIGNMENT_TESTS = "SELECT test.id as t_id, test.title as t_title, test.time as t_time," +
             " count(question.id) as count_quest, type.title as type_title FROM test inner join question on question.test_id=test.id " +
             "INNER JOIN assignment on assignment.test_id=test.id inner join type on test.type_id=type.id where assignment.user_id =? " +
-            "and completed is false and question.deleted_at is null group BY test.id";
+            "and completed is false and question.deleted_at is null and assignment.deleted_at is null group BY test.id";
 
     private static final String WRITE_ASSIGNMENT = "INSERT INTO `assignment`" +
             " (`date`,`deadline`, `test_id`, `user_id`, `completed`) " +
             "VALUES (?,?,?,?,?)";
 
     private static final String SELECT_TESTS_BY_TYPE_ID = "SELECT id, title FROM `test` WHERE type_id=? and deleted_at is null";
+
+    private static final String UPDATE_ASSIGNMENT_DELETED_AT = "UPDATE `assignment` SET `deleted_at`=? where id=?";
 
     @Override
     public Set<Test> getAssignmentTest(int userId) throws DAOSqlException {
@@ -413,8 +415,27 @@ public class SQLTestDAOImpl implements TestDAO {
         return tests;
     }
 
+    @Override
+    public void makeAssignmentDeleted(int assignmentId, LocalDate deletedAtDate) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(UPDATE_ASSIGNMENT_DELETED_AT);
+            preparedStatement.setDate(1, Date.valueOf(deletedAtDate));
+            preparedStatement.setInt(2, assignmentId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method makeAssignmentDeleted()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method makeAssignmentDeleted()", e);
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method makeAssignmentDeleted()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
+        }
 
 
+    }
 
     private Test buildTest(ResultSet resultSet) throws SQLException {
         int testId = resultSet.getInt("t_id");

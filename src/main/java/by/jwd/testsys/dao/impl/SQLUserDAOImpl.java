@@ -42,13 +42,13 @@ public class SQLUserDAOImpl implements UserDAO {
             "role_id=? WHERE id=?";
 
     private static final String SELECT_USER_ASSIGNMENT_BY_USER_ID = "SELECT id, date, deadline, test_id, completed " +
-            "FROM assignment where user_id=?";
+            "FROM assignment where user_id=? AND deleted_at IS NULL";
 
     private static final String SELECT_USER_ASSIGNMENT_BY_ASSIGNMENT_ID = "SELECT id, date, deadline, test_id, " +
-            "completed FROM assignment where id=?";
+            "completed FROM assignment where id=? AND deleted_at IS NULL";
 
     private static final String SELECT_USER_ASSIGNMENT_BY_TEST_ID = "SELECT id, date, deadline, test_id, completed " +
-            "FROM assignment where user_id=? AND test_id=? AND completed is false";
+            "FROM assignment where user_id=? AND test_id=? AND completed is false AND deleted_at IS NULL";
 
     private static final String SELECT_USER_WITH_ROLE_USER = "SELECT id, first_name, last_name FROM `users` WHERE " +
             "role_id=(SELECT id from role where title='USER')";
@@ -58,7 +58,7 @@ public class SQLUserDAOImpl implements UserDAO {
 
     private static final String SELECT_USERS_WITH_ASSIGNMENT_BY_TEST_ID = "SELECT assignment.id as asgn_id, date, " +
             "deadline,users.id as u_id, first_name, last_name, completed FROM `assignment` inner join users " +
-            "on users.id=assignment.user_id WHERE test_id=?";
+            "on users.id=assignment.user_id WHERE test_id=? AND deleted_at IS NULL";
 
 
     @Override

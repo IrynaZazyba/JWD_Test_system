@@ -473,4 +473,14 @@ public class TestServiceImpl implements TestService {
         return deadline.isAfter(LocalDate.now());
     }
 
+    @Override
+    public void deleteAssignment(int assignment_id) throws ServiceException {
+
+        try {
+            testDAO.makeAssignmentDeleted(assignment_id,LocalDate.now());
+        } catch (DAOSqlException e) {
+            throw new ServiceException("Error in getUserWithRoleUser().", e);
+        }
+
+    }
 }

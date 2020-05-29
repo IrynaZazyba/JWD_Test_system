@@ -49,4 +49,6 @@ public interface TestService {
     Set<Test> getTestByTypeId(int typeId) throws TestServiceException;
 
     Map<String,Set<User>> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws ServiceException, DateOutOfRangeException;
+
+    void deleteAssignment(int assignment_id) throws ServiceException;
 }

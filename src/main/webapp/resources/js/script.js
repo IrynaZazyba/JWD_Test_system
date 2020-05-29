@@ -148,7 +148,7 @@ function hideQuestion() {
 }
 
 function generateHiddenAssignIdInput(json) {
-    return "<input type=\"hidden\" id=\"assign_id\" name=\"assign_id\" value=\"" + json.assign_id + "\">";
+    return "<input type=\"hidden\" id=\"assign_id\" name=\"assignId\" value=\"" + json.assignId + "\">";
 
 }
 
@@ -179,7 +179,7 @@ function generateButtonResult() {
     return "<div class=\"row justify-content-center p-t-95\">" +
         "<form action=\"test\" class=\"form-horizontal\" role=\"form\" method=\"GET\">" +
         "<input type=\"hidden\" name=\"command\" value=\"get_result\"/>" +
-        "<input type=\"hidden\" name=\"assign_id\" value=\"" + assignId + "\"/>" +
+        "<input type=\"hidden\" name=\"assignId\" value=\"" + assignId + "\"/>" +
         "<button type=\"submit\" class=\"card-exe-btn btn btn-outline-primary\">Show result</button>" +
         "</form></div>"
 

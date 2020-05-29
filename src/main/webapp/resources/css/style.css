@@ -381,8 +381,16 @@ li.nav-item:hover {
     color: black;
 }
 
-.form-width100{
+.form-width100 {
     width: 100%;
+}
+
+.m-t-27 {
+    margin-top: 27px;
+}
+
+.m-27{
+    margin: 27px;
 }
 
 

@@ -5,6 +5,7 @@ import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -36,4 +37,6 @@ public interface TestDAO {
     LocalTime getTestDuration(int assignmentId) throws DAOSqlException;
 
     Set<Test> getTests(int typeId) throws DAOSqlException;
+
+    void makeAssignmentDeleted(int assignmentId, LocalDate deletedAtDate) throws DAOSqlException;
 }

@@ -3,7 +3,7 @@
  */
 "use strict"
 
-/* Add calendar to assign test */
+/* Add calendar to ASSIGNgn test */
 // document.getElementById("date").daterangepicker({
 //     singleDatePicker: true,
 //     locale: {
@@ -93,19 +93,23 @@ function generateAssignmentResultMessage(users) {
 
 
 async function showUsersAssignedToTest() {
-
     let formData = document.getElementById('displayUsers');
+    let form = new FormData(formData);
 
     let response = await fetch("http://localhost:8080/test-system/ajax?command=get_assigned_users", {
         method: 'POST',
-        body: new FormData(formData),
+        body: form,
     });
 
 
     if (response.ok) {
-        document.getElementById("usersAssignment").innerHTML = "";
+        if (document.getElementById('usersAssignment').style.display === 'none') {
+            document.getElementById('usersAssignment').style.display = 'block';
+        }
+        document.getElementById("jsData").innerHTML = "";
+
         let json = await response.json();
-        document.getElementById("usersAssignment").insertAdjacentHTML('afterbegin', generateUsersAssignmentTable(json.setUsers));
+        document.getElementById("jsData").insertAdjacentHTML('afterbegin', generateUsersAssignmentTable(json.setUsers));
     } else {
         //todo сообщение
     }
@@ -114,13 +118,11 @@ async function showUsersAssignedToTest() {
 
 function generateUsersAssignmentTable(users) {
     let html = "";
-
+    let num = 1;
     console.log(generateDate(users[0].assignment[0].asgmtDate));
 
     users.forEach(user => {
-        user.assignment.forEach(assign =>
-            html = html+"</br>" + generateDate(assign.deadline) + " / " + generateDate(assign.asgmtDate) + " / " + assign.isComplete + " / " +
-                user.firstName + " / " + user.lastName
+        user.assignment.forEach(assign => html = html + test(user, assign, num++)
         )
     });
 
@@ -160,4 +162,53 @@ function generateDate(objDate) {
     return " " + objDate.day + "." + objDate.month + "." + objDate.year;
 }
 
+function generateActionButtonEdit(isCompleted, id) {
+    let form = "";
+    if (!isCompleted) {
+        form = "<form id=editAssign-" + id + " onsubmit='editAssignment("+id+");return false;'>" +
+            "<input type='hidden' name='assignId' value='" + id + "'>" +
+            "<button class=\"btn btn-outline-primary card-btn\">Delete</button></form>"
+    } else {
+        form = "<button class=\"btn btn-outline-primary card-btn\" disabled >Delete</button>"
+    }
+    return form;
+}
 
+function test(user, assign, num) {
+    let html = "";
+    html = "<tr id='" + assign.id + "'><th scope = \"row\" >" + num + "</th>" +
+        "<td>" + user.firstName + "</td>" +
+        "<td>" + user.lastName + "</td>" +
+        "<td>" + generateDate(assign.asgmtDate) + "</td>" +
+        "<td>" + generateDate(assign.deadline) + "</td>" +
+        "<td>" + generateActionButtonEdit(assign.isComplete, assign.id) + "</td>" +
+        "</tr>";
+    return html;
+}
+
+async function editAssignment(id) {
+
+    let form = document.getElementById("editAssign-"+id);
+    let editAssign = new FormData(form);
+    let assignId = editAssign.get('assignId');
+
+    let response = await fetch("http://localhost:8080/test-system/ajax?command=delete_assignment", {
+        method: 'POST',
+        body: editAssign,
+    });
+
+    if (response.ok) {
+        //form.querySelector('button').setAttribute('disabled', 'disabled');
+        form.insertAdjacentText('beforebegin','DELETED');
+        form.remove();
+
+
+
+        document.getElementById(assignId).setAttribute('class', 'table-danger');
+
+    } else {
+        //todo сообщение
+    }
+
+
+}
