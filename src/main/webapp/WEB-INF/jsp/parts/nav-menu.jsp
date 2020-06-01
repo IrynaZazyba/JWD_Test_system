@@ -17,7 +17,9 @@
 <fmt:message bundle="${loc}" key="button.language_en" var="button_language_en"/>
 <fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
 <fmt:message bundle="${loc}" key="nav-item.article" var="nav_item_articles"/>
-<fmt:message bundle="${loc}" key="nav-item.assign_test" var="assign_test"/>
+<fmt:message bundle="${loc}" key="nav-item.assign_test" var="nav_item_assign_test"/>
+<fmt:message bundle="${loc}" key="nav-item.results" var="nav_item_results"/>
+
 
 
 
@@ -44,7 +46,7 @@
             <c:if test="${sessionScope.user_role=='ADMIN'}">
                 <li class="nav-item">
                     <a class="nav-link nav-vrl item-start"
-                       href="${pageContext.request.contextPath}/test?command=assign_test">${assign_test}</a>
+                       href="${pageContext.request.contextPath}/test?command=assign_test">${nav_item_assign_test}</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle nav-vrl item-start" href="#" id="navbarDropdown"
@@ -57,6 +59,10 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">${nav_item_admin_users}</a>
                     </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-vrl item-start"
+                       href="${pageContext.request.contextPath}/test?command=tests_results">${nav_item_results}</a>
                 </li>
             </c:if>
 

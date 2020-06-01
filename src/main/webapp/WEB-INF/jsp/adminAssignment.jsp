@@ -31,7 +31,7 @@
 <fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
 <fmt:message bundle="${loc}" key="assignment.exists" var="exists_assignment"/>
 <fmt:message bundle="${loc}" key="assignment.success_message" var="success_assignment"/>
-<fmt:message bundle="${loc}" key="assignment.nav-link.assign_test" var="assign_test"/>
+<fmt:message bundle="${loc}" key="assignment.nav-link.assign_test" var="nav_item_assign_test"/>
 <fmt:message bundle="${loc}" key="assignment.nav-link.users_assignments" var="users_assignments"/>
 <fmt:message bundle="${loc}" key="assignment.nav-link.users_assignments" var="users_assignments"/>
 
@@ -39,7 +39,7 @@
 <fmt:message bundle="${loc}" key="assignment.label.test_title" var="lable_test"/>
 <fmt:message bundle="${loc}" key="assignment.label.deadline_date" var="lable_deadline_date"/>
 <fmt:message bundle="${loc}" key="assignment.label.users" var="lable_users"/>
-<fmt:message bundle="${loc}" key="assignment.select.choose" var="select_choose"/>
+<fmt:message bundle="${loc}" key="assignment.select.choose" var="view_all"/>
 <fmt:message bundle="${loc}" key="assignment.message.invalid_date" var="message_invalid_date"/>
 
 
@@ -54,7 +54,7 @@
                 <a class="nav-link vertical-menu active" id="v-pills-assigned_test-tab" data-toggle="pill"
                    href="#v-pills-assigned_test"
                    role="tab"
-                   aria-controls="v-pills-assigned_test" aria-selected="true"><c:out value="${assign_test}"/></a>
+                   aria-controls="v-pills-assigned_test" aria-selected="true"><c:out value="${nav_item_assign_test}"/></a>
                 <a class="nav-link vertical-menu" id="v-pills-assigned_users-tab" data-toggle="pill"
                    href="#v-pills-assigned_users"
                    role="tab"
@@ -78,7 +78,7 @@
                                 <div class="form-group">
                                     <label for="testType"><c:out value="${lable_test_type}"/></label>
                                     <select class="form-control" name="testTypeId" id="testType">
-                                        <option selected><c:out value="${select_choose}"/></option>
+                                        <option selected><c:out value="${view_all}"/></option>
                                         <c:forEach var="item" items="${requestScope.type_tests}">
                                             <option value="${item.id}">${item.title}</option>
                                         </c:forEach>
@@ -88,7 +88,7 @@
                                     <label for="testTitle"><c:out value="${lable_test}"/></label>
 
                                     <select class="form-control" name="testId" id="testTitle">
-                                        <option selected><c:out value="${select_choose}"/></option>
+                                        <option selected><c:out value="${view_all}"/></option>
                                     </select>
 
 
@@ -190,6 +190,7 @@
 
                     </div>
                 </div>
+
 
             </div>
         </div>

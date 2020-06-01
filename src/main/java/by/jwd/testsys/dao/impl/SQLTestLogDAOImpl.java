@@ -1,6 +1,6 @@
 package by.jwd.testsys.dao.impl;
 
-import by.jwd.testsys.bean.TestLog;
+import by.jwd.testsys.bean.*;
 import by.jwd.testsys.dao.TestLogDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolException;
@@ -12,6 +12,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class SQLTestLogDAOImpl implements TestLogDAO {
@@ -28,6 +31,14 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
 
     private static final String SELECT_TEST_LOG_BY_ASSIGNMENT_ID = "SELECT q.question_id q_id,a.answer_id a_id FROM " +
             "`question-log` as q INNER JOIN `answer-log` as a on q.id=a.question_log_id WHERE assignment_id=?";
+
+    private static final String SELECT_RESULTS = "SELECT date_end, right_count_quest, all_count_question, assignment_id, " +
+            "test.title as t_tt, type.title as tp_tt, first_name,last_name FROM `result` " +
+            "inner join `assignment` on result.assignment_id=assignment.id " +
+            "inner join test on assignment.test_id=test.id " +
+            "inner join type on type.id=test.type_id " +
+            "INNER join users on assignment.user_id=users.id " +
+            "WHERE   assignment.deleted_at is null and test.deleted_at is null and assignment.completed=1";
 
     @Override
     public void writeAnswerLog(int questionLogId, Set<Integer> answers) throws DAOException {
@@ -134,6 +145,94 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
 
         }
         return testLog;
+    }
+
+    @Override
+    public Set<Result> getTestResult(int typeId, int testId, int userId, LocalDate date) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Set<Result> results = new HashSet<>();
+
+        String query=SELECT_RESULTS;
+
+        try {
+            connection = connectionPool.takeConnection();
+            int count=1;
+
+            if (testId != 0) {
+                query += " and test_id=?";
+            }
+
+            if (userId != 0) {
+                query += " and user_id=?";
+            }
+
+            if (typeId != 0) {
+                query += " and type.id=?";
+            }
+
+            if (date != null) {
+                query += " and date=?";
+            }
+
+
+            preparedStatement = connection.prepareStatement(query);
+
+            if (testId != 0) {
+                preparedStatement.setInt(count, testId);
+                count++;
+            }
+
+            if (userId != 0) {
+                preparedStatement.setInt(count, userId);
+                count++;
+            }
+
+            if (typeId != 0) {
+                preparedStatement.setInt(count, typeId);
+                count++;
+            }
+
+            if (date != null) {
+                preparedStatement.setDate(count, Date.valueOf(date));
+            }
+
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                String firstName = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
+                User user = new User();
+                user.setFirstName(firstName);
+                user.setLastName(lastName);
+                String testTitle = resultSet.getString("t_tt");
+                String typeTitle = resultSet.getString("tp_tt");
+                Type type = new Type();
+                type.setTitle(typeTitle);
+                Test test = new Test();
+                test.setTitle(testTitle);
+                test.setType(type);
+                LocalDateTime testDate = resultSet.getTimestamp("date_end").toLocalDateTime();
+                int rightCountQuestion = resultSet.getInt("right_count_quest");
+                int allCountQuestion = resultSet.getInt("all_count_question");
+                int assignmentId = resultSet.getInt("assignment_id");
+                Assignment assignment = new Assignment();
+                assignment.setId(assignmentId);
+                Result result = new Result(testDate, rightCountQuestion, allCountQuestion, test, user, assignment);
+                results.add(result);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestLogDAOImpl method getTestResult()", e);
+            throw new DAOSqlException("SQLException in SQLTestLogDAOImpl method getTestResult()", e);
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestLogDAOImpl method getTestResult()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+
+        }
+        return results;
     }
 
 

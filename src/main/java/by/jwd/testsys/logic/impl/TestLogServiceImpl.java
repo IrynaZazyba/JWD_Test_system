@@ -1,5 +1,6 @@
 package by.jwd.testsys.logic.impl;
 
+import by.jwd.testsys.bean.Result;
 import by.jwd.testsys.dao.TestLogDAO;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
@@ -10,6 +11,7 @@ import by.jwd.testsys.logic.exception.TestLogServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,5 +44,17 @@ public class TestLogServiceImpl implements TestLogService {
         }
     }
 
+    @Override
+    public Set<Result> reciveResultData(int typeId, int testId, int userId, LocalDate date) throws TestLogServiceException {
+        Set<Result> result = null;
+
+        try {
+            result=testLogDAO.getTestResult(typeId,testId,userId,date);
+            result.forEach(res-> System.out.println(res.getTest().getTitle()+" "+res.getUser().getFirstName()+" "+res.getRightCountQuestion()));
+        } catch (DAOSqlException e) {
+            throw new TestLogServiceException("Impossible to save question to DB", e);
+        }
+        return result;
+    }
 
 }

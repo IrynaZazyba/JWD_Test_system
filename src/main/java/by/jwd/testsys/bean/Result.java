@@ -11,6 +11,9 @@ public class Result {
     private int testId;
     private Assignment assignment;
     private int countTestQuestion;
+    private Test test;
+    private User user;
+
 
 
     public Result() {
@@ -22,6 +25,14 @@ public class Result {
         this.dateEnd = dateEnd;
         this.rightCountQuestion = countRight;
         this.assignment = assignment;
+    }
+    public Result(LocalDateTime dateEnd, int countRight, int countAll, Test test, User user, Assignment assignment) {
+        this.dateEnd = dateEnd;
+        this.rightCountQuestion = countRight;
+        this.assignment = assignment;
+        this.countTestQuestion=countAll;
+        this.test=test;
+        this.user=user;
     }
 
     public int getCountTestQuestion() {
@@ -79,5 +90,21 @@ public class Result {
 
     public void setTestId(int testId) {
         this.testId = testId;
+    }
+
+    public Test getTest() {
+        return test;
+    }
+
+    public void setTest(Test test) {
+        this.test = test;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

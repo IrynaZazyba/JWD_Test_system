@@ -28,5 +28,7 @@ public final class RequestParameterName {
     public static final String USER_TESTS_STATISTIC = "userTestStatistic";
     public static final String PERCENTAGE_CORRECT_ANSWERS = "percentage";
     public static final String TEST_INFO = "testInfo";
+    public static final String DATE="date";
     public static final String USER_ID="userId";
+
 }

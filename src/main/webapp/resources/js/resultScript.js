@@ -3,38 +3,11 @@
  */
 "use strict"
 
-/* Add calendar to ASSIGNgn test */
-// document.getElementById("date").daterangepicker({
-//     singleDatePicker: true,
-//     locale: {
-//         format: 'DD.MM.YYYY'
-//     }
-// });
-
-/*select*/
 let form = document.forms.assign;
 let type = form.elements.testTypeId;
 type.onchange = changeOption;
 
-
-
-let testTitle = form.elements.testId;
-testTitle.onchange = removeResult;
-let assign = form.elements.assigned_users;
-assign.onchange=removeResult;
-let date = form.elements.date;
-date.onchange = removeResult;
-
-
-function removeResult() {
-    document.getElementById("resultData").innerHTML="";
-}
-
-
-
 async function changeOption() {
-
-    document.getElementById("resultData").innerHTML="";
 
     let typeId = type.value;
 
@@ -137,6 +110,7 @@ async function showUsersAssignedToTest() {
 function generateUsersAssignmentTable(users) {
     let html = "";
     let num = 1;
+    console.log(generateDate(users[0].assignment[0].asgmtDate));
 
     users.forEach(user => {
         user.assignment.forEach(assign => html = html + test(user, assign, num++)
@@ -182,7 +156,7 @@ function generateDate(objDate) {
 function generateActionButtonEdit(isCompleted, id) {
     let form = "";
     if (!isCompleted) {
-        form = "<form id=editAssign-" + id + " onsubmit='editAssignment(" + id + ");return false;'>" +
+        form = "<form id=editAssign-" + id + " onsubmit='editAssignment("+id+");return false;'>" +
             "<input type='hidden' name='assignId' value='" + id + "'>" +
             "<button class=\"btn btn-outline-primary card-btn\">Delete</button></form>"
     } else {
@@ -205,7 +179,7 @@ function test(user, assign, num) {
 
 async function editAssignment(id) {
 
-    let form = document.getElementById("editAssign-" + id);
+    let form = document.getElementById("editAssign-"+id);
     let editAssign = new FormData(form);
     let assignId = editAssign.get('assignId');
 
@@ -216,8 +190,9 @@ async function editAssignment(id) {
 
     if (response.ok) {
         //form.querySelector('button').setAttribute('disabled', 'disabled');
-        form.insertAdjacentText('beforebegin', 'DELETED');
+        form.insertAdjacentText('beforebegin','DELETED');
         form.remove();
+
 
 
         document.getElementById(assignId).setAttribute('class', 'table-danger');
@@ -226,47 +201,5 @@ async function editAssignment(id) {
         //todo сообщение
     }
 
+
 }
-
-async function showResult() {
-
-    let filterData = document.getElementById('assign');
-    let response = await fetch("http://localhost:8080/test-system/ajax?command=show_result_data", {
-        method: 'POST',
-        body: new FormData(filterData),
-    });
-    if (response.ok) {
-
-        let json = await response.json();
-        document.getElementById("resultData").innerHTML="";
-        document.getElementById("resultData").insertAdjacentHTML('afterbegin', generateResultTable(json.results));
-    }
-}
-
-function generateResultTable(results) {
-    let html = "";
-    let num = 1;
-
-    results.forEach(
-        result => {
-            html = html + generateTableResult(result, num++)
-        });
-    return html;
-}
-
-
-function generateTableResult(result, num) {
-    let html = "";
-    html = "<tr id='" + result.assignment.id + "'><th scope = \"row\" >" + num + "</th>" +
-        "<td>" + result.user.firstName + "</td>" +
-        "<td>" + result.user.lastName + "</td>" +
-        "<td>" + result.test.type.title + "</td>" +
-        "<td>" + result.test.title + "</td>" +
-        "<td>" + generateDate(result.dateEnd.date) + "</td>" +
-        "<td>" + result.countTestQuestion + "</td>" +
-        "<td>" + result.rightCountQuestion + "</td>" +
-        "<td><button>More</button></td>" +
-        "</tr>";
-    return html;
-}
-

@@ -19,6 +19,7 @@ public final class AjaxCommandProvider {
         repository.put(AjaxCommandName.ASSIGN_TEST, new AssignTest());
         repository.put(AjaxCommandName.GET_ASSIGNED_USERS, new GetAssignedUsers());
         repository.put(AjaxCommandName.DELETE_ASSIGNMENT, new DeleteAssignment());
+        repository.put(AjaxCommandName.SHOW_RESULT_DATA, new ShowResultData());
     }
 
     public static AjaxCommandProvider getInstance() {
