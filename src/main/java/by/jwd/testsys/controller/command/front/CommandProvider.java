@@ -24,6 +24,9 @@ public final class CommandProvider {
         repository.put(CommandName.SHOW_EXE_TEST_PAGE, new ShowExeTestPage());
         repository.put(CommandName.ASSIGN_TEST, new ShowAdminAssignTest());
         repository.put(CommandName.TESTS_RESULTS, new TestsResults());
+        repository.put(CommandName.SHOW_ADMIN_PANEL, new ShowAdminPanel());
+        repository.put(CommandName.GET_EDIT_TEST_PAGE, new ShowEditTestPage());
+
 
     }
 

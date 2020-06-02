@@ -43,6 +43,10 @@ public class AjaxController extends HttpServlet {
         this.doProcess(req, resp);
     }
 
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.doProcess(req, resp);
+    }
 
     private void doProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String ajaxCommandName = request.getParameter(RequestParameterName.COMMAND_NAME);

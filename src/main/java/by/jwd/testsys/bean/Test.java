@@ -21,7 +21,7 @@ public class Test implements Serializable {
     private Assignment assignment;
 
     private boolean started;
-    private int flag;
+    private boolean edited;
 
     public Test() {
     }
@@ -35,9 +35,12 @@ public class Test implements Serializable {
         this.deletedAt = deletedAt;
     }
 
-    public Test(int id, String title) {
+    public Test(int id, String title, String key, LocalTime duration, boolean isEdited) {
         this.id = id;
         this.title = title;
+        this.key=key;
+        this.duration=duration;
+        this.edited=isEdited;
     }
 
     public Test(int id, String title, int countQuestion, String key, LocalTime duration) {
@@ -215,20 +218,19 @@ public class Test implements Serializable {
     }
 
 
-
-    public int getFlag() {
-        return flag;
-    }
-
-    public void setFlag(int flag) {
-        this.flag = flag;
-    }
-
     public boolean getStarted() {
         return started;
     }
 
     public void setStarted(boolean started) {
         this.started = started;
+    }
+
+    public boolean getEdited() {
+        return edited;
+    }
+
+    public void setEdited(boolean edited) {
+        this.edited = edited;
     }
 }

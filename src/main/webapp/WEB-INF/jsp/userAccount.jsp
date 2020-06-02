@@ -31,7 +31,6 @@
 <fmt:message bundle="${loc}" key="button.save_changes" var="button_save_changes"/>
 <fmt:message bundle="${loc}" key="button.language_en" var="button_language_en"/>
 <fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
-<fmt:message bundle="${loc}" key="button.test.get_started" var="button_get_started"/>
 
 
 <div class="container-fluid p-0">

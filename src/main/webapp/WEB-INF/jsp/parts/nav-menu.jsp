@@ -55,7 +55,7 @@
                             ${nav_item_admin}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">${nav_item_admin_tests}</a>
+                        <a class="dropdown-item" href="${pageContext.request.contextPath}/test?command=show_admin_panel">${nav_item_admin_tests}</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">${nav_item_admin_users}</a>
                     </div>

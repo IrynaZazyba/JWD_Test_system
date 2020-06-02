@@ -36,7 +36,7 @@
         <div class="col-2 background-gradient height-100 p-l-15 p-r-0">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
-                <a class="nav-link vertical-menu" id="v-pills-assigned_test-tab" data-toggle="pill"
+                <a class="nav-link vertical-menu active" id="v-pills-assigned_test-tab" data-toggle="pill"
                    href="#v-pills-assigned_test"
                    role="tab"
                    aria-controls="v-pills-assigned_test" aria-selected="true">${assigned_test}</a>
@@ -54,7 +54,7 @@
         <div class="col-9">
             <div class="tab-content" id="v-pills-tabContent">
 
-                <div class="tab-pane fade " id="v-pills-assigned_test" role="tabpanel"
+                <div class="tab-pane fade active show  " id="v-pills-assigned_test" role="tabpanel"
                      aria-labelledby="v-pills-assigned_test-tab">
                     <div class="row m-t-35">
 
@@ -95,7 +95,7 @@
 
                 <c:forEach var="item" items="${requestScope.tests_type}">
 
-                    <div class="tab-pane fade " id="v-pills-${item.id}" role="tabpanel"
+                    <div class="tab-pane fade  " id="v-pills-${item.id}" role="tabpanel"
                          aria-labelledby="v-pills-${item.id}-tab">
 
                         <div class="row m-t-35">

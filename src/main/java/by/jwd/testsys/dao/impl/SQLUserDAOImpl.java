@@ -400,7 +400,6 @@ public class SQLUserDAOImpl implements UserDAO {
             connection.setAutoCommit(true);
 
         } catch (ConnectionPoolException e) {
-            logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl insertNewAssignment() method", e);
             throw new DAOSqlException("SQLException in SQLUserDAOImpl insertNewAssignment() method", e);
         } catch (SQLException e) {
             try {
@@ -409,6 +408,7 @@ public class SQLUserDAOImpl implements UserDAO {
                 logger.log(Level.ERROR, "Rollback SQLUserDAOImpl method insertNewAssignment()", e);
                 throw new DAOSqlException("Impossible to rollback SQLUserDAOImpl method insertNewAssignment()", e);
             }
+            logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl insertNewAssignment() method", e);
             throw new DAOSqlException("ConnectionPoolException in SQLUserDAOImpl insertNewAssignment() method", e);
         }
     }
