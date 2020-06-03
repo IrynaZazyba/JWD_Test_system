@@ -19,15 +19,14 @@ public final class CommandProvider {
         repository.put(CommandName.SHOW_USER_ACCOUNT, new ShowUserPage());
         repository.put(CommandName.WRONG_REQUEST, new WrongRequest());
         repository.put(CommandName.CHANGE_LANGUAGE, new ChangeLocal());
-        repository.put(CommandName.GET_RESULT,new GetResult());
+        repository.put(CommandName.GET_RESULT, new GetResult());
         repository.put(CommandName.DISPLAY_STATISTIC, new DisplayStatistic());
         repository.put(CommandName.SHOW_EXE_TEST_PAGE, new ShowExeTestPage());
         repository.put(CommandName.ASSIGN_TEST, new ShowAdminAssignTest());
         repository.put(CommandName.TESTS_RESULTS, new TestsResults());
         repository.put(CommandName.SHOW_ADMIN_PANEL, new ShowAdminPanel());
         repository.put(CommandName.GET_EDIT_TEST_PAGE, new ShowEditTestPage());
-
-
+        repository.put(CommandName.ADD_TEST, new AddTestPage());
     }
 
     public static CommandProvider getInstance() {
@@ -38,7 +37,7 @@ public final class CommandProvider {
         CommandName commandName;
         Command command;
 
-        if (name == null||security!=null) {
+        if (name == null || security != null) {
             command = repository.get(CommandName.WRONG_REQUEST);
         } else {
 

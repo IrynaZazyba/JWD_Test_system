@@ -78,6 +78,17 @@ public class SQLTestDAOImpl implements TestDAO {
 
     private static final String GET_QUESTIONS_ID_TO_TEST = "SELECT id from question where test_id=?";
 
+    private static final String INSERT_TEST = "INSERT INTO `test` (`title`, `key`, `time`, `type_id`, `is_edited`) " +
+            "VALUES (?,?,?,?,?)";
+
+    private static final String INSERT_QUESTION = "INSERT INTO `question` (`question`, `test_id`) " +
+            "VALUES (?,?)";
+
+    private static final String INSERT_ANSWER = "INSERT INTO `answer` (`answer`, `result`, `question_id`) " +
+            "VALUES (?,?,?)";
+
+    private static final String UPDATE_TEST = "UPDATE test SET title=?, `key`=?, time=?,type_id=?, " +
+            "is_edited=? WHERE id=?";
 
     @Override
     public Set<Test> getAssignmentTest(int userId) throws DAOSqlException {
@@ -509,7 +520,7 @@ public class SQLTestDAOImpl implements TestDAO {
         } catch (ConnectionPoolException e) {
             throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method deleteTestById()", e);
         } finally {
-            connectionPool.closeConnection(connection, preparedStatement,resultSet);
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
     }
 
@@ -530,14 +541,117 @@ public class SQLTestDAOImpl implements TestDAO {
             }
 
         } catch (ConnectionPoolException e) {
-            throw new DAOSqlException("SQLException in SQLTestDAOImpl method getCountIncompleteTestAssignment()", e);
+            throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method getCountIncompleteTestAssignment()", e);
         } catch (SQLException e) {
             logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getCountIncompleteTestAssignment()", e);
-            throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method getCountIncompleteTestAssignment()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method getCountIncompleteTestAssignment()", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return countAssignment;
+    }
+
+    @Override
+    public int saveTest(Test test, int typeId) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet generatedKey = null;
+        int createdTestId = 0;
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(INSERT_TEST, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, test.getTitle());
+            preparedStatement.setString(2, test.getKey());
+            preparedStatement.setTime(3, Time.valueOf(test.getDuration()));
+            preparedStatement.setInt(4, typeId);
+            preparedStatement.setBoolean(5, test.getEdited());
+            preparedStatement.executeUpdate();
+
+            generatedKey = preparedStatement.getGeneratedKeys();
+            if (generatedKey.next()) {
+                createdTestId = generatedKey.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method saveTest()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method saveTest()", e);
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method saveTest()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, generatedKey);
+        }
+        return createdTestId;
+    }
+
+    @Override
+    public int saveQuestionWithAnswers(Question question, int testId) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet generatedKey = null;
+        int createdQuestionId = 0;
+
+        try {
+            connection = connectionPool.takeConnection();
+            connection.setAutoCommit(false);
+            preparedStatement = connection.prepareStatement(INSERT_QUESTION, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, question.getQuestion());
+            preparedStatement.setInt(2, testId);
+            preparedStatement.executeUpdate();
+
+            generatedKey = preparedStatement.getGeneratedKeys();
+            if (generatedKey.next()) {
+                createdQuestionId = generatedKey.getInt(1);
+            }
+
+            for (Answer answer : question.getAnswers()) {
+                preparedStatement = connection.prepareStatement(INSERT_ANSWER);
+                preparedStatement.setString(1, answer.getAnswer());
+                preparedStatement.setBoolean(2, answer.isResult());
+                preparedStatement.setInt(3, createdQuestionId);
+                preparedStatement.executeUpdate();
+            }
+            connection.commit();
+            connection.setAutoCommit(true);
+
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method saveQuestionWithAnswers()", e);
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                logger.log(Level.ERROR, "Rollback SQLTestDAOImpl method deleteTestById()", e);
+                throw new DAOSqlException("Impossible to rollback SQLTestDAOImpl method deleteTestById()", e);
+            }
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method saveQuestionWithAnswers()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method saveQuestionWithAnswers()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, generatedKey);
+        }
+        return createdQuestionId;
+    }
+
+    @Override
+    public void updateTest(Test test, int typeId) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(UPDATE_TEST);
+            preparedStatement.setString(1, test.getTitle());
+            preparedStatement.setString(2, test.getKey());
+            preparedStatement.setTime(3, Time.valueOf(test.getDuration()));
+            preparedStatement.setInt(4, typeId);
+            preparedStatement.setBoolean(5, test.getEdited());
+            preparedStatement.setInt(6,test.getId());
+            preparedStatement.executeUpdate();
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method updateTest()", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method updateTest()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method updateTest()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
+        }
     }
 
     private Test buildTest(ResultSet resultSet) throws SQLException {

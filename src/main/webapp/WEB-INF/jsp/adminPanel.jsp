@@ -57,6 +57,14 @@
 
         </div>
         <div class="col-9">
+            <div class="row m-t-15">
+                <a href="${pageContext.request.contextPath}/test?command=add_test&typeId=${requestScope.activeId}">
+                    <button type="submit"
+                            class="card-btn btn btn-outline-primary d-block mx-auto">
+                        Добавить
+                    </button>
+                </a>
+            </div>
             <div id="invalidDeleteMessage" style="display: none">
                 <div class="alert alert-danger" role="alert">
                     Данный тест не может быть удален.
@@ -85,11 +93,11 @@
                                 <td>${test.key}</td>
                                 <td>
                                     <a href="${pageContext.request.contextPath}/test?command=get_edit_test_page&testId=${test.id}">
-                                        <button>Редактировать</button>
+                                        <button class="btn btn-link">Редактировать</button>
                                     </a>
                                 </td>
                                 <td>
-                                    <button onclick="deleteTest(${test.id},this);return false;">Удалить</button>
+                                    <button  class="btn btn-link" onclick="deleteTest(${test.id},this);return false;">Удалить</button>
                                 </td>
                             </tr>
                         </c:forEach>

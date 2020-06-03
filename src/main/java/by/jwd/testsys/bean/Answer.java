@@ -17,6 +17,11 @@ public class Answer implements Serializable {
 
     }
 
+    public Answer(String answer) {
+        this.answer = answer;
+    }
+
+
     public int getId() {
         return id;
     }

@@ -43,4 +43,10 @@ public interface TestDAO {
     void deleteTestById(int testId, LocalDateTime deletedDate) throws DAOSqlException;
 
     int getCountIncompleteTestAssignment(int testId) throws DAOSqlException;
+
+    int saveTest(Test test, int testId) throws DAOSqlException;
+
+    int saveQuestionWithAnswers(Question question, int testId) throws DAOSqlException;
+
+    void updateTest(Test test, int typeId) throws DAOSqlException;
 }

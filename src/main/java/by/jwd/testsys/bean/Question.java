@@ -16,13 +16,18 @@ public class Question implements Serializable {
     private Test test;
     private Set<Answer> answers;
 
-    public Question(){
+    public Question() {
 
     }
 
-    public void addAnswer(Answer answer){
-        if(answers==null){
-            answers=new HashSet<>();
+    public Question(String title) {
+        this.question = title;
+    }
+
+
+    public void addAnswer(Answer answer) {
+        if (answers == null) {
+            answers = new HashSet<>();
         }
         answers.add(answer);
     }
@@ -68,7 +73,6 @@ public class Question implements Serializable {
     }
 
 
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -93,9 +97,9 @@ public class Question implements Serializable {
         } else if (!test.equals(other.test)) {
             return false;
         }
-        if(answers==null){
-            if(other.answers!=null)return false;
-        }else if(!answers.equals(other.answers)){
+        if (answers == null) {
+            if (other.answers != null) return false;
+        } else if (!answers.equals(other.answers)) {
             return false;
         }
         return true;

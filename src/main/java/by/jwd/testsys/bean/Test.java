@@ -43,6 +43,13 @@ public class Test implements Serializable {
         this.edited=isEdited;
     }
 
+    public Test(String title, String key, LocalTime duration, boolean isEdited) {
+        this.title = title;
+        this.key=key;
+        this.duration=duration;
+        this.edited=isEdited;
+    }
+
     public Test(int id, String title, int countQuestion, String key, LocalTime duration) {
         this.id = id;
         this.title = title;
