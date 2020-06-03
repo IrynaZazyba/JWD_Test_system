@@ -21,7 +21,7 @@ public class CreateQuestionAnswer implements AjaxCommand {
 
         String question = request.getParameter("question");
         request.getParameterMap().forEach((k, v) -> {
-            if (k.contains("answer")) {
+            if (k.contains("answer")&&!v[0].equals("")) {
                 int id = Integer.parseInt(k.split("-")[1]);
                 answers.put(id, v[0]);
             }

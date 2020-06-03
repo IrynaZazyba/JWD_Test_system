@@ -71,7 +71,6 @@
                 </div>
             </div>
             <div class="tab-content" id="v-pills-tabContent">
-                <c:out value="${requestScope.activeId}"/>
                 <table class="table table-sm">
                     <thead>
                     <tr>
@@ -85,9 +84,10 @@
                     </thead>
                     <tbody>
                     <c:if test="${not empty requestScope.tests}">
+                        <c:set var="count" value="0"/>
                         <c:forEach var="test" items="${requestScope.tests}">
                             <tr>
-                                <th scope="row">1</th>
+                                <th scope="row">${count=count+1}</th>
                                 <td>${test.title}</td>
                                 <td>${test.duration}</td>
                                 <td>${test.key}</td>

@@ -76,7 +76,7 @@ function generateQuestionView(formData) {
     let html = "<div>" + formData.get('question') + "</div>";
     for (let [name, value] of formData) {
         console.log(name + " " + value);
-        if (name.includes('answer-')) {
+        if (name.includes('answer-')&&value!=="") {
             html = html + "<div>- " + value + "</div>";
         }
     }

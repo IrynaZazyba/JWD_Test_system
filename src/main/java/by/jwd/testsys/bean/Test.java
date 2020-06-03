@@ -22,6 +22,8 @@ public class Test implements Serializable {
 
     private boolean started;
     private boolean edited;
+    private int flag;
+
 
     public Test() {
     }
@@ -239,5 +241,13 @@ public class Test implements Serializable {
 
     public void setEdited(boolean edited) {
         this.edited = edited;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
     }
 }
