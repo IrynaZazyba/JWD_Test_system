@@ -21,6 +21,12 @@ public class Answer implements Serializable {
         this.answer = answer;
     }
 
+    public Answer(int id,String answer, boolean result) {
+        this.id=id;
+        this.answer = answer;
+        this.result=result;
+    }
+
 
     public int getId() {
         return id;

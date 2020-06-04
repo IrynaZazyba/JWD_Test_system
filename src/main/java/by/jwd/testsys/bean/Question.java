@@ -24,6 +24,11 @@ public class Question implements Serializable {
         this.question = title;
     }
 
+    public Question(int id,String title) {
+        this.id=id;
+        this.question = title;
+    }
+
 
     public void addAnswer(Answer answer) {
         if (answers == null) {

@@ -92,7 +92,7 @@
                                 <td>${test.duration}</td>
                                 <td>${test.key}</td>
                                 <td>
-                                    <a href="${pageContext.request.contextPath}/test?command=get_edit_test_page&testId=${test.id}">
+                                    <a href="${pageContext.request.contextPath}/test?command=edit_test&testId=${test.id}">
                                         <button class="btn btn-link">Редактировать</button>
                                     </a>
                                 </td>

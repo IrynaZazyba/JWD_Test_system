@@ -1,8 +1,8 @@
 package by.jwd.testsys.controller;
 
-import by.jwd.testsys.controller.parameter.RequestParameterName;
+import by.jwd.testsys.controller.command.CommandProvider;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
-import by.jwd.testsys.controller.command.ajax.AjaxCommandProvider;
+import by.jwd.testsys.controller.parameter.RequestParameterName;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,7 +50,7 @@ public class AjaxController extends HttpServlet {
 
     private void doProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String ajaxCommandName = request.getParameter(RequestParameterName.COMMAND_NAME);
-        AjaxCommandProvider ajaxCommandProvider = AjaxCommandProvider.getInstance();
+        CommandProvider ajaxCommandProvider = CommandProvider.getInstance();
         AjaxCommand ajaxCommand = ajaxCommandProvider.getAjaxCommand(ajaxCommandName.toUpperCase());
 
         String jsonAnswer = ajaxCommand.execute(request, response);

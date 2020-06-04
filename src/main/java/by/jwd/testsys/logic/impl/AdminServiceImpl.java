@@ -4,6 +4,7 @@ import by.jwd.testsys.bean.Answer;
 import by.jwd.testsys.bean.Question;
 import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.dao.TestDAO;
+import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.factory.DAOFactoryProvider;
@@ -86,12 +87,35 @@ public class AdminServiceImpl implements AdminService {
             });
             createdQuestion.setAnswers(createdAnswers);
 
-            testDAO.saveQuestionWithAnswers(createdQuestion,testId);
+            testDAO.saveQuestionWithAnswers(createdQuestion, testId);
         } catch (DAOSqlException e) {
             throw new AdminServiceException("DB problem", e);
         }
 
 
+    }
+
+    @Override
+    public Test receiveTestWithQuestionsAndAnswers(int testId) throws AdminServiceException {
+        Test testData;
+        try {
+            testData = testDAO.getTestInfo(testId);
+            Set<Question> questions = testDAO.questionsWithAnswersByTestId(testId);
+            testData.setQuestions(questions);
+        } catch (DAOException e) {
+            throw new AdminServiceException("DB problem", e);
+        }
+
+        return testData;
+    }
+
+    @Override
+    public void changeTestIsEdited(int testId, boolean isEdited) throws AdminServiceException {
+        try {
+            testDAO.updateTestIsEdited(testId, isEdited);
+        } catch (DAOSqlException e) {
+            throw new AdminServiceException("DB problem", e);
+        }
     }
 
     private LocalTime buildLocalTimeFromMinuteDuration(int duration) {

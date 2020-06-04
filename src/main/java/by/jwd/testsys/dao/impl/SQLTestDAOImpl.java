@@ -29,8 +29,8 @@ public class SQLTestDAOImpl implements TestDAO {
             "and not EXISTS (select * from `question-log` where q.id=question_id  and assignment_id=?) Limit 1;";
 
 
-    private static final String SELECT_TEST_INFO_BY_ID = "SELECT t.id tid, t.title , t.key, t.time, t.deleted_at tdel " +
-            "FROM test t inner join question q on q.test_id=t.id  WHERE t.id=? AND q.deleted_at is null;";
+    private static final String SELECT_TEST_INFO_BY_ID = "SELECT t.title as t_title, t.key, t.time, " +
+            "type.id as type_id FROM test t inner join type on type.id=t.type_id  WHERE t.id=? AND t.deleted_at is NULL";
 
 
     private static final String SELECT_ANSWER_BY_QUESTION_ID = "SELECT a.id, a.answer FROM answer a WHERE question_id=?";
@@ -69,6 +69,8 @@ public class SQLTestDAOImpl implements TestDAO {
 
     private static final String UPDATE_TEST_DELETED_AT = "UPDATE `test` SET `deleted_at`=? where id=?";
 
+    private static final String UPDATE_TEST_EDITED = "UPDATE `test` SET `is_edited`=? where id=?";
+
     private static final String GET_COUNT_INCOMPLETE_ASSIGNMENT_BY_TEST_ID = "SELECT count(id) as count_id FROM `assignment` " +
             "WHERE test_id=? and completed=0";
 
@@ -89,6 +91,10 @@ public class SQLTestDAOImpl implements TestDAO {
 
     private static final String UPDATE_TEST = "UPDATE test SET title=?, `key`=?, time=?,type_id=?, " +
             "is_edited=? WHERE id=?";
+
+    private static final String SELECT_QUESTION_WITH_ANSWER_BY_TEST_ID = "SELECT question, question.id as q_id, " +
+            "answer.id as a_id, answer, result FROM `question` inner join answer on answer.question_id=question.id " +
+            "WHERE question.deleted_at is NULL and answer.deleted_at is NULL and test_id=?";
 
     @Override
     public Set<Test> getAssignmentTest(int userId) throws DAOSqlException {
@@ -193,17 +199,17 @@ public class SQLTestDAOImpl implements TestDAO {
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 if (test == null) {
-                    String title = resultSet.getString("title");
-                    Date tdel = resultSet.getDate("tdel");
-                    LocalDate deleted_at = null;
-                    if (tdel != null) {
-                        deleted_at = tdel.toLocalDate();
+                    String title = resultSet.getString("t_title");
+                    Time time = resultSet.getTime("time");
+                    LocalTime duration = null;
+                    if (time != null) {
+                        duration = time.toLocalTime();
                     }
-
-                    LocalTime time = resultSet.getTime("time").toLocalTime();
-
                     String key = resultSet.getString("key");
-                    test = new Test(id, title, key, time, deleted_at);
+                    int typeId = resultSet.getInt("type_id");
+                    Type type = new Type();
+                    type.setId(typeId);
+                    test = new Test(id, title, key, duration, type);
                 }
             }
         } catch (ConnectionPoolException e) {
@@ -642,7 +648,7 @@ public class SQLTestDAOImpl implements TestDAO {
             preparedStatement.setTime(3, Time.valueOf(test.getDuration()));
             preparedStatement.setInt(4, typeId);
             preparedStatement.setBoolean(5, test.getEdited());
-            preparedStatement.setInt(6,test.getId());
+            preparedStatement.setInt(6, test.getId());
             preparedStatement.executeUpdate();
         } catch (ConnectionPoolException e) {
             throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method updateTest()", e);
@@ -652,6 +658,82 @@ public class SQLTestDAOImpl implements TestDAO {
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
+    }
+
+    @Override
+    public void updateTestIsEdited(int testId, boolean isEdited) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(UPDATE_TEST_EDITED);
+            preparedStatement.setBoolean(1, isEdited);
+            preparedStatement.setInt(2, testId);
+            preparedStatement.executeUpdate();
+
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method updateTestIsEdited()", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method updateTestIsEdited()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method updateTestIsEdited()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
+        }
+    }
+
+    @Override
+    public Set<Question> questionsWithAnswersByTestId(int testId) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Question question = null;
+        Set<Question> questionsWithAnswers = new HashSet<>();
+        Set<Answer> answersToQuestion = null;
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_QUESTION_WITH_ANSWER_BY_TEST_ID);
+            preparedStatement.setInt(1, testId);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int q_id = resultSet.getInt("q_id");
+                if (question != null && q_id == question.getId()) {
+                    int a_id = resultSet.getInt("a_id");
+                    String dbAnswer = resultSet.getString("answer");
+                    boolean result = resultSet.getBoolean("result");
+                    Answer answer = new Answer(a_id, dbAnswer, result);
+                    answersToQuestion.add(answer);
+                } else {
+                    String dbQuestion = resultSet.getString("question");
+                    question = new Question(q_id, dbQuestion);
+                    questionsWithAnswers.add(question);
+                    answersToQuestion = new HashSet<>();
+                    int a_id = resultSet.getInt("a_id");
+                    String dbAnswer = resultSet.getString("answer");
+                    boolean result = resultSet.getBoolean("result");
+                    Answer answer = new Answer(a_id, dbAnswer, result);
+                    answersToQuestion.add(answer);
+                    question.setAnswers(answersToQuestion);
+                }
+
+
+            }
+//todo
+            questionsWithAnswers.forEach(k -> {
+                System.out.println(k.getQuestion());
+                k.getAnswers().forEach(a -> System.out.println(a.getAnswer()+" "+a.isResult()));
+            });
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method questionsWithAnswersByTestId()", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method questionsWithAnswersByTestId()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method questionsWithAnswersByTestId()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
+        }
+
+        return questionsWithAnswers;
     }
 
     private Test buildTest(ResultSet resultSet) throws SQLException {

@@ -29,12 +29,12 @@ public class Test implements Serializable {
     }
 
 
-    public Test(int id, String title, String key, LocalTime duration, LocalDate deletedAt) {
+    public Test(int id, String title, String key, LocalTime duration, Type type) {
         this.id = id;
         this.title = title;
         this.key = key;
         this.duration = duration;
-        this.deletedAt = deletedAt;
+        this.type = type;
     }
 
     public Test(int id, String title, String key, LocalTime duration, boolean isEdited) {

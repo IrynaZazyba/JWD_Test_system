@@ -1,5 +1,6 @@
 package by.jwd.testsys.logic;
 
+import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.logic.exception.AdminServiceException;
 import by.jwd.testsys.logic.exception.InvalidDeleteActionServiceException;
 
@@ -16,4 +17,8 @@ public interface AdminService {
     void updateTestData(int testId, int typeId, String title, String key, int duration) throws AdminServiceException;
 
     void createQuestionAnswer(String question, Map<Integer, String> answers, List<Integer> rightAnswers, int testId) throws AdminServiceException;
+
+    Test receiveTestWithQuestionsAndAnswers(int testId) throws AdminServiceException;
+
+    void changeTestIsEdited(int testId, boolean isEdited) throws AdminServiceException;
 }
