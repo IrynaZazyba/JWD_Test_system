@@ -1,4 +1,4 @@
-package by.jwd.testsys.controller.command.ajax.impl;
+package by.jwd.testsys.controller.command.ajax.impl.edit;
 
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
@@ -21,7 +21,7 @@ public class CreateQuestionAnswer implements AjaxCommand {
 
         String question = request.getParameter("question");
         request.getParameterMap().forEach((k, v) -> {
-            if (k.contains("answer")&&!v[0].equals("")) {
+            if (k.contains("answer") && !v[0].equals("")) {
                 int id = Integer.parseInt(k.split("-")[1]);
                 answers.put(id, v[0]);
             }
@@ -31,22 +31,25 @@ public class CreateQuestionAnswer implements AjaxCommand {
                 rightAnswerId.add(id);
             }
         });
-
-        int testId = Integer.parseInt(request.getParameter(RequestParameterName.TEST_ID));
-
-
         String answer = null;
 
-        ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        AdminService adminService = serviceFactory.getAdminService();
+        if (answers.size() > 4) {
+            response.setStatus(409);
+        } else {
 
-        try {
-            adminService.createQuestionAnswer(question, answers, rightAnswerId, testId);
-            response.setStatus(204);
-        } catch (ServiceException e) {
-            response.setStatus(500);
+            int testId = Integer.parseInt(request.getParameter(RequestParameterName.TEST_ID));
+
+
+            ServiceFactory serviceFactory = ServiceFactory.getInstance();
+            AdminService adminService = serviceFactory.getAdminService();
+
+            try {
+                adminService.createQuestionAnswer(question, answers, rightAnswerId, testId);
+                response.setStatus(204);
+            } catch (ServiceException e) {
+                response.setStatus(500);
+            }
         }
-
         return answer;
     }
 

@@ -389,12 +389,25 @@ li.nav-item:hover {
     margin-top: 27px;
 }
 
-.m-27{
+.m-27 {
     margin: 27px;
 }
 
+.edit-quest-row {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    margin-top: 7px;
+}
 
+.edit-quest-form {
+    border: 1px solid lightseagreen;
+    border-radius: 1rem;
+    padding: 15px;
+}
 
+.edit-button {
+    justify-content: flex-end;
+}
 
 
 

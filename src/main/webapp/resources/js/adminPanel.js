@@ -127,3 +127,86 @@ async function saveTestInfo(obj) {
 
     }
 }
+
+let form;
+
+function showModalWindowEdit(obj) {
+
+    let modalBody = document.querySelector(".modal-body .questionFormEdit");
+    modalBody.innerHTML = "";
+    console.log(obj.closest("div[id^='modal']"));
+    let formGroupQuestion = obj.closest("div[id^='modal']");
+    form = formGroupQuestion.cloneNode(true);
+    formGroupQuestion.insertAdjacentHTML('beforebegin', "<input type='hidden' id='placeToInsert'/>");
+    formGroupQuestion.querySelectorAll("div[id^='modal'] button").forEach(b => b.style.display = 'none');
+    $("#modal").modal('show');
+    modalBody.insertAdjacentElement('afterbegin', formGroupQuestion);
+    document.querySelectorAll(".modal-body div[id^='modal-'] :disabled");
+    document.querySelectorAll(".modal-body div[id^='modal-'] :disabled").forEach(e => e.removeAttribute('disabled'));
+    document.querySelectorAll(".modal-body input[type='text']").forEach(i => i.insertAdjacentHTML('afterend',
+        "<button onclick='deleteAnswer(this); return false;' type='button' id='" + i.id + "' class='btn btn-link editAnswerButton'><i class='far fa-trash-alt'></i></button>"));
+
+    let answerSize = document.querySelectorAll('.modal-body .answer').length;
+    if (answerSize < 4) {
+        console.log(document.querySelectorAll("modal-body .answer .input-group")[answerSize - 1]);
+        document.querySelectorAll(".modal-body .answer .input-group")[answerSize - 1].insertAdjacentHTML('beforeend', "<button type='button' onclick='addAnswerInput()' class='btn btn-link'><i class='fas fa-plus'></i></button>")
+    }
+}
+
+function addAnswerInput() {
+    let size=document.querySelectorAll('.modal-body .answer').length;
+    document.querySelectorAll('.modal-body .answer')[size-1].insertAdjacentHTML('afterend', generateInput());
+}
+
+function generateInput() {
+    return "<div class='row m-t-7 answer'><div class='col-10 p-0'>" +
+            "<div class='input-group mb-3 answer'>" +
+            "<div class='input-group-prepend'>" +
+            "<div class='input-group-text'>" +
+            "<input type='checkbox'  name='check-" + count + "' aria-label='Checkbox for following text input'></div>" +
+            "</div>" +
+            "<input  class='form-control' name='answer-" + count + "' aria-label='Text input with checkbox'></input>" +
+            "</div></div></div>";
+}
+
+let answerToDelete;
+
+function deleteAnswer(button) {
+
+    answerToDelete = new Array();
+    let answerId = button.id;
+    console.log(answerId);
+    answerToDelete.push(answerId);
+    console.log(answerToDelete);
+
+}
+
+function updateQuestion(button) {
+
+    console.log(document.querySelector(".modal-body form"));
+    let form = document.querySelector(".modal-body form");
+    let dataF = new FormData(form);
+    console.log(dataF.get('question'));
+
+    //отправляем данные
+    //очищаем массив answerToDelete
+    //перезагружаем страницу если все ок
+
+}
+
+function backEditedQuestion() {
+    document.querySelectorAll(".modal-body input").forEach(n => n.setAttribute('disabled', 'disabled'));
+    document.querySelector(".modal-body textarea").setAttribute('disabled', 'disabled');
+
+    document.querySelectorAll(".modal-body div[id^='modal-'] .editAnswerButton").forEach(b => b.remove());
+    document.querySelectorAll(".modal-body .edit-button button").forEach(eb => eb.style.display = 'block');
+
+}
+$('#modal').on('hidden.bs.modal', function (e) {
+    backEditedQuestion();
+
+    let insertPlace = document.getElementById('placeToInsert').insertAdjacentElement('afterend', form);
+    form = "";
+    document.getElementById('placeToInsert').remove();
+});
+

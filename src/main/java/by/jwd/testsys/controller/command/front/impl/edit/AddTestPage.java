@@ -1,6 +1,5 @@
-package by.jwd.testsys.controller.command.front.impl;
+package by.jwd.testsys.controller.command.front.impl.edit;
 
-import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.bean.Type;
 import by.jwd.testsys.controller.command.front.Command;
 import by.jwd.testsys.controller.command.front.ForwardCommandException;
@@ -20,38 +19,30 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-public class ShowEditTestPage implements Command {
+public class AddTestPage implements Command {
 
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        int testId = Integer.parseInt(request.getParameter(RequestParameterName.TEST_ID));
-
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        AdminService adminService = serviceFactory.getAdminService();
         TestService testService = serviceFactory.getTestService();
 
         HttpSession session = request.getSession();
 
+
         try {
 
-            adminService.changeTestIsEdited(testId, true);
+            List<Type> types = testService.allTestsType();
 
-            Test testData = adminService.receiveTestWithQuestionsAndAnswers(testId);
-            List<Type> testTypes = testService.allTestsType();
-            request.setAttribute("testData", testData);
-            request.setAttribute("testsTypes", testTypes);
             session.setAttribute(SessionAttributeName.COMMAND_NAME, request.getQueryString());
-            forwardToPage(request, response, JspPageName.EDIT_TEST);
+            request.setAttribute("testTypes",types);
+            forwardToPage(request, response, JspPageName.ADD_TEST);
 
         } catch (ForwardCommandException e) {
             response.sendRedirect(JspPageName.ERROR_PAGE);
-        } catch (AdminServiceException e) {
-            e.printStackTrace();
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-
     }
 }

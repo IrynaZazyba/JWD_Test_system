@@ -1,4 +1,4 @@
-package by.jwd.testsys.controller.command.front.impl;
+package by.jwd.testsys.controller.command.front.impl.edit;
 
 import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.bean.Type;

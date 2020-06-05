@@ -3,9 +3,13 @@ package by.jwd.testsys.controller.command;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.command.ajax.AjaxCommandName;
 import by.jwd.testsys.controller.command.ajax.impl.*;
+import by.jwd.testsys.controller.command.ajax.impl.edit.*;
 import by.jwd.testsys.controller.command.front.Command;
 import by.jwd.testsys.controller.command.front.CommandName;
 import by.jwd.testsys.controller.command.front.impl.*;
+import by.jwd.testsys.controller.command.front.impl.edit.AddTestPage;
+import by.jwd.testsys.controller.command.front.impl.edit.ShowAdminPanel;
+import by.jwd.testsys.controller.command.front.impl.edit.ShowEditTestPage;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="resources/css/style.css"/>
     <link rel="stylesheet" href="resources/css/test-card.css"/>
 
-
 </head>
 <body>
 <fmt:setLocale value="${sessionScope.local}"/>
@@ -59,56 +58,101 @@
                            id="testDuration">
                 </div>
                 <c:forEach var="quest" items="${requestScope.testData.questions}">
-                    <div class="form-group">
-                        <label for="${requestScope.testData.id}">Вопрос</label>
-                        <textarea class="form-control" id="${requestScope.testData.id}"
-                                  rows="3">${quest.question}</textarea>
-                    </div>
-                    <c:forEach var="answer" items="${quest.answers}">
-                        <c:if test="${answer.result eq true}">
-
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text">
-                                    <input type="checkbox" checked aria-label="Checkbox for following text input">
-                                </div>
-                            </div>
-                            <input type="text" style="background-color: palegreen" class="form-control"
-                                   id="${answer.id}"
-                                   value="${answer.answer}"
-                                   aria-label="Text input with checkbox">
+                    <div id="modal-${quest.id}" class="form-group edit-quest-form">
+                        <div class="row edit-button">
+                            <button onclick="showModalWindowEdit(this); return false;" type="button"
+                                    value="${quest.id}"
+                                    class="btn btn-link"><i class="far fa-edit"></i></button>
+                            <button type="button" value="${quest.id}" class="btn btn-link"><i
+                                    class="far fa-trash-alt "></i>
+                            </button>
                         </div>
-                        </c:if>
+                        <div class="row">
+                            <div class="col-10 p-0">
+                                <textarea disabled class="form-control" name="question"
+                                          id="question" rows="3">${quest.question}</textarea>
+                            </div>
 
-                        <c:if test="${answer.result eq false}">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">
-                                        <input type="checkbox" aria-label="Checkbox for following text input">
+                        </div>
+                        <c:forEach var="answer" items="${quest.answers}">
+                            <c:if test="${answer.result eq true}">
+                                <div class="row m-t-7 answer">
+                                    <div class="col-10 p-0">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <input disabled type="checkbox" name="check-1"
+                                                           aria-label="Checkbox for following text input">
+                                                </div>
+                                            </div>
+                                            <input id="${answer.id}" name="answer-a" disabled type="text"
+                                                   value="${answer.answer}" class="form-control"
+                                                   aria-label="Text input with checkbox">
+                                        </div>
                                     </div>
                                 </div>
-                                <input type="text" class="form-control" id="${answer.id}" value="${answer.answer}"
-                                       aria-label="Text input with checkbox">
-                            </div>
-                        </c:if>
-                    </c:forEach>
+                            </c:if>
+                            <c:if test="${answer.result eq false}">
+                                <div class="row m-t-7 answer">
+                                    <div class="col-10 p-0">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <input disabled type="checkbox" name="check-1"
+                                                           aria-label="Checkbox for following text input">
+                                                </div>
+                                            </div>
+                                            <input id="${answer.id}" name="answer-a" disabled type="text"
+                                                   value="${answer.answer}" class="form-control"
+                                                   aria-label="Text input with checkbox">
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
+                        </c:forEach>
+                    </div>
                 </c:forEach>
+                <div class="form-group m-t-15">
+                    <button type="button" class="btn btn-outline-info">Завершить создание теста</button>
+                </div>
             </form>
         </div>
         <div class="col-3"></div>
-
     </div>
 
     <button onclick="window.history.back()">Кнопка назад</button>
 
 </div>
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="" crossorigin="anonymous"></script>
+
+
+<div id="modal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span  class="closeButton" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="questionFormEdit"></form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary closeButton" data-dismiss="modal">Close</button>
+                <button onclick="updateQuestion(this)" type="button" class="btn btn-info">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
 <script src="resources/js/bootstrap.min.js.map"
         integrity="" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="" crossorigin="anonymous"></script>
-<script src="resources/js/script.js"></script>
+<script src="resources/js/adminPanel.js"></script>
 
 </body>
 

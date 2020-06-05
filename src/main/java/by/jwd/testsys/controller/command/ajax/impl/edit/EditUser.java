@@ -1,4 +1,4 @@
-package by.jwd.testsys.controller.command.ajax.impl;
+package by.jwd.testsys.controller.command.ajax.impl.edit;
 
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
