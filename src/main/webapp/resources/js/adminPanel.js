@@ -76,11 +76,11 @@ function generateQuestionView(formData) {
     let html = "<div>" + formData.get('question') + "</div>";
     for (let [name, value] of formData) {
         console.log(name + " " + value);
-        if (name.includes('answer-')&&value!=="") {
+        if (name.includes('answer-') && value !== "") {
             html = html + "<div>- " + value + "</div>";
         }
     }
-    return html+"<hr>";
+    return html + "<hr>";
 }
 
 async function saveTestInfo(obj) {
@@ -153,12 +153,16 @@ function showModalWindowEdit(obj) {
     }
 }
 
-let countInsertedAnswer=0;
+let countInsertedAnswer = 0;
 
+function insertButtonAddAnswer() {
+    document.querySelector(".modal-body div[id^='modal-']").insertAdjacentHTML('beforeend', "<button type='button' id='addAnswer' onclick='addAnswerInput()' class='btn btn-link btn-block'><i class='fas fa-plus'></i></button>")
+
+}
 
 function addAnswerInput() {
-    let size=document.querySelectorAll('.modal-body .answer').length;
-    if((size)<4) {
+    let size = document.querySelectorAll('.modal-body .answer').length;
+    if ((size) < 4) {
         console.log(document.querySelectorAll('.modal-body .answer')[size - 1]);
         document.querySelectorAll('.modal-body .answer')[size - 1].insertAdjacentHTML('afterend', generateInput());
     }
@@ -168,37 +172,56 @@ function addAnswerInput() {
 function generateInput() {
     countInsertedAnswer++;
     return "<div class='row m-t-7 answer'><div class='col-10 p-0'>" +
-            "<div class='input-group mb-3'>" +
-            "<div class='input-group-prepend'>" +
-            "<div class='input-group-text'>" +
-            "<input type='checkbox'  name='check-add-"+countInsertedAnswer+"' aria-label='Checkbox for following text input'></div>" +
-            "</div>" +
-            "<input  class='form-control' name='answer-add-"+countInsertedAnswer+"' aria-label='Text input with checkbox'></input>" +
-            "<button onclick='deleteAnswer(this); return false;' type='button' id='answer-add-"+countInsertedAnswer+"' class='btn btn-link editAnswerButton'><i class='far fa-trash-alt'></i></button></div></div></div>";
+        "<div class='input-group mb-3'>" +
+        "<div class='input-group-prepend'>" +
+        "<div class='input-group-text'>" +
+        "<input type='checkbox'  name='checkAdd-" + countInsertedAnswer + "' aria-label='Checkbox for following text input'></div>" +
+        "</div>" +
+        "<input  class='form-control' name='answerAdd-" + countInsertedAnswer + "' aria-label='Text input with checkbox'></input>" +
+        "<button onclick='deleteAnswer(this); return false;' type='button' id='answer-add-" + countInsertedAnswer + "' class='btn btn-link editAnswerButton'><i class='far fa-trash-alt'></i></button></div></div></div>";
 }
 
-let answerToDelete=[];
+let answerToDelete = [];
 
 function deleteAnswer(button) {
 
     let answerId = button.id;
-    if(!answerId.includes('answer-add')){
-    console.log(answerId);
-    answerToDelete.push(answerId);}
+    if (!answerId.includes('answer-add')) {
+        console.log(answerId);
+        answerToDelete.push(answerId);
+    }
 
+    if (document.getElementById("addAnswer") == null) {
+        document.querySelector(".modal-body div[id^='modal-']").insertAdjacentHTML('beforeend', "<button type='button' id='addAnswer' onclick='addAnswerInput()' class='btn btn-link btn-block'><i class='fas fa-plus'></i></button>")
+    }
     button.closest(".answer").remove();
 
     console.log(answerToDelete);
 
 }
 
-function updateQuestion(button) {
+async function updateQuestion(button) {
 
     console.log(document.querySelector(".modal-body form"));
     let form = document.querySelector(".modal-body form");
     let dataF = new FormData(form);
-    console.log(dataF.get('question'));
-    countInsertedAnswer=0;
+    dataF.append("deletedAnswers", answerToDelete);
+
+    let response = await fetch("http://localhost:8080/test-system/ajax?command=update_question", {
+        method: 'POST',
+        body: dataF,
+    });
+
+    if (response.ok) {
+        let json = await response.json();
+        console.log("ok response");
+        answerToDelete = [];
+
+
+    } else {
+
+
+    }
     //отправляем данные
     //очищаем массив answerToDelete
     //перезагружаем страницу если все ок
@@ -213,7 +236,10 @@ function backEditedQuestion() {
     document.querySelectorAll(".modal-body .edit-button button").forEach(eb => eb.style.display = 'block');
 
 }
+
 $('#modal').on('hidden.bs.modal', function (e) {
+    countInsertedAnswer = 0;
+
     backEditedQuestion();
 
     let insertPlace = document.getElementById('placeToInsert').insertAdjacentElement('afterend', form);

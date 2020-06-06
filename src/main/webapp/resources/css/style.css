@@ -409,5 +409,9 @@ li.nav-item:hover {
     justify-content: flex-end;
 }
 
+input:checked{
+    background-color: green;
+}
+
 
 

@@ -50,6 +50,8 @@ public final class CommandProvider {
         ajaxRepository.put(AjaxCommandName.DELETE_TEST, new DeleteTest());
         ajaxRepository.put(AjaxCommandName.CREATE_TEST, new CreateTest());
         ajaxRepository.put(AjaxCommandName.CREATE_QUESTION_ANSWER, new CreateQuestionAnswer());
+        ajaxRepository.put(AjaxCommandName.UPDATE_QUESTION, new UpdateQuestion());
+
     }
 
     public static CommandProvider getInstance() {

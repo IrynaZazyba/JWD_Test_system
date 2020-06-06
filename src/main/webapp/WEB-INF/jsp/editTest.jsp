@@ -28,7 +28,7 @@
 
     <jsp:include page="parts/nav-menu.jsp"/>
     <div class="row">
-        <div class="col-1"></div>
+        <div class="col-3"></div>
         <div class="col-5">
             <form>
                 <div class="form-group">
@@ -73,7 +73,7 @@
                         </div>
                         <div class="row">
                             <div class="col-10 p-0">
-                                <textarea disabled class="form-control" name="question"
+                                <textarea disabled class="form-control" name="question-${quest.id}"
                                           id="question" rows="3">${quest.question}</textarea>
                             </div>
 
@@ -85,11 +85,11 @@
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">
-                                                    <input disabled type="checkbox" name="check-1"
+                                                    <input checked disabled type="checkbox" name="check-${answer.id}"
                                                            aria-label="Checkbox for following text input">
                                                 </div>
                                             </div>
-                                            <input id="${answer.id}" name="answer-a" disabled type="text"
+                                            <input id="${answer.id}" name="answer-${answer.id}" disabled type="text"
                                                    value="${answer.answer}" class="form-control"
                                                    aria-label="Text input with checkbox">
                                         </div>
@@ -102,7 +102,7 @@
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">
-                                                    <input disabled type="checkbox" name="check-1"
+                                                    <input disabled type="checkbox" name="check-${answer.id}"
                                                            aria-label="Checkbox for following text input">
                                                 </div>
                                             </div>
@@ -139,7 +139,9 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form class="questionFormEdit"></form>
+                <form class="questionFormEdit">
+
+                </form>
             </div>
 
             <div class="modal-footer">

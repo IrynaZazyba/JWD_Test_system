@@ -53,4 +53,11 @@ public interface TestDAO {
     void updateTestIsEdited(int testId, boolean isEdited) throws DAOSqlException;
 
     Set<Question> questionsWithAnswersByTestId(int testId) throws DAOSqlException;
+
+
+    void updateQuestionWithAnswersByQuestionId(Question updatedQuestion,
+                                               Set<Answer> answerToUpdate,
+                                               Set<Answer> answerToAdd,
+                                               List<Integer> answerToDelete,
+                                               LocalDate deletedDate) throws DAOSqlException;
 }

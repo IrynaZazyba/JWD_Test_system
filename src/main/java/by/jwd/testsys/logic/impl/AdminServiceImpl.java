@@ -12,6 +12,7 @@ import by.jwd.testsys.logic.AdminService;
 import by.jwd.testsys.logic.exception.AdminServiceException;
 import by.jwd.testsys.logic.exception.InvalidDeleteActionServiceException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
@@ -117,6 +118,62 @@ public class AdminServiceImpl implements AdminService {
             throw new AdminServiceException("DB problem", e);
         }
     }
+
+
+    @Override
+    public void updateQuestionWithAnswers(int questionId,
+                                          String question,
+                                          String deletedAnswers,
+                                          Map<Integer, String> answers,
+                                          Map<Integer, String> addedAnswers,
+                                          List<Integer> rightAnswersId,
+                                          List<Integer> rightAddedAnswersId) throws AdminServiceException {
+
+        Question updatedQuestion = new Question(questionId, question);
+        Set<Answer> answerToUpdate = new HashSet<>();
+        Set<Answer> answerToAdd = new HashSet<>();
+
+//        Question questionFromDb = testDAO.getQuestionWithAnswersByQuestionId(questionId);
+
+
+        String[] answersIdToDelete = deletedAnswers.split(",");
+        List<Integer> answerToDelete = new ArrayList<>();
+        for (String s : answersIdToDelete) {
+            answerToDelete.add(Integer.parseInt(s));
+        }
+
+        answers.forEach((k, v) -> {
+            Answer answer = new Answer(k, v);
+            rightAnswersId.forEach(value -> {
+                if (value.equals(k)) {
+                    answer.setResult(true);
+                }
+            });
+            answerToUpdate.add(answer);
+        });
+
+        addedAnswers.forEach((k, v) -> {
+            Answer answer = new Answer(v);
+            rightAddedAnswersId.forEach(value -> {
+                if (value.equals(k)) {
+                    answer.setResult(true);
+                }
+            });
+            answerToAdd.add(answer);
+        });
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println(updatedQuestion);
+        System.out.println(answerToUpdate);
+        System.out.println(answerToAdd);
+        System.out.println(answerToDelete);
+
+        try {
+            testDAO.updateQuestionWithAnswersByQuestionId(updatedQuestion, answerToUpdate, answerToAdd, answerToDelete, LocalDate.now());
+        } catch (DAOSqlException e) {
+            throw new AdminServiceException("DB problem", e);
+        }
+    }
+
 
     private LocalTime buildLocalTimeFromMinuteDuration(int duration) {
         LocalTime testDuration = null;

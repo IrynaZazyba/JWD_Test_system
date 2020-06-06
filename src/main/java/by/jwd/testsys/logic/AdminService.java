@@ -21,4 +21,12 @@ public interface AdminService {
     Test receiveTestWithQuestionsAndAnswers(int testId) throws AdminServiceException;
 
     void changeTestIsEdited(int testId, boolean isEdited) throws AdminServiceException;
+
+    void updateQuestionWithAnswers(int questionId,
+                                   String question,
+                                   String deletedAnswers,
+                                   Map<Integer, String> answers,
+                                   Map<Integer, String> addedAnswers,
+                                   List<Integer> rightAnswersId,
+                                   List<Integer> rightAddedAnswersId) throws AdminServiceException;
 }
