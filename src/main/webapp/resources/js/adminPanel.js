@@ -149,34 +149,45 @@ function showModalWindowEdit(obj) {
     let answerSize = document.querySelectorAll('.modal-body .answer').length;
     if (answerSize < 4) {
         console.log(document.querySelectorAll("modal-body .answer .input-group")[answerSize - 1]);
-        document.querySelectorAll(".modal-body .answer .input-group")[answerSize - 1].insertAdjacentHTML('beforeend', "<button type='button' onclick='addAnswerInput()' class='btn btn-link'><i class='fas fa-plus'></i></button>")
+        document.querySelector(".modal-body div[id^='modal-']").insertAdjacentHTML('beforeend', "<button type='button' id='addAnswer' onclick='addAnswerInput()' class='btn btn-link btn-block'><i class='fas fa-plus'></i></button>")
     }
 }
 
+let countInsertedAnswer=0;
+
+
 function addAnswerInput() {
     let size=document.querySelectorAll('.modal-body .answer').length;
-    document.querySelectorAll('.modal-body .answer')[size-1].insertAdjacentHTML('afterend', generateInput());
+    if((size)<4) {
+        console.log(document.querySelectorAll('.modal-body .answer')[size - 1]);
+        document.querySelectorAll('.modal-body .answer')[size - 1].insertAdjacentHTML('afterend', generateInput());
+    }
 }
+
 
 function generateInput() {
+    countInsertedAnswer++;
     return "<div class='row m-t-7 answer'><div class='col-10 p-0'>" +
-            "<div class='input-group mb-3 answer'>" +
+            "<div class='input-group mb-3'>" +
             "<div class='input-group-prepend'>" +
             "<div class='input-group-text'>" +
-            "<input type='checkbox'  name='check-" + count + "' aria-label='Checkbox for following text input'></div>" +
+            "<input type='checkbox'  name='check-add-"+countInsertedAnswer+"' aria-label='Checkbox for following text input'></div>" +
             "</div>" +
-            "<input  class='form-control' name='answer-" + count + "' aria-label='Text input with checkbox'></input>" +
-            "</div></div></div>";
+            "<input  class='form-control' name='answer-add-"+countInsertedAnswer+"' aria-label='Text input with checkbox'></input>" +
+            "<button onclick='deleteAnswer(this); return false;' type='button' id='answer-add-"+countInsertedAnswer+"' class='btn btn-link editAnswerButton'><i class='far fa-trash-alt'></i></button></div></div></div>";
 }
 
-let answerToDelete;
+let answerToDelete=[];
 
 function deleteAnswer(button) {
 
-    answerToDelete = new Array();
     let answerId = button.id;
+    if(!answerId.includes('answer-add')){
     console.log(answerId);
-    answerToDelete.push(answerId);
+    answerToDelete.push(answerId);}
+
+    button.closest(".answer").remove();
+
     console.log(answerToDelete);
 
 }
@@ -187,7 +198,7 @@ function updateQuestion(button) {
     let form = document.querySelector(".modal-body form");
     let dataF = new FormData(form);
     console.log(dataF.get('question'));
-
+    countInsertedAnswer=0;
     //отправляем данные
     //очищаем массив answerToDelete
     //перезагружаем страницу если все ок
@@ -210,3 +221,8 @@ $('#modal').on('hidden.bs.modal', function (e) {
     document.getElementById('placeToInsert').remove();
 });
 
+
+function addQuestion() {
+    console.log("add question");
+
+}

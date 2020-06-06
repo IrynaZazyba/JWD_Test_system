@@ -57,6 +57,10 @@
                     <input type="email" class="form-control" value="${requestScope.testData.duration}"
                            id="testDuration">
                 </div>
+                <div class="form-group">
+                    <button type="button" onclick="addQuestion();return false;" class="btn btn-outline-info btn-block"><i class="fas fa-plus"></i></button>
+
+                </div>
                 <c:forEach var="quest" items="${requestScope.testData.questions}">
                     <div id="modal-${quest.id}" class="form-group edit-quest-form">
                         <div class="row edit-button">
@@ -102,7 +106,7 @@
                                                            aria-label="Checkbox for following text input">
                                                 </div>
                                             </div>
-                                            <input id="${answer.id}" name="answer-a" disabled type="text"
+                                            <input id="${answer.id}" name="answer-${answer.id}" disabled type="text"
                                                    value="${answer.answer}" class="form-control"
                                                    aria-label="Text input with checkbox">
                                         </div>
