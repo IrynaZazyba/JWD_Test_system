@@ -67,7 +67,7 @@ public class SQLTestDAOImpl implements TestDAO {
 
     private static final String UPDATE_ASSIGNMENT_DELETED_AT = "UPDATE `assignment` SET `deleted_at`=? where id=?";
 
-    private static final String UPDATE_TEST_DELETED_AT = "UPDATE `test` SET `deleted_at`=? where id=?";
+    private static final String UPDATE_TEST_DELETED_AT = "UPDATE `test` SET `deleted_at`=? where id=? and deleted_at is null";
 
     private static final String UPDATE_TEST_EDITED = "UPDATE `test` SET `is_edited`=? where id=?";
 

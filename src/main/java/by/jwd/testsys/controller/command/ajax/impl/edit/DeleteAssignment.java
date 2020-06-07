@@ -31,9 +31,7 @@ public class DeleteAssignment implements AjaxCommand {
         try {
             testService.deleteAssignment(assignment_id);
         } catch (ServiceException e) {
-            //todo
             response.setStatus(500);
-            e.printStackTrace();
         }
 
         return answer;

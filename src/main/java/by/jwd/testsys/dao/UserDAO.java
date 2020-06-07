@@ -33,6 +33,6 @@ public interface UserDAO {
 
     void insertNewAssignment(LocalDate assignmentDate, LocalDate deadline, int testId, List<Integer> usersId) throws DAOSqlException;
 
-    Set<User> getUsersWithAssignmentByTestId(int testId, boolean isCompleted) throws DAOSqlException;
+    Set<User> getUsersWithAssignmentByTestId(int testId, int testTypeId, boolean isCompleted) throws DAOSqlException;
 
 }

@@ -31,9 +31,8 @@ public class SecurityFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpSession session = httpServletRequest.getSession();
 
-        //todo security const
         if (httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME) == null) {
-            session.setAttribute("security", "security");
+            session.setAttribute("security","security");
         }
 
         String parameter = httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME);
@@ -46,7 +45,7 @@ public class SecurityFilter implements Filter {
                 && !httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME).
                 equals(CommandName.CHANGE_LANGUAGE.toString().toLowerCase())) {
 
-            session.setAttribute("security", "security");
+            session.setAttribute("security","security");
         }
         filterChain.doFilter(httpServletRequest, servletResponse);
     }

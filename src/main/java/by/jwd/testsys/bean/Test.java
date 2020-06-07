@@ -75,6 +75,11 @@ public class Test implements Serializable {
         this.countQuestion = countQuestion;
     }
 
+    public Test(int id, String title) {
+        this.id = id;
+        this.title = title;
+    }
+
     public Assignment getAssignment() {
         return assignment;
     }

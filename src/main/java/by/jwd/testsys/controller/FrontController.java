@@ -3,6 +3,7 @@ package by.jwd.testsys.controller;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.command.front.Command;
 import by.jwd.testsys.controller.command.CommandProvider;
+import by.jwd.testsys.controller.parameter.SessionAttributeName;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -42,7 +43,6 @@ public class FrontController extends HttpServlet {
 
     private void doProcess(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String commandName = req.getParameter(RequestParameterName.COMMAND_NAME);
-        //todo const
         String security = (String)req.getSession().getAttribute("security");
         CommandProvider commandProvider = CommandProvider.getInstance();
         Command command = commandProvider.getFrontCommand(commandName,security);

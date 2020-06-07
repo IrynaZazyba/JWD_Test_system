@@ -100,10 +100,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<User> getUsersWithAssignment(int testId, boolean isCompleted) throws ServiceException {
+    public Set<User> getUsersWithAssignment(int testId,int testTypeId, boolean isCompleted) throws ServiceException {
         Set<User> users = new HashSet<>();
         try {
-           users=userDao.getUsersWithAssignmentByTestId(testId, isCompleted);
+           users=userDao.getUsersWithAssignmentByTestId(testId, testTypeId, isCompleted);
         } catch (DAOSqlException e) {
             throw new ServiceException("Error in getUserWithRoleUser().", e);
         }

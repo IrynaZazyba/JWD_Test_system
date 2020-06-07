@@ -107,7 +107,7 @@
                             <th scope="col"></th>
                         </tr>
                         </thead>
-                        <tbody id="resultData">
+                        <tbody id="jsData">
 
                         </tbody>
                     </table>

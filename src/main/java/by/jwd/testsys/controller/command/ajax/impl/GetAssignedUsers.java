@@ -21,7 +21,21 @@ public class GetAssignedUsers implements AjaxCommand {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
 
-        int testId = Integer.parseInt(request.getParameter(RequestParameterName.TEST_ID));
+
+        String testIdValue = request.getParameter(RequestParameterName.TEST_ID);
+        int testId=0;
+        if (testIdValue != null) {
+            testId = Integer.parseInt(testIdValue);
+        }
+
+        String testTypeIdValue = request.getParameter(RequestParameterName.TEST_TYPE_ID);
+        int testTypeId=0;
+        if (testTypeIdValue != null) {
+            testTypeId = Integer.parseInt(testTypeIdValue);
+        }
+
+
+
         String completed = request.getParameter("completed");
 
         String answer = null;
@@ -37,7 +51,7 @@ public class GetAssignedUsers implements AjaxCommand {
         }
 
         try {
-            Set<User> usersWithAssignment = userService.getUsersWithAssignment(testId, isCompleted);
+            Set<User> usersWithAssignment = userService.getUsersWithAssignment(testId, testTypeId, isCompleted);
             usersWithTestAssignment.put("setUsers", usersWithAssignment);
             answer = gson.toJson(usersWithTestAssignment);
 

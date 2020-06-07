@@ -84,7 +84,6 @@ public class ShowQuestion implements AjaxCommand {
             Gson gson = new Gson();
             return gson.toJson(map);
         } catch (InvalidTestKeyException e) {
-            //todo если ключ неверный
             Map<String, Object> map = new HashMap<>();
             map.put("invalid_key", "true");
             Gson gson = new Gson();

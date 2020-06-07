@@ -110,14 +110,11 @@ public class TestServiceImpl implements TestService {
     public Test getTestInfo(int id) throws TestServiceException {
         Test test;
         try {
-            //todo Просто довавить данные в полученный тест
-            Test dbTest = testDAO.getTestInfo(id);
-            int countQuestion = testDAO.getCountQuestion(dbTest.getId());
-            String title = dbTest.getTitle();
-            LocalTime duration = dbTest.getDuration();
-            String key = dbTest.getKey();
+            test = testDAO.getTestInfo(id);
+            int countQuestion = testDAO.getCountQuestion(test.getId());
+            test.setId(id);
+            test.setCountQuestion(countQuestion);
 
-            test = new Test(id, title, countQuestion, key, duration);
         } catch (DAOException e) {
             throw new TestServiceException("DB problem", e);
         }
@@ -329,7 +326,7 @@ public class TestServiceImpl implements TestService {
 
 
     private Result calculateResult(Assignment assignment) throws TestServiceException {
-        Result result = null;
+        Result result;
         try {
             TestLog testLogByAssignmentId = testLogDAO.getTestLog(assignment.getId());
 
@@ -462,24 +459,22 @@ public class TestServiceImpl implements TestService {
             assignmentResult.put("existsAssignment", existsAssignment);
             userDAO.insertNewAssignment(LocalDate.now(), deadline, testId, usersId);
         } catch (DAOSqlException e) {
-            throw new ServiceException("Error in getUserWithRoleUser().", e);
+            throw new TestServiceException("Error in getUserWithRoleUser().", e);
         }
 
         return assignmentResult;
     }
 
-
-    boolean isWithinRange(LocalDate deadline) {
+    private boolean isWithinRange(LocalDate deadline) {
         return deadline.isAfter(LocalDate.now());
     }
 
     @Override
     public void deleteAssignment(int assignment_id) throws ServiceException {
-
         try {
-            testDAO.makeAssignmentDeleted(assignment_id,LocalDate.now());
+            testDAO.makeAssignmentDeleted(assignment_id, LocalDate.now());
         } catch (DAOSqlException e) {
-            throw new ServiceException("Error in getUserWithRoleUser().", e);
+            throw new TestServiceException("DAOSqlException  in deleteAssignment().", e);
         }
 
     }

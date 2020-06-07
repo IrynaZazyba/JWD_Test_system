@@ -56,9 +56,10 @@ public class SQLUserDAOImpl implements UserDAO {
     private static final String INSERT_NEW_ASSIGNMENT = "INSERT INTO `assignment` (`date`, `deadline`, `test_id`, " +
             "`user_id`, `completed`) VALUES (?,?,?,?, false)";
 
-    private static final String SELECT_USERS_WITH_ASSIGNMENT_BY_TEST_ID = "SELECT assignment.id as asgn_id, date, " +
+    private static final String SELECT_USERS_WITH_ASSIGNMENT_GENERATED = "SELECT  test.title as t_title, assignment.id as asgn_id, date, " +
             "deadline,users.id as u_id, first_name, last_name, completed FROM `assignment` inner join users " +
-            "on users.id=assignment.user_id WHERE test_id=? AND deleted_at IS NULL";
+            "on users.id=assignment.user_id inner join test on test.id=assignment.test_id WHERE assignment.deleted_at IS NULL " +
+            "and test.deleted_at is NULL";
 
 
     @Override
@@ -414,22 +415,48 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public Set<User> getUsersWithAssignmentByTestId(int testId, boolean isCompleted) throws DAOSqlException {
+    public Set<User> getUsersWithAssignmentByTestId(int testId, int testTypeId, boolean isCompleted) throws DAOSqlException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         Set<User> users = new HashSet<>();
+        String query = SELECT_USERS_WITH_ASSIGNMENT_GENERATED;
 
         try {
             connection = connectionPool.takeConnection();
-            if (isCompleted) {
-                preparedStatement = connection.prepareStatement(SELECT_USERS_WITH_ASSIGNMENT_BY_TEST_ID);
-                preparedStatement.setInt(1, testId);
-            } else {
-                preparedStatement = connection.prepareStatement(SELECT_USERS_WITH_ASSIGNMENT_BY_TEST_ID + " AND completed=?");
-                preparedStatement.setInt(1, testId);
-                preparedStatement.setBoolean(2, isCompleted);
+
+            int count = 1;
+
+            if (testId != 0) {
+                query = query + " AND test_id=?";
             }
+
+            if (testTypeId != 0) {
+                query = query + " AND test.type_id=?";
+            }
+
+            if (!isCompleted) {
+                query = query + " AND completed=?";
+            }
+
+
+            preparedStatement = connection.prepareStatement(query);
+
+
+            if (testId != 0) {
+                preparedStatement.setInt(count, testId);
+                count++;
+            }
+
+            if (testTypeId != 0) {
+                preparedStatement.setInt(count, testTypeId);
+                count++;
+            }
+
+            if (!isCompleted) {
+                preparedStatement.setBoolean(count, isCompleted);
+            }
+
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int user_id = resultSet.getInt("u_id");
@@ -440,7 +467,9 @@ public class SQLUserDAOImpl implements UserDAO {
                 Date date = resultSet.getDate("date");
                 Date deadline = resultSet.getDate("deadline");
                 boolean completed = resultSet.getBoolean("completed");
-                Assignment assignment = new Assignment(asgn_id, date.toLocalDate(), deadline.toLocalDate(), completed);
+                String t_title = resultSet.getString("t_title");
+                Test test = new Test(testId, t_title);
+                Assignment assignment = new Assignment(asgn_id, date.toLocalDate(), deadline.toLocalDate(), test, completed);
                 if (users.add(user)) {
                     user.getAssignment().add(assignment);
                 } else {

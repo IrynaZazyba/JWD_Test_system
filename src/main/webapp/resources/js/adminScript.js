@@ -14,27 +14,31 @@
 /*select*/
 let form = document.forms.assign;
 let type = form.elements.testTypeId;
-type.onchange = changeOption;
+type.onchange = changeResultStatisticOption;
 
-
+let formAssignAction = document.forms.assignAction;
+let formAssignType = formAssignAction.elements.testTypeId;
+formAssignType.onchange = changeOption;
 
 let testTitle = form.elements.testId;
 testTitle.onchange = removeResult;
 let assign = form.elements.assigned_users;
-assign.onchange=removeResult;
+assign.onchange = removeResult;
 let date = form.elements.date;
 date.onchange = removeResult;
 
 
 function removeResult() {
-    document.getElementById("resultData").innerHTML="";
+    document.getElementById("resultData").innerHTML = "";
 }
 
 
+async function changeResultStatisticOption() {
+    document.getElementById("jsData").innerHTML = "";
+    changeOption();
+}
 
 async function changeOption() {
-
-    document.getElementById("resultData").innerHTML="";
 
     let typeId = type.value;
 
@@ -76,7 +80,7 @@ async function assignUser() {
         document.getElementById("success").style.display = 'none';
     }
 
-    let startTest = document.getElementById("assign");
+    let startTest = document.getElementById("assignAction");
     let response = await fetch("http://localhost:8080/test-system/ajax", {
         method: 'POST',
         body: new FormData(startTest),
@@ -86,11 +90,11 @@ async function assignUser() {
     if (response.ok) {
         console.log("ok");
         let json = await response.json();
-        if (json.existsAssignment.length != 0) {
+        if (json.existsAssignment.length !== 0) {
             document.getElementById("alert").style.display = 'block';
             document.getElementById("existsAssignment").insertAdjacentHTML('afterbegin', generateAssignmentResultMessage(json.existsAssignment));
         }
-        if (json.successAssignment.length != 0) {
+        if (json.successAssignment.length !== 0) {
             document.getElementById("success").style.display = 'block';
             document.getElementById("successMessage").insertAdjacentHTML('afterbegin', generateAssignmentResultMessage(json.successAssignment));
         }
@@ -139,7 +143,7 @@ function generateUsersAssignmentTable(users) {
     let num = 1;
 
     users.forEach(user => {
-        user.assignment.forEach(assign => html = html + test(user, assign, num++)
+        user.assignment.forEach(assign => html = html + generateRowTableAssignment(user, assign, num++)
         )
     });
 
@@ -151,8 +155,22 @@ let formDisplayType = document.forms.displayUsers;
 let testType = formDisplayType.elements.type;
 testType.onchange = changeOptionFormDisplay;
 
+let testFormDisplay = formDisplayType.elements.test;
+testFormDisplay.onchange = removeResultAssignedUsers;
+
+let completedFormDisplay = formDisplayType.elements.completed;
+completedFormDisplay.onchange = removeResultAssignedUsers;
+
+
+function removeResultAssignedUsers() {
+
+    document.getElementById("jsData").innerHTML = "";
+
+}
 
 async function changeOptionFormDisplay() {
+
+    removeResultAssignedUsers();
 
     let typeId = testType.value;
 
@@ -179,26 +197,36 @@ function generateDate(objDate) {
     return " " + objDate.day + "." + objDate.month + "." + objDate.year;
 }
 
-function generateActionButtonEdit(isCompleted, id) {
+function generateActionButtonDelete(isCompleted, id) {
     let form = "";
     if (!isCompleted) {
         form = "<form id=editAssign-" + id + " onsubmit='editAssignment(" + id + ");return false;'>" +
             "<input type='hidden' name='assignId' value='" + id + "'>" +
-            "<button class=\"btn btn-outline-primary card-btn\">Delete</button></form>"
+            "<button class=\"btn btn-link\"><i class=\"far fa-trash-alt\"></i></button></form>"
     } else {
-        form = "<button class=\"btn btn-outline-primary card-btn\" disabled >Delete</button>"
+        form = "<button class=\"btn btn-link\" disabled ><i class=\"far fa-trash-alt\"></i></button>"
     }
     return form;
 }
 
-function test(user, assign, num) {
+function generateRowTableAssignment(user, assign, num) {
+
+    let completed;
+    if (assign.isComplete) {
+        completed = "+";
+    } else {
+        completed = "-"
+    }
+
     let html = "";
     html = "<tr id='" + assign.id + "'><th scope = \"row\" >" + num + "</th>" +
+        "<td>" + assign.test.title + "</td>" +
         "<td>" + user.firstName + "</td>" +
         "<td>" + user.lastName + "</td>" +
         "<td>" + generateDate(assign.asgmtDate) + "</td>" +
         "<td>" + generateDate(assign.deadline) + "</td>" +
-        "<td>" + generateActionButtonEdit(assign.isComplete, assign.id) + "</td>" +
+        "<td>" + completed + "</td>" +
+        "<td>" + generateActionButtonDelete(assign.isComplete, assign.id) + "</td>" +
         "</tr>";
     return html;
 }
@@ -215,14 +243,15 @@ async function editAssignment(id) {
     });
 
     if (response.ok) {
-        //form.querySelector('button').setAttribute('disabled', 'disabled');
-        form.insertAdjacentText('beforebegin', 'DELETED');
+        form.querySelector('.editAssign-"+id+" button').setAttribute('disabled', 'disabled');
+        // form.insertAdjacentText('beforebegin', 'DELETED');
         form.remove();
 
 
         document.getElementById(assignId).setAttribute('class', 'table-danger');
 
     } else {
+
         //todo сообщение
     }
 
@@ -238,8 +267,8 @@ async function showResult() {
     if (response.ok) {
 
         let json = await response.json();
-        document.getElementById("resultData").innerHTML="";
-        document.getElementById("resultData").insertAdjacentHTML('afterbegin', generateResultTable(json.results));
+        document.getElementById("jsData").innerHTML = "";
+        document.getElementById("jsData").insertAdjacentHTML('afterbegin', generateResultTable(json.results));
     }
 }
 

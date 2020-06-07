@@ -32,6 +32,10 @@
 <fmt:message bundle="${loc}" key="test.run_page.message.duration_test" var="message_test_duration"/>
 <fmt:message bundle="${loc}" key="test.run_page.message.number_question" var="message_number_question"/>
 
+<div class="row">
+       <button onclick="window.history.back()" type="submit"
+            class="card-exe-btn btn btn-right btn-outline-primary">Назад</button>
+</div>
 <div class="row m-0">
     <div id="timer" class="row m-0" style="visibility: hidden">
         <div id="countdown" class="countdown">

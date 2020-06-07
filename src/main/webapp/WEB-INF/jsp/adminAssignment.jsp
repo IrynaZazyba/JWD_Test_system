@@ -71,7 +71,7 @@
                     <div class="row m-t-15">
                         <div class="col-1"></div>
                         <div class="col-4">
-                            <form name="assign" id="assign" onsubmit="assignUser(); return false;"
+                            <form name="assign" id="assignAction" onsubmit="assignUser(); return false;"
                                   enctype="multipart/form-data"
                                   accept-charset="UTF-8" class="key-form" role="form">
                                 <input type="hidden" name="command" value="assign_test"/>
@@ -111,7 +111,7 @@
                             </form>
                         </div>
                         <div class="col-2">
-                            <div id="attention" style="width: 500px; margin: 0 auto;">
+                            <div id="assignResult" style="width: 500px; margin: 0 auto;">
                                 <div class="alert alert-danger" role="alert" id="alert" style="display: none">
                                     ${exists_assignment}
                                     <hr>
@@ -140,8 +140,8 @@
                                 <div class="col-3">
                                     <div class="form-group">
                                         <label for="type">Test type</label>
-                                        <select class="form-control" id="type">
-                                            <option selected>choose</option>
+                                        <select class="form-control" name="typeId" id="type">
+                                            <option value="0" selected>choose</option>
                                             <c:forEach var="item" items="${requestScope.type_tests}">
                                                 <option value="${item.id}">${item.title}</option>
                                             </c:forEach>
@@ -152,15 +152,15 @@
                                     <div class="form-group">
                                         <label for="test">Test</label>
                                         <select class="form-control" name="testId" id="test">
-                                            <option selected>choose</option>
+                                            <option value="0" selected>choose</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-auto">
                                     <div class="form-group form-check m-t-27 p-top-7">
                                         <input type="checkbox" name="completed" class="form-check-input"
-                                               id="exampleCheck1">
-                                        <label class="form-check-label" for="exampleCheck1">завершенные</label>
+                                               id="completed">
+                                        <label class="form-check-label" for="completed">завершенные</label>
                                     </div>
                                 </div>
                                 <div class="col-1 p-top-7">
@@ -175,11 +175,13 @@
                                 <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th scope="col">Тест</th>
                                     <th scope="col">Имя</th>
                                     <th scope="col">Фамилия</th>
                                     <th scope="col">Дата назначения</th>
                                     <th scope="col">Выполнить до</th>
-                                    <th scope="col">Редактировать</th>
+                                    <th scope="col">Завершенный</th>
+                                    <th scope="col"></th>
                                 </tr>
                                 </thead>
                                 <tbody id="jsData">

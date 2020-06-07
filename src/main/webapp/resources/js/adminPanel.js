@@ -149,6 +149,7 @@ function showModalWindowEdit(obj) {
     let answerSize = document.querySelectorAll('.modal-body .answer').length;
     if (answerSize < 4) {
         console.log(document.querySelectorAll("modal-body .answer .input-group")[answerSize - 1]);
+        //todo insertButtonAddAnswer
         document.querySelector(".modal-body div[id^='modal-']").insertAdjacentHTML('beforeend', "<button type='button' id='addAnswer' onclick='addAnswerInput()' class='btn btn-link btn-block'><i class='fas fa-plus'></i></button>")
     }
 }
@@ -192,7 +193,7 @@ function deleteAnswer(button) {
     }
 
     if (document.getElementById("addAnswer") == null) {
-        document.querySelector(".modal-body div[id^='modal-']").insertAdjacentHTML('beforeend', "<button type='button' id='addAnswer' onclick='addAnswerInput()' class='btn btn-link btn-block'><i class='fas fa-plus'></i></button>")
+        insertButtonAddAnswer();
     }
     button.closest(".answer").remove();
 

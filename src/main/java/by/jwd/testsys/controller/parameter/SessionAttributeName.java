@@ -10,6 +10,8 @@ public final class SessionAttributeName {
     public static final String LANGUAGE_ATTRIBUTE="local";
     public static final String COMMAND_NAME="command";
     public static final String QUERY_STRING="query_string";
+    public static final String SECURITY="security";
+
 
 
 }
