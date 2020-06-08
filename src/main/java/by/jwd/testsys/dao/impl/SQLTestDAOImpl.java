@@ -63,7 +63,7 @@ public class SQLTestDAOImpl implements TestDAO {
             "VALUES (?,?,?,?,?)";
 
     private static final String SELECT_TESTS_BY_TYPE_ID = "SELECT id, title,`key`,is_edited, time FROM `test` WHERE type_id=? " +
-            "and deleted_at is null";
+            "and deleted_at is null AND is_edited=0";
 
     private static final String UPDATE_ASSIGNMENT_DELETED_AT = "UPDATE `assignment` SET `deleted_at`=? where id=?";
 
@@ -724,14 +724,8 @@ public class SQLTestDAOImpl implements TestDAO {
                     answersToQuestion.add(answer);
                     question.setAnswers(answersToQuestion);
                 }
-
-
             }
-//todo
-            questionsWithAnswers.forEach(k -> {
-                System.out.println(k.getQuestion());
-                k.getAnswers().forEach(a -> System.out.println(a.getAnswer() + " " + a.isResult()));
-            });
+
         } catch (ConnectionPoolException e) {
             throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method questionsWithAnswersByTestId()", e);
         } catch (SQLException e) {
@@ -763,12 +757,13 @@ public class SQLTestDAOImpl implements TestDAO {
             preparedStatement.setInt(2, updatedQuestion.getId());
             preparedStatement.executeUpdate();
 
-
-            for (Integer id : answerToDelete) {
-                preparedStatement = connection.prepareStatement(UPDATE_ANSWER_DELETED_AT_BY_ANSWER_ID);
-                preparedStatement.setDate(1, Date.valueOf(deletedDate));
-                preparedStatement.setInt(2, id);
-                preparedStatement.executeUpdate();
+            if (answerToDelete.size() == 0) {
+                for (Integer id : answerToDelete) {
+                    preparedStatement = connection.prepareStatement(UPDATE_ANSWER_DELETED_AT_BY_ANSWER_ID);
+                    preparedStatement.setDate(1, Date.valueOf(deletedDate));
+                    preparedStatement.setInt(2, id);
+                    preparedStatement.executeUpdate();
+                }
             }
 
             for (Answer answer : answerToAdd) {

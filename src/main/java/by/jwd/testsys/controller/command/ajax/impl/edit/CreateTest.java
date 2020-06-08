@@ -18,7 +18,6 @@ public class CreateTest implements AjaxCommand {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String testId = request.getParameter(RequestParameterName.TEST_ID);
-        System.out.println("testId "+testId);
         int typeId = Integer.parseInt(request.getParameter(RequestParameterName.TEST_TYPE_ID));
         String testTitle = request.getParameter(RequestParameterName.TEST_TITLE);
         String testKey = request.getParameter(RequestParameterName.TEST_KEY);
@@ -36,13 +35,14 @@ public class CreateTest implements AjaxCommand {
 
         try {
 
+
             if (testId != null) {
                 adminService.updateTestData(Integer.parseInt(testId), typeId, testTitle, testKey, testDuration);
             }
 
             if (testId == null) {
                 int createdTestId = adminService.createTest(typeId, testTitle, testKey, testDuration);
-                parameterMapForJson.put("testId", createdTestId);
+                parameterMapForJson.put(RequestParameterName.TEST_ID, createdTestId);
                 answer = gson.toJson(parameterMapForJson);
             }
         } catch (AdminServiceException e) {

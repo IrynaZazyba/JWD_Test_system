@@ -43,7 +43,7 @@ public class FrontController extends HttpServlet {
 
     private void doProcess(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String commandName = req.getParameter(RequestParameterName.COMMAND_NAME);
-        String security = (String)req.getSession().getAttribute("security");
+        String security = (String)req.getSession().getAttribute(SessionAttributeName.SECURITY);
         CommandProvider commandProvider = CommandProvider.getInstance();
         Command command = commandProvider.getFrontCommand(commandName,security);
         command.execute(req, resp);

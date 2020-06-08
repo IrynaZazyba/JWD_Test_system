@@ -405,12 +405,24 @@ li.nav-item:hover {
     padding: 15px;
 }
 
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
 .edit-button {
     justify-content: flex-end;
 }
 
-input:checked{
+input:checked {
     background-color: green;
+}
+
+.m-15 {
+    margin: 15px;
 }
 
 

@@ -4,9 +4,8 @@
 "use strict"
 
 async function deleteTest(testId, obj) {
-    console.log(obj);
 
-    let response = await fetch("http://localhost:8080/test-system/ajax?command=delete_test&testId=" + testId, {
+    let response = await fetch("/test-system/ajax?command=delete_test&testId=" + testId, {
         method: 'DELETE',
     });
 
@@ -22,7 +21,6 @@ async function deleteTest(testId, obj) {
 let count = 1;
 
 function addAnswerTextArea(obj) {
-    console.log(obj);
     obj.insertAdjacentHTML('beforebegin', generateTextArea());
 }
 
@@ -47,16 +45,15 @@ async function saveQuestion(obj) {
     let formData = new FormData(obj);
     let testId = document.querySelector("#testId > input[type=hidden]").value;
     formData.append("testId", testId);
-    console.log(obj);
-    let response = await fetch("http://localhost:8080/test-system/ajax?command=create_question_answer", {
+    let response = await fetch("/test-system/ajax?command=create_question_answer", {
         method: 'POST',
         body: formData,
     });
 
 
     if (response.ok) {
+
         count = 1;
-        console.log("ok");
         let addedQuestionDiv = document.getElementById('addedQuestions');
         addedQuestionDiv.style.display = 'block';
         addedQuestionDiv.insertAdjacentHTML('beforeend', generateQuestionView(formData));
@@ -75,7 +72,6 @@ async function saveQuestion(obj) {
 function generateQuestionView(formData) {
     let html = "<div>" + formData.get('question') + "</div>";
     for (let [name, value] of formData) {
-        console.log(name + " " + value);
         if (name.includes('answer-') && value !== "") {
             html = html + "<div>- " + value + "</div>";
         }
@@ -86,9 +82,7 @@ function generateQuestionView(formData) {
 async function saveTestInfo(obj) {
 
     let divButtonBack = document.getElementById('buttonBack');
-    if (divButtonBack != null) {
-        divButtonBack.remove();
-    }
+
 
     let successMessageDiv = document.getElementById('successCreatedTest');
     if (successMessageDiv.style.display === 'block') {
@@ -104,17 +98,23 @@ async function saveTestInfo(obj) {
 
     let testId = document.querySelector("#testId > input[type=hidden]");
     if (testId != null) {
-        console.log("testId" + testId);
         formData.append("testId", testId.value);
     }
     let response = await
-        fetch("http://localhost:8080/test-system/ajax?command=create_test", {
+        fetch("/test-system/ajax?command=create_test", {
             method: 'POST',
             body: formData,
         });
 
 
     if (response.ok) {
+        if (divButtonBack != null) {
+            divButtonBack.remove();
+        }
+
+        document.getElementById("questionEditForm-tab").classList.remove('disabled');
+        // document.getElementById("preview").setAttribute("onclick","document.location=")
+
         let json = await response.json();
 
         if (json != null) {
@@ -134,7 +134,6 @@ function showModalWindowEdit(obj) {
 
     let modalBody = document.querySelector(".modal-body .questionFormEdit");
     modalBody.innerHTML = "";
-    console.log(obj.closest("div[id^='modal']"));
     let formGroupQuestion = obj.closest("div[id^='modal']");
     form = formGroupQuestion.cloneNode(true);
     formGroupQuestion.insertAdjacentHTML('beforebegin', "<input type='hidden' id='placeToInsert'/>");
@@ -148,7 +147,6 @@ function showModalWindowEdit(obj) {
 
     let answerSize = document.querySelectorAll('.modal-body .answer').length;
     if (answerSize < 4) {
-        console.log(document.querySelectorAll("modal-body .answer .input-group")[answerSize - 1]);
         //todo insertButtonAddAnswer
         document.querySelector(".modal-body div[id^='modal-']").insertAdjacentHTML('beforeend', "<button type='button' id='addAnswer' onclick='addAnswerInput()' class='btn btn-link btn-block'><i class='fas fa-plus'></i></button>")
     }
@@ -164,7 +162,6 @@ function insertButtonAddAnswer() {
 function addAnswerInput() {
     let size = document.querySelectorAll('.modal-body .answer').length;
     if ((size) < 4) {
-        console.log(document.querySelectorAll('.modal-body .answer')[size - 1]);
         document.querySelectorAll('.modal-body .answer')[size - 1].insertAdjacentHTML('afterend', generateInput());
     }
 }
@@ -188,7 +185,6 @@ function deleteAnswer(button) {
 
     let answerId = button.id;
     if (!answerId.includes('answer-add')) {
-        console.log(answerId);
         answerToDelete.push(answerId);
     }
 
@@ -197,27 +193,23 @@ function deleteAnswer(button) {
     }
     button.closest(".answer").remove();
 
-    console.log(answerToDelete);
 
 }
 
 async function updateQuestion(button) {
 
-    console.log(document.querySelector(".modal-body form"));
     let form = document.querySelector(".modal-body form");
     let dataF = new FormData(form);
     dataF.append("deletedAnswers", answerToDelete);
 
-    let response = await fetch("http://localhost:8080/test-system/ajax?command=update_question", {
+    let response = await fetch("/test-system/ajax?command=update_question", {
         method: 'POST',
         body: dataF,
     });
 
     if (response.ok) {
-        let json = await response.json();
-        console.log("ok response");
         answerToDelete = [];
-
+        location.reload();
 
     } else {
 
@@ -250,6 +242,30 @@ $('#modal').on('hidden.bs.modal', function (e) {
 
 
 function addQuestion() {
-    console.log("add question");
+    //todo
 
+}
+
+function showPreviewPage() {
+    let testId = document.querySelector("#testId > input[type=hidden]").value;
+    document.location.href = "/test-system/test?command=edit_test&testId=" + testId;
+}
+
+async function completeTestCreating() {
+    let testId = document.getElementById("testId").value;
+    let response = await fetch("/test-system/ajax?command=complete_test&testId="+testId, {
+        method: 'GET',
+    });
+
+    if (response.ok) {
+        answerToDelete = [];
+
+        document.location.href = "/test-system/test?command=show_admin_panel";
+
+
+
+    } else {
+
+
+    }
 }

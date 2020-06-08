@@ -45,12 +45,11 @@ public class TestLogServiceImpl implements TestLogService {
     }
 
     @Override
-    public Set<Result> reciveResultData(int typeId, int testId, int userId, LocalDate date) throws TestLogServiceException {
+    public Set<Result> receiveResultData(int typeId, int testId, int userId, LocalDate date) throws TestLogServiceException {
         Set<Result> result = null;
 
         try {
             result=testLogDAO.getTestResult(typeId,testId,userId,date);
-            result.forEach(res-> System.out.println(res.getTest().getTitle()+" "+res.getUser().getFirstName()+" "+res.getRightCountQuestion()));
         } catch (DAOSqlException e) {
             throw new TestLogServiceException("Impossible to save question to DB", e);
         }

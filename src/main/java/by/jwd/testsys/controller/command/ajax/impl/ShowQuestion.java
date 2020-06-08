@@ -51,8 +51,6 @@ public class ShowQuestion implements AjaxCommand {
 
                 long time= testService.calculateTestDuration(assignment);
 
-                System.out.println("time "+time);
-
                 Map<String, Object> map = new HashMap<>();
                 map.put("question", questionByTestId);
                 map.put("assignId", assignment.getId());

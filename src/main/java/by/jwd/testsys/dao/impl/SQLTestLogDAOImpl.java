@@ -134,7 +134,6 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
             testLog.setAssignment_id(assignmentId);
             testLog.setQuestionAnswerMap(questionAnswerMap);
 
-            questionAnswerMap.forEach((k, v) -> System.out.println(k + "  " + v));
         } catch (ConnectionPoolException e) {
             throw new DAOSqlException("ConnectionPoolException in SQLTestLogDAOImpl method writeQuestionLog()", e);
         } catch (SQLException e) {

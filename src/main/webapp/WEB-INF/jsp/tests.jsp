@@ -41,7 +41,7 @@
                    role="tab"
                    aria-controls="v-pills-assigned_test" aria-selected="true">${assigned_test}</a>
 
-                <c:forEach var="item" items="${requestScope.tests_type}">
+                <c:forEach var="item" items="${requestScope.testTypes}">
                     <a class="nav-link vertical-menu" id="v-pills-${item.id}-tab" data-toggle="pill"
                        href="#v-pills-${item.id}"
                        role="tab"
@@ -93,7 +93,7 @@
 
                 </div>
 
-                <c:forEach var="item" items="${requestScope.tests_type}">
+                <c:forEach var="item" items="${requestScope.testTypes}">
 
                     <div class="tab-pane fade  " id="v-pills-${item.id}" role="tabpanel"
                          aria-labelledby="v-pills-${item.id}-tab">

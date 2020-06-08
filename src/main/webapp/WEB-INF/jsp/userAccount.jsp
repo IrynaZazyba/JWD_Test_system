@@ -41,7 +41,7 @@
         <div class="col-2 background-gradient height-100 p-l-15 p-r-0">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
-                <a class="nav-link vertical-menu " id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home"
+                <a class="nav-link vertical-menu active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home"
                    role="tab"
                    aria-controls="v-pills-test" aria-selected="true">${nav_link_account_settings}</a>
             </div>
@@ -49,8 +49,8 @@
 
         </div>
         <div class="col-9">
-            <div class="tab-content" id="v-pills-tabContent">
-                <div class="tab-pane fade " id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+            <div class="tab-content " id="v-pills-tabContent">
+                <div class="tab-pane fade  active show " id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
 
 
                     <div class="row m-t-15">

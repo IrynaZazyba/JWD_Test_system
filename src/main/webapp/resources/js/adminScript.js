@@ -20,12 +20,12 @@ let formAssignAction = document.forms.assignAction;
 let formAssignType = formAssignAction.elements.testTypeId;
 formAssignType.onchange = changeOption;
 
-let testTitle = form.elements.testId;
-testTitle.onchange = removeResult;
-let assign = form.elements.assigned_users;
-assign.onchange = removeResult;
-let date = form.elements.date;
-date.onchange = removeResult;
+// let testTitle = form.elements.testId;
+// testTitle.onchange = removeResult;
+// let assign = form.elements.assigned_users;
+// assign.onchange = removeResult;
+// let date = form.elements.date;
+// date.onchange = removeResult;
 
 
 function removeResult() {
@@ -47,7 +47,7 @@ async function changeOption() {
         jsOptions.forEach(element => element.remove());
     }
 
-    let response = await fetch("http://localhost:8080/test-system/ajax?command=get_tests&typeId=" + typeId, {
+    let response = await fetch("/test-system/ajax?command=get_tests&typeId=" + typeId, {
         method: 'GET',
     });
 
@@ -70,6 +70,10 @@ function generateOptionSelect(json) {
 
 async function assignUser() {
 
+
+    if (document.getElementById("assignmentError").style.display === "block") {
+        document.getElementById("assignmentError").style.display = 'none';
+    }
     if (document.getElementById("alert").style.display === 'block') {
         document.getElementById("existsAssignment").innerHTML = '';
         document.getElementById("alert").style.display = 'none';
@@ -81,14 +85,13 @@ async function assignUser() {
     }
 
     let startTest = document.getElementById("assignAction");
-    let response = await fetch("http://localhost:8080/test-system/ajax", {
+    let response = await fetch("/test-system/ajax", {
         method: 'POST',
         body: new FormData(startTest),
 
     });
 
     if (response.ok) {
-        console.log("ok");
         let json = await response.json();
         if (json.existsAssignment.length !== 0) {
             document.getElementById("alert").style.display = 'block';
@@ -99,8 +102,8 @@ async function assignUser() {
             document.getElementById("successMessage").insertAdjacentHTML('afterbegin', generateAssignmentResultMessage(json.successAssignment));
         }
     } else {
-        console.log("409");
-        document.getElementById('date').classList.add('is-invalid');
+        document.getElementById("assignmentError").style.display = "block";
+        // document.getElementById('date').classList.add('is-invalid');
     }
 
 }
@@ -118,7 +121,7 @@ async function showUsersAssignedToTest() {
     let formData = document.getElementById('displayUsers');
     let form = new FormData(formData);
 
-    let response = await fetch("http://localhost:8080/test-system/ajax?command=get_assigned_users", {
+    let response = await fetch("/test-system/ajax?command=get_assigned_users", {
         method: 'POST',
         body: form,
     });
@@ -179,7 +182,7 @@ async function changeOptionFormDisplay() {
         jsOptions.forEach(element => element.remove());
     }
 
-    let response = await fetch("http://localhost:8080/test-system/ajax?command=get_tests&typeId=" + typeId, {
+    let response = await fetch("/test-system/ajax?command=get_tests&typeId=" + typeId, {
         method: 'GET',
     });
 
@@ -237,17 +240,13 @@ async function editAssignment(id) {
     let editAssign = new FormData(form);
     let assignId = editAssign.get('assignId');
 
-    let response = await fetch("http://localhost:8080/test-system/ajax?command=delete_assignment", {
+    let response = await fetch("/test-system/ajax?command=delete_assignment", {
         method: 'POST',
         body: editAssign,
     });
 
     if (response.ok) {
-        form.querySelector('.editAssign-"+id+" button').setAttribute('disabled', 'disabled');
-        // form.insertAdjacentText('beforebegin', 'DELETED');
         form.remove();
-
-
         document.getElementById(assignId).setAttribute('class', 'table-danger');
 
     } else {
@@ -260,7 +259,7 @@ async function editAssignment(id) {
 async function showResult() {
 
     let filterData = document.getElementById('assign');
-    let response = await fetch("http://localhost:8080/test-system/ajax?command=show_result_data", {
+    let response = await fetch("/test-system/ajax?command=show_result_data", {
         method: 'POST',
         body: new FormData(filterData),
     });

@@ -29,20 +29,14 @@ public class AddTestPage implements Command {
         TestService testService = serviceFactory.getTestService();
 
         HttpSession session = request.getSession();
-
-
         try {
-
             List<Type> types = testService.allTestsType();
-
-            session.setAttribute(SessionAttributeName.COMMAND_NAME, request.getQueryString());
-            request.setAttribute("testTypes",types);
+            request.setAttribute(RequestParameterName.TEST_TYPES_LIST,types);
+            session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
             forwardToPage(request, response, JspPageName.ADD_TEST);
 
-        } catch (ForwardCommandException e) {
+        } catch (ForwardCommandException | ServiceException e) {
             response.sendRedirect(JspPageName.ERROR_PAGE);
-        } catch (ServiceException e) {
-            e.printStackTrace();
         }
     }
 }

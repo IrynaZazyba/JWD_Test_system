@@ -29,4 +29,6 @@ public interface AdminService {
                                    Map<Integer, String> addedAnswers,
                                    List<Integer> rightAnswersId,
                                    List<Integer> rightAddedAnswersId) throws AdminServiceException;
+
+    void completeTestCreation(int testID) throws AdminServiceException;
 }

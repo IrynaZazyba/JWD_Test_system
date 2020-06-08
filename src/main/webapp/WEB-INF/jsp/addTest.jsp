@@ -41,9 +41,9 @@
                     <a class="nav-link active" id="testEditForm-tab" data-toggle="tab" href="#testEditForm" role="tab" aria-controls="home"
                        aria-selected="true">Тест</a>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="questionEditForm-tab" data-toggle="tab" href="#questionEditForm" role="tab"
-                       aria-controls="profile" aria-selected="false" aria-disabled="true" disabled>Вопрос</a>
+                <li  class="nav-item" role="presentation">
+                    <a class="nav-link disabled" id="questionEditForm-tab" data-toggle="tab" href="#questionEditForm" role="tab"
+                       aria-controls="profile" aria-selected="false" aria-disabled="true" >Вопрос</a>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -61,7 +61,7 @@
                           accept-charset="UTF-8" class="key-form" role="form">
                         <div class="form-group">
                             <label for="testType">Раздел</label>
-                            <select class="form-control" name="typeId" id="testType">
+                            <select required class="form-control" name="typeId" id="testType">
                                 <c:forEach var="type" items="${requestScope.testTypes}">
                                 <option value="${type.id}">${type.title}</option>
                                 </c:forEach>
@@ -69,7 +69,7 @@
                         </div>
                         <div class="form-group">
                             <label for="testTitle">Название</label>
-                            <input type="text" class="form-control" name="testTitle" id="testTitle">
+                            <input required type="text" class="form-control" name="testTitle" id="testTitle">
                         </div>
                         <div class="form-group">
                             <label for="keyValue">Ключ</label>
@@ -77,7 +77,7 @@
                         </div>
                         <div class="form-group">
                             <label for="duration">Продолжительность, мин</label>
-                            <input type="text" class="form-control" name="testDuration" id="duration">
+                            <input required type="text" class="form-control" name="testDuration" id="duration">
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-info float-right">Сохранить</button>
@@ -113,7 +113,7 @@
                             <button type="submit" class="btn btn-info">Сохранить вопрос</button>
                         </div>
                         <div class="form-group m-t-15">
-                            <button type="button" class="btn btn-outline-info btn-lg btn-block">Завершить создание теста</button>
+                            <button type="button" onclick="showPreviewPage()" class="btn btn-outline-info btn-lg btn-block">Предпросмотр</button>
                         </div>
                     </form>
                 </div>
@@ -129,7 +129,7 @@
         integrity="" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="" crossorigin="anonymous"></script>
-<script src="resources/js/adminPanel.js"></script>
+<script src="resources/js/addEditTest.js"></script>
 
 </body>
 

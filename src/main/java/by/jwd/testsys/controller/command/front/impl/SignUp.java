@@ -21,8 +21,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 
 public class SignUp implements Command {
@@ -37,27 +39,20 @@ public class SignUp implements Command {
         String lastName = request.getParameter(RequestParameterName.USER_LAST_NAME_PARAMETER);
 
         HttpSession session = request.getSession();
-        String locale = null;
-        if (session != null) {
-            locale = (String) session.getAttribute(SessionAttributeName.LANGUAGE_ATTRIBUTE);
-        }
+        UserService userService = ServiceFactory.getInstance().getUserService();
 
-        //    UserValidatorImpl userValidator = new UserValidatorImpl(new User(login, password, firstName, lastName), locale);
-        Map<String, String> userValidateAnswer = null;
-        //userValidator.validate();
+        Set<String> validateResult = userService.validateUserData(login, password, firstName, lastName);
+        checkAnswerAccordingValidation(validateResult, request, response);
 
-        checkAnswerAccordingValidation(userValidateAnswer, request, response);
 
-        if (userValidateAnswer.size() == 0) {
+        if (validateResult.size() == 0) {
 
-            UserService userService = ServiceFactory.getInstance().getUserService();
             try {
 
                 User user = new User(login, password, firstName, lastName, Role.USER);
                 userService.registerUser(user);
 
-                setRequestParameter(request, RequestParameterName.SIGN_UP_SUCCESS_MESSAGE,
-                        "message.success_sign_up");
+                request.setAttribute(RequestParameterName.SIGN_UP_SUCCESS_MESSAGE,RequestParameterName.SIGN_UP_SUCCESS_MESSAGE);
                 forwardToPage(request, response, JspPageName.START_JSP_PAGE);
 
 
@@ -66,8 +61,9 @@ public class SignUp implements Command {
                 response.sendRedirect(JspPageName.ERROR_PAGE);
             } catch (ExistsUserException ex) {
 
-                setRequestParameter(request, RequestParameterName.SIGN_UP_ERROR,
-                        "message.exists_login");
+                request.setAttribute(RequestParameterName.SIGN_UP_ERROR,RequestParameterName.SIGN_UP_ERROR);
+                request.setAttribute(RequestParameterName.SIGN_UP_EXISTS_ERROR,RequestParameterName.SIGN_UP_EXISTS_ERROR);
+
                 try {
                     forwardToPage(request, response, JspPageName.START_JSP_PAGE);
                 } catch (ForwardCommandException e) {
@@ -80,26 +76,20 @@ public class SignUp implements Command {
         }
     }
 
-    private void checkAnswerAccordingValidation(Map<String, String> userValidateAnswer,
+    private void checkAnswerAccordingValidation(Set<String> userValidateAnswer,
                                                 HttpServletRequest request,
                                                 HttpServletResponse response) throws ServletException, IOException {
 
-        if (userValidateAnswer != null&userValidateAnswer.size() != 0) {
-                userValidateAnswer.forEach((k, v) -> request.setAttribute(k, v));
-                request.setAttribute(RequestParameterName.SIGN_UP_ERROR, "error");
-                try {
-                    forwardToPage(request, response, JspPageName.START_JSP_PAGE);
-                } catch (ForwardCommandException e) {
-                    logger.log(Level.ERROR, e.getMessage(), e);
-                    response.sendRedirect(JspPageName.ERROR_PAGE);
-                }
+        if (userValidateAnswer != null & userValidateAnswer.size() != 0) {
+            userValidateAnswer.forEach((k) -> request.setAttribute(k.toLowerCase(),k));
+            request.setAttribute(RequestParameterName.SIGN_UP_ERROR, "error");
+            try {
+                forwardToPage(request, response, JspPageName.START_JSP_PAGE);
+            } catch (ForwardCommandException e) {
+                logger.log(Level.ERROR, e.getMessage(), e);
+                response.sendRedirect(JspPageName.ERROR_PAGE);
             }
+        }
 
     }
-
-    private void setRequestParameter(HttpServletRequest request, String paramName, String paramValue) {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("local/local");
-        request.setAttribute(paramName, resourceBundle.getString(paramValue));
-    }
-
 }

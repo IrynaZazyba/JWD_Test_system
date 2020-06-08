@@ -33,14 +33,11 @@ public class ShowExeTestPage implements Command {
 
         Test test = null;
         try {
-
-
             Result result = testService.checkResult(user_id, testId);
             test = testService.getTestInfo(testId);
             test.setStarted(result!=null);
-            System.out.println("test started"+test.getStarted());
             req.setAttribute(RequestParameterName.TEST_INFO, test);
-
+            session.setAttribute(SessionAttributeName.QUERY_STRING, req.getQueryString());
 
             forwardToPage(req, resp, JspPageName.EXE_TEST_PAGE);
         } catch (TestServiceException | ForwardCommandException e) {

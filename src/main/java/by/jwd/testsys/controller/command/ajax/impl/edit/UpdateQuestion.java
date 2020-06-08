@@ -57,26 +57,14 @@ public class UpdateQuestion implements AjaxCommand {
             }
         }
 
-        System.out.println("answers " + answers);
-        System.out.println("rightanswerid " + rightAnswerId);
-        System.out.println("ADDEDanswers " + addedAnswers);
-        System.out.println("rightADDEDanswerid " + rightAddedAnswerId);
-
-
-        System.out.println("deleted " + deletedAnswers);
         String answer = null;
-
-        //int testId = Integer.parseInt(request.getParameter(RequestParameterName.TEST_ID));
-
-
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         AdminService adminService = serviceFactory.getAdminService();
 
         try {
             adminService.updateQuestionWithAnswers(questionId, question, deletedAnswers, answers, addedAnswers, rightAnswerId, rightAddedAnswerId);
         } catch (AdminServiceException e) {
-            //todo
-            e.printStackTrace();
+            response.setStatus(500);
         }
 
         return answer;

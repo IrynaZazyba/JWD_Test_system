@@ -15,7 +15,7 @@
 formElem.onsubmit = async (e) => {
     e.preventDefault();
 
-    let response = await fetch("http://localhost:8080/test-system/ajax", {
+    let response = await fetch("/test-system/ajax", {
         method: 'POST',
         body: new FormData(formElem),
 
@@ -23,7 +23,6 @@ formElem.onsubmit = async (e) => {
 
     if (response.ok) {
         let json = await response.json();
-        console.log(json);
         document.getElementById('message').innerHTML = generateMessageDiv(json);
     } else {
         alert("ERROR: " + response.status);
@@ -39,11 +38,9 @@ formElem.onsubmit = async (e) => {
 
 function generateMessageDiv(json) {
     let htmlCode = "";
-    console.log(json.status);
     if (json.status === 'ok') {
         htmlCode = "<div class=\"alert alert-success\" id=\"edit_user_answer\" role=\"alert\">" + json.message + "</div>";
     } else {
-        console.log(json);
         for (let mess of Object.keys(json)) {
             if (mess !== "status") {
                 htmlCode = htmlCode + "<div class=\"alert alert-danger\" id=\"edit_user_" + mess + "\" role=\"alert\">" + json[mess] + "</div>";
@@ -56,9 +53,7 @@ function generateMessageDiv(json) {
 
 async function getQuestion() {
 
-
     await sendAnswer();
-
 
     let dataToGetQuestion = new FormData();
     let test_id = document.getElementById("testId").value;
@@ -75,7 +70,7 @@ async function getQuestion() {
     dataToGetQuestion.append("testId", test_id);
 
 
-    let response = await fetch("http://localhost:8080/test-system/ajax", {
+    let response = await fetch("/test-system/ajax", {
         method: 'POST',
         body: dataToGetQuestion,
 
@@ -89,7 +84,6 @@ async function getQuestion() {
 
         if (json.time_is_over != null) {
             hideKeyConditions();
-            console.log("time_is_over" + json.time_is_over);
             hideQuestion();
             document.getElementById("card-body").insertAdjacentHTML('afterbegin', generateHiddenAssignIdInput(json));
             document.getElementById('complete').insertAdjacentHTML('beforeend', generateButtonResult());
@@ -124,7 +118,7 @@ async function getQuestion() {
                 document.getElementById("card-body").insertAdjacentHTML('afterbegin', generateHiddenAssignIdInput(json));
                 document.getElementById('quest').insertAdjacentHTML('afterbegin', generateCheckBox(json));
             } else {
-
+                document.getElementById("card-body").insertAdjacentHTML('afterbegin', generateHiddenAssignIdInput(json));
                 document.getElementById('complete').style.visibility = 'visible';
                 document.getElementById("exeTest").remove();
                 document.getElementById("countdown").className = "hidden";
@@ -135,7 +129,7 @@ async function getQuestion() {
         }
     } else {
 
-        document.location.href = 'http://localhost:8080/test-system/errorPage.jsp';
+        document.location.href = '/test-system/errorPage.jsp';
 
     }
 
@@ -157,7 +151,6 @@ function generateCheckBox(json) {
     let htmlCode = "<div id=\"js_quest\"><h4 id=\"text_question\" class=\"name-test text-ctr\">" + json.question.question + "</h4><hr>" +
         "<input type=\"hidden\" name=\"question_log_id\" value=\"" + json.question_log_id + "\">";
 
-    console.log(Object.keys(json.question.answers[0]));
 
     for (let key of Object.keys(json.question.answers)) {
         let idAnsw = json.question.answers[key].id;
@@ -186,25 +179,22 @@ function generateButtonResult() {
 }
 
 async function sendAnswer() {
-    console.log("send answer");
 
     let startTest = document.getElementById("exeTest");
 
     if (document.getElementById("js_quest") != null) {
 
-        let response = await fetch("http://localhost:8080/test-system/ajax", {
+        let response = await fetch("/test-system/ajax", {
             method: 'POST',
             body: new FormData(startTest),
 
         });
 
         if (response.ok) {
-            console.log("ok");
 //todo
 
         } else {
-            console.log("error location");
-            document.location.href = 'http://localhost:8080/test-system/errorPage.jsp';
+            document.location.href = '/test-system/errorPage.jsp';
         }
     }
 }
@@ -273,16 +263,19 @@ async function getContinuedQuestion() {
 
     dataToGetQuestion.append("command", "get_empty_question_page");
 
-    let response = await fetch("http://localhost:8080/test-system/test", {
+    let response = await fetch("/test-system/test", {
         method: 'POST',
         body: dataToGetQuestion,
 
     });
 
     getQuestion();
-
 }
 
+
+async function registerUser(form) {
+
+}
 
 
 

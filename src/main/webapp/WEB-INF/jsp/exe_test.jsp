@@ -32,10 +32,6 @@
 <fmt:message bundle="${loc}" key="test.run_page.message.duration_test" var="message_test_duration"/>
 <fmt:message bundle="${loc}" key="test.run_page.message.number_question" var="message_number_question"/>
 
-<div class="row">
-       <button onclick="window.history.back()" type="submit"
-            class="card-exe-btn btn btn-right btn-outline-primary">Назад</button>
-</div>
 <div class="row m-0">
     <div id="timer" class="row m-0" style="visibility: hidden">
         <div id="countdown" class="countdown">
@@ -95,7 +91,12 @@
                         <div id="exeButton">
                             <div class="form-group">
                                 <div class="row justify-content-center">
-                                    <div class="col-sm-offset-2 col-sm-10 p-top-95">
+                                    <div class="col">
+                                        <button onclick="window.history.back()" type="button"
+                                                class="card-exe-btn btn btn-right btn-outline-primary">Назад
+                                        </button>
+                                    </div>
+                                    <div class="col">
                                         <button type="submit"
                                                 class="card-exe-btn btn btn-outline-primary">${button_start}
                                         </button>
@@ -103,7 +104,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="quest" style="visibility: hidden">
+                        <div  id="quest" style="visibility: hidden">
                             <button type="submit"
                                     class="card-exe-btn btn btn-right btn-outline-primary">${button_next}</button>
                         </div>
@@ -122,6 +123,7 @@
                         <input type="hidden" name="command" value="save_answer"/>
                         <input type="hidden" id="testId" name="test_id" value="${requestScope.testInfo.id}"/>
                         <div id="quest" style="visibility: hidden">
+
                             <button type="submit"
                                     class="card-exe-btn btn btn-right btn-outline-primary">${button_next}</button>
                         </div>

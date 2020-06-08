@@ -60,8 +60,6 @@
                 <div class="col"></div>
             </div>
 
-
-
         </div>
         </c:if>
 
@@ -75,14 +73,9 @@
                 <div class="row p-t-25">
                     <div class="col"></div>
                     <div class="col">
-
                         <img src="resources/img/main-page-image.png"></div>
-
                     <div class="col"></div>
                 </div>
-
-
-
             </div>
         </c:if>
 
@@ -219,27 +212,27 @@
                                     <div class="form-group">
                                         <div>
 
-                                            <c:if test="${not empty requestScope.login_invalid}">
+                                            <c:if test="${not empty requestScope.invalid_login}">
                                                 <div class="alert alert-danger" role="alert">
                                                     <c:out value="${message_invalid_login}"/></div>
                                             </c:if>
 
-                                            <c:if test="${not empty requestScope.password_invalid}">
+                                            <c:if test="${not empty requestScope.invalid_password}">
                                                 <div class="alert alert-danger" role="alert">
                                                     <c:out value="${message_invalid_password}"/></div>
                                             </c:if>
 
-                                            <c:if test="${not empty requestScope.first_name_invalid}">
+                                            <c:if test="${not empty requestScope.invalid_first_name}">
                                                 <div class="alert alert-danger" role="alert">
                                                     <c:out value="${message_invalid_first_name}"/></div>
                                             </c:if>
 
-                                            <c:if test="${not empty requestScope.last_name_invalid}">
+                                            <c:if test="${not empty requestScope.invalid_last_name}">
                                                 <div class="alert alert-danger" role="alert">
                                                     <c:out value="${message_invalid_last_name}"/></div>
                                             </c:if>
 
-                                            <c:if test="${not empty requestScope.sign_up_error}">
+                                            <c:if test="${not empty requestScope.sign_up_exists_error}">
                                                 <div class="alert alert-danger" role="alert">
                                                     <c:out value="${message_exists_login}"/></div>
                                             </c:if>

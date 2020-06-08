@@ -186,6 +186,13 @@ public class TestServiceImpl implements TestService {
                 writeResult(result);
             }
 
+            if (testKey == null && assignment != null && getResult(assignment) == null) {
+
+                //todo builder
+                result = createResult(assignment);
+                writeResult(result);
+            }
+
 
         } catch (DAOSqlException e) {
             throw new TestServiceException("DB problem", e);
@@ -351,7 +358,6 @@ public class TestServiceImpl implements TestService {
                     }
                 }
             }
-            System.out.println(countRight);
             result = testResultDAO.getTestResult(assignment);
             result.setRightCountQuestion(countRight);
         } catch (DAOSqlException e) {

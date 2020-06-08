@@ -1,43 +1,35 @@
 package by.jwd.testsys.controller.command.ajax.impl.edit;
 
-import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
-import by.jwd.testsys.logic.TestService;
-import by.jwd.testsys.logic.exception.ServiceException;
+import by.jwd.testsys.logic.AdminService;
+import by.jwd.testsys.logic.exception.AdminServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import com.google.gson.Gson;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-public class DeleteAssignment implements AjaxCommand {
+public class CompleteTestCreation implements AjaxCommand {
 
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-
-        int assignment_id = Integer.parseInt(request.getParameter(RequestParameterName.ASSIGNMENT_ID));
+        int testId = Integer.parseInt(request.getParameter(RequestParameterName.TEST_ID));
 
         String answer = null;
-        Map<String, Set<User>> assignmentResult;
-        Gson gson = new Gson();
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        TestService testService = serviceFactory.getTestService();
+        AdminService adminService = serviceFactory.getAdminService();
 
         try {
-            testService.deleteAssignment(assignment_id);
+            adminService.completeTestCreation(testId);
             response.setStatus(204);
-
-        } catch (ServiceException e) {
+        } catch (AdminServiceException e) {
             response.setStatus(500);
         }
-
         return answer;
     }
-
-
 }

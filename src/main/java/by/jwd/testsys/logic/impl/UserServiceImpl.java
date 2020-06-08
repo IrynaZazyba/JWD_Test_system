@@ -100,15 +100,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<User> getUsersWithAssignment(int testId,int testTypeId, boolean isCompleted) throws ServiceException {
+    public Set<User> getUsersWithAssignment(int testId, int testTypeId, boolean isCompleted) throws ServiceException {
         Set<User> users = new HashSet<>();
         try {
-           users=userDao.getUsersWithAssignmentByTestId(testId, testTypeId, isCompleted);
+            users = userDao.getUsersWithAssignmentByTestId(testId, testTypeId, isCompleted);
         } catch (DAOSqlException e) {
             throw new ServiceException("Error in getUserWithRoleUser().", e);
         }
         return users;
     }
 
+    @Override
+    public Set<String> validateUserData(String login, String password, String firstName, String lastName) {
+
+        ValidatorFactory validatorFactory=ValidatorFactory.getInstance();
+        UserValidator userValidator = validatorFactory.getUserValidator();
+        User registerUser=new User(login,password,firstName,lastName);
+        return userValidator.validate(registerUser);
+    }
 
 }

@@ -133,13 +133,13 @@ public class AdminServiceImpl implements AdminService {
         Set<Answer> answerToUpdate = new HashSet<>();
         Set<Answer> answerToAdd = new HashSet<>();
 
-//        Question questionFromDb = testDAO.getQuestionWithAnswersByQuestionId(questionId);
-
-
-        String[] answersIdToDelete = deletedAnswers.split(",");
         List<Integer> answerToDelete = new ArrayList<>();
-        for (String s : answersIdToDelete) {
-            answerToDelete.add(Integer.parseInt(s));
+
+        if(!deletedAnswers.equals("")) {
+            String[] answersIdToDelete = deletedAnswers.split(",");
+            for (String s : answersIdToDelete) {
+                answerToDelete.add(Integer.parseInt(s));
+            }
         }
 
         answers.forEach((k, v) -> {
@@ -161,11 +161,6 @@ public class AdminServiceImpl implements AdminService {
             });
             answerToAdd.add(answer);
         });
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        System.out.println(updatedQuestion);
-        System.out.println(answerToUpdate);
-        System.out.println(answerToAdd);
-        System.out.println(answerToDelete);
 
         try {
             testDAO.updateQuestionWithAnswersByQuestionId(updatedQuestion, answerToUpdate, answerToAdd, answerToDelete, LocalDate.now());
@@ -174,6 +169,15 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+    @Override
+    public void completeTestCreation(int testID) throws AdminServiceException {
+
+        try {
+            testDAO.updateTestIsEdited(testID, false);
+        } catch (DAOSqlException e) {
+            throw new AdminServiceException("DB problem", e);
+        }
+    }
 
     private LocalTime buildLocalTimeFromMinuteDuration(int duration) {
         LocalTime testDuration = null;

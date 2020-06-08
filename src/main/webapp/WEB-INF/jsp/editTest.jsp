@@ -28,6 +28,7 @@
 
     <jsp:include page="parts/nav-menu.jsp"/>
     <div class="row">
+        <input type="hidden" name="testId" id="testId" value="${requestScope.testData.id}"/>
         <div class="col-3"></div>
         <div class="col-5">
             <form>
@@ -38,7 +39,7 @@
                 <div class="form-group">
                     <label for="testType">Example select</label>
                     <select class="form-control" id="testType">
-                        <c:forEach var="type" items="${requestScope.testsTypes}">
+                        <c:forEach var="type" items="${requestScope.testTypes}">
                             <c:if test="${requestScope.testData.type.id==type.id}">
                                 <option selected value="${type.id}">${type.title}</option>
                             </c:if>
@@ -117,15 +118,12 @@
                     </div>
                 </c:forEach>
                 <div class="form-group m-t-15">
-                    <button type="button" class="btn btn-outline-info">Завершить создание теста</button>
+                    <button type="button" onclick="completeTestCreating()" id="preview" class="btn btn-outline-info">Завершить создание теста</button>
                 </div>
             </form>
         </div>
         <div class="col-3"></div>
     </div>
-
-    <button onclick="window.history.back()">Кнопка назад</button>
-
 </div>
 
 
@@ -158,7 +156,7 @@
         integrity="" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="" crossorigin="anonymous"></script>
-<script src="resources/js/adminPanel.js"></script>
+<script src="resources/js/addEditTest.js"></script>
 
 </body>
 

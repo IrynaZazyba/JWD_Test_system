@@ -44,7 +44,7 @@ public class GetResult implements Command {
 
             request.setAttribute(RequestParameterName.PERCENTAGE_CORRECT_ANSWERS, percentageOfCorrectAnswers);
             request.setAttribute(RequestParameterName.TEST_NAME, testInfo.getTitle());
-            session.setAttribute(SessionAttributeName.COMMAND_NAME, request.getQueryString());
+            session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
             forwardToPage(request, response, JspPageName.TEST_RESULT_PAGE);
 
         } catch (ForwardCommandException | TestServiceException e) {

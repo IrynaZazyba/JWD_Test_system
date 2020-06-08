@@ -12,5 +12,5 @@ public interface TestLogService {
 
     int writeQuestionLog(int questionId, int assignmentId) throws TestLogServiceException;
 
-    Set<Result> reciveResultData(int typeId, int testId, int userId, LocalDate date) throws TestLogServiceException;
+    Set<Result> receiveResultData(int typeId, int testId, int userId, LocalDate date) throws TestLogServiceException;
 }

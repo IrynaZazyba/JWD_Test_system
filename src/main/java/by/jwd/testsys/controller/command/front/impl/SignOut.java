@@ -19,7 +19,7 @@ public class SignOut implements Command {
         session.removeAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
         session.removeAttribute(SessionAttributeName.USER_LOGIN_SESSION_ATTRIBUTE);
         session.removeAttribute(SessionAttributeName.USER_ROLE_SESSION_ATTRIBUTE);
-        session.removeAttribute(SessionAttributeName.COMMAND_NAME);
+        session.removeAttribute(SessionAttributeName.QUERY_STRING);
         response.sendRedirect(JspPageName.START_PAGE);
     }
 }

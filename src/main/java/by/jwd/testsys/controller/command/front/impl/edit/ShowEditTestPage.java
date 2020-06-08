@@ -9,7 +9,6 @@ import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.AdminService;
 import by.jwd.testsys.logic.TestService;
-import by.jwd.testsys.logic.exception.AdminServiceException;
 import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 
@@ -40,17 +39,14 @@ public class ShowEditTestPage implements Command {
 
             Test testData = adminService.receiveTestWithQuestionsAndAnswers(testId);
             List<Type> testTypes = testService.allTestsType();
-            request.setAttribute("testData", testData);
-            request.setAttribute("testsTypes", testTypes);
-            session.setAttribute(SessionAttributeName.COMMAND_NAME, request.getQueryString());
+            request.setAttribute(RequestParameterName.FULL_TEST_DATA, testData);
+            request.setAttribute(RequestParameterName.TEST_TYPES_LIST, testTypes);
+
+            session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
             forwardToPage(request, response, JspPageName.EDIT_TEST);
 
-        } catch (ForwardCommandException e) {
+        } catch (ForwardCommandException | ServiceException e) {
             response.sendRedirect(JspPageName.ERROR_PAGE);
-        } catch (AdminServiceException e) {
-            e.printStackTrace();
-        } catch (ServiceException e) {
-            e.printStackTrace();
         }
 
     }

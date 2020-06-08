@@ -37,14 +37,14 @@
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
 
-                <c:forEach var="type" items="${requestScope.types}">
-                    <c:if test="${type.id==requestScope.activeId}">
+                <c:forEach var="type" items="${requestScope.testTypes}">
+                    <c:if test="${type.id==requestScope.activeTypeId}">
                         <a class="nav-link vertical-menu active " id="v-pills-admin-${type.id}"
                            href="${pageContext.request.contextPath}/test?command=show_admin_panel&typeId=${type.id}"
                            role="tab"
                            aria-controls="v-pills-test" aria-selected="true"><c:out value="${type.title}"/></a>
                     </c:if>
-                    <c:if test="${type.id!=requestScope.activeId}">
+                    <c:if test="${type.id!=requestScope.activeTypeId}">
 
                         <a class="nav-link vertical-menu " id="v-pills-admin-${type.id}"
                            href="${pageContext.request.contextPath}/test?command=show_admin_panel&typeId=${type.id}"
@@ -57,8 +57,8 @@
 
         </div>
         <div class="col-9">
-            <div class="row m-t-15">
-                <a href="${pageContext.request.contextPath}/test?command=add_test&typeId=${requestScope.activeId}">
+            <div class="row m-15">
+                <a href="${pageContext.request.contextPath}/test?command=add_test&typeId=${requestScope.activeTypeId}">
                     <button type="submit"
                             class="card-btn btn btn-outline-primary d-block mx-auto">
                         Добавить
@@ -78,19 +78,22 @@
                         <th scope="col">Название</th>
                         <th scope="col">Продолжительность</th>
                         <th scope="col">Ключ</th>
+                        <th scope="col">В процессе создания</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <c:if test="${not empty requestScope.tests}">
+                    <c:if test="${not empty requestScope.testsInfoData}">
                         <c:set var="count" value="0"/>
-                        <c:forEach var="test" items="${requestScope.tests}">
+                        <c:forEach var="test" items="${requestScope.testsInfoData}">
                             <tr>
                                 <th scope="row">${count=count+1}</th>
                                 <td>${test.title}</td>
                                 <td>${test.duration}</td>
                                 <td>${test.key}</td>
+                                <td>${test.edited}</td>
+
                                 <td>
                                     <a href="${pageContext.request.contextPath}/test?command=edit_test&testId=${test.id}">
                                         <button class="btn btn-link">Редактировать</button>
@@ -102,7 +105,7 @@
                             </tr>
                         </c:forEach>
                     </c:if>
-                    <c:if test="${empty requestScope.tests}">
+                    <c:if test="${empty requestScope.testsInfoData}">
                         <tr>empty data</tr>
                     </c:if>
 
@@ -124,7 +127,7 @@
         integrity="" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="" crossorigin="anonymous"></script>
-<script src="resources/js/adminPanel.js"></script>
+<script src="resources/js/addEditTest.js"></script>
 
 
 </body>

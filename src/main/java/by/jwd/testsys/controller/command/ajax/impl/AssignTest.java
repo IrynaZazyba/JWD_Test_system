@@ -4,7 +4,6 @@ import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.logic.TestService;
-import by.jwd.testsys.logic.UserService;
 import by.jwd.testsys.logic.exception.DateOutOfRangeException;
 import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
@@ -23,28 +22,34 @@ public class AssignTest implements AjaxCommand {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
 
-        int testId = Integer.parseInt(request.getParameter(RequestParameterName.TEST_ID));
-        LocalDate deadline = LocalDate.parse(request.getParameter(RequestParameterName.DEADLINE_DATE));
-        String[] usersId = request.getParameterValues(RequestParameterName.ASSIGNED_USERS);
-
         String answer = null;
         Map<String, Set<User>> assignmentResult;
         Gson gson = new Gson();
 
-        ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        TestService testService = serviceFactory.getTestService();
+        int testId = Integer.parseInt(request.getParameter(RequestParameterName.TEST_ID));
+        String deadlineParam = request.getParameter(RequestParameterName.DEADLINE_DATE);
+        String[] usersId = request.getParameterValues(RequestParameterName.ASSIGNED_USERS);
 
-        try {
-            assignmentResult = testService.assignTestToUsers(testId, deadline, usersId);
-            answer = gson.toJson(assignmentResult);
+        if (testId==0 || deadlineParam ==null || usersId == null) {
+            response.setStatus(400);
+        }
 
-        } catch (ServiceException e) {
-            response.setStatus(500);
-        } catch (DateOutOfRangeException e) {
-            response.setStatus(409);
+        if (testId != 0 && deadlineParam != null && usersId != null) {
+
+            ServiceFactory serviceFactory = ServiceFactory.getInstance();
+            TestService testService = serviceFactory.getTestService();
+
+            try {
+                LocalDate deadline=LocalDate.parse(deadlineParam);
+                assignmentResult = testService.assignTestToUsers(testId, deadline, usersId);
+                answer = gson.toJson(assignmentResult);
+
+            } catch (ServiceException e) {
+                response.setStatus(500);
+            } catch (DateOutOfRangeException e) {
+                response.setStatus(409);
+            }
         }
         return answer;
     }
-
-
 }

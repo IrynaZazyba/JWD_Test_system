@@ -32,11 +32,10 @@ public class SecurityFilter implements Filter {
         HttpSession session = httpServletRequest.getSession();
 
         if (httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME) == null) {
-            session.setAttribute("security","security");
+            session.setAttribute(SessionAttributeName.SECURITY, SessionAttributeName.SECURITY);
         }
 
         String parameter = httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME);
-        System.out.println(parameter);
         if (session != null && session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE) == null
                 && !httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME).
                 equals(CommandName.SIGN_IN.toString().toLowerCase())
@@ -45,7 +44,7 @@ public class SecurityFilter implements Filter {
                 && !httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME).
                 equals(CommandName.CHANGE_LANGUAGE.toString().toLowerCase())) {
 
-            session.setAttribute("security","security");
+            session.setAttribute(SessionAttributeName.SECURITY, SessionAttributeName.SECURITY);
         }
         filterChain.doFilter(httpServletRequest, servletResponse);
     }

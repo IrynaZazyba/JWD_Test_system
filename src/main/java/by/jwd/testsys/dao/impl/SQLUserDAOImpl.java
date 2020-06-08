@@ -302,7 +302,7 @@ public class SQLUserDAOImpl implements UserDAO {
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
+        ResultSet resultSet=null;
         Assignment assignment = null;
         try {
             connection = connectionPool.takeConnection();
@@ -323,7 +323,7 @@ public class SQLUserDAOImpl implements UserDAO {
         } catch (ConnectionPoolException e) {
             throw new DAOSqlException("ConnectionPoolException in SQLUserDAOImpl getUserAssignmentByTestId() method", e);
         } finally {
-            connectionPool.closeConnection(connection, preparedStatement);
+            connectionPool.closeConnection(connection, preparedStatement,resultSet);
         }
         return assignment;
     }
@@ -411,6 +411,8 @@ public class SQLUserDAOImpl implements UserDAO {
             }
             logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl insertNewAssignment() method", e);
             throw new DAOSqlException("ConnectionPoolException in SQLUserDAOImpl insertNewAssignment() method", e);
+        }finally {
+            connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 

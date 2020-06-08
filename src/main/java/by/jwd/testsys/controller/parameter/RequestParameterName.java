@@ -12,8 +12,10 @@ public final class RequestParameterName {
     public static final String USER_LAST_NAME_PARAMETER = "last_name";
     public static final String SIGN_IN_ERROR = "sign_in_error";
     public static final String SIGN_UP_ERROR = "sign_up_error";
+    public static final String SIGN_UP_EXISTS_ERROR = "sign_up_exists_error";
+
     public static final String SIGN_UP_SUCCESS_MESSAGE = "success_message";
-    public static final String TESTS_TYPE_LIST = "tests_type";
+    public static final String TEST_TYPES_LIST = "testTypes";
     public static final String USER_ACCOUNT_INFO = "user_info";
     public static final String ASSIGNMENT_ID = "assignId";
     public static final String TEST_NAME = "test_name";
@@ -32,7 +34,11 @@ public final class RequestParameterName {
     public static final String USER_TESTS_STATISTIC = "userTestStatistic";
     public static final String PERCENTAGE_CORRECT_ANSWERS = "percentage";
     public static final String TEST_INFO = "testInfo";
+    public static final String INFO_ABOUT_TESTS = "testsInfoData";
+
     public static final String DATE="date";
     public static final String USER_ID="userId";
+    public static final String ACTIVE_TYPE_ID="activeTypeId";
+    public static final String FULL_TEST_DATA="testData";
 
 }

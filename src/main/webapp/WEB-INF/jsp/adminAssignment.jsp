@@ -46,7 +46,6 @@
 <div class="container-fluid p-0">
 
     <jsp:include page="parts/nav-menu.jsp"/>
-
     <div class="row height-90">
         <div class="col-2 background-gradient height-100 p-l-15 p-r-0">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -54,7 +53,8 @@
                 <a class="nav-link vertical-menu active" id="v-pills-assigned_test-tab" data-toggle="pill"
                    href="#v-pills-assigned_test"
                    role="tab"
-                   aria-controls="v-pills-assigned_test" aria-selected="true"><c:out value="${nav_item_assign_test}"/></a>
+                   aria-controls="v-pills-assigned_test" aria-selected="true"><c:out
+                        value="${nav_item_assign_test}"/></a>
                 <a class="nav-link vertical-menu" id="v-pills-assigned_users-tab" data-toggle="pill"
                    href="#v-pills-assigned_users"
                    role="tab"
@@ -77,8 +77,8 @@
                                 <input type="hidden" name="command" value="assign_test"/>
                                 <div class="form-group">
                                     <label for="testType"><c:out value="${lable_test_type}"/></label>
-                                    <select class="form-control" name="testTypeId" id="testType">
-                                        <option selected><c:out value="${view_all}"/></option>
+                                    <select required class="form-control" name="testTypeId" id="testType">
+                                        <option value="0" selected><c:out value="${view_all}"/></option>
                                         <c:forEach var="item" items="${requestScope.type_tests}">
                                             <option value="${item.id}">${item.title}</option>
                                         </c:forEach>
@@ -87,15 +87,15 @@
                                 <div class="form-group">
                                     <label for="testTitle"><c:out value="${lable_test}"/></label>
 
-                                    <select class="form-control" name="testId" id="testTitle">
-                                        <option selected><c:out value="${view_all}"/></option>
+                                    <select required class="form-control" name="testId" id="testTitle">
+                                        <option value="0" selected><c:out value="${view_all}"/></option>
                                     </select>
 
 
                                 </div>
                                 <div class="form-group">
                                     <label for="students"><c:out value="${lable_users}"/></label>
-                                    <select multiple class="form-control" name="assigned_users" id="students">
+                                    <select required multiple class="form-control" name="assigned_users" id="students">
                                         <c:forEach var="user" items="${requestScope.users}">
                                             <option value="${user.id}">${user.firstName} ${user.lastName}</option>
                                         </c:forEach>
@@ -122,7 +122,10 @@
                                     <hr>
                                     <div id="successMessage"></div>
                                 </div>
-                                <%--                min="${requestScope.dateNow}--%>
+                                <div id="assignmentError" class="alert alert-danger" role="alert"
+                                     style="display: none;">
+                                    Empty data
+                                </div>
 
                             </div>
                         </div>
@@ -164,7 +167,8 @@
                                     </div>
                                 </div>
                                 <div class="col-1 p-top-7">
-                                    <button type="submit" class="btn btn-outline-primary card-btn m-t-27">Submit</button>
+                                    <button type="submit" class="btn btn-outline-primary card-btn m-t-27">Submit
+                                    </button>
                                 </div>
                             </div>
                         </form>
