@@ -382,7 +382,7 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Set<Test> getNotEditedTestByTypeId(int typeId) throws TestServiceException {
+    public Set<Test> getNotEditedTestByTypeId(int typeId) throws TestServiceException   {
         Set<Test> tests = null;
         try {
             tests = testDAO.getTests(typeId,false);

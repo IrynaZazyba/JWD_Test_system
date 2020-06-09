@@ -49,7 +49,7 @@ public class AdminServiceImpl implements AdminService {
         int generatedTestId;
         LocalTime testDuration = buildLocalTimeFromMinuteDuration(duration);
         if (key.equals("")) {
-            key=null;
+            key = null;
         }
         Test test = new Test(title, key, testDuration, true);
         try {
@@ -177,6 +177,16 @@ public class AdminServiceImpl implements AdminService {
 
         try {
             testDAO.updateTestIsEdited(testID, false);
+        } catch (DAOSqlException e) {
+            throw new AdminServiceException("DB problem", e);
+        }
+    }
+
+    @Override
+    public void deleteQuestionWithAnswers(int questionId) throws AdminServiceException {
+
+        try {
+            testDAO.deleteQuestionWithAnswers(questionId, LocalDateTime.now());
         } catch (DAOSqlException e) {
             throw new AdminServiceException("DB problem", e);
         }

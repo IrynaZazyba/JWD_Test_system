@@ -31,4 +31,6 @@ public interface AdminService {
                                    List<Integer> rightAddedAnswersId) throws AdminServiceException;
 
     void completeTestCreation(int testID) throws AdminServiceException;
+
+    void deleteQuestionWithAnswers(int questionId) throws AdminServiceException;
 }

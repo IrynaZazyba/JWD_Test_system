@@ -59,7 +59,8 @@
                            id="testDuration">
                 </div>
                 <div class="form-group">
-                    <button type="button" onclick="addQuestion();return false;" class="btn btn-outline-info btn-block"><i class="fas fa-plus"></i></button>
+                    <button type="button" onclick="showModalWindowAddQuestion();return false;" class="btn btn-outline-info btn-block">
+                        <i class="fas fa-plus"></i></button>
 
                 </div>
                 <c:forEach var="quest" items="${requestScope.testData.questions}">
@@ -68,7 +69,8 @@
                             <button onclick="showModalWindowEdit(this); return false;" type="button"
                                     value="${quest.id}"
                                     class="btn btn-link"><i class="far fa-edit"></i></button>
-                            <button type="button" value="${quest.id}" class="btn btn-link"><i
+                            <button onclick="deleteQuestion(this); return false;" type="button" value="${quest.id}"
+                                    class="btn btn-link"><i
                                     class="far fa-trash-alt "></i>
                             </button>
                         </div>
@@ -118,7 +120,9 @@
                     </div>
                 </c:forEach>
                 <div class="form-group m-t-15">
-                    <button type="button" onclick="completeTestCreating()" id="preview" class="btn btn-outline-info">Завершить создание теста</button>
+                    <button type="button" onclick="completeTestCreating()" id="preview" class="btn btn-outline-info">
+                        Завершить создание теста
+                    </button>
                 </div>
             </form>
         </div>
@@ -133,7 +137,7 @@
             <div class="modal-header">
                 <h5 class="modal-title">Edit</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span  class="closeButton" aria-hidden="true">&times;</span>
+                    <span class="closeButton" aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
@@ -145,6 +149,50 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary closeButton" data-dismiss="modal">Close</button>
                 <button onclick="updateQuestion(this)" type="button" class="btn btn-info">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalAddQuestion" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span class="closeButton" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form enctype="multipart/form-data" id="addQuestionModalWindowForm"
+                      accept-charset="UTF-8" class="key-form" role="form">
+                    <div class="form-group">
+                        <label for="quest">Добавить вопрос</label>
+                        <textarea class="form-control" id="quest" name="question" rows="3"></textarea>
+                    </div>
+                    <div>Отметьте правильный вариант ответа(ов) чекбоксом.</div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input type="checkbox" name="check-1" aria-label="Checkbox for following text input">
+                            </div>
+                        </div>
+                        <textarea type="text" class="form-control" name="answer-1"
+                                  aria-label="Text input with checkbox"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button onclick="addAnswerTextArea(this)" type="button" class="btn btn-link">+Добавить ответ
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary closeButton" data-dismiss="modal">Close</button>
+                <div class="form-group  float-right">
+                    <button type="submit" onclick="addQuestion(this)" class="btn btn-info">Сохранить вопрос</button>
+                </div>
             </div>
         </div>
     </div>

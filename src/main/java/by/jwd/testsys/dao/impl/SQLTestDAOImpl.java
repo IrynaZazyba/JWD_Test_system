@@ -76,6 +76,9 @@ public class SQLTestDAOImpl implements TestDAO {
 
     private static final String DELETE_QUESTIONS_BY_TEST_ID = "UPDATE `question` set deleted_at=? WHERE test_id=?";
 
+    private static final String DELETE_QUESTION_BY_QUESTION_ID = "UPDATE `question` set deleted_at=? WHERE id=?";
+
+
     private static final String DELETE_ANSWER_BY_QUESTION_ID = "UPDATE `answer` set deleted_at=? WHERE question_id=?";
 
     private static final String GET_QUESTIONS_ID_TO_TEST = "SELECT id from question where test_id=?";
@@ -808,6 +811,43 @@ public class SQLTestDAOImpl implements TestDAO {
 
     }
 
+    @Override
+    public void deleteQuestionWithAnswers(int questionId, LocalDateTime deletedDate) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            connection.setAutoCommit(false);
+
+            preparedStatement = connection.prepareStatement(DELETE_QUESTION_BY_QUESTION_ID);
+            preparedStatement.setTimestamp(1, Timestamp.valueOf(deletedDate));
+            preparedStatement.setInt(2, questionId);
+            preparedStatement.executeUpdate();
+
+            preparedStatement = connection.prepareStatement(DELETE_ANSWER_BY_QUESTION_ID);
+            preparedStatement.setTimestamp(1, Timestamp.valueOf(deletedDate));
+            preparedStatement.setInt(2, questionId);
+            preparedStatement.executeUpdate();
+
+            connection.commit();
+            connection.setAutoCommit(true);
+
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                logger.log(Level.ERROR, "Rollback SQLTestDAOImpl method deleteQuestionWithAnswers()", e);
+                throw new DAOSqlException("Impossible to rollback SQLTestDAOImpl method deleteQuestionWithAnswers()", e);
+            }
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method deleteQuestionWithAnswers()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method deleteQuestionWithAnswers()", e);
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method deleteQuestionWithAnswers()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
+        }
+    }
 
     private Test buildTest(ResultSet resultSet) throws SQLException {
         int testId = resultSet.getInt("t_id");

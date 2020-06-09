@@ -60,4 +60,6 @@ public interface TestDAO {
                                                Set<Answer> answerToAdd,
                                                List<Integer> answerToDelete,
                                                LocalDate deletedDate) throws DAOSqlException;
+
+    void deleteQuestionWithAnswers(int questionId, LocalDateTime deletedDate) throws DAOSqlException;
 }

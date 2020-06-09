@@ -40,5 +40,7 @@ public final class RequestParameterName {
     public static final String USER_ID="userId";
     public static final String ACTIVE_TYPE_ID="activeTypeId";
     public static final String FULL_TEST_DATA="testData";
+    public static final String QUESTION_ID = "questionId";
+
 
 }

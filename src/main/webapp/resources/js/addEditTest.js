@@ -241,8 +241,31 @@ $('#modal').on('hidden.bs.modal', function (e) {
 });
 
 
-function addQuestion() {
-    //todo
+function showModalWindowAddQuestion() {
+
+    let modalBody = document.querySelector(".modal-body .questionFormEdit");
+    modalBody.innerHTML = "";
+    $("#modalAddQuestion").modal('show');
+}
+
+async function addQuestion(button) {
+    let questionAddForm = document.getElementById("addQuestionModalWindowForm");
+    let formData = new FormData(questionAddForm);
+    let testId = document.getElementById("testId").value;
+    formData.append("testId", testId);
+    let response = await fetch("/test-system/ajax?command=create_question_answer", {
+        method: 'POST',
+        body: formData,
+    });
+
+    if (response.ok) {
+        location.reload();
+
+
+    } else {
+
+    }
+
 
 }
 
@@ -253,13 +276,29 @@ function showPreviewPage() {
 
 async function completeTestCreating() {
     let testId = document.getElementById("testId").value;
-    let response = await fetch("/test-system/ajax?command=complete_test&testId="+testId, {
+    let response = await fetch("/test-system/ajax?command=complete_test&testId=" + testId, {
         method: 'GET',
     });
 
     if (response.ok) {
         answerToDelete = [];
         document.location.href = "/test-system/test?command=show_admin_panel";
+
+    } else {
+
+    }
+}
+
+
+async function deleteQuestion(button) {
+
+    let questionId = button.value;
+    let response = await fetch("/test-system/ajax?command=delete_question&questionId=" + questionId, {
+        method: 'DELETE',
+    });
+
+    if (response.ok) {
+        location.reload();
 
     } else {
 
