@@ -40,12 +40,11 @@ public class ShowAdminPanel implements Command {
                 activeTypeId = types.get(0).getId();
             }
 
-            Set<Test> testByTypeId = testService.getTestByTypeId(activeTypeId);
+            Set<Test> testByTypeId = testService.getAllTestByTypeId(activeTypeId);
 
             request.setAttribute(RequestParameterName.TEST_TYPES_LIST, types);
             request.setAttribute(RequestParameterName.INFO_ABOUT_TESTS, testByTypeId);
             request.setAttribute(RequestParameterName.ACTIVE_TYPE_ID, activeTypeId);
-            System.out.println("~~~~~~~~~ admin panel"+request.getQueryString());
 
             session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
             request.getRequestDispatcher(JspPageName.ADMIN_PANEL).forward(request, response);

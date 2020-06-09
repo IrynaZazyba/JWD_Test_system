@@ -259,13 +259,9 @@ async function completeTestCreating() {
 
     if (response.ok) {
         answerToDelete = [];
-
         document.location.href = "/test-system/test?command=show_admin_panel";
 
-
-
     } else {
-
 
     }
 }

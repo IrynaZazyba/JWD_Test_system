@@ -36,7 +36,7 @@ public interface TestDAO {
 
     LocalTime getTestDuration(int assignmentId) throws DAOSqlException;
 
-    Set<Test> getTests(int typeId) throws DAOSqlException;
+    Set<Test> getTests(int typeId, boolean isEdited) throws DAOSqlException;
 
     void makeAssignmentDeleted(int assignmentId, LocalDate deletedAtDate) throws DAOSqlException;
 

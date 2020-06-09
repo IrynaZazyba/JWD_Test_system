@@ -382,16 +382,29 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Set<Test> getTestByTypeId(int typeId) throws TestServiceException {
+    public Set<Test> getNotEditedTestByTypeId(int typeId) throws TestServiceException {
         Set<Test> tests = null;
         try {
-            tests = testDAO.getTests(typeId);
+            tests = testDAO.getTests(typeId,false);
         } catch (DAOSqlException e) {
             throw new TestServiceException("DB problem", e);
         }
         return tests;
     }
 
+
+    @Override
+    public Set<Test> getAllTestByTypeId(int typeId) throws TestServiceException {
+        Set<Test> tests = null;
+        try {
+            tests = testDAO.getTests(typeId,true);
+            Set<Test> notEditedTests = testDAO.getTests(typeId, false);
+            tests.addAll(notEditedTests);
+        } catch (DAOSqlException e) {
+            throw new TestServiceException("DB problem", e);
+        }
+        return tests;
+    }
 
     private Result getResult(Assignment assignment) throws TestServiceException {
         try {

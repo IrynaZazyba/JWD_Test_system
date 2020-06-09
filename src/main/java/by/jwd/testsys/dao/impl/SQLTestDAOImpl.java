@@ -62,8 +62,8 @@ public class SQLTestDAOImpl implements TestDAO {
             " (`date`,`deadline`, `test_id`, `user_id`, `completed`) " +
             "VALUES (?,?,?,?,?)";
 
-    private static final String SELECT_TESTS_BY_TYPE_ID = "SELECT id, title,`key`,is_edited, time FROM `test` WHERE type_id=? " +
-            "and deleted_at is null AND is_edited=0";
+    private static final String SELECT_TESTS_BY_TYPE_ID = "SELECT id, title,`key`, time FROM `test` WHERE type_id=? " +
+            "and deleted_at is null AND is_edited=?";
 
     private static final String UPDATE_ASSIGNMENT_DELETED_AT = "UPDATE `assignment` SET `deleted_at`=? where id=?";
 
@@ -425,7 +425,7 @@ public class SQLTestDAOImpl implements TestDAO {
     }
 
     @Override
-    public Set<Test> getTests(int typeId) throws DAOSqlException {
+    public Set<Test> getTests(int typeId, boolean isEdited) throws DAOSqlException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -435,12 +435,13 @@ public class SQLTestDAOImpl implements TestDAO {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(SELECT_TESTS_BY_TYPE_ID);
             preparedStatement.setInt(1, typeId);
+            preparedStatement.setBoolean(2, isEdited);
+
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String title = resultSet.getString("title");
                 String key = resultSet.getString("key");
-                boolean isEdited = resultSet.getBoolean("is_edited");
                 Time time = resultSet.getTime("time");
                 LocalTime testDuration = null;
                 if (time != null) {
@@ -575,6 +576,7 @@ public class SQLTestDAOImpl implements TestDAO {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(INSERT_TEST, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, test.getTitle());
+            preparedStatement.setString(2, test.getKey());
             preparedStatement.setString(2, test.getKey());
             preparedStatement.setTime(3, Time.valueOf(test.getDuration()));
             preparedStatement.setInt(4, typeId);
@@ -757,7 +759,7 @@ public class SQLTestDAOImpl implements TestDAO {
             preparedStatement.setInt(2, updatedQuestion.getId());
             preparedStatement.executeUpdate();
 
-            if (answerToDelete.size() == 0) {
+            if (answerToDelete.size() != 0) {
                 for (Integer id : answerToDelete) {
                     preparedStatement = connection.prepareStatement(UPDATE_ANSWER_DELETED_AT_BY_ANSWER_ID);
                     preparedStatement.setDate(1, Date.valueOf(deletedDate));

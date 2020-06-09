@@ -23,7 +23,6 @@ public class ChangeLocal implements Command {
 
 
         String queryString = (String) session.getAttribute(SessionAttributeName.QUERY_STRING);
-        System.out.println(request.getContextPath());
 
         if (queryString != null) {
             response.sendRedirect(request.getContextPath() + CONTROLLER_ROUTE+queryString);

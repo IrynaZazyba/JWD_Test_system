@@ -39,7 +39,6 @@ public class ShowAdminAssignTest implements Command {
             Set<User> students = userService.getStudents();
             request.setAttribute(RequestParameterName.SET_STUDENTS, students);
             request.setAttribute(RequestParameterName.CURRENT_DATE, LocalDate.now());
-
             session.setAttribute(SessionAttributeName.QUERY_STRING,request.getQueryString());
 
             forwardToPage(request, response, JspPageName.ADMIN_PAGE_ASSIGN_TEST);

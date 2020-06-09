@@ -1,13 +1,10 @@
 package by.jwd.testsys.controller.command.ajax.impl;
 
 import by.jwd.testsys.bean.Test;
-import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.logic.TestService;
-import by.jwd.testsys.logic.UserService;
 import by.jwd.testsys.logic.exception.ServiceException;
-import by.jwd.testsys.logic.exception.TestServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import com.google.gson.Gson;
 
@@ -35,7 +32,7 @@ public class GetTests implements AjaxCommand {
         TestService testService = serviceFactory.getTestService();
 
         try {
-            Set<Test> tests = testService.getTestByTypeId(typeId);
+            Set<Test> tests = testService.getNotEditedTestByTypeId(typeId);
             responseParams.put(RESPONSE_PARAMETER_SET_TESTS, tests);
             answer=gson.toJson(responseParams);
 

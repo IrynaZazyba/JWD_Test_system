@@ -36,10 +36,12 @@ public class TestsResults implements Command {
             List<Type> typeWithTests = testService.allTestsType();
             request.setAttribute(RequestParameterName.LIST_TYPE_WITH_TESTS, typeWithTests);
 
-            Set<User> students = userService.getStudents();
-            request.setAttribute(RequestParameterName.SET_STUDENTS, students);
+            Set<User> allStudents = userService.getStudents();
+            request.setAttribute(RequestParameterName.SET_STUDENTS, allStudents);
+            request.setAttribute(RequestParameterName.CURRENT_DATE, LocalDate.now());
 
             session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
+
             forwardToPage(request, response, JspPageName.ADMIN_PAGE_TESTS_RESULTS);
         } catch (ForwardCommandException |
                 ServiceException e) {

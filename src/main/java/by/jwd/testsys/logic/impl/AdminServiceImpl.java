@@ -48,6 +48,9 @@ public class AdminServiceImpl implements AdminService {
     public int createTest(int typeId, String title, String key, int duration) throws AdminServiceException {
         int generatedTestId;
         LocalTime testDuration = buildLocalTimeFromMinuteDuration(duration);
+        if (key.equals("")) {
+            key=null;
+        }
         Test test = new Test(title, key, testDuration, true);
         try {
             generatedTestId = testDAO.saveTest(test, typeId);
@@ -135,7 +138,7 @@ public class AdminServiceImpl implements AdminService {
 
         List<Integer> answerToDelete = new ArrayList<>();
 
-        if(!deletedAnswers.equals("")) {
+        if (!deletedAnswers.equals("")) {
             String[] answersIdToDelete = deletedAnswers.split(",");
             for (String s : answersIdToDelete) {
                 answerToDelete.add(Integer.parseInt(s));

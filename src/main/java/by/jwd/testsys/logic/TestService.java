@@ -46,7 +46,9 @@ public interface TestService {
 
     Result checkResult(int userId, int testId) throws TestServiceException;
 
-    Set<Test> getTestByTypeId(int typeId) throws TestServiceException;
+    Set<Test> getNotEditedTestByTypeId(int typeId) throws TestServiceException;
+
+    Set<Test> getAllTestByTypeId(int typeId) throws TestServiceException;
 
     Map<String,Set<User>> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws ServiceException, DateOutOfRangeException;
 

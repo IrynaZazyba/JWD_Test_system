@@ -42,6 +42,21 @@
 <fmt:message bundle="${loc}" key="assignment.select.choose" var="view_all"/>
 <fmt:message bundle="${loc}" key="assignment.message.invalid_date" var="message_invalid_date"/>
 
+<fmt:message bundle="${loc}" key="assignment.table.test_title" var="table_test_title"/>
+<fmt:message bundle="${loc}" key="assignment.table.user_first_name" var="table_first_name"/>
+<fmt:message bundle="${loc}" key="assignment.table.user_last_name" var="table_last_name"/>
+<fmt:message bundle="${loc}" key="assignment.table.assignment_date" var="table_assignment_date"/>
+<fmt:message bundle="${loc}" key="assignment.table.test_deadline" var="table_deadline"/>
+<fmt:message bundle="${loc}" key="assignment.table.is_completed" var="table_is_completed"/>
+<fmt:message bundle="${loc}" key="assignment.checkbox.completed" var="checkbox_completed"/>
+<fmt:message bundle="${loc}" key="admin.form.label.test_title" var="lable_test_title"/>
+<fmt:message bundle="${loc}" key="admin.form.label.test_type" var="lable_test_type"/>
+<fmt:message bundle="${loc}" key="admin.form.label.date" var="lable_date"/>
+<fmt:message bundle="${loc}" key="admin.form.label.users" var="lable_users"/>
+<fmt:message bundle="${loc}" key="assignment.button.assign" var="button_assign"/>
+<fmt:message bundle="${loc}" key="assignment.button.show" var="button_show"/>
+<fmt:message bundle="${loc}" key="assignment.message.empty_data" var="message_empty_data"/>
+
 
 <div class="container-fluid p-0">
 
@@ -102,12 +117,12 @@
                                     </select>
                                 </div>
                                 <label for="date"><c:out value="${lable_deadline_date}"/></label>
-                                <input id="date" type="date" class="form-control mydate" name="date" placeholder="Дата"
+                                <input id="date" type="date" class="form-control mydate" name="date"
                                        min="${requestScope.dateNow}">
                                 <div class="invalid-feedback">
                                     <c:out value="${message_invalid_date}"/>
                                 </div>
-                                <button type="submit" class="btn btn-outline-primary card-btn">Submit</button>
+                                <button type="submit" class="btn btn-outline-primary card-btn m-t-7">${button_assign}</button>
                             </form>
                         </div>
                         <div class="col-2">
@@ -124,7 +139,7 @@
                                 </div>
                                 <div id="assignmentError" class="alert alert-danger" role="alert"
                                      style="display: none;">
-                                    Empty data
+                                    ${message_empty_data}
                                 </div>
 
                             </div>
@@ -142,9 +157,9 @@
                             <div class="row">
                                 <div class="col-3">
                                     <div class="form-group">
-                                        <label for="type">Test type</label>
+                                        <label for="type">${lable_test_type}</label>
                                         <select class="form-control" name="typeId" id="type">
-                                            <option value="0" selected>choose</option>
+                                            <option value="0" selected>${view_all}</option>
                                             <c:forEach var="item" items="${requestScope.type_tests}">
                                                 <option value="${item.id}">${item.title}</option>
                                             </c:forEach>
@@ -153,9 +168,9 @@
                                 </div>
                                 <div class="col-3">
                                     <div class="form-group">
-                                        <label for="test">Test</label>
+                                        <label for="test">${lable_test}</label>
                                         <select class="form-control" name="testId" id="test">
-                                            <option value="0" selected>choose</option>
+                                            <option value="0" selected>${view_all}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -163,11 +178,11 @@
                                     <div class="form-group form-check m-t-27 p-top-7">
                                         <input type="checkbox" name="completed" class="form-check-input"
                                                id="completed">
-                                        <label class="form-check-label" for="completed">завершенные</label>
+                                        <label class="form-check-label" for="completed">${checkbox_completed}</label>
                                     </div>
                                 </div>
                                 <div class="col-1 p-top-7">
-                                    <button type="submit" class="btn btn-outline-primary card-btn m-t-27">Submit
+                                    <button type="submit" class="btn btn-outline-primary card-btn m-t-27">${button_show}
                                     </button>
                                 </div>
                             </div>
@@ -179,12 +194,12 @@
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th scope="col">Тест</th>
-                                    <th scope="col">Имя</th>
-                                    <th scope="col">Фамилия</th>
-                                    <th scope="col">Дата назначения</th>
-                                    <th scope="col">Выполнить до</th>
-                                    <th scope="col">Завершенный</th>
+                                    <th scope="col">${table_test_title}</th>
+                                    <th scope="col">${table_first_name}</th>
+                                    <th scope="col">${table_last_name}</th>
+                                    <th scope="col">${table_assignment_date}</th>
+                                    <th scope="col">${table_deadline}</th>
+                                    <th scope="col">${table_is_completed}</th>
                                     <th scope="col"></th>
                                 </tr>
                                 </thead>

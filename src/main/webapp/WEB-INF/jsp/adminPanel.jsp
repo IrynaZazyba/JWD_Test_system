@@ -27,6 +27,17 @@
 <fmt:message bundle="${loc}" key="nav-link.admin-panel.add_test" var="nav_link_add_test"/>
 <fmt:message bundle="${loc}" key="nav-link.admin-panel.add_test_type" var="nav_link_add_test_type"/>
 
+<fmt:message bundle="${loc}" key="admin_panel.tests.table.test_title" var="table_test_title"/>
+<fmt:message bundle="${loc}" key="admin_panel.tests.table.duration" var="table_duration"/>
+<fmt:message bundle="${loc}" key="admin_panel.tests.table.key" var="table_key"/>
+<fmt:message bundle="${loc}" key="admin_panel.tests.table.in_process" var="table_in_process"/>
+<fmt:message bundle="${loc}" key="admin_panel.tests.button.add" var="button_add_test"/>
+<fmt:message bundle="${loc}" key="admin_panel.tests.button.delete" var="button_delete"/>
+<fmt:message bundle="${loc}" key="admin_panel.tests.button.edit" var="button_edit"/>
+<fmt:message bundle="${loc}" key="admin_panel.tests.message.delete" var="message_impossible_delete"/>
+<fmt:message bundle="${loc}" key="admin_panel.tests.message.empty_data" var="message_empty_data"/>
+
+
 
 <div class="container-fluid p-0">
 
@@ -61,24 +72,22 @@
                 <a href="${pageContext.request.contextPath}/test?command=add_test&typeId=${requestScope.activeTypeId}">
                     <button type="submit"
                             class="card-btn btn btn-outline-primary d-block mx-auto">
-                        Добавить
-                    </button>
+                        ${button_add_test} </button>
                 </a>
             </div>
             <div id="invalidDeleteMessage" style="display: none">
                 <div class="alert alert-danger" role="alert">
-                    Данный тест не может быть удален.
-                </div>
+                    ${message_impossible_delete} </div>
             </div>
             <div class="tab-content" id="v-pills-tabContent">
                 <table class="table table-sm">
                     <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Название</th>
-                        <th scope="col">Продолжительность</th>
-                        <th scope="col">Ключ</th>
-                        <th scope="col">В процессе создания</th>
+                        <th scope="col">${table_test_title}</th>
+                        <th scope="col">${table_duration}</th>
+                        <th scope="col">${table_key}</th>
+                        <th scope="col">${table_in_process}</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
@@ -96,11 +105,12 @@
 
                                 <td>
                                     <a href="${pageContext.request.contextPath}/test?command=edit_test&testId=${test.id}">
-                                        <button class="btn btn-link">Редактировать</button>
+                                        <button class="btn btn-link">${button_edit}</button>
                                     </a>
                                 </td>
                                 <td>
-                                    <button  class="btn btn-link" onclick="deleteTest(${test.id},this);return false;">Удалить</button>
+                                    <button class="btn btn-link"
+                                            onclick="deleteTest(${test.id},this);return false;">${button_delete}</button>
                                 </td>
                             </tr>
                         </c:forEach>

@@ -34,7 +34,7 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
             "test.time as tt_time,test.id tt_id, test.title tt_title, count(question.id) as count_quest " +
             "FROM type INNER JOIN test ON test.type_id=type.id inner join question on question.test_id=test.id " +
             "WHERE type.deleted_at IS null AND test.deleted_at IS null AND question.deleted_at is null " +
-            "and test.key is null group by test.id;";
+            "and test.key is null group by test.id";
 
     @Override
     public List<Type> getAll() throws DAOException {

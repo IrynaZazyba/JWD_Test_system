@@ -41,6 +41,7 @@
                    role="tab"
                    aria-controls="v-pills-assigned_test" aria-selected="true">${assigned_test}</a>
 
+                <hr>
                 <c:forEach var="item" items="${requestScope.testTypes}">
                     <a class="nav-link vertical-menu" id="v-pills-${item.id}-tab" data-toggle="pill"
                        href="#v-pills-${item.id}"
