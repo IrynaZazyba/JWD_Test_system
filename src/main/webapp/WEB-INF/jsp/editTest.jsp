@@ -31,42 +31,49 @@
         <input type="hidden" name="testId" id="testId" value="${requestScope.testData.id}"/>
         <div class="col-3"></div>
         <div class="col-5">
-            <form>
-                <div class="form-group">
-                    <label for="testTitle">Название теста</label>
-                    <input type="email" class="form-control" value="${requestScope.testData.title}" id="testTitle">
+            <form id="editTest">
+                <div id="testInfo" class="edit-quest-form">
+                    <div class="row edit-button">
+                    <button onclick="showModalWindowEditTestInfo(this); return false;" type="button"
+                            value="${requestScope.testData.id}"
+                            class="btn btn-link"><i class="far fa-edit"></i></button></div>
+                    <div class="form-group">
+                        <label for="testTitle">Название теста</label>
+                        <input disabled type="email" class="form-control" name="testTitle" value="${requestScope.testData.title}" id="testTitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="testType">Тип теста</label>
+                        <select disabled class="form-control" name="typeId" id="testType">
+                            <c:forEach var="type" items="${requestScope.testTypes}">
+                                <c:if test="${requestScope.testData.type.id==type.id}">
+                                    <option  selected value="${type.id}">${type.title}</option>
+                                </c:if>
+                                <c:if test="${requestScope.testData.type.id!=type.id}">
+                                    <option  value="${type.id}">${type.title}</option>
+                                </c:if>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="testKey">Ключ</label>
+                        <input disabled type="email" class="form-control" name="testKey" value="${requestScope.testData.key}" id="testKey">
+                    </div>
+                    <div class="form-group">
+                        <label for="testDuration">Продолжительность, мин</label>
+                        <input disabled type="email" class="form-control" name="testDuration" value="${requestScope.testData.duration}"
+                               id="testDuration">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="testType">Example select</label>
-                    <select class="form-control" id="testType">
-                        <c:forEach var="type" items="${requestScope.testTypes}">
-                            <c:if test="${requestScope.testData.type.id==type.id}">
-                                <option selected value="${type.id}">${type.title}</option>
-                            </c:if>
-                            <c:if test="${requestScope.testData.type.id!=type.id}">
-                                <option value="${type.id}">${type.title}</option>
-                            </c:if>
-                        </c:forEach>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="testKey">Ключ</label>
-                    <input type="email" class="form-control" value="${requestScope.testData.key}" id="testKey">
-                </div>
-                <div class="form-group">
-                    <label for="testDuration">Продолжительность, мин</label>
-                    <input type="email" class="form-control" value="${requestScope.testData.duration}"
-                           id="testDuration">
-                </div>
-                <div class="form-group">
-                    <button type="button" onclick="showModalWindowAddQuestion();return false;" class="btn btn-outline-info btn-block">
+                    <button type="button" onclick="showModalWindowAddQuestion();return false;"
+                            class="btn btn-outline-info btn-block m-t-27">
                         <i class="fas fa-plus"></i></button>
 
                 </div>
                 <c:forEach var="quest" items="${requestScope.testData.questions}">
                     <div id="modal-${quest.id}" class="form-group edit-quest-form">
                         <div class="row edit-button">
-                            <button onclick="showModalWindowEdit(this); return false;" type="button"
+                            <button onclick="showModalWindowEditQuestion(this); return false;" type="button"
                                     value="${quest.id}"
                                     class="btn btn-link"><i class="far fa-edit"></i></button>
                             <button onclick="deleteQuestion(this); return false;" type="button" value="${quest.id}"
@@ -149,6 +156,29 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary closeButton" data-dismiss="modal">Close</button>
                 <button onclick="updateQuestion(this)" type="button" class="btn btn-info">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalTestInfo" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span class="closeButton" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="testInfoFormEdit">
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary closeButton" data-dismiss="modal">Close</button>
+                <button onclick="updateTestInfo(this)" type="button" class="btn btn-info">Сохранить</button>
             </div>
         </div>
     </div>

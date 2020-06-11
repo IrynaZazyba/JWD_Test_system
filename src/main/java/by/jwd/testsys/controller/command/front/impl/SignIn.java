@@ -35,7 +35,6 @@ public class SignIn implements Command {
         UserService userService = serviceFactory.getUserService();
         HttpSession session = request.getSession();
 
-
         try {
             User userByLogin = userService.userByLoginPassword(login, password);
 
@@ -51,8 +50,10 @@ public class SignIn implements Command {
                 forwardToPage(request, response, JspPageName.START_JSP_PAGE);
             }
 
-        } catch (ServiceException | ForwardCommandException e) {
-            logger.log(Level.ERROR, e.getMessage(),e);
+        } catch (ServiceException e) {
+            response.sendRedirect(JspPageName.ERROR_PAGE);
+        } catch (ForwardCommandException e) {
+            logger.log(Level.ERROR,"Forward to page Exception in SignIn command", e);
             response.sendRedirect(JspPageName.ERROR_PAGE);
         }
     }

@@ -129,8 +129,9 @@ async function saveTestInfo(obj) {
 }
 
 let form;
+let testInfoForm;
 
-function showModalWindowEdit(obj) {
+function showModalWindowEditQuestion(obj) {
 
     let modalBody = document.querySelector(".modal-body .questionFormEdit");
     modalBody.innerHTML = "";
@@ -152,6 +153,21 @@ function showModalWindowEdit(obj) {
     }
 }
 
+function showModalWindowEditTestInfo(obj) {
+    let modalBody = document.querySelector(".modal-body #testInfoFormEdit");
+    modalBody.innerHTML = "";
+    let formTestInfo = document.querySelector("div[id^='testInfo']");
+    testInfoForm = formTestInfo.cloneNode(true);
+    $("#modalTestInfo").modal('show');
+    modalBody.insertAdjacentElement('afterbegin', formTestInfo);
+    formTestInfo.querySelector("div[id^='modal'] button").style.display = 'none';
+    document.querySelectorAll('#modalTestInfo .modal-body :disabled').forEach(e=>e.removeAttribute('disabled'));
+
+
+
+
+
+}
 let countInsertedAnswer = 0;
 
 function insertButtonAddAnswer() {
@@ -241,6 +257,18 @@ $('#modal').on('hidden.bs.modal', function (e) {
 });
 
 
+$('#modalTestInfo').on('hidden.bs.modal', function (e) {
+    countInsertedAnswer = 0;
+
+    document.querySelectorAll('#modalTestInfo .modal-body input').forEach(e=>e.setAttribute('disabled','disabled'));
+    document.querySelector('#modalTestInfo .modal-body select').setAttribute('disabled','disabled');
+    document.querySelector("div[id^='modalTestInfo'] .modal-body button").style.display = 'block';
+
+    let insertPlace = document.getElementById('editTest').insertAdjacentElement('afterbegin', testInfoForm);
+    testInfoForm = "";
+});
+
+
 function showModalWindowAddQuestion() {
 
     let modalBody = document.querySelector(".modal-body .questionFormEdit");
@@ -303,4 +331,24 @@ async function deleteQuestion(button) {
     } else {
 
     }
+}
+
+
+async function updateTestInfo(button) {
+
+    let testId = document.getElementById("testId").value;
+    let testInfoFormEdit = document.getElementById("testInfoFormEdit");
+
+    let response = await fetch("/test-system/ajax?command=update_test_info&testId=" + testId, {
+        method: 'POST',
+        body:new FormData(testInfoFormEdit),
+    });
+
+    if (response.ok) {
+        location.reload();
+
+    } else {
+
+    }
+
 }

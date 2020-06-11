@@ -11,6 +11,9 @@ import by.jwd.testsys.logic.AdminService;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +23,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class ShowEditTestPage implements Command {
+    private static Logger logger = LogManager.getLogger();
 
 
     @Override
@@ -45,7 +49,10 @@ public class ShowEditTestPage implements Command {
             session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
             forwardToPage(request, response, JspPageName.EDIT_TEST);
 
-        } catch (ForwardCommandException | ServiceException e) {
+        } catch (ServiceException e) {
+            response.sendRedirect(JspPageName.ERROR_PAGE);
+        } catch (ForwardCommandException e) {
+            logger.log(Level.ERROR,"Forward to page Exception in ShowEditTestPage command", e);
             response.sendRedirect(JspPageName.ERROR_PAGE);
         }
 

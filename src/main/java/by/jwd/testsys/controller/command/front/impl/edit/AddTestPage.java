@@ -11,6 +11,9 @@ import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.AdminServiceException;
 import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +23,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class AddTestPage implements Command {
+
+    private static Logger logger = LogManager.getLogger();
 
 
     @Override
@@ -35,8 +40,12 @@ public class AddTestPage implements Command {
             session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
             forwardToPage(request, response, JspPageName.ADD_TEST);
 
-        } catch (ForwardCommandException | ServiceException e) {
+        } catch ( ServiceException e) {
             response.sendRedirect(JspPageName.ERROR_PAGE);
+        } catch (ForwardCommandException e) {
+            logger.log(Level.ERROR,"Forward to page Exception in AddTestPage command", e);
+            response.sendRedirect(JspPageName.ERROR_PAGE);
+
         }
     }
 }

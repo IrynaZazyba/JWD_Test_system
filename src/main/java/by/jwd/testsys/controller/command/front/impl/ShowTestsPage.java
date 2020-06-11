@@ -10,6 +10,9 @@ import by.jwd.testsys.controller.command.front.ForwardCommandException;
 import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.factory.ServiceFactory;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +22,7 @@ import java.io.IOException;
 import java.util.Set;
 
 public class ShowTestsPage implements Command {
+    private static Logger logger = LogManager.getLogger();
 
 
     @Override
@@ -36,8 +40,12 @@ public class ShowTestsPage implements Command {
 
             forwardToPage(req, resp, JspPageName.START_MENU_PAGE);
 
-        } catch (ServiceException | ForwardCommandException e) {
+        } catch (ServiceException  e) {
             resp.sendRedirect(JspPageName.ERROR_PAGE);
+        } catch (ForwardCommandException e) {
+            logger.log(Level.ERROR,"Forward to page Exception in ShowTestsPage command", e);
+            resp.sendRedirect(JspPageName.ERROR_PAGE);
+
         }
     }
 }

@@ -67,7 +67,7 @@ public class SignUp implements Command {
                 try {
                     forwardToPage(request, response, JspPageName.START_JSP_PAGE);
                 } catch (ForwardCommandException e) {
-                    logger.log(Level.ERROR, e.getMessage(), e);
+                    logger.log(Level.ERROR,"Forward to page Exception in SignUp command", ex);
                     response.sendRedirect(JspPageName.ERROR_PAGE);
                 }
 

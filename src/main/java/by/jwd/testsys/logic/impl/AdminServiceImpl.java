@@ -45,13 +45,12 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public int createTest(int typeId, String title, String key, int duration) throws AdminServiceException {
+    public int createTest(int typeId, String title, String key, LocalTime duration) throws AdminServiceException {
         int generatedTestId;
-        LocalTime testDuration = buildLocalTimeFromMinuteDuration(duration);
         if (key.equals("")) {
             key = null;
         }
-        Test test = new Test(title, key, testDuration, true);
+        Test test = new Test(title, key, duration, true);
         try {
             generatedTestId = testDAO.saveTest(test, typeId);
         } catch (DAOSqlException e) {
@@ -61,9 +60,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void updateTestData(int testId, int typeId, String title, String key, int duration) throws AdminServiceException {
-        LocalTime testDuration = buildLocalTimeFromMinuteDuration(duration);
-        Test test = new Test(testId, title, key, testDuration, true);
+    public void updateTestData(int testId, int typeId, String title, String key, LocalTime duration) throws AdminServiceException {
+        Test test = new Test(testId, title, key, duration, true);
         try {
             testDAO.updateTest(test, typeId);
         } catch (DAOSqlException e) {
@@ -191,6 +189,7 @@ public class AdminServiceImpl implements AdminService {
             throw new AdminServiceException("DB problem", e);
         }
     }
+
 
     private LocalTime buildLocalTimeFromMinuteDuration(int duration) {
         LocalTime testDuration = null;
