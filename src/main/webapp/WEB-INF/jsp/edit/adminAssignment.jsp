@@ -60,7 +60,7 @@
 
 <div class="container-fluid p-0">
 
-    <jsp:include page="parts/nav-menu.jsp"/>
+    <jsp:include page="../parts/nav-menu.jsp"/>
     <div class="row height-90">
         <div class="col-2 background-gradient height-100 p-l-15 p-r-0">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">

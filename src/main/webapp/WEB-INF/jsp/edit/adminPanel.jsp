@@ -38,10 +38,9 @@
 <fmt:message bundle="${loc}" key="admin_panel.tests.message.empty_data" var="message_empty_data"/>
 
 
-
 <div class="container-fluid p-0">
 
-    <jsp:include page="parts/nav-menu.jsp"/>
+    <jsp:include page="../parts/nav-menu.jsp"/>
 
     <div class="row height-90">
         <div class="col-2 background-gradient height-100 p-l-15 p-r-0">
@@ -109,8 +108,8 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <button class="btn btn-link"
-                                            onclick="deleteTest(${test.id},this);return false;">${button_delete}</button>
+                                    <button class="btn btn-link" id="btn-${test.id}" data-toggle="modal" data-target="#confirm-delete"
+                                            data-onclick="deleteTest(${test.id},this)">${button_delete}</button>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -130,6 +129,25 @@
 <div id="content bor"></div>
 
 
+</div>
+<div id="confirm-delete" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true" data-target="#staticBackdrop">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">
+                    Вы действительно хотите удалить
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger btn-ok">Удалить</button>
+            </div>
+        </div>
+    </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="" crossorigin="anonymous"></script>

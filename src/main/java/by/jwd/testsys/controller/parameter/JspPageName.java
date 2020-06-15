@@ -8,11 +8,12 @@ public final class JspPageName {
     public static final String START_PAGE = "/test-system";
     public static final String ERROR_PAGE = "errorPage.jsp";
     public static final String START_MENU_PAGE = "WEB-INF/jsp/tests.jsp";
-    public static final String ADMIN_PAGE_ASSIGN_TEST = "WEB-INF/jsp/adminAssignment.jsp";
+    public static final String ADMIN_PAGE_ASSIGN_TEST = "WEB-INF/jsp/edit/adminAssignment.jsp";
     public static final String ADMIN_PAGE_TESTS_RESULTS = "WEB-INF/jsp/usersResultPage.jsp";
-    public static final String ADMIN_PANEL = "WEB-INF/jsp/adminPanel.jsp";
-    public static final String EDIT_TEST = "WEB-INF/jsp/editTest.jsp";
-    public static final String ADD_TEST = "WEB-INF/jsp/addTest.jsp";
+    public static final String ADMIN_PANEL = "WEB-INF/jsp/edit/adminPanel.jsp";
+    public static final String PREVIEW_TEST = "WEB-INF/jsp/edit/previewTest.jsp";
+    public static final String EDIT_TEST = "WEB-INF/jsp/edit/editTest.jsp";
+    public static final String ADD_TEST = "WEB-INF/jsp/edit/addTest.jsp";
     public static final String START_JSP_PAGE = "index.jsp";
     public static final String TEST_RESULT_PAGE = "WEB-INF/jsp/result.jsp";
     public static final String JSP_PAGE_PATH = "WEB-INF/jsp/userAccount.jsp";

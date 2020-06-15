@@ -26,8 +26,8 @@
 
 <div class="container-fluid p-0">
 
-    <jsp:include page="parts/nav-menu.jsp"/>
-    <div class="row">
+    <jsp:include page="../parts/nav-menu.jsp"/>
+    <div class="row m-t-27">
         <input type="hidden" name="testId" id="testId" value="${requestScope.testData.id}"/>
         <div class="col-3"></div>
         <div class="col-5">
@@ -76,10 +76,10 @@
                             <button onclick="showModalWindowEditQuestion(this); return false;" type="button"
                                     value="${quest.id}"
                                     class="btn btn-link"><i class="far fa-edit"></i></button>
-                            <button onclick="deleteQuestion(this); return false;" type="button" value="${quest.id}"
-                                    class="btn btn-link"><i
-                                    class="far fa-trash-alt "></i>
-                            </button>
+                            <a href="#deleteQuestion" class="trigger-btn p-t-r" data-toggle="modal" data-value="${quest.id}"
+                               data-onclick="deleteQuestion(this)">
+                                <i class="far fa-trash-alt"></i>
+                            </a>
                         </div>
                         <div class="row">
                             <div class="col-10 p-0">
@@ -227,6 +227,37 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger btn-ok">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="deleteQuestion" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Are you sure?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger btn-ok">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>

@@ -425,5 +425,11 @@ input:checked {
     margin: 15px;
 }
 
+.deleted-row{
+    background-color: rgba(255, 68, 117, 0.41);
+}
+.p-t-r{
+    padding: 6px 12px 0 0;
+}
 
 

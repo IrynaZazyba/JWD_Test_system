@@ -3,15 +3,13 @@ package by.jwd.testsys.controller.command.front.impl;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.parameter.JspPageName;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
-import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.controller.command.front.Command;
 import by.jwd.testsys.controller.command.front.ForwardCommandException;
 import by.jwd.testsys.logic.UserService;
 import by.jwd.testsys.logic.exception.ExistsUserException;
 import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
-import by.jwd.testsys.logic.util.Role;
-import by.jwd.testsys.logic.validator.impl.UserValidatorImpl;
+import by.jwd.testsys.bean.Role;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,9 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 

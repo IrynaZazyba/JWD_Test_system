@@ -1,7 +1,5 @@
 package by.jwd.testsys.bean;
 
-import by.jwd.testsys.logic.util.Role;
-
 import java.io.Serializable;
 import java.util.Set;
 

@@ -28,7 +28,7 @@
 
 <div class="container-fluid p-0">
 
-    <jsp:include page="parts/nav-menu.jsp"/>
+    <jsp:include page="../parts/nav-menu.jsp"/>
 
     <div class="row">
         <div class="col-5" style="margin: 0 auto;">

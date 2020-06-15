@@ -5,17 +5,28 @@
 
 async function deleteTest(testId, obj) {
 
+
     let response = await fetch("/test-system/ajax?command=delete_test&testId=" + testId, {
         method: 'DELETE',
     });
 
 
     if (response.status === 204) {
-        obj.replaceWith("DELETED");
+        $("#confirm-delete").modal('hide');
+        let tableRow=document.getElementById("btn-" + testId).closest("tr");
+        tableRow.setAttribute("class","deleted-row");
+        tableRow.querySelectorAll("button").forEach(elem=>elem.setAttribute("disabled","disabled"));
+        tableRow.querySelector("a").removeAttribute("href");
     } else {
         document.getElementById('invalidDeleteMessage').style.display = 'block';
     }
 }
+
+
+$('#confirm-delete').on('show.bs.modal', function (e) {
+    $(this).find('.btn-ok').attr('onclick', $(e.relatedTarget).data('onclick'));
+});
+
 
 
 let count = 1;
@@ -161,13 +172,11 @@ function showModalWindowEditTestInfo(obj) {
     $("#modalTestInfo").modal('show');
     modalBody.insertAdjacentElement('afterbegin', formTestInfo);
     formTestInfo.querySelector("div[id^='modal'] button").style.display = 'none';
-    document.querySelectorAll('#modalTestInfo .modal-body :disabled').forEach(e=>e.removeAttribute('disabled'));
-
-
-
+    document.querySelectorAll('#modalTestInfo .modal-body :disabled').forEach(e => e.removeAttribute('disabled'));
 
 
 }
+
 let countInsertedAnswer = 0;
 
 function insertButtonAddAnswer() {
@@ -260,8 +269,8 @@ $('#modal').on('hidden.bs.modal', function (e) {
 $('#modalTestInfo').on('hidden.bs.modal', function (e) {
     countInsertedAnswer = 0;
 
-    document.querySelectorAll('#modalTestInfo .modal-body input').forEach(e=>e.setAttribute('disabled','disabled'));
-    document.querySelector('#modalTestInfo .modal-body select').setAttribute('disabled','disabled');
+    document.querySelectorAll('#modalTestInfo .modal-body input').forEach(e => e.setAttribute('disabled', 'disabled'));
+    document.querySelector('#modalTestInfo .modal-body select').setAttribute('disabled', 'disabled');
     document.querySelector("div[id^='modalTestInfo'] .modal-body button").style.display = 'block';
 
     let insertPlace = document.getElementById('editTest').insertAdjacentElement('afterbegin', testInfoForm);
@@ -270,10 +279,9 @@ $('#modalTestInfo').on('hidden.bs.modal', function (e) {
 
 
 function showModalWindowAddQuestion() {
-
+    $("#modalAddQuestion").modal('show');
     let modalBody = document.querySelector(".modal-body .questionFormEdit");
     modalBody.innerHTML = "";
-    $("#modalAddQuestion").modal('show');
 }
 
 async function addQuestion(button) {
@@ -293,13 +301,11 @@ async function addQuestion(button) {
     } else {
 
     }
-
-
 }
 
 function showPreviewPage() {
     let testId = document.querySelector("#testId > input[type=hidden]").value;
-    document.location.href = "/test-system/test?command=edit_test&testId=" + testId;
+    document.location.href = "/test-system/test?command=preview_test&testId=" + testId;
 }
 
 async function completeTestCreating() {
@@ -317,6 +323,10 @@ async function completeTestCreating() {
     }
 }
 
+$('#deleteQuestion').on('show.bs.modal', function(e) {
+    $(this).find('.btn-ok').attr('onclick', $(e.relatedTarget).data('onclick'));
+    $(this).find('.btn-ok').attr('value', $(e.relatedTarget).data('value'));
+});
 
 async function deleteQuestion(button) {
 
@@ -326,6 +336,8 @@ async function deleteQuestion(button) {
     });
 
     if (response.ok) {
+        $("#deleteQuestion").modal('hide');
+
         location.reload();
 
     } else {
@@ -341,7 +353,7 @@ async function updateTestInfo(button) {
 
     let response = await fetch("/test-system/ajax?command=update_test_info&testId=" + testId, {
         method: 'POST',
-        body:new FormData(testInfoFormEdit),
+        body: new FormData(testInfoFormEdit),
     });
 
     if (response.ok) {

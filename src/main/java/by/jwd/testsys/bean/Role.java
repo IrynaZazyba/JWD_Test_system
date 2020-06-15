@@ -1,4 +1,4 @@
-package by.jwd.testsys.logic.util;
+package by.jwd.testsys.bean;
 
 public enum Role {
     USER,ADMIN;
