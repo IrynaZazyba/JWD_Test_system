@@ -266,6 +266,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="" crossorigin="anonymous"></script>
 <script src="resources/js/addEditTest.js"></script>
+<script src="resources/js/script.js"></script>
 
 </body>
 

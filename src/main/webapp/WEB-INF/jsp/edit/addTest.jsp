@@ -76,8 +76,11 @@
                             <input type="text" class="form-control" name="testKey" id="keyValue">
                         </div>
                         <div class="form-group">
-                            <label for="duration">Продолжительность, мин</label>
-                            <input required type="text" class="form-control" name="testDuration" id="duration">
+                            <label for="duration">Продолжительность, чч:mm</label>
+                            <input required type="time" class="form-control" name="testDuration" id="duration">
+                            <div class="invalid-feedback">
+                                Please enter time in required format.
+                            </div>
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-info float-right">Сохранить</button>
@@ -130,6 +133,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="" crossorigin="anonymous"></script>
 <script src="resources/js/addEditTest.js"></script>
+<script src="resources/js/script.js"></script>
 
 </body>
 

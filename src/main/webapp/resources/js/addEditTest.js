@@ -13,9 +13,9 @@ async function deleteTest(testId, obj) {
 
     if (response.status === 204) {
         $("#confirm-delete").modal('hide');
-        let tableRow=document.getElementById("btn-" + testId).closest("tr");
-        tableRow.setAttribute("class","deleted-row");
-        tableRow.querySelectorAll("button").forEach(elem=>elem.setAttribute("disabled","disabled"));
+        let tableRow = document.getElementById("btn-" + testId).closest("tr");
+        tableRow.setAttribute("class", "deleted-row");
+        tableRow.querySelectorAll("button").forEach(elem => elem.setAttribute("disabled", "disabled"));
         tableRow.querySelector("a").removeAttribute("href");
     } else {
         document.getElementById('invalidDeleteMessage').style.display = 'block';
@@ -26,7 +26,6 @@ async function deleteTest(testId, obj) {
 $('#confirm-delete').on('show.bs.modal', function (e) {
     $(this).find('.btn-ok').attr('onclick', $(e.relatedTarget).data('onclick'));
 });
-
 
 
 let count = 1;
@@ -323,7 +322,7 @@ async function completeTestCreating() {
     }
 }
 
-$('#deleteQuestion').on('show.bs.modal', function(e) {
+$('#deleteQuestion').on('show.bs.modal', function (e) {
     $(this).find('.btn-ok').attr('onclick', $(e.relatedTarget).data('onclick'));
     $(this).find('.btn-ok').attr('value', $(e.relatedTarget).data('value'));
 });
@@ -361,6 +360,27 @@ async function updateTestInfo(button) {
 
     } else {
 
+    }
+
+}
+
+
+async function addTestType() {
+
+    let testTypeTitle = document.getElementById("testTypeTitle").value;
+    let formData = new FormData();
+    formData.append("testTypeTitle", testTypeTitle);
+    let response = await fetch("/test-system/ajax?command=add_test_type", {
+        method: 'POST',
+        body: formData,
+    });
+
+    if (response.ok) {
+        $("#addTestType").modal('hide');
+        location.reload();
+
+    } else {
+        document.getElementById("testTypeTitle").classList.add('is-invalid');
     }
 
 }

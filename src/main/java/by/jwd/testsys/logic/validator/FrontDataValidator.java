@@ -1,0 +1,16 @@
+package by.jwd.testsys.logic.validator;
+
+public interface FrontDataValidator {
+
+    boolean validateNumber(String number);
+
+    boolean validateTime(String time);
+
+    boolean validateOnlyLatinLetters(String str);
+
+    boolean validateLetters(String str);
+
+    boolean validateStringWithSymbolsAndNumbers(String str);
+    boolean validateStringWithDashes(String str);
+
+}

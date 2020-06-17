@@ -63,7 +63,7 @@
 
 
                             <div class="form">
-                                <form id="formElem" enctype="multipart/form-data" accept-charset="UTF-8"
+                                <form id="formElem" onsubmit="" enctype="multipart/form-data" accept-charset="UTF-8"
                                       class="form-horizontal m-0" role="form">
                                     <input type="hidden" name="command" value="edit_user"/>
                                     <div class="form-group">

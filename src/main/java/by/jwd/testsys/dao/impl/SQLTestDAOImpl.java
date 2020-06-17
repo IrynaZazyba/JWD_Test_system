@@ -106,6 +106,11 @@ public class SQLTestDAOImpl implements TestDAO {
 
     private static final String UPDATE_ANSWER_TITLE_RESULT_BY_ANSWER_ID = "UPDATE `answer` SET `answer`=?,`result`=? WHERE id=?;";
 
+    private static final String SELECT_ALL_TESTS_BY_TYPE_ID_LIMIT_PAGE = "SELECT id, title,`key`, time FROM `test` " +
+            "WHERE type_id=? and deleted_at is null LIMIT ?,?";
+
+    private static final String GET_COUNT_NOT_DELETED_TESTS_BY_TYPE_ID = "SELECT count(id) as countRow FROM `test` " +
+            "WHERE type_id=? and deleted_at is null";
 
     @Override
     public Set<Test> getAssignmentTest(int userId) throws DAOSqlException {
@@ -463,6 +468,72 @@ public class SQLTestDAOImpl implements TestDAO {
         }
 
         return tests;
+    }
+
+    @Override
+    public Set<Test> getTestsByLimit(int typeId, int from, int to) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Set<Test> tests = new HashSet<>();
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_ALL_TESTS_BY_TYPE_ID_LIMIT_PAGE);
+            preparedStatement.setInt(1, typeId);
+            preparedStatement.setInt(2, from);
+            preparedStatement.setInt(3, to);
+
+
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String title = resultSet.getString("title");
+                String key = resultSet.getString("key");
+                Time time = resultSet.getTime("time");
+                LocalTime testDuration = null;
+                if (time != null) {
+                    testDuration = time.toLocalTime();
+                }
+                Test test = new Test(id, title, key, testDuration);
+                tests.add(test);
+            }
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method getTestsByLimit()", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getTestsByLimit()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method getTestsByLimit()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+        }
+
+        return tests;
+    }
+
+    @Override
+    public int getCountNotDeletedTests(int typeId) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        int countNotDeletedTests = 0;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(GET_COUNT_NOT_DELETED_TESTS_BY_TYPE_ID);
+            preparedStatement.setInt(1, typeId);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                countNotDeletedTests = resultSet.getInt("countRow");
+            }
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getCountNotDeletedTests()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method getCountNotDeletedTests()", e);
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method getCountNotDeletedTests()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+        }
+        return countNotDeletedTests;
     }
 
     @Override
@@ -848,6 +919,7 @@ public class SQLTestDAOImpl implements TestDAO {
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }
+
 
     private Test buildTest(ResultSet resultSet) throws SQLException {
         int testId = resultSet.getInt("t_id");

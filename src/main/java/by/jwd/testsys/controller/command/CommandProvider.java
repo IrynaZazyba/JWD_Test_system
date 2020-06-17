@@ -57,6 +57,7 @@ public final class CommandProvider {
         ajaxRepository.put(AjaxCommandName.COMPLETE_TEST, new CompleteTestCreation());
         ajaxRepository.put(AjaxCommandName.DELETE_QUESTION, new DeleteQuestion());
         ajaxRepository.put(AjaxCommandName.UPDATE_TEST_INFO, new UpdateTestInfo());
+        ajaxRepository.put(AjaxCommandName.ADD_TEST_TYPE, new AddTestType());
 
 
 

@@ -48,9 +48,11 @@ public interface TestService {
 
     Set<Test> getNotEditedTestByTypeId(int typeId) throws TestServiceException;
 
-    Set<Test> getAllTestByTypeId(int typeId) throws TestServiceException;
+    Set<Test> getAllTestByTypeId(int typeId, int currentPage) throws TestServiceException;
 
     Map<String,Set<User>> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws ServiceException, DateOutOfRangeException;
 
     void deleteAssignment(int assignment_id) throws ServiceException;
+
+    int receiveCountTestPages(int typeId) throws TestServiceException;
 }

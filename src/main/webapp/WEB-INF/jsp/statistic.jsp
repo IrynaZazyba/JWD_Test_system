@@ -65,7 +65,7 @@
                         <td><c:out value="${item.minutesSpentOnTest}"/></td>
                         <td><c:out value="${item.timeOnTest}"/></td>
                         <td><c:out value="${item.rightCountQuestion}"/></td>
-                        <td><c:out value="${item.rightCountQuestion*100/item.allCountQuestion}%"/></td>
+                        <td><fmt:formatNumber value="${item.rightCountQuestion*100/item.allCountQuestion}" maxFractionDigits="2"/></td>
                     </tr>
                 </c:forEach>
 

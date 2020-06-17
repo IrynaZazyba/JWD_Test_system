@@ -315,7 +315,7 @@ public class TestServiceImpl implements TestService {
         try {
             result = getResult(assignment);
             int countQuestion = test.getCountQuestion();
-            return (result.getRightCountQuestion() * 100) / countQuestion;
+            return Math.ceil((result.getRightCountQuestion() * 100) / countQuestion);
         } catch (TestServiceException e) {
             throw new TestServiceException("DB problem", e);
         }
@@ -382,10 +382,10 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Set<Test> getNotEditedTestByTypeId(int typeId) throws TestServiceException   {
+    public Set<Test> getNotEditedTestByTypeId(int typeId) throws TestServiceException {
         Set<Test> tests = null;
         try {
-            tests = testDAO.getTests(typeId,false);
+            tests = testDAO.getTests(typeId, false);
         } catch (DAOSqlException e) {
             throw new TestServiceException("DB problem", e);
         }
@@ -394,12 +394,13 @@ public class TestServiceImpl implements TestService {
 
 
     @Override
-    public Set<Test> getAllTestByTypeId(int typeId) throws TestServiceException {
+    public Set<Test> getAllTestByTypeId(int typeId, int currentPage) throws TestServiceException {
+
+        int recordsPerPage = 11;
+        int start = currentPage * recordsPerPage - recordsPerPage;
         Set<Test> tests = null;
         try {
-            tests = testDAO.getTests(typeId,true);
-            Set<Test> notEditedTests = testDAO.getTests(typeId, false);
-            tests.addAll(notEditedTests);
+            tests = testDAO.getTestsByLimit(typeId, start, recordsPerPage);
         } catch (DAOSqlException e) {
             throw new TestServiceException("DB problem", e);
         }
@@ -496,6 +497,23 @@ public class TestServiceImpl implements TestService {
             throw new TestServiceException("DAOSqlException  in deleteAssignment().", e);
         }
 
+    }
+
+    @Override
+    public int receiveCountTestPages(int typeId) throws TestServiceException {
+        int countPageRows = 11;
+        int countTest;
+        try {
+            countTest = testDAO.getCountNotDeletedTests(typeId);
+
+        } catch (DAOSqlException e) {
+            throw new TestServiceException("DAOSqlException  in deleteAssignment().", e);
+        }
+        int numberOfPages = countTest / countPageRows;
+        if (numberOfPages  % countPageRows> 0) {
+            numberOfPages++;
+        }
+        return numberOfPages;
     }
 
 }

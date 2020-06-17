@@ -4,18 +4,28 @@
 "use strict"
 
 
-// $('li.nav-item a').on('click', function (e) {
-//     // e.preventDefault();
-//     $('#myTab a.active').removeClass('active');
-//     $(this).tab('show');
-//     console.log("fghj");
-// })
+document.addEventListener("DOMContentLoaded", menuLinkHelper);
 
 
+function menuLinkHelper() {
+    console.log(window.location.search.toString());
+    let urlParams = window.location.search.toString().split('&');
+    urlParams.forEach(elem => {
+        if (elem.includes('command')) {
+            let command=elem.split('=')[1];
+            let menuLinkActive=document.querySelector(".nav-item > a[href*='"+command+"']");
+            if(menuLinkActive!=null){
+                menuLinkActive.classList.add('active');
+            }
+        }
+    })
 
-formElem.onsubmit = async (e) => {
-    e.preventDefault();
+}
 
+
+async function userAccount() {
+
+    let formElem = document.getElementById("formElem");
     let response = await fetch("/test-system/ajax", {
         method: 'POST',
         body: new FormData(formElem),

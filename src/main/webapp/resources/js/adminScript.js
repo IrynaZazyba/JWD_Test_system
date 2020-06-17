@@ -20,14 +20,6 @@ let formAssignAction = document.forms.assignAction;
 let formAssignType = formAssignAction.elements.testTypeId;
 formAssignType.onchange = changeOption;
 
-// let testTitle = form.elements.testId;
-// testTitle.onchange = removeResult;
-// let assign = form.elements.assigned_users;
-// assign.onchange = removeResult;
-// let date = form.elements.date;
-// date.onchange = removeResult;
-
-
 function removeResult() {
     document.getElementById("resultData").innerHTML = "";
 }

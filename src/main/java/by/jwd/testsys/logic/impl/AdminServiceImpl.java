@@ -3,13 +3,16 @@ package by.jwd.testsys.logic.impl;
 import by.jwd.testsys.bean.Answer;
 import by.jwd.testsys.bean.Question;
 import by.jwd.testsys.bean.Test;
+import by.jwd.testsys.bean.Type;
 import by.jwd.testsys.dao.TestDAO;
+import by.jwd.testsys.dao.TestTypeDAO;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.factory.DAOFactoryProvider;
 import by.jwd.testsys.logic.AdminService;
 import by.jwd.testsys.logic.exception.AdminServiceException;
+import by.jwd.testsys.logic.exception.ExistsTypeAdminServiceException;
 import by.jwd.testsys.logic.exception.InvalidDeleteActionServiceException;
 
 import java.time.LocalDate;
@@ -190,6 +193,22 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+    @Override
+    public void addTestType(String testTypeTitle) throws AdminServiceException, ExistsTypeAdminServiceException {
+        TestTypeDAO typeDao = daoFactory.getTypeDao();
+
+        try {
+            Type typeByTitle = typeDao.getTypeByTitle(testTypeTitle);
+            if (typeByTitle.getTitle() != null) {
+                throw new ExistsTypeAdminServiceException("Exists test type exception in AdminService addTestType() method");
+            }
+
+            typeDao.saveTestType(testTypeTitle);
+
+        } catch (DAOSqlException e) {
+            throw new AdminServiceException("DB problem", e);
+        }
+    }
 
     private LocalTime buildLocalTimeFromMinuteDuration(int duration) {
         LocalTime testDuration = null;

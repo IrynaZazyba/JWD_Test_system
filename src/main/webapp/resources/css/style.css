@@ -209,12 +209,15 @@ li.nav-item:hover {
 .vertical-menu:hover {
     background-color: #EDFFFF;
     color: black;
-
 }
 
 .vertical-menu.active {
     background-color: #EDFFFF !important;
     color: black !important;
+}
+
+.vertical-menu-button-add{
+    margin: 15px 0 10px 0;
 }
 
 .test-start-btn {

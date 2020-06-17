@@ -2,6 +2,7 @@ package by.jwd.testsys.logic;
 
 import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.logic.exception.AdminServiceException;
+import by.jwd.testsys.logic.exception.ExistsTypeAdminServiceException;
 import by.jwd.testsys.logic.exception.InvalidDeleteActionServiceException;
 
 import java.time.LocalTime;
@@ -34,4 +35,6 @@ public interface AdminService {
     void completeTestCreation(int testID) throws AdminServiceException;
 
     void deleteQuestionWithAnswers(int questionId) throws AdminServiceException;
+
+    void addTestType(String testTypeTitle) throws AdminServiceException, ExistsTypeAdminServiceException;
 }

@@ -20,6 +20,7 @@ public final class RequestParameterName {
     public static final String ASSIGNMENT_ID = "assignId";
     public static final String TEST_NAME = "test_name";
     public static final String TEST_TYPE_ID = "typeId";
+    public static final String TEST_TYPE_TITLE = "testTypeTitle";
     public static final String TEST_TITLE="testTitle";
     public static final String TEST_KEY="testKey";
     public static final String TEST_DURATION="testDuration";

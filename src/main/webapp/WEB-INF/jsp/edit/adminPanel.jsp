@@ -46,6 +46,10 @@
         <div class="col-2 background-gradient height-100 p-l-15 p-r-0">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
+                <button type="submit" data-toggle="modal" data-target="#addTestType" data-onclick="addTestType()"
+                        class="card-btn btn btn-outline-primary d-block mx-auto vertical-menu-button-add">
+                    + add test type
+                </button>
 
                 <c:forEach var="type" items="${requestScope.testTypes}">
                     <c:if test="${type.id==requestScope.activeTypeId}">
@@ -62,6 +66,8 @@
                            aria-controls="v-pills-test" aria-selected="true"><c:out value="${type.title}"/></a>
                     </c:if>
                 </c:forEach>
+
+
             </div>
 
 
@@ -82,8 +88,7 @@
                 <table class="table table-sm">
                     <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">${table_test_title}</th>
+                         <th scope="col">${table_test_title}</th>
                         <th scope="col">${table_duration}</th>
                         <th scope="col">${table_key}</th>
                         <th scope="col">${table_in_process}</th>
@@ -93,10 +98,8 @@
                     </thead>
                     <tbody>
                     <c:if test="${not empty requestScope.testsInfoData}">
-                        <c:set var="count" value="0"/>
                         <c:forEach var="test" items="${requestScope.testsInfoData}">
                             <tr>
-                                <th scope="row">${count=count+1}</th>
                                 <td>${test.title}</td>
                                 <td>${test.duration}</td>
                                 <td>${test.key}</td>
@@ -108,18 +111,47 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <button class="btn btn-link" id="btn-${test.id}" data-toggle="modal" data-target="#confirm-delete"
+                                    <button class="btn btn-link" id="btn-${test.id}" data-toggle="modal"
+                                            data-target="#confirm-delete"
                                             data-onclick="deleteTest(${test.id},this)">${button_delete}</button>
                                 </td>
                             </tr>
                         </c:forEach>
                     </c:if>
                     <c:if test="${empty requestScope.testsInfoData}">
-                        <tr>empty data</tr>
+                        <tr>
+                            <td>empty data</td>
+                        </tr>
                     </c:if>
 
                     </tbody>
                 </table>
+
+
+                <nav aria-label="...">
+                    <ul class="pagination pagination-sm">
+                        <c:forEach var="i" begin="1" end="${requestScope.countPages}">
+                            <c:if test="${i==requestScope.currentPage}">
+
+                                <li class="page-item active" aria-current="page">
+                                <span class="page-link">${i}
+                                <span class="sr-only">(current)</span>
+                          </span>
+                            </c:if>
+
+                            <c:if test="${i!=requestScope.currentPage}">
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="${pageContext.request.contextPath}/test?command=show_admin_panel&currentPage=${i}">
+                                            ${i}
+                                    </a>
+                                </li>
+                            </c:if>
+                        </c:forEach>
+                    </ul>
+                </nav>
+
+
             </div>
         </div>
 
@@ -149,6 +181,34 @@
         </div>
     </div>
 </div>
+
+<div id="addTestType" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true" data-target="#staticBackdrop">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticLabel">
+                    Введите название раздела </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="testTypeTitle">
+                    <div class="invalid-feedback">
+                        Exists value
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" onclick="addTestType()" class="btn btn-danger btn-ok">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -156,6 +216,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="" crossorigin="anonymous"></script>
 <script src="resources/js/addEditTest.js"></script>
+<script src="resources/js/script.js"></script>
 
 
 </body>

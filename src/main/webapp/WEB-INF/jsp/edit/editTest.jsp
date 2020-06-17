@@ -39,7 +39,7 @@
                             class="btn btn-link"><i class="far fa-edit"></i></button></div>
                     <div class="form-group">
                         <label for="testTitle">Название теста</label>
-                        <input disabled type="email" class="form-control" name="testTitle" value="${requestScope.testData.title}" id="testTitle">
+                        <input disabled type="text" class="form-control" name="testTitle" value="${requestScope.testData.title}" id="testTitle">
                     </div>
                     <div class="form-group">
                         <label for="testType">Тип теста</label>
@@ -56,11 +56,11 @@
                     </div>
                     <div class="form-group">
                         <label for="testKey">Ключ</label>
-                        <input disabled type="email" class="form-control" name="testKey" value="${requestScope.testData.key}" id="testKey">
+                        <input disabled type="text" class="form-control" name="testKey" value="${requestScope.testData.key}" id="testKey">
                     </div>
                     <div class="form-group">
                         <label for="testDuration">Продолжительность, мин</label>
-                        <input disabled type="email" class="form-control" name="testDuration" value="${requestScope.testData.duration}"
+                        <input disabled type="time" class="form-control" name="testDuration" value="${requestScope.testData.duration}"
                                id="testDuration">
                     </div>
                 </div>
@@ -223,6 +223,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="" crossorigin="anonymous"></script>
 <script src="resources/js/addEditTest.js"></script>
+<script src="resources/js/script.js"></script>
 
 </body>
 
