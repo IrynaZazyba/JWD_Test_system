@@ -26,22 +26,24 @@ public class SQLUserDAOImpl implements UserDAO {
     private final ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
     private ConnectionPoolDAO connectionPool = connectionPoolFactory.getMySqlConnectionPoolDAO();
 
-    private static final String SELECT_ALL_USERS = "SELECT id, login,password, first_name, last_name, role.title" +
+    private static final String SELECT_ALL_USERS = "SELECT id, login,password, first_name, last_name, email, role.title" +
             " from users INNER JOIN role ON users.role_id=role.id";
-    private static final String INSERT_USER = "INSERT INTO users (login, password, first_name, last_name, role_id) " +
-            "VALUES (?,?,?,?,?)";
+    private static final String INSERT_USER = "INSERT INTO users (login, password, first_name, last_name,email, role_id) " +
+            "VALUES (?,?,?,?,?,?)";
     private static final String SELECT_USER_BY_LOGIN_PASSWORD = "SELECT u.id,u.login,u.password,u.first_name,u.last_name," +
-            "role.title FROM users as u INNER JOIN role ON u.role_id=role.id WHERE u.login=? AND u.password=?";
+            "role.title, u.email FROM users as u INNER JOIN role ON u.role_id=role.id WHERE u.login=? AND u.password=?";
     private static final String SELECT_ROLE_ID = "SELECT id FROM role WHERE title=?";
     private static final String SELECT_USER_BY_LOGIN = "SELECT u.id,u.login,u.password,u.first_name,u.last_name," +
-            "role.title FROM users as u INNER JOIN role ON u.role_id=role.id WHERE u.login=?";
+            "role.title, u.email FROM users as u INNER JOIN role ON u.role_id=role.id WHERE u.login=?";
     private static final String SELECT_USER_BY_ID = "SELECT u.id,u.login,u.password,u.first_name,u.last_name," +
-            "role.title FROM users as u INNER JOIN role ON u.role_id=role.id WHERE u.id=?";
+            "role.title, u.email FROM users as u INNER JOIN role ON u.role_id=role.id WHERE u.id=?";
     private static final String UPDATE_USER = "UPDATE users SET login=?, password=?, first_name=?, last_name=?," +
             "role_id=? WHERE id=?";
 
     private static final String SELECT_USER_ASSIGNMENT_BY_USER_ID = "SELECT id, date, deadline, test_id, completed " +
             "FROM assignment where user_id=? AND deleted_at IS NULL";
+
+    private static final String SELECT_USER_EMAIL_BY_ID = "SELECT email FROM users where id=?";
 
     private static final String SELECT_USER_ASSIGNMENT_BY_ASSIGNMENT_ID = "SELECT id, date, deadline, test_id, " +
             "completed FROM assignment where id=? AND deleted_at IS NULL";
@@ -104,7 +106,8 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getFirstName());
             preparedStatement.setString(4, user.getLastName());
-            preparedStatement.setInt(5, id_role);
+            preparedStatement.setString(5, user.getEmail());
+            preparedStatement.setInt(6, id_role);
             preparedStatement.executeUpdate();
 
             generatedKeys = preparedStatement.getGeneratedKeys();
@@ -113,10 +116,10 @@ public class SQLUserDAOImpl implements UserDAO {
             }
 
         } catch (ConnectionPoolException e) {
-            throw new DAOSqlException("ConnectionPoolException in SQLUserDAOImpl getAll() method", e);
+            throw new DAOSqlException("ConnectionPoolException in SQLUserDAOImpl create() method", e);
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl getAll() method", e);
-            throw new DAOSqlException("SQLException in SQLUserDAOImpl getAll() method", e);
+            logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl create() method", e);
+            throw new DAOSqlException("SQLException in SQLUserDAOImpl create() method", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, generatedKeys);
         }
@@ -157,8 +160,9 @@ public class SQLUserDAOImpl implements UserDAO {
         String password = resultSet.getString("password");
         String firstName = resultSet.getString("first_name");
         String lastName = resultSet.getString("last_name");
+        String email = resultSet.getString("email");
         Role role = Role.valueOf(resultSet.getString("title").toUpperCase());
-        return new User(id, login, password, firstName, lastName, role);
+        return new User(id, login, password, firstName, lastName, email,role);
     }
 
     private int getRoleId(Role role) throws DAOSqlException {
@@ -301,7 +305,7 @@ public class SQLUserDAOImpl implements UserDAO {
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet=null;
+        ResultSet resultSet = null;
         Assignment assignment = null;
         try {
             connection = connectionPool.takeConnection();
@@ -322,7 +326,7 @@ public class SQLUserDAOImpl implements UserDAO {
         } catch (ConnectionPoolException e) {
             throw new DAOSqlException("ConnectionPoolException in SQLUserDAOImpl getUserAssignmentByTestId() method", e);
         } finally {
-            connectionPool.closeConnection(connection, preparedStatement,resultSet);
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return assignment;
     }
@@ -410,7 +414,7 @@ public class SQLUserDAOImpl implements UserDAO {
             }
             logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl insertNewAssignment() method", e);
             throw new DAOSqlException("ConnectionPoolException in SQLUserDAOImpl insertNewAssignment() method", e);
-        }finally {
+        } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }
@@ -491,6 +495,33 @@ public class SQLUserDAOImpl implements UserDAO {
         }
 
         return users;
+    }
+
+    @Override
+    public String getUserEmail(int userId) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        String email = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_USER_EMAIL_BY_ID);
+            preparedStatement.setInt(1, userId);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                email = resultSet.getString("email");
+            }
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method getUserEmail()", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getUserEmail()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method getUserEmail()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+        }
+
+        return email;
     }
 
     private Assignment buildAssignment(ResultSet resultSet) throws SQLException {

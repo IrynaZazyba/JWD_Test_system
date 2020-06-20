@@ -8,6 +8,7 @@ import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.factory.DAOFactoryProvider;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.*;
+import by.jwd.testsys.logic.sender.SslSender;
 import by.jwd.testsys.logic.validator.TestValidator;
 import by.jwd.testsys.logic.validator.factory.ValidatorFactory;
 import org.apache.logging.log4j.Level;
@@ -22,6 +23,13 @@ import java.time.LocalTime;
 import java.util.*;
 
 public class TestServiceImpl implements TestService {
+
+    private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT = "BeeTesting test assignment";
+    private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_TEST = "you have been assigned to the test ";
+    private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_KEY = "Key: ";
+    private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_DEADLINE = "Deadline: ";
+    private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_REGARDS="Best regards,\n \"Bee testing\" team.";
+
 
     private final static Logger logger = LogManager.getLogger();
 
@@ -448,6 +456,8 @@ public class TestServiceImpl implements TestService {
         return result;
     }
 
+
+    //todo передавать Map из контроллера и здесь уже заполнять ответами
     @Override
     public Map<String, Set<User>> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws ServiceException, DateOutOfRangeException {
 
@@ -457,7 +467,6 @@ public class TestServiceImpl implements TestService {
         Set<User> successAssignment = new HashSet<>();
 
         if (!isWithinRange(deadline)) {
-            //todo logger
             throw new DateOutOfRangeException("Deadline date isn't valid");
         }
 
@@ -478,12 +487,46 @@ public class TestServiceImpl implements TestService {
             assignmentResult.put("successAssignment", successAssignment);
             assignmentResult.put("existsAssignment", existsAssignment);
             userDAO.insertNewAssignment(LocalDate.now(), deadline, testId, usersId);
+            sendTestKeyToUsers(successAssignment, testId, deadline);
         } catch (DAOSqlException e) {
             throw new TestServiceException("Error in getUserWithRoleUser().", e);
         }
 
         return assignmentResult;
     }
+
+    private void sendTestKeyToUsers(Set<User> assignedUsers, int testId, LocalDate deadline) {
+
+        try {
+            Test testInfo = testDAO.getTestInfo(testId);
+            SslSender sender = SslSender.getInstance();
+
+            for (User user : assignedUsers) {
+                String message=buildEmailMessage(user.getFirstName(),testInfo.getTitle(),testInfo.getKey(),deadline);
+                sender.send(EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT,message,user.getEmail());
+            }
+        } catch (DAOSqlException e) {
+            //todo
+            e.printStackTrace();
+        } catch (DAOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String buildEmailMessage(String userName,String testName, String key, LocalDate deadline) {
+        StringBuilder message = new StringBuilder();
+        message.append(userName)
+                .append(", ")
+                .append(EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_TEST)
+                .append("\"").append(testName).append("\"").append(".\n");
+        message.append(EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_DEADLINE).append(deadline).append(".\n");
+        if (key != null) {
+            message.append(EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_KEY).append(key).append(".\n");
+        }
+        message.append(EMAIL_ABOUT_TEST_ASSIGNMENT_REGARDS);
+        return message.toString();
+    }
+
 
     private boolean isWithinRange(LocalDate deadline) {
         return deadline.isAfter(LocalDate.now());
@@ -510,7 +553,7 @@ public class TestServiceImpl implements TestService {
             throw new TestServiceException("DAOSqlException  in deleteAssignment().", e);
         }
         int numberOfPages = countTest / countPageRows;
-        if (numberOfPages  % countPageRows> 0) {
+        if (numberOfPages % countPageRows > 0) {
             numberOfPages++;
         }
         return numberOfPages;

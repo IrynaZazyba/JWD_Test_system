@@ -28,6 +28,7 @@ public class SignUp implements Command {
     //todo synchronized чтоб два не записались одновременно
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String email = request.getParameter(RequestParameterName.USER_EMAIL_PARAMETER);
         String login = request.getParameter(RequestParameterName.USER_LOGIN_PARAMETER);
         String password = request.getParameter(RequestParameterName.USER_PASSWORD_PARAMETER);
         String firstName = request.getParameter(RequestParameterName.USER_FIRST_NAME_PARAMETER);
@@ -36,7 +37,7 @@ public class SignUp implements Command {
         HttpSession session = request.getSession();
         UserService userService = ServiceFactory.getInstance().getUserService();
 
-        Set<String> validateResult = userService.validateUserData(login, password, firstName, lastName);
+        Set<String> validateResult = userService.validateUserData(login, password, firstName, lastName,email);
         checkAnswerAccordingValidation(validateResult, request, response);
 
 
@@ -44,7 +45,7 @@ public class SignUp implements Command {
 
             try {
 
-                User user = new User(login, password, firstName, lastName, Role.USER);
+                User user = new User(login, password, firstName, lastName,email, Role.USER);
                 userService.registerUser(user);
 
                 request.setAttribute(RequestParameterName.SIGN_UP_SUCCESS_MESSAGE,RequestParameterName.SIGN_UP_SUCCESS_MESSAGE);
@@ -53,6 +54,7 @@ public class SignUp implements Command {
 
             } catch (ServiceException | ForwardCommandException e) {
                 logger.log(Level.ERROR, e.getMessage(), e);
+                //todo
                 response.sendRedirect(JspPageName.ERROR_PAGE);
             } catch (ExistsUserException ex) {
 

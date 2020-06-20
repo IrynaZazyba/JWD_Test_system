@@ -23,5 +23,5 @@ public interface UserService {
 
     Set<User> getUsersWithAssignment(int testId, int testTypeId, boolean isCompleted) throws ServiceException;
 
-    Set<String> validateUserData(String login, String password, String firstName, String lastName);
+    Set<String> validateUserData(String login, String password, String firstName, String lastName, String email);
 }

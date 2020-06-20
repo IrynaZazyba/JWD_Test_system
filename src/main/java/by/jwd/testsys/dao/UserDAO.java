@@ -35,4 +35,5 @@ public interface UserDAO {
 
     Set<User> getUsersWithAssignmentByTestId(int testId, int testTypeId, boolean isCompleted) throws DAOSqlException;
 
+    String getUserEmail(int userId) throws DAOSqlException;
 }

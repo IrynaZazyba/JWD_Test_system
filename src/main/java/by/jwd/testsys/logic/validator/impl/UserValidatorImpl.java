@@ -6,12 +6,16 @@ import by.jwd.testsys.logic.validator.UserValidator;
 import by.jwd.testsys.logic.validator.util.InvalidParam;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class UserValidatorImpl implements UserValidator {
 
     private static final String LOGIN_PATTERN = "[a-zA-Z0-9-_]{5,15}$";
     private static final String PASSWORD_PATTERN = "[a-zA-Z0-9_-]{6,18}$";
     private static final String NAME_PATTERN = "^([a-zA-Z-]|[а-яА-Я-]){2,25}$";
+    private static final String EMAIL_PATTERN =
+            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
+                    "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
     public UserValidatorImpl() {
     }
@@ -39,6 +43,9 @@ public class UserValidatorImpl implements UserValidator {
             validationResult.add(InvalidParam.INVALID_LAST_NAME.toString());
         }
 
+        if (user.getEmail() == null || !validateEmail(user.getEmail())) {
+            validationResult.add(InvalidParam.INVALID_EMAIL.toString());
+        }
         return validationResult;
     }
 
@@ -71,4 +78,7 @@ public class UserValidatorImpl implements UserValidator {
     }
 
 
+    private boolean validateEmail(String email){
+        return email.matches(EMAIL_PATTERN);
+    }
 }

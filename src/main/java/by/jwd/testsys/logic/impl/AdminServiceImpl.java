@@ -26,13 +26,6 @@ public class AdminServiceImpl implements AdminService {
     private TestDAO testDAO = daoFactory.getTestDao();
 
 
-    public Set<Question> getAllQuestionByTestId(int testId) {
-
-        Set<Question> testQuestions = null;
-
-        return testQuestions;
-    }
-
     @Override
     public void deleteTest(int testId) throws AdminServiceException, InvalidDeleteActionServiceException {
         try {

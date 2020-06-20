@@ -8,6 +8,9 @@ import by.jwd.testsys.logic.exception.DateOutOfRangeException;
 import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import com.google.gson.Gson;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +20,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class AssignTest implements AjaxCommand {
+
+    private final static Logger logger = LogManager.getLogger();
 
 
     @Override
@@ -42,11 +47,14 @@ public class AssignTest implements AjaxCommand {
             try {
                 LocalDate deadline=LocalDate.parse(deadlineParam);
                 assignmentResult = testService.assignTestToUsers(testId, deadline, usersId);
+
+
                 answer = gson.toJson(assignmentResult);
 
             } catch (ServiceException e) {
                 response.setStatus(500);
             } catch (DateOutOfRangeException e) {
+                logger.log(Level.ERROR, "Deadline date out of range Exception in AssignTest command method execute()", e);
                 response.setStatus(409);
             }
         }

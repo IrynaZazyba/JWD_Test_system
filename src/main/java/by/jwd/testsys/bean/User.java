@@ -10,6 +10,7 @@ public class User implements Serializable {
     private int id;
     private String login;
     private String password;
+    private String email;
     private String firstName;
     private String lastName;
     private Role role;
@@ -20,21 +21,24 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(int id, String login, String password, String firstName, String lastName, Role role) {
+    public User(int id, String login, String password, String firstName, String lastName, String email,Role role) {
         this.id = id;
         this.login = login;
         this.firstName = firstName;
         this.password = password;
         this.lastName = lastName;
         this.role = role;
+        this.email=email;
     }
 
-    public User(String login, String password, String firstName, String lastName, Role role) {
+    public User(String login, String password, String firstName, String lastName,String email, Role role) {
         this.login = login;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
+        this.email=email;
+
     }
 
     public User(String login, String password, String firstName, String lastName) {
@@ -42,6 +46,14 @@ public class User implements Serializable {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public User(String login, String password, String firstName, String lastName, String email) {
+        this.login = login;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email=email;
     }
 
     public User(int id, String firstName, String lastName) {
@@ -170,5 +182,13 @@ public class User implements Serializable {
                 ", login=" + login +
                 ", password=" + password +
                 ", role=" + role;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

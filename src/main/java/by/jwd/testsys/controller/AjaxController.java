@@ -55,8 +55,6 @@ public class AjaxController extends HttpServlet {
 
         String jsonAnswer = ajaxCommand.execute(request, response);
         PrintWriter out = response.getWriter();
-        //todo filter?
-        response.setContentType("application/json");
         out.print(jsonAnswer);
         out.flush();
     }

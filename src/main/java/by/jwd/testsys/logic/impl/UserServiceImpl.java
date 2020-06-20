@@ -45,7 +45,6 @@ public class UserServiceImpl implements UserService {
 
             if (userByLogin == null) {
                 userCreated = userDao.create(user);
-
             } else {
                 throw new ExistsUserException("Such login alreadyExists.");
             }
@@ -101,7 +100,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Set<User> getUsersWithAssignment(int testId, int testTypeId, boolean isCompleted) throws ServiceException {
-        Set<User> users = new HashSet<>();
+        Set<User> users;
         try {
             users = userDao.getUsersWithAssignmentByTestId(testId, testTypeId, isCompleted);
         } catch (DAOSqlException e) {
@@ -111,11 +110,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<String> validateUserData(String login, String password, String firstName, String lastName) {
+    public Set<String> validateUserData(String login, String password, String firstName, String lastName, String email) {
 
         ValidatorFactory validatorFactory=ValidatorFactory.getInstance();
         UserValidator userValidator = validatorFactory.getUserValidator();
-        User registerUser=new User(login,password,firstName,lastName);
+        User registerUser=new User(login,password,firstName,lastName,email);
         return userValidator.validate(registerUser);
     }
 
