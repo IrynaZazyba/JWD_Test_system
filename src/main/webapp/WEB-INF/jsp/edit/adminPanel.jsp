@@ -32,6 +32,7 @@
 <fmt:message bundle="${loc}" key="admin_panel.tests.table.key" var="table_key"/>
 <fmt:message bundle="${loc}" key="admin_panel.tests.table.in_process" var="table_in_process"/>
 <fmt:message bundle="${loc}" key="admin_panel.tests.button.add" var="button_add_test"/>
+<fmt:message bundle="${loc}" key="admin_panel.types.button.add" var="button_add_type"/>
 <fmt:message bundle="${loc}" key="admin_panel.tests.button.delete" var="button_delete"/>
 <fmt:message bundle="${loc}" key="admin_panel.tests.button.edit" var="button_edit"/>
 <fmt:message bundle="${loc}" key="admin_panel.tests.message.delete" var="message_impossible_delete"/>
@@ -48,7 +49,7 @@
 
                 <button type="submit" data-toggle="modal" data-target="#addTestType" data-onclick="addTestType()"
                         class="card-btn btn btn-outline-primary d-block mx-auto vertical-menu-button-add">
-                    + add test type
+                   ${button_add_type}
                 </button>
 
                 <c:forEach var="type" items="${requestScope.testTypes}">
@@ -128,12 +129,12 @@
                 </table>
 
 
-                <nav aria-label="...">
-                    <ul class="pagination pagination-sm">
+                <nav aria-label="..." >
+                    <ul class="pagination pagination-sm pagination_center">
                         <c:forEach var="i" begin="1" end="${requestScope.countPages}">
                             <c:if test="${i==requestScope.currentPage}">
 
-                                <li class="page-item active" aria-current="page">
+                                <li class="page-item page-item-change active" aria-current="page">
                                 <span class="page-link">${i}
                                 <span class="sr-only">(current)</span>
                           </span>

@@ -26,6 +26,7 @@
 <fmt:message bundle="${loc}" key="nav-link.account_settings" var="nav_link_account_settings"/>
 <fmt:message bundle="${loc}" key="label.field.login" var="lable_login"/>
 <fmt:message bundle="${loc}" key="label.field.password" var="lable_password"/>
+<fmt:message bundle="${loc}" key="label.field.email" var="lable_email"/>
 <fmt:message bundle="${loc}" key="label.field.first_name" var="lable_first_name"/>
 <fmt:message bundle="${loc}" key="label.field.last_name" var="lable_last_name"/>
 <fmt:message bundle="${loc}" key="button.save_changes" var="button_save_changes"/>
@@ -38,19 +39,11 @@
     <jsp:include page="parts/nav-menu.jsp"/>
 
     <div class="row height-90">
-        <div class="col-2 background-gradient height-100 p-l-15 p-r-0">
-            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-
-                <a class="nav-link vertical-menu active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home"
-                   role="tab"
-                   aria-controls="v-pills-test" aria-selected="true">${nav_link_account_settings}</a>
-            </div>
-
-
-        </div>
-        <div class="col-9">
+        <div class="col-2"></div>
+        <div class="col-8">
             <div class="tab-content " id="v-pills-tabContent">
-                <div class="tab-pane fade  active show " id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                <div class="tab-pane fade  active show " id="v-pills-home" role="tabpanel"
+                     aria-labelledby="v-pills-home-tab">
 
 
                     <div class="row m-t-15">
@@ -63,7 +56,8 @@
 
 
                             <div class="form">
-                                <form id="formElem" onsubmit="userAccount();return false;" enctype="multipart/form-data" accept-charset="UTF-8"
+                                <form id="formElem" onsubmit="userAccount();return false;" enctype="multipart/form-data"
+                                      accept-charset="UTF-8"
                                       class="form-horizontal m-0" role="form">
                                     <input type="hidden" name="command" value="edit_user"/>
                                     <div class="form-group">
@@ -96,6 +90,16 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="row">
+                                                <label class="col-sm-3 control-label" for="email">${lable_email}</label>
+                                                <div class="col-sm-9">
+                                                    <input type="email" class="form-control" id="email"
+                                                           name="email" value="${requestScope.user_info.email}"
+                                                           aria-describedby="emailHelp">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
                                                 <label class="col-sm-3  control-label ">${lable_login}</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" class="form-control" required name="login"
@@ -119,7 +123,7 @@
                                             <div class="row">
                                                 <div class="col-sm-offset-2 col-sm-10 p-top-7">
                                                     <button type="submit"
-                                                            class="btn btn-outline-primary">${button_save_changes}
+                                                            class="card-btn btn btn-outline-primary">${button_save_changes}
                                                     </button>
                                                 </div>
                                             </div>
@@ -132,22 +136,21 @@
                 </div>
             </div>
         </div>
+        <div class="col-2"></div>
+
 
     </div>
-
-</div>
-</div>
 </div>
 <div id="content bor"></div>
 
 
 </div>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity=""        crossorigin="anonymous"></script>
+        integrity="" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity=""        crossorigin="anonymous"></script>
+        integrity="" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity=""        crossorigin="anonymous"></script>
+        integrity="" crossorigin="anonymous"></script>
 <script src="resources/js/script.js"></script>
 
 

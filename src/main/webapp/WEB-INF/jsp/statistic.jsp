@@ -5,6 +5,8 @@
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
     <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
+    <%@ taglib uri="customtag" prefix="res" %>
+
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -65,7 +67,7 @@
                         <td><c:out value="${item.minutesSpentOnTest}"/></td>
                         <td><c:out value="${item.timeOnTest}"/></td>
                         <td><c:out value="${item.rightCountQuestion}"/></td>
-                        <td><fmt:formatNumber value="${item.rightCountQuestion*100/item.allCountQuestion}" maxFractionDigits="2"/></td>
+                        <td><res:result-tag rightCountQuestion="${item.rightCountQuestion}" allCountQuestion="${item.allCountQuestion}"/></td>
                     </tr>
                 </c:forEach>
 

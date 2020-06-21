@@ -103,7 +103,7 @@
                                 <c:out value="${message_invalid_date}"/>
                             </div>
                         </div>
-                        <div class="col-1 m-t-15">
+                        <div class="col-1 m-t-30">
                             <button type="submit" class="btn btn-outline-primary card-btn">${button_show}</button>
                         </div>
                     </div>
@@ -122,7 +122,6 @@
                             <th scope="col">${table_completed}</th>
                             <th scope="col">${table_count_questions}</th>
                             <th scope="col">${table_right_answers}</th>
-                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody id="jsData">

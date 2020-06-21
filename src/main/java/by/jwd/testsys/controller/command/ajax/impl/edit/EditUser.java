@@ -33,7 +33,9 @@ public class EditUser implements AjaxCommand {
         String password = request.getParameter(RequestParameterName.USER_PASSWORD_PARAMETER);
         String first_name = request.getParameter(RequestParameterName.USER_FIRST_NAME_PARAMETER);
         String last_name = request.getParameter(RequestParameterName.USER_LAST_NAME_PARAMETER);
-        User user = new User(login, password, first_name, last_name);
+        String email = request.getParameter(RequestParameterName.USER_EMAIL_PARAMETER);
+
+        User user = new User(login, password, first_name, last_name, email);
 
         UserService userService = ServiceFactory.getInstance().getUserService();
         HttpSession session = request.getSession(false);

@@ -76,10 +76,6 @@
             <li class="nav-item">
                 <a class="nav-link nav-vrl item-start"  href="#">${nav_item_about}</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link start-nav-color height-100 nav-vrl item-start" href="#">${nav_item_articles}</a>
-            </li>
-
         </ul>
     </div>
 

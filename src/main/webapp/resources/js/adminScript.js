@@ -285,7 +285,6 @@ function generateTableResult(result, num) {
         "<td>" + generateDate(result.dateEnd.date) + "</td>" +
         "<td>" + result.countTestQuestion + "</td>" +
         "<td>" + result.rightCountQuestion + "</td>" +
-        "<td><button>More</button></td>" +
         "</tr>";
     return html;
 }

@@ -38,7 +38,7 @@ public class SQLUserDAOImpl implements UserDAO {
     private static final String SELECT_USER_BY_ID = "SELECT u.id,u.login,u.password,u.first_name,u.last_name," +
             "role.title, u.email FROM users as u INNER JOIN role ON u.role_id=role.id WHERE u.id=?";
     private static final String UPDATE_USER = "UPDATE users SET login=?, password=?, first_name=?, last_name=?," +
-            "role_id=? WHERE id=?";
+            "role_id=?, email=? WHERE id=?";
 
     private static final String SELECT_USER_ASSIGNMENT_BY_USER_ID = "SELECT id, date, deadline, test_id, completed " +
             "FROM assignment where user_id=? AND deleted_at IS NULL";
@@ -254,7 +254,8 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setString(3, user.getFirstName());
             preparedStatement.setString(4, user.getLastName());
             preparedStatement.setInt(5, getRoleId(user.getRole()));
-            preparedStatement.setInt(6, user.getId());
+            preparedStatement.setString(6, user.getEmail());
+            preparedStatement.setInt(7, user.getId());
             preparedStatement.executeUpdate();
             updatedUser = user;
 

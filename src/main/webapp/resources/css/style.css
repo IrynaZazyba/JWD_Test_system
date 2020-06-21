@@ -216,7 +216,7 @@ li.nav-item:hover {
     color: black !important;
 }
 
-.vertical-menu-button-add{
+.vertical-menu-button-add {
     margin: 15px 0 10px 0;
 }
 
@@ -420,6 +420,10 @@ a:hover {
     justify-content: flex-end;
 }
 
+.pagination_center {
+    justify-content: center;
+}
+
 input:checked {
     background-color: green;
 }
@@ -428,11 +432,19 @@ input:checked {
     margin: 15px;
 }
 
-.deleted-row{
+.deleted-row {
     background-color: rgba(255, 68, 117, 0.41);
 }
-.p-t-r{
+
+.p-t-r {
     padding: 6px 12px 0 0;
 }
 
+.page-item-change.active .page-link {
+    background-color: #0A8D8E !important;
+    border-color: #0A8D8E !important;
+}
 
+.m-t-30 {
+    margin-top: 30px;
+}

@@ -9,4 +9,10 @@
     <error-page>
         <location>/errorPage.jsp</location>
     </error-page>
+    <jsp-config>
+    <taglib>
+        <taglib-uri>customtag</taglib-uri>
+        <taglib-location>/WEB-INF/tld/custom.tld</taglib-location>
+    </taglib>
+    </jsp-config>
 </web-app>
