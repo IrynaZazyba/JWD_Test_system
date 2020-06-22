@@ -59,11 +59,15 @@ public class SQLUserDAOImpl implements UserDAO {
     private static final String INSERT_NEW_ASSIGNMENT = "INSERT INTO `assignment` (`date`, `deadline`, `test_id`, " +
             "`user_id`, `completed`) VALUES (?,?,?,?, false)";
 
-    private static final String SELECT_USERS_WITH_ASSIGNMENT_GENERATED = "SELECT  test.title as t_title, " +
+    private static final String SELECT_USERS_WITH_ASSIGNMENT_GENERATED = "SELECT  title, " +
             "assignment.id as asgn_id, date, deadline,users.id as u_id, first_name, last_name,email, completed " +
             "FROM `assignment` inner join users on users.id=assignment.user_id inner join test " +
             "on test.id=assignment.test_id WHERE assignment.deleted_at IS NULL and test.deleted_at is NULL";
 
+
+    private static final String ASSIGNMENT_TEST_TITLE_COLUMN="title";
+    private static final String ASSIGNMENT_ID_COLUMN_ALIAS = "asgn_id";
+    private static final String USER_ID_COLUMN_ALIAS = "u_id";
 
     private static final String USER_ID_COLUMN = "id";
     private static final String USER_LOGIN_COLUMN = "login";
@@ -73,10 +77,10 @@ public class SQLUserDAOImpl implements UserDAO {
     private static final String USER_EMAIL_COLUMN = "email";
     private static final String ROLE_TITLE_COLUMN = "title";
     private static final String ASSIGNMENT_ID_COLUMN = "id";
-    private static final String ASSIGNMENT_DATE_COLUMN = "id";
-    private static final String ASSIGNMENT_DEADLINE_COLUMN = "id";
+    private static final String ASSIGNMENT_DATE_COLUMN = "date";
+    private static final String ASSIGNMENT_DEADLINE_COLUMN = "deadline";
     private static final String ASSIGNMENT_TEST_ID_COLUMN = "id";
-    private static final String ASSIGNMENT_COMPLETED_COLUMN = "id";
+    private static final String ASSIGNMENT_COMPLETED_COLUMN = "completed";
 
 
     @Override
@@ -226,8 +230,8 @@ public class SQLUserDAOImpl implements UserDAO {
     public User updateUser(User user) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-
         User updatedUser;
+
         try {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(UPDATE_USER);
@@ -256,7 +260,7 @@ public class SQLUserDAOImpl implements UserDAO {
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
+        ResultSet resultSet=null;
         Set<Assignment> assignments = new HashSet<>();
         try {
             connection = connectionPool.takeConnection();
@@ -275,7 +279,7 @@ public class SQLUserDAOImpl implements UserDAO {
         } catch (ConnectionPoolException e) {
             throw new DAOConnectionPoolException("ConnectionPoolException in SQLUserDAOImpl getUserAssignment() method", e);
         } finally {
-            connectionPool.closeConnection(connection, preparedStatement);
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return assignments;
     }
@@ -314,7 +318,7 @@ public class SQLUserDAOImpl implements UserDAO {
     public Assignment getUserAssignmentByAssignmentId(int assignmentId) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet;
+        ResultSet resultSet=null;
         Assignment assignment = null;
 
         try {
@@ -331,7 +335,7 @@ public class SQLUserDAOImpl implements UserDAO {
         } catch (ConnectionPoolException e) {
             throw new DAOConnectionPoolException("ConnectionPoolException in SQLUserDAOImpl getUserAssignmentByAssignmentId() method", e);
         } finally {
-            connectionPool.closeConnection(connection, preparedStatement);
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return assignment;
     }
@@ -441,16 +445,21 @@ public class SQLUserDAOImpl implements UserDAO {
 
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                User user = buildUserWithIdFirstNameLastName(resultSet);
+                int id = resultSet.getInt(USER_ID_COLUMN_ALIAS);
+                String firstName = resultSet.getString(USER_FIRST_NAME_COLUMN);
+                String lastName = resultSet.getString(USER_LAST_NAME_COLUMN);
+                User user= new User.Builder().withId(id).withFirstName(firstName).withLastName(lastName).build();
                 user.setAssignment(new HashSet<>());
 
-                int asgn_id = resultSet.getInt(ASSIGNMENT_ID_COLUMN);
+                String t_title = resultSet.getString(ASSIGNMENT_TEST_TITLE_COLUMN);
+                Test test = new Test(testId, t_title);
+
+                int asgn_id = resultSet.getInt(ASSIGNMENT_ID_COLUMN_ALIAS);
                 Date date = resultSet.getDate(ASSIGNMENT_DATE_COLUMN);
                 Date deadline = resultSet.getDate(ASSIGNMENT_DEADLINE_COLUMN);
                 boolean completed = resultSet.getBoolean(ASSIGNMENT_COMPLETED_COLUMN);
 
-                String t_title = resultSet.getString(ASSIGNMENT_TEST_ID_COLUMN);
-                Test test = new Test(testId, t_title);
+
                 Assignment assignment = new Assignment.Builder()
                         .withId(asgn_id)
                         .withAssignmentDate(date.toLocalDate())
@@ -458,6 +467,7 @@ public class SQLUserDAOImpl implements UserDAO {
                         .withTest(test)
                         .withIsCompleted(completed)
                         .build();
+
                 if (users.add(user)) {
                     user.getAssignment().add(assignment);
                 } else {

@@ -218,7 +218,7 @@ function generateRowTableAssignment(user, assign, num) {
         "<td>" + assign.test.title + "</td>" +
         "<td>" + user.firstName + "</td>" +
         "<td>" + user.lastName + "</td>" +
-        "<td>" + generateDate(assign.asgmtDate) + "</td>" +
+        "<td>" + generateDate(assign.assignmentDate) + "</td>" +
         "<td>" + generateDate(assign.deadline) + "</td>" +
         "<td>" + completed + "</td>" +
         "<td>" + generateActionButtonDelete(assign.isComplete, assign.id) + "</td>" +
