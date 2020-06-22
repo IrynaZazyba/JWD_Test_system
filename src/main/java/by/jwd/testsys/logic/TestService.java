@@ -40,7 +40,7 @@ public interface TestService {
 
     Assignment getAssignment(int assignmentId) throws TestServiceException;
 
-    double calculatePercentageOfCorrectAnswers(Assignment assignment, Test test) throws TestServiceException;
+    Result getResultInfo(Assignment assignment, Test test) throws TestServiceException;
 
     Set<Statistic> getUserTestStatistic(int userId) throws TestServiceException;
 

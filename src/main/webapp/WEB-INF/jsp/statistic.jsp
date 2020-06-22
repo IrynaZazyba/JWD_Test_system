@@ -63,7 +63,7 @@
                 <c:forEach var="item" items="${requestScope.userTestStatistic}">
                     <tr>
                         <td><c:out value="${item.testTitle}"/></td>
-                        <td><tags:localDateTime date="${item.testStart}"/></td>
+                        <td><res:local-date date="${item.testStart}"/></td>
                         <td><c:out value="${item.minutesSpentOnTest}"/></td>
                         <td><c:out value="${item.timeOnTest}"/></td>
                         <td><c:out value="${item.rightCountQuestion}"/></td>

@@ -1,107 +1,74 @@
 package by.jwd.testsys.bean;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.time.LocalDate;
 
-public class Assignment {
+public  @Getter @Setter @ToString @EqualsAndHashCode
+class Assignment {
 
     private int id;
     private User user;
-    private LocalDate asgmtDate;
+    private LocalDate assignmentDate;
     private LocalDate deadline;
     private Test test;
     private boolean isComplete;
-
-
     private TestLog testLog;
 
     public Assignment() {
 
     }
 
-    public Assignment(int id, User user, LocalDate asgmtDate, LocalDate deadline, Test test) {
-        this.id = id;
-        this.user = user;
-        this.asgmtDate = asgmtDate;
-        this.deadline = deadline;
-        this.test = test;
-    }
-    public Assignment(int id, LocalDate asgmtDate, LocalDate deadline, boolean isComplete) {
-        this.id = id;
-        this.asgmtDate = asgmtDate;
-        this.deadline = deadline;
-        this.isComplete=isComplete;
+    public static class Builder {
+
+        private Assignment newAssignment;
+
+        public Builder() {
+            newAssignment = new Assignment();
+        }
+
+        public Builder withId(int id) {
+            newAssignment.id = id;
+            return this;
+        }
+
+        public Builder withUser(User user) {
+            newAssignment.user = user;
+            return this;
+        }
+
+        public Builder withAssignmentDate(LocalDate asgmtDate) {
+            newAssignment.assignmentDate = asgmtDate;
+            return this;
+        }
+
+        public Builder withDeadline(LocalDate deadline) {
+            newAssignment.deadline = deadline;
+            return this;
+        }
+
+        public Builder withTest(Test test) {
+            newAssignment.test = test;
+            return this;
+        }
+
+        public Builder withIsCompleted(boolean isCompleted) {
+            newAssignment.isComplete = isCompleted;
+            return this;
+        }
+
+        public Builder withTestLog(TestLog testLog) {
+            newAssignment.testLog = testLog;
+            return this;
+        }
+
+        public Assignment build() {
+            return newAssignment;
+
+        }
     }
 
-    public Assignment(int id, LocalDate asgmtDate, LocalDate deadline, Test test, boolean isComplete) {
-        this.id = id;
-        this.asgmtDate = asgmtDate;
-        this.deadline = deadline;
-        this.test = test;
-        this.isComplete=isComplete;
-
-    }
-
-    public Assignment(User user, LocalDate asgmtDate,LocalDate deadline, Test test) {
-        this.user = user;
-        this.asgmtDate = asgmtDate;
-        this.deadline=deadline;
-        this.test = test;
-        this.isComplete=isComplete;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public LocalDate getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(LocalDate deadline) {
-        this.deadline = deadline;
-    }
-
-    public Test getTest() {
-        return test;
-    }
-
-    public void setTest(Test test) {
-        this.test = test;
-    }
-
-    public TestLog getTestLog() {
-        return testLog;
-    }
-
-    public void setTestLog(TestLog testLog) {
-        this.testLog = testLog;
-    }
-
-    public LocalDate getAsgmtDate() {
-        return asgmtDate;
-    }
-
-    public void setAsgmtDate(LocalDate asgmtDate) {
-        this.asgmtDate = asgmtDate;
-    }
-
-    public boolean isComplete() {
-        return isComplete;
-    }
-
-    public void setComplete(boolean complete) {
-        isComplete = complete;
-    }
 }

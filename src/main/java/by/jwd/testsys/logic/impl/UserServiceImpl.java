@@ -1,9 +1,9 @@
 package by.jwd.testsys.logic.impl;
 
+import by.jwd.testsys.bean.Role;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.dao.UserDAO;
 import by.jwd.testsys.dao.exception.DAOException;
-import by.jwd.testsys.dao.exception.DAOSqlException;
 import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.factory.DAOFactoryProvider;
 import by.jwd.testsys.logic.UserService;
@@ -13,10 +13,6 @@ import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.validator.UserValidator;
 import by.jwd.testsys.logic.validator.factory.ValidatorFactory;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -81,7 +77,7 @@ public class UserServiceImpl implements UserService {
 
         try {
             updatedUser = userDao.updateUser(user);
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new ServiceException("Error in editUserInfo().", e);
         }
         return updatedUser;
@@ -91,9 +87,9 @@ public class UserServiceImpl implements UserService {
     public Set<User> getStudents() throws ServiceException {
         Set<User> students;
         try {
-            students = userDao.getUserWithRoleUser();
-        } catch (DAOSqlException e) {
-            throw new ServiceException("Error in getUserWithRoleUser().", e);
+            students = userDao.getUserByRole(Role.USER);
+        } catch (DAOException e) {
+            throw new ServiceException("Error in getUserByRole().", e);
         }
         return students;
     }
@@ -103,8 +99,8 @@ public class UserServiceImpl implements UserService {
         Set<User> users;
         try {
             users = userDao.getUsersWithAssignmentByTestId(testId, testTypeId, isCompleted);
-        } catch (DAOSqlException e) {
-            throw new ServiceException("Error in getUserWithRoleUser().", e);
+        } catch (DAOException e) {
+            throw new ServiceException("Error in getUsersWithAssignment().", e);
         }
         return users;
     }
@@ -112,9 +108,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public Set<String> validateUserData(String login, String password, String firstName, String lastName, String email) {
 
-        ValidatorFactory validatorFactory=ValidatorFactory.getInstance();
+        ValidatorFactory validatorFactory = ValidatorFactory.getInstance();
         UserValidator userValidator = validatorFactory.getUserValidator();
-        User registerUser=new User(login,password,firstName,lastName,email);
+        User registerUser = new User.Builder()
+                .withLogin(login)
+                .withPassword(password)
+                .withFirstName(firstName)
+                .withLastName(lastName)
+                .withEmail(email)
+                .build();
         return userValidator.validate(registerUser);
     }
 

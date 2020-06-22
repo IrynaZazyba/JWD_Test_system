@@ -4,6 +4,8 @@
 <head>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+    <%@ taglib uri="customtag" prefix="res" %>
+
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -31,7 +33,10 @@
     <jsp:include page="parts/nav-menu.jsp"/>
 
     <c:out value="${requestScope.test_name}"/>
-    <c:out value="${requestScope.percentage}"/>
+    <res:result-tag rightCountQuestion="${requestScope.testResult.rightCountQuestion}"
+                    allCountQuestion="${requestScope.testResult.allCountQuestion}"/>
+
+    <c:out value="${requestScope.testResult}"/>
 
 </div>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

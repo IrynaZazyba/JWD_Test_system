@@ -33,6 +33,7 @@ public class ConfigListener implements ServletContextListener {
             SslSender instance = SslSender.getInstance();
             instance.inializeSalSender(properties);
         } catch (IOException e) {
+            //todo
             e.printStackTrace();
         }
 

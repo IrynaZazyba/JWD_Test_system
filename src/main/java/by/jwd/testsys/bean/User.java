@@ -1,9 +1,18 @@
 package by.jwd.testsys.bean;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 import java.util.Set;
 
-public class User implements Serializable {
+public @Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+class User implements Serializable {
 
     private static final long serialVersionUID = -6672256886751595811L;
 
@@ -16,179 +25,60 @@ public class User implements Serializable {
     private Role role;
     private Set<Assignment> assignment;
 
-
-
     public User() {
     }
 
-    public User(int id, String login, String password, String firstName, String lastName, String email,Role role) {
-        this.id = id;
-        this.login = login;
-        this.firstName = firstName;
-        this.password = password;
-        this.lastName = lastName;
-        this.role = role;
-        this.email=email;
-    }
+    public static class Builder {
 
-    public User(String login, String password, String firstName, String lastName,String email, Role role) {
-        this.login = login;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.role = role;
-        this.email=email;
+        private User newUser;
 
-    }
-
-    public User(String login, String password, String firstName, String lastName) {
-        this.login = login;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
-    public User(String login, String password, String firstName, String lastName, String email) {
-        this.login = login;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email=email;
-    }
-
-    public User(int id, String firstName, String lastName) {
-        this.id =id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-    public User(int id, String firstName, String lastName,Set<Assignment> assignments) {
-        this.id =id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.assignment=assignments;
-    }
-
-    public Set<Assignment> getAssignment() {
-        return assignment;
-    }
-
-    public void setAssignment(Set<Assignment> assignment) {
-        this.assignment = assignment;
-    }
-
-    public final int getId() {
-        return id;
-    }
-
-    public final void setId(int id) {
-        this.id = id;
-    }
-
-
-    public final String getFirstName() {
-        return firstName;
-    }
-
-    public final void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public final String getLastName() {
-        return lastName;
-    }
-
-    public final void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public final String getLogin() {
-        return login;
-    }
-
-    public final void setLogin(String login) {
-        this.login = login;
-    }
-
-    public final String getPassword() {
-        return password;
-    }
-
-    public final void setPassword(String password) {
-        this.password = password;
-    }
-
-    public final Role getRole() {
-        return role;
-    }
-
-    public final void setRole(Role role) {
-        this.role = role;
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-        User other = (User) obj;
-        if (firstName == null) {
-            if (other.firstName != null) return false;
-        } else {
-            if (!firstName.equals(other.firstName)) return false;
-        }if (lastName == null) {
-            if (other.lastName != null) return false;
-        } else {
-            if (!lastName.equals(other.lastName)) return false;
-        }
-        if (login == null) {
-            if (other.login != null) return false;
-        } else {
-            if (!login.equals(other.login)) return false;
-        }
-        if (password == null) {
-            if (other.password != null) return false;
-        } else {
-            if (!password.equals(other.password)) return false;
-        }
-        if (role == null) {
-            if (other.role != null) return false;
-        } else {
-            if (role != other.role) return false;
+        public Builder() {
+            newUser = new User();
         }
 
-        return true;
+        public Builder withId(int id) {
+            newUser.id = id;
+            return this;
+        }
+
+        public Builder withLogin(String login) {
+            newUser.login = login;
+            return this;
+        }
+
+        public Builder withPassword(String password) {
+            newUser.password = password;
+            return this;
+        }
+
+        public Builder withEmail(String email) {
+            newUser.email = email;
+            return this;
+        }
+
+        public Builder withFirstName(String firstName) {
+            newUser.firstName = firstName;
+            return this;
+        }
+
+        public Builder withLastName(String lastName) {
+            newUser.lastName = lastName;
+            return this;
+        }
+
+        public Builder withRole(Role role) {
+            newUser.role = role;
+            return this;
+        }
+
+        public Builder withAssignment(Set<Assignment> assignment) {
+            newUser.assignment = assignment;
+            return this;
+        }
+
+        public User build() {
+            return newUser;
+        }
     }
 
-    @Override
-    public int hashCode() {
-        int prime = 31;
-        int result = 1;
-        result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
-        result = prime * result + ((login == null) ? 0 : login.hashCode());
-        result = prime * result + ((password == null) ? 0 : password.hashCode());
-        result = prime * result + ((role == null) ? 0 : role.hashCode());
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getName() + '@' +
-                "id=" + id +
-                ", firstName=" + firstName +
-                ", login=" + login +
-                ", password=" + password +
-                ", role=" + role;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }

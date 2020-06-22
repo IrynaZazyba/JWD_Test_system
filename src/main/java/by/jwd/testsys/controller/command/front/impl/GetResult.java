@@ -1,6 +1,7 @@
 package by.jwd.testsys.controller.command.front.impl;
 
 import by.jwd.testsys.bean.Assignment;
+import by.jwd.testsys.bean.Result;
 import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.controller.command.front.Command;
 import by.jwd.testsys.controller.command.front.ForwardCommandException;
@@ -42,9 +43,10 @@ public class GetResult implements Command {
             }
 
             Test testInfo = testService.getTestInfo(assignment.getTest().getId());
-            double percentageOfCorrectAnswers = testService.calculatePercentageOfCorrectAnswers(assignment, testInfo);
+            Result result=testService.getResultInfo(assignment, testInfo);
 
-            request.setAttribute(RequestParameterName.PERCENTAGE_CORRECT_ANSWERS, percentageOfCorrectAnswers);
+
+            request.setAttribute(RequestParameterName.USER_TEST_RESULT, result);
             request.setAttribute(RequestParameterName.TEST_NAME, testInfo.getTitle());
             session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
             forwardToPage(request, response, JspPageName.TEST_RESULT_PAGE);

@@ -203,9 +203,7 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
             while (resultSet.next()) {
                 String firstName = resultSet.getString("first_name");
                 String lastName = resultSet.getString("last_name");
-                User user = new User();
-                user.setFirstName(firstName);
-                user.setLastName(lastName);
+                User user = new User.Builder().withFirstName(firstName).withLastName(lastName).build();
                 String testTitle = resultSet.getString("t_tt");
                 String typeTitle = resultSet.getString("tp_tt");
                 Type type = new Type();
@@ -217,8 +215,7 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
                 int rightCountQuestion = resultSet.getInt("right_count_quest");
                 int allCountQuestion = resultSet.getInt("all_count_question");
                 int assignmentId = resultSet.getInt("assignment_id");
-                Assignment assignment = new Assignment();
-                assignment.setId(assignmentId);
+                Assignment assignment = new Assignment.Builder().withId(assignmentId).build();
                 Result result = new Result(testDate, rightCountQuestion, allCountQuestion, test, user, assignment);
                 results.add(result);
             }

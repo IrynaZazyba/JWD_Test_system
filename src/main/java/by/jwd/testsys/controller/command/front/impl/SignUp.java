@@ -45,7 +45,13 @@ public class SignUp implements Command {
 
             try {
 
-                User user = new User(login, password, firstName, lastName,email, Role.USER);
+                User user = new User.Builder()
+                        .withLogin(login)
+                        .withPassword(password)
+                        .withFirstName(firstName)
+                        .withLastName(lastName)
+                        .withEmail(email)
+                        .withRole(Role.USER).build();
                 userService.registerUser(user);
 
                 request.setAttribute(RequestParameterName.SIGN_UP_SUCCESS_MESSAGE,RequestParameterName.SIGN_UP_SUCCESS_MESSAGE);

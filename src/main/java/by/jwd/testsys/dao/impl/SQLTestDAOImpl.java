@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
-public class SQLTestDAOImpl implements TestDAO {
+public class  SQLTestDAOImpl implements TestDAO {
 
     private static Logger logger = LogManager.getLogger();
     private final ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
@@ -297,7 +297,7 @@ public class SQLTestDAOImpl implements TestDAO {
         try {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(WRITE_ASSIGNMENT, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setDate(1, Date.valueOf(assignment.getAsgmtDate()));
+            preparedStatement.setDate(1, Date.valueOf(assignment.getAssignmentDate()));
             preparedStatement.setDate(2, Date.valueOf(assignment.getDeadline()));
             preparedStatement.setInt(3, assignment.getTest().getId());
             preparedStatement.setInt(4, assignment.getUser().getId());

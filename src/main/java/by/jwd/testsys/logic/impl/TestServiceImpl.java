@@ -132,26 +132,30 @@ public class TestServiceImpl implements TestService {
     @Override
     public Assignment receiveTestAssignment(int testId, int userId) throws TestServiceException {
 
-        Assignment assignment = null;
+        Assignment assignment;
         try {
             assignment = checkAssignment(userId, testId);
 
             String testKey = testDAO.getTestKey(testId);
-            Result result = null;
+            Result result;
 
             if (assignment == null && testKey == null) {
                 Test test = new Test();
                 test.setId(testId);
-                User user = new User();
-                user.setId(userId);
-                assignment = new Assignment(user, LocalDate.now(), LocalDate.now().plusDays(7), test);
+                User user = new User.Builder().withId(userId).build();
+                assignment = new Assignment.Builder()
+                        .withUser(user)
+                        .withAssignmentDate(LocalDate.now())
+                        .withDeadline(LocalDate.now().plusDays(7))             //todo deadline
+                        .withTest(test)
+                        .build();
                 Integer integer = testDAO.writeAssignment(assignment);
                 assignment.setId(integer);
                 result = createResult(assignment);
                 writeResult(result);
             }
 
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new TestServiceException("DB problem", e);
         }
 
@@ -202,7 +206,7 @@ public class TestServiceImpl implements TestService {
             }
 
 
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new TestServiceException("DB problem", e);
         }
 
@@ -222,7 +226,7 @@ public class TestServiceImpl implements TestService {
         return isValid;
     }
 
-    private Assignment checkAssignment(int userId, int testId) throws DAOSqlException {
+    private Assignment checkAssignment(int userId, int testId) throws DAOException {
         return userDAO.getUserAssignmentByTestId(userId, testId);
     }
 
@@ -309,7 +313,7 @@ public class TestServiceImpl implements TestService {
         Assignment testAssignment = null;
         try {
             testAssignment = userDAO.getUserAssignmentByAssignmentId(assignmentId);
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new TestServiceException("DB problem", e);
         }
         return testAssignment;
@@ -317,17 +321,15 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public double calculatePercentageOfCorrectAnswers(Assignment assignment, Test test) throws TestServiceException {
+    public Result getResultInfo(Assignment assignment, Test test) throws TestServiceException {
 
         Result result = null;
         try {
             result = getResult(assignment);
-            int countQuestion = test.getCountQuestion();
-            return Math.ceil((result.getRightCountQuestion() * 100) / countQuestion);
         } catch (TestServiceException e) {
             throw new TestServiceException("DB problem", e);
         }
-
+        return result;
     }
 
     @Override
@@ -383,7 +385,7 @@ public class TestServiceImpl implements TestService {
             if (userAssignmentByTestId != null) {
                 testResult = testResultDAO.getTestResult(userAssignmentByTestId);
             }
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new TestServiceException("DB problem", e);
         }
         return testResult;
@@ -488,8 +490,8 @@ public class TestServiceImpl implements TestService {
             assignmentResult.put("existsAssignment", existsAssignment);
             userDAO.insertNewAssignment(LocalDate.now(), deadline, testId, usersId);
             sendTestKeyToUsers(successAssignment, testId, deadline);
-        } catch (DAOSqlException e) {
-            throw new TestServiceException("Error in getUserWithRoleUser().", e);
+        } catch (DAOException e) {
+            throw new TestServiceException("Error in assignTestToUsers().", e);
         }
 
         return assignmentResult;
