@@ -4,6 +4,7 @@ import by.jwd.testsys.bean.Assignment;
 import by.jwd.testsys.bean.Role;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.dao.exception.DAOException;
+import by.jwd.testsys.dao.exception.DAOSqlException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,9 +32,15 @@ public interface UserDAO {
 
     Set<User> getUserByRole(Role role) throws DAOException;
 
-    void insertNewAssignment(LocalDate assignmentDate, LocalDate deadline, int testId, List<Integer> usersId) throws DAOException;
+    void insertAssignment(LocalDate assignmentDate, LocalDate deadline, int testId, List<Integer> usersId) throws DAOException;
+
+    void deleteAssignment(int assignmentId, LocalDate deletedAtDate) throws DAOSqlException;
 
     Set<User> getUsersWithAssignmentByTestId(int testId, int testTypeId, boolean isCompleted) throws DAOException;
 
     String getUserEmail(int userId) throws DAOException;
+
+    void updateAssignment(int assignmentId, boolean isCompleted) throws DAOSqlException;
+
+    Integer writeAssignment(Assignment assignment) throws DAOSqlException;
 }

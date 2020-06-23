@@ -5,6 +5,7 @@ import by.jwd.testsys.dao.TestLogDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolException;
 import by.jwd.testsys.dao.dbconn.factory.ConnectionPoolFactory;
+import by.jwd.testsys.dao.exception.DAOConnectionPoolException;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 import org.apache.logging.log4j.Level;
@@ -32,13 +33,10 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
     private static final String SELECT_TEST_LOG_BY_ASSIGNMENT_ID = "SELECT q.question_id q_id,a.answer_id a_id FROM " +
             "`question-log` as q INNER JOIN `answer-log` as a on q.id=a.question_log_id WHERE assignment_id=?";
 
-    private static final String SELECT_RESULTS = "SELECT date_end, right_count_quest, all_count_question, assignment_id, " +
-            "test.title as t_tt, type.title as tp_tt, first_name,last_name FROM `result` " +
-            "inner join `assignment` on result.assignment_id=assignment.id " +
-            "inner join test on assignment.test_id=test.id " +
-            "inner join type on type.id=test.type_id " +
-            "INNER join users on assignment.user_id=users.id " +
-            "WHERE   assignment.deleted_at is null and test.deleted_at is null and assignment.completed=1";
+
+    private static final String QUESTION_LOG_ID_COLUMN_ALIAS="q_id";
+    private static final String ANSWER_LOG_ID_COLUMN_ALIAS="a_id";
+
 
     @Override
     public void writeAnswerLog(int questionLogId, Set<Integer> answers) throws DAOException {
@@ -65,7 +63,7 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
             logger.log(Level.ERROR, "SQLException in SQLTestLogDAOImpl method writeAnswerLog()", e);
             throw new DAOSqlException("SQLException in SQLTestLogDAOImpl method writeAnswerLog()", e);
         } catch (ConnectionPoolException e) {
-            throw new DAOSqlException("ConnectionPoolException in SQLTestLogDAOImpl method writeAnswerLog()", e);
+            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestLogDAOImpl method writeAnswerLog()", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
@@ -74,7 +72,7 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
 
 
     @Override
-    public Integer writeQuestionLog(int idQuestion, int idAssignment) throws DAOSqlException {
+    public Integer writeQuestionLog(int idQuestion, int idAssignment) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -92,7 +90,7 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
             }
 
         } catch (ConnectionPoolException e) {
-            throw new DAOSqlException("ConnectionPoolException in SQLTestLogDAOImpl method writeQuestionLog()", e);
+            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestLogDAOImpl method writeQuestionLog()", e);
         } catch (SQLException e) {
             logger.log(Level.ERROR, "SQLException in SQLTestLogDAOImpl method writeQuestionLog()", e);
             throw new DAOSqlException("SQLException in SQLTestLogDAOImpl method writeQuestionLog()", e);
@@ -103,9 +101,9 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
     }
 
     @Override
-    public TestLog getTestLog(int assignmentId) throws DAOSqlException {
+    public TestLog getTestLog(int assignmentId) throws DAOException {
         TestLog testLog = new TestLog();
-        List<Integer> answers = null;
+        List<Integer> answers;
         Map<Integer, List<Integer>> questionAnswerMap = new HashMap<>();
 
         Connection connection = null;
@@ -117,14 +115,14 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
             preparedStatement.setInt(1, assignmentId);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int question_id = resultSet.getInt("q_id");
+                int question_id = resultSet.getInt(QUESTION_LOG_ID_COLUMN_ALIAS);
 
                 if (questionAnswerMap.containsKey(question_id)) {
-                    int answer_id = resultSet.getInt("a_id");
+                    int answer_id = resultSet.getInt(ANSWER_LOG_ID_COLUMN_ALIAS);
                     List<Integer> answersByKey = questionAnswerMap.get(question_id);
                     answersByKey.add(answer_id);
                 } else {
-                    int answer_id = resultSet.getInt("a_id");
+                    int answer_id = resultSet.getInt(ANSWER_LOG_ID_COLUMN_ALIAS);
                     answers = new ArrayList<>();
                     answers.add(answer_id);
                     questionAnswerMap.put(question_id, answers);
@@ -135,7 +133,7 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
             testLog.setQuestionAnswerMap(questionAnswerMap);
 
         } catch (ConnectionPoolException e) {
-            throw new DAOSqlException("ConnectionPoolException in SQLTestLogDAOImpl method writeQuestionLog()", e);
+            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestLogDAOImpl method writeQuestionLog()", e);
         } catch (SQLException e) {
             logger.log(Level.ERROR, "SQLException in SQLTestLogDAOImpl method writeAnswerLog()", e);
             throw new DAOSqlException("SQLException in SQLTestLogDAOImpl method writeQuestionLog()", e);
@@ -144,91 +142,6 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
 
         }
         return testLog;
-    }
-
-    @Override
-    public Set<Result> getTestResult(int typeId, int testId, int userId, LocalDate date) throws DAOSqlException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        Set<Result> results = new HashSet<>();
-
-        String query=SELECT_RESULTS;
-
-        try {
-            connection = connectionPool.takeConnection();
-            int count=1;
-
-            if (testId != 0) {
-                query += " and test_id=?";
-            }
-
-            if (userId != 0) {
-                query += " and user_id=?";
-            }
-
-            if (typeId != 0) {
-                query += " and type.id=?";
-            }
-
-            if (date != null) {
-                query += " and date=?";
-            }
-
-
-            preparedStatement = connection.prepareStatement(query);
-
-            if (testId != 0) {
-                preparedStatement.setInt(count, testId);
-                count++;
-            }
-
-            if (userId != 0) {
-                preparedStatement.setInt(count, userId);
-                count++;
-            }
-
-            if (typeId != 0) {
-                preparedStatement.setInt(count, typeId);
-                count++;
-            }
-
-            if (date != null) {
-                preparedStatement.setDate(count, Date.valueOf(date));
-            }
-
-
-            resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                String firstName = resultSet.getString("first_name");
-                String lastName = resultSet.getString("last_name");
-                User user = new User.Builder().withFirstName(firstName).withLastName(lastName).build();
-                String testTitle = resultSet.getString("t_tt");
-                String typeTitle = resultSet.getString("tp_tt");
-                Type type = new Type();
-                type.setTitle(typeTitle);
-                Test test = new Test();
-                test.setTitle(testTitle);
-                test.setType(type);
-                LocalDateTime testDate = resultSet.getTimestamp("date_end").toLocalDateTime();
-                int rightCountQuestion = resultSet.getInt("right_count_quest");
-                int allCountQuestion = resultSet.getInt("all_count_question");
-                int assignmentId = resultSet.getInt("assignment_id");
-                Assignment assignment = new Assignment.Builder().withId(assignmentId).build();
-                Result result = new Result(testDate, rightCountQuestion, allCountQuestion, test, user, assignment);
-                results.add(result);
-            }
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "SQLException in SQLTestLogDAOImpl method getTestResult()", e);
-            throw new DAOSqlException("SQLException in SQLTestLogDAOImpl method getTestResult()", e);
-        } catch (ConnectionPoolException e) {
-            throw new DAOSqlException("ConnectionPoolException in SQLTestLogDAOImpl method getTestResult()", e);
-        } finally {
-            connectionPool.closeConnection(connection, preparedStatement, resultSet);
-
-        }
-        return results;
     }
 
 

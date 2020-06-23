@@ -28,7 +28,7 @@ public class TestServiceImpl implements TestService {
     private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_TEST = "you have been assigned to the test ";
     private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_KEY = "Key: ";
     private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_DEADLINE = "Deadline: ";
-    private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_REGARDS="Best regards,\n \"Bee testing\" team.";
+    private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_REGARDS = "Best regards,\n \"Bee testing\" team.";
 
 
     private final static Logger logger = LogManager.getLogger();
@@ -39,6 +39,8 @@ public class TestServiceImpl implements TestService {
     private TestResultDAO testResultDAO = daoFactory.getTestResultDao();
     private TestLogDAO testLogDAO = daoFactory.getTestLogDao();
     private UserDAO userDAO = daoFactory.getUserDao();
+    private QuestionAnswerDAO questionAnswerDAO = daoFactory.getQuestionAnswerDao();
+
     private ValidatorFactory validatorFactory = ValidatorFactory.getInstance();
     private TestValidator testValidator = validatorFactory.getTestValidator();
 
@@ -55,11 +57,16 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Set<Type> typeWithTests(int userId) throws ServiceException {
-        Set<Type> testsType;
+    public List<Type> typeWithTests(int userId) throws ServiceException {
+        List<Type> testsType;
 
         try {
-            testsType = typeDAO.getTypeWithTests();
+            testsType = typeDAO.getAll();
+
+            for(Type type:testsType){
+                Set<Test> tests = testDAO.getTests(type.getId(), false);
+                type.setTests(tests);
+            }
 
             for (Type testType : testsType) {
                 Set<Test> tests = testType.getTests();
@@ -85,25 +92,25 @@ public class TestServiceImpl implements TestService {
     public Set<Test> getUserAssignmentTests(int userId) throws ServiceException {
         Set<Test> assignmentTest = null;
         try {
-            assignmentTest = testDAO.getAssignmentTest(userId);
+            assignmentTest = testDAO.getAssignedTests(userId);
 
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new ServiceException("Error in TestService typeWithTests() method", e);
         }
         return assignmentTest;
     }
 
     @Override
-    //todo assign
+    //todo assign название
     public Question getQuestionByTestId(Assignment assignment) throws TestServiceException, TimeIsOverServiceException {
         Question question;
         try {
             int testId = assignment.getTest().getId();
-            question = testDAO.getQuestionByTestId(testId, assignment.getId());
+            question = questionAnswerDAO.getQuestionByTestId(testId, assignment.getId());
 
             if (question != null) {
                 checkTestDuration(assignment);
-                Set<Answer> answersByQuestionId = testDAO.getAnswersByQuestionId(question.getId());
+                Set<Answer> answersByQuestionId = questionAnswerDAO.getAnswersByQuestionId(question.getId());
                 question.setAnswers(answersByQuestionId);
             }
 
@@ -119,7 +126,7 @@ public class TestServiceImpl implements TestService {
         Test test;
         try {
             test = testDAO.getTestInfo(id);
-            int countQuestion = testDAO.getCountQuestion(test.getId());
+            int countQuestion = questionAnswerDAO.getCountQuestion(test.getId());
             test.setId(id);
             test.setCountQuestion(countQuestion);
 
@@ -149,7 +156,7 @@ public class TestServiceImpl implements TestService {
                         .withDeadline(LocalDate.now().plusDays(7))             //todo deadline
                         .withTest(test)
                         .build();
-                Integer integer = testDAO.writeAssignment(assignment);
+                Integer integer = userDAO.writeAssignment(assignment);
                 assignment.setId(integer);
                 result = createResult(assignment);
                 writeResult(result);
@@ -220,7 +227,7 @@ public class TestServiceImpl implements TestService {
             if (testKey.equals(key)) {
                 isValid = true;
             }
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new TestServiceException("DB problem", e);
         }
         return isValid;
@@ -247,7 +254,7 @@ public class TestServiceImpl implements TestService {
                 throw new TimeIsOverServiceException("Time is over");
             }
 
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new TestServiceException("DB problem", e);
         }
 
@@ -257,12 +264,12 @@ public class TestServiceImpl implements TestService {
     @Override
     public void completeTest(Assignment assignment, LocalDateTime localDateTime) throws TestServiceException {
         try {
-            testDAO.updateAssignment(assignment.getId(), true);
+            userDAO.updateAssignment(assignment.getId(), true);
 
             Result result = calculateResult(assignment);
             result.setDateEnd(localDateTime);
             updateResult(result);
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new TestServiceException("DB problem", e);
         }
 
@@ -273,10 +280,10 @@ public class TestServiceImpl implements TestService {
     public LocalDateTime getStartTestTime(int assignmentId) throws TestServiceException {
         LocalDateTime localDateTime;
         try {
-            Timestamp testStartDateTime = testDAO.getTestStartDateTime(assignmentId);
+            Timestamp testStartDateTime = testResultDAO.getTestStartDateTime(assignmentId);
             localDateTime = testStartDateTime.toLocalDateTime();
 
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new TestServiceException("DB problem", e);
         }
         return localDateTime;
@@ -289,7 +296,7 @@ public class TestServiceImpl implements TestService {
         LocalTime duration;
         try {
             duration = testDAO.getTestDuration(assignmentId);
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new TestServiceException("DB problem", e);
         }
         return duration;
@@ -336,7 +343,7 @@ public class TestServiceImpl implements TestService {
     public Set<Statistic> getUserTestStatistic(int userId) throws TestServiceException {
         try {
             return testResultDAO.getUserTestStatistic(userId);
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new TestServiceException("DB problem", e);
         }
     }
@@ -347,7 +354,7 @@ public class TestServiceImpl implements TestService {
         try {
             TestLog testLogByAssignmentId = testLogDAO.getTestLog(assignment.getId());
 
-            Map<Integer, List<Integer>> rightAnswersToQuestionByTestId = testDAO.
+            Map<Integer, List<Integer>> rightAnswersToQuestionByTestId = questionAnswerDAO.
                     getRightAnswersToQuestionByTestId(assignment.getTest().getId());
 
             Map<Integer, List<Integer>> userAnswerMap = testLogByAssignmentId.getQuestionAnswerMap();
@@ -370,7 +377,7 @@ public class TestServiceImpl implements TestService {
             }
             result = testResultDAO.getTestResult(assignment);
             result.setRightCountQuestion(countRight);
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new TestServiceException("DB problem", e);
         }
         return result;
@@ -396,7 +403,7 @@ public class TestServiceImpl implements TestService {
         Set<Test> tests = null;
         try {
             tests = testDAO.getTests(typeId, false);
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new TestServiceException("DB problem", e);
         }
         return tests;
@@ -411,16 +418,18 @@ public class TestServiceImpl implements TestService {
         Set<Test> tests = null;
         try {
             tests = testDAO.getTestsByLimit(typeId, start, recordsPerPage);
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new TestServiceException("DB problem", e);
         }
         return tests;
     }
 
+    //todo Зачем
+
     private Result getResult(Assignment assignment) throws TestServiceException {
         try {
             return testResultDAO.getTestResult(assignment);
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new TestServiceException("DB problem", e);
         }
     }
@@ -428,13 +437,13 @@ public class TestServiceImpl implements TestService {
     private void writeResult(Result result) throws TestServiceException {
         try {
             testResultDAO.insertResult(result);
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new TestServiceException("DB problem", e);
         }
 
     }
 
-    private void updateResult(Result result) throws DAOSqlException {
+    private void updateResult(Result result) throws DAOException {
         testResultDAO.updateResult(result);
     }
 
@@ -443,15 +452,13 @@ public class TestServiceImpl implements TestService {
         //todo builder
         int testId = assignment.getTest().getId();
 
-        Result result = new Result();
-        result.setDateStart(LocalDateTime.now());
-        result.setAssignment(assignment);
+        Result result = new Result.Builder().withDateStart(LocalDateTime.now()).withAssignment(assignment).build();
         int countQuestion = 0;
         try {
-            countQuestion = testDAO.getCountQuestion(testId);
+            countQuestion = questionAnswerDAO.getCountQuestion(testId);
             result.setCountTestQuestion(countQuestion);
 
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new TestServiceException("DB problem", e);
         }
 
@@ -488,7 +495,7 @@ public class TestServiceImpl implements TestService {
 
             assignmentResult.put("successAssignment", successAssignment);
             assignmentResult.put("existsAssignment", existsAssignment);
-            userDAO.insertNewAssignment(LocalDate.now(), deadline, testId, usersId);
+            userDAO.insertAssignment(LocalDate.now(), deadline, testId, usersId);
             sendTestKeyToUsers(successAssignment, testId, deadline);
         } catch (DAOException e) {
             throw new TestServiceException("Error in assignTestToUsers().", e);
@@ -504,8 +511,8 @@ public class TestServiceImpl implements TestService {
             SslSender sender = SslSender.getInstance();
 
             for (User user : assignedUsers) {
-                String message=buildEmailMessage(user.getFirstName(),testInfo.getTitle(),testInfo.getKey(),deadline);
-                sender.send(EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT,message,user.getEmail());
+                String message = buildEmailMessage(user.getFirstName(), testInfo.getTitle(), testInfo.getKey(), deadline);
+                sender.send(EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT, message, user.getEmail());
             }
         } catch (DAOSqlException e) {
             //todo
@@ -515,7 +522,7 @@ public class TestServiceImpl implements TestService {
         }
     }
 
-    private String buildEmailMessage(String userName,String testName, String key, LocalDate deadline) {
+    private String buildEmailMessage(String userName, String testName, String key, LocalDate deadline) {
         StringBuilder message = new StringBuilder();
         message.append(userName)
                 .append(", ")
@@ -537,7 +544,7 @@ public class TestServiceImpl implements TestService {
     @Override
     public void deleteAssignment(int assignment_id) throws ServiceException {
         try {
-            testDAO.makeAssignmentDeleted(assignment_id, LocalDate.now());
+            userDAO.deleteAssignment(assignment_id, LocalDate.now());
         } catch (DAOSqlException e) {
             throw new TestServiceException("DAOSqlException  in deleteAssignment().", e);
         }
@@ -548,16 +555,17 @@ public class TestServiceImpl implements TestService {
     public int receiveCountTestPages(int typeId) throws TestServiceException {
         int countPageRows = 11;
         int countTest;
+        int numberOfPages;
         try {
-            countTest = testDAO.getCountNotDeletedTests(typeId);
-
-        } catch (DAOSqlException e) {
+            countTest = testDAO.getCountTests(typeId);
+            numberOfPages = countTest / countPageRows;
+            if (numberOfPages % countPageRows > 0) {
+                numberOfPages++;
+            }
+        } catch (DAOException e) {
             throw new TestServiceException("DAOSqlException  in deleteAssignment().", e);
         }
-        int numberOfPages = countTest / countPageRows;
-        if (numberOfPages % countPageRows > 0) {
-            numberOfPages++;
-        }
+
         return numberOfPages;
     }
 

@@ -10,8 +10,6 @@ import java.util.Set;
 public interface TestTypeDAO {
 
     List<Type> getAll() throws DAOException;
-    Set<Type> getTypeWithTests() throws DAOException;
-
     void saveTestType(String testTypeTitle) throws DAOSqlException;
 
     Type getTypeByTitle(String title) throws DAOSqlException;

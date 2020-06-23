@@ -47,22 +47,21 @@ public class ShowAdminPanel implements Command {
 
 
             String currentPage = request.getParameter("currentPage");
-            int page=1;
-            if(currentPage!=null){
-                page=Integer.parseInt(currentPage);
+            int page = 1;
+            if (currentPage != null) {
+                page = Integer.parseInt(currentPage);
             }
 
-            Set<Test> testByTypeId = testService.getAllTestByTypeId(activeTypeId,page);
+            Set<Test> testByTypeId = testService.getAllTestByTypeId(activeTypeId, page);
 
             request.setAttribute(RequestParameterName.TEST_TYPES_LIST, types);
             request.setAttribute(RequestParameterName.INFO_ABOUT_TESTS, testByTypeId);
             request.setAttribute(RequestParameterName.ACTIVE_TYPE_ID, activeTypeId);
 
 
-            request.setAttribute("currentPage",page);
+            request.setAttribute("currentPage", page);
             int countPages = testService.receiveCountTestPages(activeTypeId);
-            request.setAttribute("countPages",countPages);
-
+            request.setAttribute("countPages", countPages);
 
 
             session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());

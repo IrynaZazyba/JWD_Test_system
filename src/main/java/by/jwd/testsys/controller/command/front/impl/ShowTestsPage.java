@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 public class ShowTestsPage implements Command {
@@ -32,7 +33,7 @@ public class ShowTestsPage implements Command {
         HttpSession session = req.getSession();
         int userId = (int) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
         try {
-            Set<Type> tests = testService.typeWithTests(userId);
+            List<Type> tests = testService.typeWithTests(userId);
             req.setAttribute(RequestParameterName.TEST_TYPES_LIST, tests);
             Set<Test> userAssignedTests=testService.getUserAssignmentTests(userId);
             req.setAttribute(RequestParameterName.USER_ASSIGNMENT,userAssignedTests);

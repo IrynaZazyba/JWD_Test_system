@@ -29,12 +29,6 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
     private static final String SELECT_TYPE_BY_TITLE = "SELECT id, title from type WHERE deleted_at IS null AND title=?";
 
 
-    private static final String SELECT_TYPE_WITH_TESTS = "SELECT type.id as tp_id, type.title tp_title, " +
-            "test.time as tt_time,test.id tt_id, test.title tt_title, count(question.id) as count_quest " +
-            "FROM type INNER JOIN test ON test.type_id=type.id inner join question on question.test_id=test.id " +
-            "WHERE type.deleted_at IS null AND test.deleted_at IS null AND question.deleted_at is null " +
-            "and test.key is null group by test.id";
-
     private static final String INSERT_TYPE = "INSERT INTO type (title) VALUES (?)";
 
     @Override
@@ -53,7 +47,7 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
             while (resultSet.next()) {
                 int typeId = resultSet.getInt("id");
                 String typeTitle = resultSet.getString("title");
-                typesFromDB.add(new Type(typeId, typeTitle));
+                typesFromDB.add(new Type.Builder().withId(typeId).withTitle(typeTitle).build());
             }
         } catch (ConnectionPoolException e) {
             throw new DAOSqlException("ConnectionPoolException in SQLTestTypeDAOImpl getAll() method.", e);
@@ -67,40 +61,6 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
         return typesFromDB;
     }
 
-    @Override
-    public Set<Type> getTypeWithTests() throws DAOException {
-        Connection connection = null;
-        Set<Type> typesFromDB = new HashSet<>();
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = connectionPool.takeConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(SELECT_TYPE_WITH_TESTS);
-            while (resultSet.next()) {
-                Type type = buildType(resultSet);
-                typesFromDB.add(type);
-
-                int type_id = resultSet.getInt("tp_id");
-                Test test = buildTest(resultSet);
-                for (Type type1 : typesFromDB) {
-                    if (type1.getId() == type_id) {
-                        type1.setTests(test);
-                    }
-                }
-            }
-        } catch (ConnectionPoolException e) {
-            throw new DAOSqlException("ConnectionPoolException in SQLTestTypeDAOImpl getTypeWithTests() method.", e);
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "SQLException in SQLTestTypeDAOImpl getTypeWithTests() method", e);
-            throw new DAOSqlException("SQLException in SQLTestTypeDAOImpl getTypeWithTests() method.", e);
-
-        } finally {
-            connectionPool.closeConnection(connection, statement, resultSet);
-        }
-
-        return typesFromDB;
-    }
 
     @Override
     public void saveTestType(String testTypeTitle) throws DAOSqlException {
@@ -156,7 +116,7 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
     private Type buildType(ResultSet resultSet) throws SQLException {
         int idType = resultSet.getInt("tp_id");
         String titleType = resultSet.getString("tp_title");
-        return new Type(idType, titleType);
+        return new Type.Builder().withId(idType).withTitle(titleType).build();
     }
 
     private Test buildTest(ResultSet resultSet) throws SQLException {
@@ -164,6 +124,7 @@ public class SQLTestTypeDAOImpl implements TestTypeDAO {
         String titleTest = resultSet.getString("tt_title");
         LocalTime testDuration = resultSet.getTime("tt_time").toLocalTime();
         int countQuestion = resultSet.getInt("count_quest");
-        return new Test(idTest, titleTest, testDuration, countQuestion);
+        return new Test.Builder()
+                .withId(idTest).withTitle(titleTest).withDuration(testDuration).withCountQuestion(countQuestion).build();
     }
 }

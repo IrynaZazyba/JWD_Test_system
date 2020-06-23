@@ -1,12 +1,21 @@
 package by.jwd.testsys.bean;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
 
-public class Statistic implements Serializable {
+public @Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+class Statistic implements Serializable {
 
 
     private static final long serialVersionUID = 887666526432335145L;
@@ -21,70 +30,55 @@ public class Statistic implements Serializable {
     public Statistic() {
     }
 
-    public Statistic(String testTitle, LocalTime timeOnTest, LocalDateTime testStart, LocalDateTime testEnd, int rightCountQuestion, int allCountQuestion) {
-        this.testTitle = testTitle;
-        this.timeOnTest = timeOnTest;
-        this.testStart = testStart;
-        this.testEnd = testEnd;
-        this.rightCountQuestion = rightCountQuestion;
-        this.allCountQuestion = allCountQuestion;
-        Duration duration=Duration.between(testStart,testEnd);
-        this.minutesSpentOnTest= Math.abs(duration.toMinutes());
+    public static class Builder {
+
+        private Statistic newStatistic;
+
+        public Builder(){
+            newStatistic=new Statistic();
+        }
+
+        public Builder withTimeOnTest(LocalTime timeOnTest){
+            newStatistic.timeOnTest=timeOnTest;
+            return this;
+        }
+
+        public Builder withTestStart(LocalDateTime testStart){
+            newStatistic.testStart=testStart;
+            return this;
+        }
+
+        public Builder withTestEnd(LocalDateTime testEnd){
+            newStatistic.testEnd=testEnd;
+            return this;
+        }
+
+        public Builder withMinutesSpentOnTest(int minutesSpentOnTest){
+            newStatistic.minutesSpentOnTest=minutesSpentOnTest;
+            return this;
+        }
+
+        public Builder withRightCountQuestion(int rightCountQuestion){
+            newStatistic.rightCountQuestion=rightCountQuestion;
+            return this;
+        }
+
+        public Builder withAllCountQuestion(int allCountQuestion){
+            newStatistic.allCountQuestion=allCountQuestion;
+            return this;
+        }
+
+        public Builder withTestTitle(String testTitle){
+            newStatistic.testTitle=testTitle;
+            return this;
+        }
+
+        public Statistic build(){
+            return newStatistic;
+        }
+
+
     }
 
-    public String getTestTitle() {
-        return testTitle;
-    }
 
-    public void setTestTitle(String testTitle) {
-        this.testTitle = testTitle;
-    }
-
-    public LocalTime getTimeOnTest() {
-        return timeOnTest;
-    }
-
-    public void setTimeOnTest(LocalTime timeOnTest) {
-        this.timeOnTest = timeOnTest;
-    }
-
-    public LocalDateTime getTestStart() {
-        return testStart;
-    }
-
-    public void setTestStart(LocalDateTime testStart) {
-        this.testStart = testStart;
-    }
-
-    public LocalDateTime getTestEnd() {
-        return testEnd;
-    }
-
-    public void setTestEnd(LocalDateTime testEnd) {
-        this.testEnd = testEnd;
-    }
-
-    public int getRightCountQuestion() {
-        return rightCountQuestion;
-    }
-
-    public void setRightCountQuestion(int rightCountQuestion) {
-        this.rightCountQuestion = rightCountQuestion;
-    }
-
-    public int getAllCountQuestion() {
-        return allCountQuestion;
-    }
-
-    public void setAllCountQuestion(int allCountQuestion) {
-        this.allCountQuestion = allCountQuestion;
-    }
-
-    public long getMinutesSpentOnTest() {
-        return minutesSpentOnTest;
-    }
-
-    public void setMinutesSpentOnTest(long minutesSpentOnTest) {
-        this.minutesSpentOnTest = minutesSpentOnTest;
-    }
 }

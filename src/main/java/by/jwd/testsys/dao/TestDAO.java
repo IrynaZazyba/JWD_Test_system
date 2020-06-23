@@ -14,56 +14,29 @@ import java.util.Set;
 
 public interface TestDAO {
 
-    Set<Test> getAssignmentTest(int userId) throws DAOSqlException;
-
-    Question getQuestionByTestId(int id, int assignment_id) throws DAOException;
-
-    Set<Answer> getAnswersByQuestionId(int id) throws DAOSqlException;
+    Set<Test> getAssignedTests(int userId) throws DAOException;
 
     Test getTestInfo(int id) throws DAOException;
 
-    int getCountQuestion(int testId) throws DAOSqlException;
+    String getTestKey(int testId) throws DAOException;
 
-    void updateAssignment(int assignmentId, boolean isCompleted) throws DAOSqlException;
+    LocalTime getTestDuration(int assignmentId) throws DAOException;
 
-    Integer writeAssignment(Assignment assignment) throws DAOSqlException;
+    Set<Test> getTests(int typeId, boolean isEdited) throws DAOException;
 
-    Map<Integer, List<Integer>> getRightAnswersToQuestionByTestId(int testId) throws DAOSqlException;
+    Set<Test> getTestsByLimit(int typeId, int from, int to) throws DAOException;
 
-    String getTestKey(int testId) throws DAOSqlException;
+    int getCountTests(int typeId) throws DAOException;
 
-    Timestamp getTestStartDateTime(int assignmentId) throws DAOSqlException;
+    void deleteTestById(int testId, LocalDateTime deletedDate) throws DAOException;
 
-    LocalTime getTestDuration(int assignmentId) throws DAOSqlException;
+    int getCountTestAssignment(int testId, boolean isCompleted) throws DAOException;
 
-    Set<Test> getTests(int typeId, boolean isEdited) throws DAOSqlException;
+    int saveTest(Test test, int testId) throws DAOException;
 
-    Set<Test> getTestsByLimit(int typeId, int from, int to) throws DAOSqlException;
+    void updateTest(Test test, int typeId) throws DAOException;
 
-    int getCountNotDeletedTests(int typeId) throws DAOSqlException;
-
-    void makeAssignmentDeleted(int assignmentId, LocalDate deletedAtDate) throws DAOSqlException;
-
-    void deleteTestById(int testId, LocalDateTime deletedDate) throws DAOSqlException;
-
-    int getCountIncompleteTestAssignment(int testId) throws DAOSqlException;
-
-    int saveTest(Test test, int testId) throws DAOSqlException;
-
-    int saveQuestionWithAnswers(Question question, int testId) throws DAOSqlException;
-
-    void updateTest(Test test, int typeId) throws DAOSqlException;
-
-    void updateTestIsEdited(int testId, boolean isEdited) throws DAOSqlException;
-
-    Set<Question> questionsWithAnswersByTestId(int testId) throws DAOSqlException;
+    void updateTestIsEdited(int testId, boolean isEdited) throws DAOException;
 
 
-    void updateQuestionWithAnswersByQuestionId(Question updatedQuestion,
-                                               Set<Answer> answerToUpdate,
-                                               Set<Answer> answerToAdd,
-                                               List<Integer> answerToDelete,
-                                               LocalDate deletedDate) throws DAOSqlException;
-
-    void deleteQuestionWithAnswers(int questionId, LocalDateTime deletedDate) throws DAOSqlException;
 }

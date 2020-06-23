@@ -2,6 +2,7 @@ package by.jwd.testsys.logic.impl;
 
 import by.jwd.testsys.bean.Result;
 import by.jwd.testsys.dao.TestLogDAO;
+import by.jwd.testsys.dao.TestResultDAO;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 import by.jwd.testsys.dao.factory.DAOFactory;
@@ -20,6 +21,7 @@ public class TestLogServiceImpl implements TestLogService {
 
     private final DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
     private TestLogDAO testLogDAO = daoFactory.getTestLogDao();
+    private TestResultDAO testResultDAO=daoFactory.getTestResultDao();
 
     @Override
     public void writeUserAnswer(int questionLogId, String[] answers) throws TestLogServiceException {
@@ -39,18 +41,20 @@ public class TestLogServiceImpl implements TestLogService {
     public int writeQuestionLog(int questionId, int assignmentId) throws TestLogServiceException {
         try {
             return testLogDAO.writeQuestionLog(questionId, assignmentId);
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new TestLogServiceException("Impossible to save question to DB", e);
         }
     }
 
+
+    //todo перенести
     @Override
     public Set<Result> receiveResultData(int typeId, int testId, int userId, LocalDate date) throws TestLogServiceException {
         Set<Result> result = null;
 
         try {
-            result=testLogDAO.getTestResult(typeId,testId,userId,date);
-        } catch (DAOSqlException e) {
+            result=testResultDAO.getTestResult(typeId,testId,userId,date);
+        } catch (DAOException e) {
             throw new TestLogServiceException("Impossible to save question to DB", e);
         }
         return result;

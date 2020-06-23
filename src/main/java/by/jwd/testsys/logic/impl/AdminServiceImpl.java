@@ -4,6 +4,7 @@ import by.jwd.testsys.bean.Answer;
 import by.jwd.testsys.bean.Question;
 import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.bean.Type;
+import by.jwd.testsys.dao.QuestionAnswerDAO;
 import by.jwd.testsys.dao.TestDAO;
 import by.jwd.testsys.dao.TestTypeDAO;
 import by.jwd.testsys.dao.exception.DAOException;
@@ -24,18 +25,19 @@ public class AdminServiceImpl implements AdminService {
 
     private final DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
     private TestDAO testDAO = daoFactory.getTestDao();
+    private QuestionAnswerDAO questionAnswerDAO = daoFactory.getQuestionAnswerDao();
 
 
     @Override
     public void deleteTest(int testId) throws AdminServiceException, InvalidDeleteActionServiceException {
         try {
-            int countIncompleteTestAssignment = testDAO.getCountIncompleteTestAssignment(testId);
+            int countIncompleteTestAssignment = testDAO.getCountTestAssignment(testId,false);
             if (countIncompleteTestAssignment != 0) {
                 throw new InvalidDeleteActionServiceException("Impossible to delete current test. Assignment exists.");
             }
 
             testDAO.deleteTestById(testId, LocalDateTime.now());
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new AdminServiceException("DB problem", e);
         }
     }
@@ -46,10 +48,10 @@ public class AdminServiceImpl implements AdminService {
         if (key.equals("")) {
             key = null;
         }
-        Test test = new Test(title, key, duration, true);
+        Test test = new Test.Builder().withTitle(title).withKey(key).withDuration(duration).withEdited(true).build();
         try {
             generatedTestId = testDAO.saveTest(test, typeId);
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new AdminServiceException("DB problem", e);
         }
         return generatedTestId;
@@ -57,10 +59,11 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void updateTestData(int testId, int typeId, String title, String key, LocalTime duration) throws AdminServiceException {
-        Test test = new Test(testId, title, key, duration, true);
+        Test test = new Test.Builder()
+                .withId(testId).withTitle(title).withKey(key).withDuration(duration).withEdited(true).build();
         try {
             testDAO.updateTest(test, typeId);
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new AdminServiceException("DB problem", e);
         }
     }
@@ -68,13 +71,12 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void createQuestionAnswer(String question, Map<Integer, String> answers, List<Integer> rightAnswers, int testId) throws AdminServiceException {
 
-        Question createdQuestion = new Question(question);
+        Question createdQuestion = new Question.Builder().withQuestion(question).build();
         Set<Answer> createdAnswers = new HashSet<>();
         try {
 
             answers.forEach((k, v) -> {
-                Answer answer = new Answer(v);
-                answer.setResult(false);
+                Answer answer = new Answer.Builder().withAnswer(v).withResult(false).build();
                 rightAnswers.forEach(rightAnswer ->
                 {
                     if (k.equals(rightAnswer)) {
@@ -84,9 +86,8 @@ public class AdminServiceImpl implements AdminService {
                 createdAnswers.add(answer);
             });
             createdQuestion.setAnswers(createdAnswers);
-
-            testDAO.saveQuestionWithAnswers(createdQuestion, testId);
-        } catch (DAOSqlException e) {
+            questionAnswerDAO.saveQuestionWithAnswers(createdQuestion, testId);
+        } catch (DAOException e) {
             throw new AdminServiceException("DB problem", e);
         }
 
@@ -98,7 +99,7 @@ public class AdminServiceImpl implements AdminService {
         Test testData;
         try {
             testData = testDAO.getTestInfo(testId);
-            Set<Question> questions = testDAO.questionsWithAnswersByTestId(testId);
+            Set<Question> questions = questionAnswerDAO.getQuestionsWithAnswersByTestId(testId);
             testData.setQuestions(questions);
         } catch (DAOException e) {
             throw new AdminServiceException("DB problem", e);
@@ -111,7 +112,7 @@ public class AdminServiceImpl implements AdminService {
     public void changeTestIsEdited(int testId, boolean isEdited) throws AdminServiceException {
         try {
             testDAO.updateTestIsEdited(testId, isEdited);
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new AdminServiceException("DB problem", e);
         }
     }
@@ -126,7 +127,7 @@ public class AdminServiceImpl implements AdminService {
                                           List<Integer> rightAnswersId,
                                           List<Integer> rightAddedAnswersId) throws AdminServiceException {
 
-        Question updatedQuestion = new Question(questionId, question);
+        Question updatedQuestion = new Question.Builder().withId(questionId).withQuestion(question).build();
         Set<Answer> answerToUpdate = new HashSet<>();
         Set<Answer> answerToAdd = new HashSet<>();
 
@@ -140,7 +141,7 @@ public class AdminServiceImpl implements AdminService {
         }
 
         answers.forEach((k, v) -> {
-            Answer answer = new Answer(k, v);
+            Answer answer = new Answer.Builder().withId(k).withAnswer(v).build();
             rightAnswersId.forEach(value -> {
                 if (value.equals(k)) {
                     answer.setResult(true);
@@ -150,7 +151,7 @@ public class AdminServiceImpl implements AdminService {
         });
 
         addedAnswers.forEach((k, v) -> {
-            Answer answer = new Answer(v);
+            Answer answer = new Answer.Builder().withAnswer(v).build();
             rightAddedAnswersId.forEach(value -> {
                 if (value.equals(k)) {
                     answer.setResult(true);
@@ -160,8 +161,8 @@ public class AdminServiceImpl implements AdminService {
         });
 
         try {
-            testDAO.updateQuestionWithAnswersByQuestionId(updatedQuestion, answerToUpdate, answerToAdd, answerToDelete, LocalDate.now());
-        } catch (DAOSqlException e) {
+            questionAnswerDAO.updateQuestionWithAnswersByQuestionId(updatedQuestion, answerToUpdate, answerToAdd, answerToDelete, LocalDate.now());
+        } catch (DAOException e) {
             throw new AdminServiceException("DB problem", e);
         }
     }
@@ -171,7 +172,7 @@ public class AdminServiceImpl implements AdminService {
 
         try {
             testDAO.updateTestIsEdited(testID, false);
-        } catch (DAOSqlException e) {
+        } catch (DAOException e) {
             throw new AdminServiceException("DB problem", e);
         }
     }
@@ -180,8 +181,8 @@ public class AdminServiceImpl implements AdminService {
     public void deleteQuestionWithAnswers(int questionId) throws AdminServiceException {
 
         try {
-            testDAO.deleteQuestionWithAnswers(questionId, LocalDateTime.now());
-        } catch (DAOSqlException e) {
+            questionAnswerDAO.deleteQuestionWithAnswers(questionId, LocalDateTime.now());
+        } catch (DAOException e) {
             throw new AdminServiceException("DB problem", e);
         }
     }

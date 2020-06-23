@@ -14,7 +14,7 @@ public interface TestService {
 
     List<Type> allTestsType() throws ServiceException;
 
-    Set<Type> typeWithTests(int userId) throws ServiceException;
+    List<Type> typeWithTests(int userId) throws ServiceException;
 
     Set<Test> getUserAssignmentTests(int userId) throws ServiceException;
 

@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 public class TestLog {
-    Map<Integer, List<Integer>> questionAnswerMap;
+
+    private Map<Integer, List<Integer>> questionAnswerMap;
     private int assignment_id;
 
     public TestLog() {
