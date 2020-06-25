@@ -48,6 +48,9 @@ public class ShowPreviewTestPage implements Command {
             request.setAttribute(RequestParameterName.TEST_TYPES_LIST, testTypes);
 
             session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
+
+
+
             forwardToPage(request, response, JspPageName.PREVIEW_TEST);
 
         } catch (ServiceException e) {

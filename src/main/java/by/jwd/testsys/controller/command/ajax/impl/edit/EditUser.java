@@ -67,12 +67,6 @@ public class EditUser implements AjaxCommand {
                 answer = "{\"message\":\"" + resourceBundle.getString("message.json.user_edit_error") +
                         "\",\"status\":\"error\"}";
             }
-
-
-        } catch (ServiceException e) {
-            logger.log(Level.ERROR, e.getMessage(), e);
-            answer = "{\"message\":\"" + resourceBundle.getString("message.json.user_edit_error") +
-                    "\",\"status\":\"error\"}";
         } catch (InvalidUserDataException e) {
             Gson gson = new Gson();
             Set<String> invalidUserData = e.getInvalidData();
@@ -80,13 +74,17 @@ public class EditUser implements AjaxCommand {
             answerInvalidData.put("status", "error");
             answer = gson.toJson(answerInvalidData);
 
+        } catch (ServiceException e) {
+            logger.log(Level.ERROR, e.getMessage(), e);
+            answer = "{\"message\":\"" + resourceBundle.getString("message.json.user_edit_error") +
+                    "\",\"status\":\"error\"}";
         }
 
 
         return answer;
     }
 
-    private Map<String,String> buildAnswer(Set<String> params, ResourceBundle bundle) {
+    private Map<String, String> buildAnswer(Set<String> params, ResourceBundle bundle) {
 
         Map<String, String> answer = new HashMap<>();
         for (String param : params) {

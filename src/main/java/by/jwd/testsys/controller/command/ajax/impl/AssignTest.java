@@ -3,6 +3,7 @@ package by.jwd.testsys.controller.command.ajax.impl;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
+import by.jwd.testsys.logic.AdminService;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.DateOutOfRangeException;
 import by.jwd.testsys.logic.exception.ServiceException;
@@ -42,11 +43,11 @@ public class AssignTest implements AjaxCommand {
         if (testId != 0 && deadlineParam != null && usersId != null) {
 
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
-            TestService testService = serviceFactory.getTestService();
+            AdminService adminService = serviceFactory.getAdminService();
 
             try {
                 LocalDate deadline=LocalDate.parse(deadlineParam);
-                assignmentResult = testService.assignTestToUsers(testId, deadline, usersId);
+                assignmentResult = adminService.assignTestToUsers(testId, deadline, usersId);
 
 
                 answer = gson.toJson(assignmentResult);

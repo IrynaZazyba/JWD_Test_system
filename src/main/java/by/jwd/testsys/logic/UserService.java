@@ -1,9 +1,11 @@
 package by.jwd.testsys.logic;
 
+import by.jwd.testsys.bean.Assignment;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.logic.exception.ExistsUserException;
 import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.exception.ServiceException;
+import by.jwd.testsys.logic.exception.TestServiceException;
 
 import java.time.LocalDate;
 import java.util.Set;

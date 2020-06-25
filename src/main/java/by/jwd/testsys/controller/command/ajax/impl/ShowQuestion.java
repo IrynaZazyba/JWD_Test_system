@@ -38,7 +38,7 @@ public class ShowQuestion implements AjaxCommand {
         try {
 
             testService.checkPermission(user_id, test_id, key);
-            assignment = testService.receiveTestAssignment(test_id, user_id);
+            assignment = testService.checkTestAssignment(test_id, user_id);
 
 
             int questionLogId;

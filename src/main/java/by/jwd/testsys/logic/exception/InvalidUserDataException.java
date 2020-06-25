@@ -3,7 +3,7 @@ package by.jwd.testsys.logic.exception;
 import java.io.Serializable;
 import java.util.Set;
 
-public class InvalidUserDataException extends Exception implements Serializable {
+public class InvalidUserDataException extends ServiceException implements Serializable {
 
 
     private static final long serialVersionUID = 1075319083581008765L;

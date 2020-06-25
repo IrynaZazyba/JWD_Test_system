@@ -26,16 +26,16 @@ public class ShowUserPage implements Command {
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        HttpSession session = req.getSession();
-
         ServiceFactory serviceFactory=ServiceFactory.getInstance();
         UserService userService = serviceFactory.getUserService();
 
-        try {
-            int userId = (Integer) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
-            User userInfoToAccount = userService.userInfoToAccount(userId);
+        HttpSession session = req.getSession();
+        int userId = (Integer) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
 
+        try {
+            User userInfoToAccount = userService.userInfoToAccount(userId);
             req.setAttribute(RequestParameterName.USER_ACCOUNT_INFO, userInfoToAccount);
+
             session.setAttribute(SessionAttributeName.QUERY_STRING,req.getQueryString());
             forwardToPage(req, resp, JspPageName.JSP_PAGE_PATH);
 

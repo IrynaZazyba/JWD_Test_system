@@ -4,6 +4,7 @@ import by.jwd.testsys.bean.Result;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.logic.TestLogService;
+import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.TestLogServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import com.google.gson.Gson;
@@ -46,9 +47,9 @@ public class ShowResultData implements AjaxCommand {
         Gson gson = new Gson();
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        TestLogService testLogService = serviceFactory.getTestLogService();
+        TestService testService = serviceFactory.getTestService();
         try {
-            Set<Result> results = testLogService.receiveResultData(testTypeId, testId, userId, date);
+            Set<Result> results = testService.receiveResultData(testTypeId, testId, userId, date);
             assignmentResult.put("results", results);
             answer=gson.toJson(assignmentResult);
 

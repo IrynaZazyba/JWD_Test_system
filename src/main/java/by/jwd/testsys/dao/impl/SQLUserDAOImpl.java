@@ -110,10 +110,10 @@ public class SQLUserDAOImpl implements UserDAO {
                 usersFromDB.add(buildUser(resultSet));
             }
         } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLUserDAOImpl getAll() method", e);
+            throw new DAOConnectionPoolException("ConnectionPoolException in SQLUserDAOImpl getTypes() method", e);
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl getAll() method", e);
-            throw new DAOSqlException("SQLException in SQLUserDAOImpl getAll() method", e);
+            logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl getTypes() method", e);
+            throw new DAOSqlException("SQLException in SQLUserDAOImpl getTypes() method", e);
         } finally {
             connectionPool.closeConnection(connection, statement, resultSet);
         }
@@ -619,6 +619,8 @@ public class SQLUserDAOImpl implements UserDAO {
         } catch (SQLException e) {
             logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method writeAssignment()", e);
             throw new DAOSqlException("SQLException in SQLTestDAOImpl method writeAssignment()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement,generatedKeys);
         }
         return assignmentId;
     }

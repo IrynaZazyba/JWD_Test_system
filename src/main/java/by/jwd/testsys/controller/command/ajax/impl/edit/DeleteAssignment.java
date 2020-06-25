@@ -3,6 +3,7 @@ package by.jwd.testsys.controller.command.ajax.impl.edit;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
+import by.jwd.testsys.logic.AdminService;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
@@ -26,10 +27,10 @@ public class DeleteAssignment implements AjaxCommand {
         Gson gson = new Gson();
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        TestService testService = serviceFactory.getTestService();
+        AdminService adminService = serviceFactory.getAdminService();
 
         try {
-            testService.deleteAssignment(assignment_id);
+            adminService.deleteAssignment(assignment_id);
             response.setStatus(204);
 
         } catch (ServiceException e) {

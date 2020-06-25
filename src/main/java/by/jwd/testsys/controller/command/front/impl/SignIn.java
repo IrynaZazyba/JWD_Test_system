@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
@@ -24,6 +25,10 @@ import java.util.ResourceBundle;
 public class SignIn implements Command {
 
     private static Logger logger = LogManager.getLogger();
+    private static final String LOCAL_FILE_NAME = "local";
+    private static final String LOCAL_FILE_PACKAGE = "local";
+    private static final String LOCAL_MESSAGE_INVALID_SIGN_IN = "message.invalid_sign_in";
+
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -44,16 +49,15 @@ public class SignIn implements Command {
                 session.setAttribute(SessionAttributeName.USER_ROLE_SESSION_ATTRIBUTE, userByLogin.getRole());
                 response.sendRedirect(request.getContextPath());
             } else {
-
-                ResourceBundle resourceBundle = ResourceBundle.getBundle("local/local");
-                request.setAttribute(RequestParameterName.SIGN_IN_ERROR, resourceBundle.getString("message.invalid_sign_in"));
+                ResourceBundle resourceBundle = ResourceBundle.getBundle(LOCAL_FILE_PACKAGE+ File.separator+LOCAL_FILE_NAME);
+                request.setAttribute(RequestParameterName.SIGN_IN_ERROR, resourceBundle.getString(LOCAL_MESSAGE_INVALID_SIGN_IN));
                 forwardToPage(request, response, JspPageName.START_JSP_PAGE);
             }
 
         } catch (ServiceException e) {
             response.sendRedirect(JspPageName.ERROR_PAGE);
         } catch (ForwardCommandException e) {
-            logger.log(Level.ERROR,"Forward to page Exception in SignIn command", e);
+            logger.log(Level.ERROR, "Forward to page Exception in SignIn command", e);
             response.sendRedirect(JspPageName.ERROR_PAGE);
         }
     }

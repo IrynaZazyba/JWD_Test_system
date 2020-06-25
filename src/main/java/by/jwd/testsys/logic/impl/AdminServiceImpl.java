@@ -1,20 +1,16 @@
 package by.jwd.testsys.logic.impl;
 
-import by.jwd.testsys.bean.Answer;
-import by.jwd.testsys.bean.Question;
-import by.jwd.testsys.bean.Test;
-import by.jwd.testsys.bean.Type;
+import by.jwd.testsys.bean.*;
 import by.jwd.testsys.dao.QuestionAnswerDAO;
 import by.jwd.testsys.dao.TestDAO;
-import by.jwd.testsys.dao.TestTypeDAO;
+import by.jwd.testsys.dao.UserDAO;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
 import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.factory.DAOFactoryProvider;
 import by.jwd.testsys.logic.AdminService;
-import by.jwd.testsys.logic.exception.AdminServiceException;
-import by.jwd.testsys.logic.exception.ExistsTypeAdminServiceException;
-import by.jwd.testsys.logic.exception.InvalidDeleteActionServiceException;
+import by.jwd.testsys.logic.exception.*;
+import by.jwd.testsys.logic.sender.SslSender;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,7 +21,18 @@ public class AdminServiceImpl implements AdminService {
 
     private final DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
     private TestDAO testDAO = daoFactory.getTestDao();
+    private UserDAO userDAO=daoFactory.getUserDao();
     private QuestionAnswerDAO questionAnswerDAO = daoFactory.getQuestionAnswerDao();
+
+    private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT = "BeeTesting test assignment";
+    private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_TEST = "you have been assigned to the test ";
+    private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_KEY = "Key: ";
+    private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_DEADLINE = "Deadline: ";
+    private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_REGARDS = "Best regards,\n \"Bee testing\" team.";
+    private static final String COMMA=",";
+    private static final String QUOTATION_MARK="\"";
+    private static final String NEW_LINE="\n";
+    private static final String DOT=".";
 
 
     @Override
@@ -38,7 +45,7 @@ public class AdminServiceImpl implements AdminService {
 
             testDAO.deleteTestById(testId, LocalDateTime.now());
         } catch (DAOException e) {
-            throw new AdminServiceException("DB problem", e);
+            throw new AdminServiceException("DAOException in AdminServiceImpl deleteTest() method", e);
         }
     }
 
@@ -52,7 +59,7 @@ public class AdminServiceImpl implements AdminService {
         try {
             generatedTestId = testDAO.saveTest(test, typeId);
         } catch (DAOException e) {
-            throw new AdminServiceException("DB problem", e);
+            throw new AdminServiceException("DAOException in AdminServiceImpl createTest() method", e);
         }
         return generatedTestId;
     }
@@ -64,7 +71,7 @@ public class AdminServiceImpl implements AdminService {
         try {
             testDAO.updateTest(test, typeId);
         } catch (DAOException e) {
-            throw new AdminServiceException("DB problem", e);
+            throw new AdminServiceException("DAOException in AdminServiceImpl updateTestData() method", e);
         }
     }
 
@@ -88,7 +95,7 @@ public class AdminServiceImpl implements AdminService {
             createdQuestion.setAnswers(createdAnswers);
             questionAnswerDAO.saveQuestionWithAnswers(createdQuestion, testId);
         } catch (DAOException e) {
-            throw new AdminServiceException("DB problem", e);
+            throw new AdminServiceException("DAOException in AdminServiceImpl createQuestionAnswer() method", e);
         }
 
 
@@ -102,18 +109,19 @@ public class AdminServiceImpl implements AdminService {
             Set<Question> questions = questionAnswerDAO.getQuestionsWithAnswersByTestId(testId);
             testData.setQuestions(questions);
         } catch (DAOException e) {
-            throw new AdminServiceException("DB problem", e);
+            throw new AdminServiceException("DAOException in AdminServiceImpl receiveTestWithQuestionsAndAnswers() method", e);
         }
 
         return testData;
     }
 
+    //todo Изменить на параметр
     @Override
     public void changeTestIsEdited(int testId, boolean isEdited) throws AdminServiceException {
         try {
             testDAO.updateTestIsEdited(testId, isEdited);
         } catch (DAOException e) {
-            throw new AdminServiceException("DB problem", e);
+            throw new AdminServiceException("DAOException in AdminServiceImpl changeTestIsEdited() method", e);
         }
     }
 
@@ -163,7 +171,7 @@ public class AdminServiceImpl implements AdminService {
         try {
             questionAnswerDAO.updateQuestionWithAnswersByQuestionId(updatedQuestion, answerToUpdate, answerToAdd, answerToDelete, LocalDate.now());
         } catch (DAOException e) {
-            throw new AdminServiceException("DB problem", e);
+            throw new AdminServiceException("DAOException in AdminServiceImpl updateQuestionWithAnswers() method", e);
         }
     }
 
@@ -173,7 +181,7 @@ public class AdminServiceImpl implements AdminService {
         try {
             testDAO.updateTestIsEdited(testID, false);
         } catch (DAOException e) {
-            throw new AdminServiceException("DB problem", e);
+            throw new AdminServiceException("DAOException in AdminServiceImpl completeTestCreation() method", e);
         }
     }
 
@@ -183,34 +191,102 @@ public class AdminServiceImpl implements AdminService {
         try {
             questionAnswerDAO.deleteQuestionWithAnswers(questionId, LocalDateTime.now());
         } catch (DAOException e) {
-            throw new AdminServiceException("DB problem", e);
+            throw new AdminServiceException("DAOException in AdminServiceImpl deleteQuestionWithAnswers() method", e);
         }
     }
 
     @Override
     public void addTestType(String testTypeTitle) throws AdminServiceException, ExistsTypeAdminServiceException {
-        TestTypeDAO typeDao = daoFactory.getTypeDao();
 
         try {
-            Type typeByTitle = typeDao.getTypeByTitle(testTypeTitle);
+            Type typeByTitle = testDAO.getTypeByTitle(testTypeTitle);
             if (typeByTitle.getTitle() != null) {
                 throw new ExistsTypeAdminServiceException("Exists test type exception in AdminService addTestType() method");
             }
 
-            typeDao.saveTestType(testTypeTitle);
+            testDAO.saveTestType(testTypeTitle);
 
-        } catch (DAOSqlException e) {
-            throw new AdminServiceException("DB problem", e);
+        } catch (DAOException e) {
+            throw new AdminServiceException("DAOException in AdminServiceImpl addTestType() method", e);
         }
     }
 
-    private LocalTime buildLocalTimeFromMinuteDuration(int duration) {
-        LocalTime testDuration = null;
-
-        if (duration > 0) {
-            testDuration = LocalTime.ofSecondOfDay(duration * 60);
+    @Override
+    public void deleteAssignment(int assignment_id) throws ServiceException {
+        try {
+            userDAO.deleteAssignment(assignment_id, LocalDate.now());
+        } catch (DAOSqlException e) {
+            throw new AdminServiceException("DAOException in AdminServiceImpl deleteAssignment() method", e);
         }
-        return testDuration;
+
+    }
+
+    @Override
+    public Map<String, Set<User>> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws ServiceException, DateOutOfRangeException {
+
+        List<Integer> usersId = new ArrayList<>();
+        Map<String, Set<User>> assignmentResult = new HashMap<>();
+        Set<User> existsAssignment = new HashSet<>();
+        Set<User> successAssignment = new HashSet<>();
+
+        if (!isWithinRange(deadline)) {
+            throw new DateOutOfRangeException("Deadline date isn't valid");
+        }
+
+        try {
+            for (String id : assignUsersId) {
+                int userId = Integer.parseInt(id);
+                Assignment assignment =userDAO.getUserAssignmentByTestId(userId, testId);
+                if (assignment == null) {
+                    usersId.add(userId);
+                    User user = userDAO.getUserById(userId);
+                    successAssignment.add(user);
+                } else {
+                    User userById = userDAO.getUserById(userId);
+                    existsAssignment.add(userById);
+                }
+            }
+
+            assignmentResult.put("successAssignment", successAssignment);
+            assignmentResult.put("existsAssignment", existsAssignment);
+            userDAO.insertAssignment(LocalDate.now(), deadline, testId, usersId);
+            sendTestKeyToUsers(successAssignment, testId, deadline);
+        } catch (DAOException e) {
+            throw new AdminServiceException("DAOException in AdminServiceImpl assignTestToUsers() method", e);
+        }
+
+        return assignmentResult;
+    }
+
+
+    private boolean isWithinRange(LocalDate deadline) {
+        return deadline.isAfter(LocalDate.now());
+    }
+
+    private void sendTestKeyToUsers(Set<User> assignedUsers, int testId, LocalDate deadline) throws DAOException {
+
+            Test testInfo = testDAO.getTestInfo(testId);
+            SslSender sender = SslSender.getInstance();
+
+            for (User user : assignedUsers) {
+                String message = buildEmailMessage(user.getFirstName(), testInfo.getTitle(), testInfo.getKey(), deadline);
+                sender.send(EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT, message, user.getEmail());
+            }
+
+    }
+
+    private String buildEmailMessage(String userName, String testName, String key, LocalDate deadline) {
+        StringBuilder message = new StringBuilder();
+        message.append(userName)
+                .append(COMMA)
+                .append(EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_TEST)
+                .append(QUOTATION_MARK).append(testName).append(QUOTATION_MARK).append(DOT+NEW_LINE);
+        message.append(EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_DEADLINE).append(deadline).append(DOT+NEW_LINE);
+        if (key != null) {
+            message.append(EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_KEY).append(key).append(DOT+NEW_LINE);
+        }
+        message.append(EMAIL_ABOUT_TEST_ASSIGNMENT_REGARDS);
+        return message.toString();
     }
 
 }

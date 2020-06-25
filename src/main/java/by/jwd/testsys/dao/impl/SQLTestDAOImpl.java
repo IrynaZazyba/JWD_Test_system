@@ -16,7 +16,9 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class SQLTestDAOImpl implements TestDAO {
@@ -70,6 +72,10 @@ public class SQLTestDAOImpl implements TestDAO {
     private static final String GET_COUNT_TESTS_BY_TYPE_ID = "SELECT count(id) as countRow FROM `test` " +
             "WHERE type_id=? and deleted_at is null";
 
+    private static final String SELECT_ALL_TYPES = "SELECT id, title from type WHERE deleted_at IS null";
+    private static final String SELECT_TYPE_BY_TITLE = "SELECT id, title from type WHERE deleted_at IS null AND title=?";
+    private static final String INSERT_TYPE = "INSERT INTO type (title) VALUES (?)";
+
 
     private static final String TEST_ID_COLUMN = "id";
     private static final String TEST_TITLE_COLUMN = "title";
@@ -79,6 +85,8 @@ public class SQLTestDAOImpl implements TestDAO {
     private static final String COUNT_TEST_ROW = "countRow";
     private static final String TEST_ID_COLUMN_ALIAS = "t_id";
     private static final String TEST_TITLE_COLUMN_ALIAS = "t_title";
+    private static final String TYPE_TITLE_COLUMN= "title";
+    private static final String TYPE_ID_COLUMN= "id";
     private static final String TYPE_TITLE_COLUMN_ALIAS = "type_title";
     private static final String TYPE_ID_COLUMN_ALIAS = "type_id";
     private static final String QUESTION_ID_COLUMN = "id";
@@ -112,6 +120,90 @@ public class SQLTestDAOImpl implements TestDAO {
         return assignmentTests;
     }
 
+
+    @Override
+    public List<Type> getTypes() throws DAOException {
+
+        Connection connection = null;
+        List<Type> typesFromDB;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(SELECT_ALL_TYPES);
+            typesFromDB = new ArrayList<>();
+            while (resultSet.next()) {
+               Type type=buildType(resultSet);
+                typesFromDB.add(type);
+            }
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestTypeDAOImpl getTypes() method.", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestTypeDAOImpl getTypes() method", e);
+            throw new DAOSqlException("SQLException in SQLTestTypeDAOImpl getTypes() method.", e);
+        } finally {
+            connectionPool.closeConnection(connection, statement, resultSet);
+        }
+
+        return typesFromDB;
+    }
+
+    @Override
+    public void saveTestType(String testTypeTitle) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(INSERT_TYPE);
+            preparedStatement.setString(1, testTypeTitle);
+            preparedStatement.executeUpdate();
+
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestTypeDAOImpl saveTestType() method.", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestTypeDAOImpl saveTestType() method", e);
+            throw new DAOSqlException("SQLException in SQLTestTypeDAOImpl saveTestType() method.", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
+        }
+    }
+
+
+    @Override
+    public Type getTypeByTitle(String title) throws DAOSqlException {
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Type type = new Type();
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_TYPE_BY_TITLE);
+            preparedStatement.setString(1, title);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+              type=buildType(resultSet);
+            }
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestTypeDAOImpl getTypeByTitle() method.", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestTypeDAOImpl getTypeByTitle() method", e);
+            throw new DAOSqlException("SQLException in SQLTestTypeDAOImpl getTypeByTitle() method.", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement,resultSet);
+        }
+        return type;
+    }
+
+    private Type buildType(ResultSet resultSet) throws SQLException {
+        int id = resultSet.getInt(TYPE_ID_COLUMN);
+        String typeTitle = resultSet.getString(TYPE_TITLE_COLUMN);
+        return new Type.Builder().withId(id).withTitle(typeTitle).build();
+
+    }
 
     @Override
     public Test getTestInfo(int id) throws DAOException {
@@ -309,7 +401,7 @@ public class SQLTestDAOImpl implements TestDAO {
 
             preparedStatement = connection.prepareStatement(GET_COUNT_INCOMPLETE_ASSIGNMENT_BY_TEST_ID);
             preparedStatement.setInt(1, testId);
-            preparedStatement.setBoolean(2,isCompleted);
+            preparedStatement.setBoolean(2, isCompleted);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 countAssignment = resultSet.getInt(COUNT_TEST_ASSIGNMENT);

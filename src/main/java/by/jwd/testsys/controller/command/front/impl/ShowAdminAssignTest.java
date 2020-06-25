@@ -30,28 +30,38 @@ public class ShowAdminAssignTest implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        ServiceFactory serviceFactory=ServiceFactory.getInstance();
-        TestService testService =serviceFactory.getTestService();
-        UserService userService = serviceFactory.getUserService();
         HttpSession session = request.getSession(false);
 
         try {
-            List<Type> typeWithTests = testService.allTestsType();
-
-            request.setAttribute(RequestParameterName.LIST_TYPE_WITH_TESTS,typeWithTests);
-            Set<User> students = userService.getStudents();
-            request.setAttribute(RequestParameterName.SET_STUDENTS, students);
-            request.setAttribute(RequestParameterName.CURRENT_DATE, LocalDate.now());
-            session.setAttribute(SessionAttributeName.QUERY_STRING,request.getQueryString());
+            BuildRequest.addFilterInfoToRequest(request);
+            session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
 
             forwardToPage(request, response, JspPageName.ADMIN_PAGE_ASSIGN_TEST);
         } catch (ServiceException e) {
             response.sendRedirect(JspPageName.ERROR_PAGE);
         } catch (ForwardCommandException e) {
-            logger.log(Level.ERROR,"Forward to page Exception in ShowAdminAssignTest command", e);
+            logger.log(Level.ERROR, "Forward to page Exception in ShowAdminAssignTest command", e);
             response.sendRedirect(JspPageName.ERROR_PAGE);
 
         }
     }
+
+
+     static class BuildRequest {
+
+         static void addFilterInfoToRequest(HttpServletRequest request) throws ServiceException {
+            ServiceFactory serviceFactory = ServiceFactory.getInstance();
+            TestService testService = serviceFactory.getTestService();
+            UserService userService = serviceFactory.getUserService();
+
+            List<Type> typeWithTests = testService.allTestsType();
+
+            request.setAttribute(RequestParameterName.LIST_TYPE_WITH_TESTS, typeWithTests);
+            Set<User> students = userService.getStudents();
+            request.setAttribute(RequestParameterName.SET_STUDENTS, students);
+            request.setAttribute(RequestParameterName.CURRENT_DATE, LocalDate.now());
+        }
+
+    }
+
 }

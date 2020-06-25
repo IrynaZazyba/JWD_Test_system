@@ -6,8 +6,6 @@ public interface DAOFactory {
 
     UserDAO getUserDao();
 
-    TestTypeDAO getTypeDao();
-
     TestDAO getTestDao();
 
     TestLogDAO getTestLogDao();

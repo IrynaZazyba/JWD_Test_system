@@ -27,7 +27,6 @@ public class ShowExeTestPage implements Command {
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        int testId = Integer.parseInt(req.getParameter(RequestParameterName.TEST_ID));
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         TestService testService = serviceFactory.getTestService();
@@ -35,12 +34,15 @@ public class ShowExeTestPage implements Command {
         HttpSession session = req.getSession(false);
         int user_id = (int) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
 
-        Test test = null;
+        Test test;
         try {
+
+            int testId = Integer.parseInt(req.getParameter(RequestParameterName.TEST_ID));
             Result result = testService.checkResult(user_id, testId);
             test = testService.getTestInfo(testId);
             test.setStarted(result!=null);
             req.setAttribute(RequestParameterName.TEST_INFO, test);
+
             session.setAttribute(SessionAttributeName.QUERY_STRING, req.getQueryString());
 
             forwardToPage(req, resp, JspPageName.EXE_TEST_PAGE);

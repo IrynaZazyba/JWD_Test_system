@@ -8,7 +8,6 @@ public class SQLDAOFactory implements DAOFactory {
 
     private final static SQLDAOFactory sqlDAOFactory = new SQLDAOFactory();
     private final static UserDAO userDao = new SQLUserDAOImpl();
-    private final static TestTypeDAO typeDao = new SQLTestTypeDAOImpl();
     private final static TestDAO testDao = new SQLTestDAOImpl();
     private final static TestLogDAO testLogDao = new SQLTestLogDAOImpl();
     private final static TestResultDAO testResultDao = new SQLTestResultDAOImpl();
@@ -24,11 +23,6 @@ public class SQLDAOFactory implements DAOFactory {
     @Override
     public UserDAO getUserDao() {
         return userDao;
-    }
-
-    @Override
-    public TestTypeDAO getTypeDao() {
-        return typeDao;
     }
 
     @Override

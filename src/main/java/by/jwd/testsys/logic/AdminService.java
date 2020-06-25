@@ -1,13 +1,14 @@
 package by.jwd.testsys.logic;
 
 import by.jwd.testsys.bean.Test;
-import by.jwd.testsys.logic.exception.AdminServiceException;
-import by.jwd.testsys.logic.exception.ExistsTypeAdminServiceException;
-import by.jwd.testsys.logic.exception.InvalidDeleteActionServiceException;
+import by.jwd.testsys.bean.User;
+import by.jwd.testsys.logic.exception.*;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface AdminService {
 
@@ -37,4 +38,8 @@ public interface AdminService {
     void deleteQuestionWithAnswers(int questionId) throws AdminServiceException;
 
     void addTestType(String testTypeTitle) throws AdminServiceException, ExistsTypeAdminServiceException;
+
+    void deleteAssignment(int assignment_id) throws ServiceException;
+
+    Map<String, Set<User>> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws ServiceException, DateOutOfRangeException;
 }

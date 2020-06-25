@@ -22,9 +22,11 @@ public interface TestService {
 
     Test getTestInfo(int id) throws TestServiceException;
 
-    Assignment receiveTestAssignment(int testId, int userId) throws TestServiceException;
+    Assignment checkTestAssignment(int testId, int userId) throws TestServiceException;
 
     void checkPermission(int userId, int testId, String key) throws TestServiceException, InvalidUserDataException, InvalidTestKeyException;
+
+    Set<Result> receiveResultData(int typeId, int testId, int userId, LocalDate date) throws TestLogServiceException;
 
     boolean checkKey(String key, int testId) throws TestServiceException;
 
@@ -38,21 +40,17 @@ public interface TestService {
 
     LocalTime getTestDuration(int assignmentId) throws TestServiceException;
 
-    Assignment getAssignment(int assignmentId) throws TestServiceException;
-
     Result getResultInfo(Assignment assignment, Test test) throws TestServiceException;
 
     Set<Statistic> getUserTestStatistic(int userId) throws TestServiceException;
+
+    Assignment getAssignment(int assignmentId) throws TestServiceException;
 
     Result checkResult(int userId, int testId) throws TestServiceException;
 
     Set<Test> getNotEditedTestByTypeId(int typeId) throws TestServiceException;
 
     Set<Test> getAllTestByTypeId(int typeId, int currentPage) throws TestServiceException;
-
-    Map<String,Set<User>> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws ServiceException, DateOutOfRangeException;
-
-    void deleteAssignment(int assignment_id) throws ServiceException;
 
     int receiveCountTestPages(int typeId) throws TestServiceException;
 }

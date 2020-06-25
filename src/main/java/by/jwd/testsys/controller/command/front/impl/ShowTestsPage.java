@@ -23,18 +23,20 @@ import java.util.List;
 import java.util.Set;
 
 public class ShowTestsPage implements Command {
-    private static Logger logger = LogManager.getLogger();
 
+    private static Logger logger = LogManager.getLogger();
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        TestService testService = ServiceFactory.getInstance().getTestService();
 
         HttpSession session = req.getSession();
         int userId = (int) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
+
         try {
+            TestService testService = ServiceFactory.getInstance().getTestService();
             List<Type> tests = testService.typeWithTests(userId);
             req.setAttribute(RequestParameterName.TEST_TYPES_LIST, tests);
+
             Set<Test> userAssignedTests=testService.getUserAssignmentTests(userId);
             req.setAttribute(RequestParameterName.USER_ASSIGNMENT,userAssignedTests);
             session.setAttribute(SessionAttributeName.QUERY_STRING, req.getQueryString());

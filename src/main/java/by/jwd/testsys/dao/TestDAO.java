@@ -16,6 +16,12 @@ public interface TestDAO {
 
     Set<Test> getAssignedTests(int userId) throws DAOException;
 
+    List<Type> getTypes() throws DAOException;
+
+    void saveTestType(String testTypeTitle) throws DAOException;
+
+    Type getTypeByTitle(String title) throws DAOException;
+
     Test getTestInfo(int id) throws DAOException;
 
     String getTestKey(int testId) throws DAOException;

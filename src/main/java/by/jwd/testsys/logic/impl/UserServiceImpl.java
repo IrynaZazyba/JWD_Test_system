@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
         try {
             userByLogin = userDao.getUserByLoginPassword(userLogin, userPassword);
         } catch (DAOException e) {
-            throw new ServiceException("Error in userByLoginPassword.", e);
+            throw new ServiceException("Exception in UserServiceImpl method userByLoginPassword().", e);
         }
         return userByLogin;
     }
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
             }
 
         } catch (DAOException e) {
-            throw new ServiceException("Error in save user.", e);
+            throw new ServiceException("Exception in UserServiceImpl method registerUser().", e);
         }
         return userCreated;
     }
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
         try {
             userFromDB = userDao.getUserById(id);
         } catch (DAOException e) {
-            throw new ServiceException("Error in getUserById().", e);
+            throw new ServiceException("Exception in UserServiceImpl method userInfoToAccount().", e);
         }
         return userFromDB;
     }
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
         try {
             updatedUser = userDao.updateUser(user);
         } catch (DAOException e) {
-            throw new ServiceException("Error in editUserInfo().", e);
+            throw new ServiceException("Exception in UserServiceImpl method editUserInfo().", e);
         }
         return updatedUser;
     }
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
         try {
             students = userDao.getUserByRole(Role.USER);
         } catch (DAOException e) {
-            throw new ServiceException("Error in getUserByRole().", e);
+            throw new ServiceException("Exception in UserServiceImpl method getStudents().", e);
         }
         return students;
     }
@@ -100,10 +100,11 @@ public class UserServiceImpl implements UserService {
         try {
             users = userDao.getUsersWithAssignmentByTestId(testId, testTypeId, isCompleted);
         } catch (DAOException e) {
-            throw new ServiceException("Error in getUsersWithAssignment().", e);
+            throw new ServiceException("Exception in UserServiceImpl method getUsersWithAssignment().", e);
         }
         return users;
     }
+
 
     @Override
     public Set<String> validateUserData(String login, String password, String firstName, String lastName, String email) {
