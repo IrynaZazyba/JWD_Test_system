@@ -27,17 +27,36 @@
 <fmt:message bundle="${loc}" key="nav-item.admin.users" var="nav_item_admin_users"/>
 <fmt:message bundle="${loc}" key="button.language_en" var="button_language_en"/>
 <fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
+<fmt:message bundle="${loc}" key="result.page.card-title" var="title_result"/>
 
 <div class="container-fluid p-0">
 
     <jsp:include page="parts/nav-menu.jsp"/>
 
-    <c:out value="${requestScope.test_name}"/>
-    <res:result-tag rightCountQuestion="${requestScope.testResult.rightCountQuestion}"
-                    allCountQuestion="${requestScope.testResult.allCountQuestion}"/>
-
-    <c:out value="${requestScope.testResult}"/>
-
+    <div class="row p-t-25">
+        <div class="col-2"></div>
+        <div class="col-8">
+            <div class="row">
+                <div class="card border-info mb-3" style="min-width: 100%;">
+                    <div class="card-header">${title_result}</div>
+                    <div class="card-body text-info">
+                        <h5 class="card-title">${requestScope.test_name}</h5>
+                        <p class="card-text">
+                        <div class="progress wight-100">
+                            <div class="progress-bar w-75" role="progressbar"
+                                 aria-valuenow="${requestScope.testResult.rightCountQuestion}"
+                                 aria-valuemin="0"
+                                 aria-valuemax="${requestScope.testResult.countTestQuestion}">
+                                <c:out value="${requestScope.testResult.rightCountQuestion}/${requestScope.testResult.countTestQuestion}"/>
+                            </div>
+                        </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-2"></div>
+    </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="" crossorigin="anonymous"></script>

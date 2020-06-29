@@ -16,7 +16,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>allCountQuestion</name>
+            <name>countTestQuestion</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>

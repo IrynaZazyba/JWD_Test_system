@@ -327,6 +327,8 @@ public class TestServiceImpl implements TestService {
         Result result;
         try {
             result = testResultDAO.getTestResult(assignment);
+            int countQuestion = questionAnswerDAO.getCountQuestion(test.getId());
+            result.setCountTestQuestion(countQuestion);
         } catch (DAOException e) {
             throw new TestServiceException("DAOException in TestService getResultInfo() method", e);
         }

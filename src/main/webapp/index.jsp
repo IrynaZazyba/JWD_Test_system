@@ -44,7 +44,7 @@
 
     <jsp:include page="WEB-INF/jsp/parts/nav-menu.jsp"/>
 
-    <div class="row align-items-center ">
+    <div class="row align-items-center m-0 ">
 
         <c:if test="${empty sessionScope.user_id}">
             <div class="col-7">
@@ -335,8 +335,6 @@
 
             </div>
         </c:if>
-
-        <div class="col-1"></div>
 
     </div>
 </div>

@@ -10,14 +10,14 @@ public class ResultTag extends TagSupport {
     private static final long serialVersionUID = -5845012029025545470L;
 
     private int rightCountQuestion;
-    private int allCountQuestion;
+    private int countTestQuestion;
 
     @Override
     public int doStartTag() throws JspException {
 
         JspWriter out = pageContext.getOut();
         try {
-            double result =rightCountQuestion * 100 / allCountQuestion;
+            double result =(rightCountQuestion * 100) / countTestQuestion;
             out.write(String.format("%.2f",result));
         } catch (IOException e) {
             throw new JspException(e);
@@ -33,11 +33,11 @@ public class ResultTag extends TagSupport {
         this.rightCountQuestion = rightCountQuestion;
     }
 
-    public int getAllCountQuestion() {
-        return allCountQuestion;
+    public int getCountTestQuestion() {
+        return countTestQuestion;
     }
 
-    public void setAllCountQuestion(int allCountQuestion) {
-        this.allCountQuestion = allCountQuestion;
+    public void setCountTestQuestion(int countTestQuestion) {
+        this.countTestQuestion = countTestQuestion;
     }
 }

@@ -67,7 +67,7 @@
                         <td><c:out value="${item.minutesSpentOnTest}"/></td>
                         <td><c:out value="${item.timeOnTest}"/></td>
                         <td><c:out value="${item.rightCountQuestion}"/></td>
-                        <td><res:result-tag rightCountQuestion="${item.rightCountQuestion}" allCountQuestion="${item.allCountQuestion}"/></td>
+                        <td><res:result-tag rightCountQuestion="${item.rightCountQuestion}" countTestQuestion="${item.countTestQuestion}"/></td>
                     </tr>
                 </c:forEach>
 

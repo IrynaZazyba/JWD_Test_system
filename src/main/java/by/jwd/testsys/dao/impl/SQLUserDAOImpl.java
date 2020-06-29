@@ -88,7 +88,7 @@ public class SQLUserDAOImpl implements UserDAO {
     private static final String ASSIGNMENT_ID_COLUMN = "id";
     private static final String ASSIGNMENT_DATE_COLUMN = "date";
     private static final String ASSIGNMENT_DEADLINE_COLUMN = "deadline";
-    private static final String ASSIGNMENT_TEST_ID_COLUMN = "id";
+    private static final String ASSIGNMENT_TEST_ID_COLUMN = "test_id";
     private static final String ASSIGNMENT_COMPLETED_COLUMN = "completed";
 
 

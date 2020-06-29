@@ -25,7 +25,7 @@ class Statistic implements Serializable {
     private LocalDateTime testEnd;
     private long minutesSpentOnTest;
     private int rightCountQuestion;
-    private int allCountQuestion;
+    private int countTestQuestion;
 
     public Statistic() {
     }
@@ -63,8 +63,8 @@ class Statistic implements Serializable {
             return this;
         }
 
-        public Builder withAllCountQuestion(int allCountQuestion){
-            newStatistic.allCountQuestion=allCountQuestion;
+        public Builder withAllCountQuestion(int countTestQuestion){
+            newStatistic.countTestQuestion=countTestQuestion;
             return this;
         }
 
