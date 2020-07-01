@@ -218,8 +218,6 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
                 preparedStatement.executeUpdate();
             }
             connection.commit();
-            connection.setAutoCommit(true);
-
         } catch (ConnectionPoolException e) {
             throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method saveQuestionWithAnswers()", e);
         } catch (SQLException e) {
@@ -232,6 +230,14 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
             logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method saveQuestionWithAnswers()", e);
             throw new DAOSqlException("SQLException in SQLTestDAOImpl method saveQuestionWithAnswers()", e);
         } finally {
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method saveQuestionWithAnswers() in" +
+                            "attempt to setAutoCommit(true)", e);
+                }
+            }
             connectionPool.closeConnection(connection, preparedStatement, generatedKey);
         }
         return createdQuestionId;
@@ -283,7 +289,6 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
             }
 
             connection.commit();
-            connection.setAutoCommit(true);
 
         } catch (ConnectionPoolException e) {
             throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method updateQuestionWithAnswersByQuestionId()", e);
@@ -297,6 +302,14 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
             logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method updateQuestionWithAnswersByQuestionId()", e);
             throw new DAOSqlException("SQLException in SQLTestDAOImpl method updateQuestionWithAnswersByQuestionId()", e);
         } finally {
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method updateQuestionWithAnswersByQuestionId() in" +
+                            "attempt to setAutoCommit(true)", e);
+                }
+            }
             connectionPool.closeConnection(connection, preparedStatement);
         }
 
@@ -372,7 +385,6 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
             preparedStatement.executeUpdate();
 
             connection.commit();
-            connection.setAutoCommit(true);
 
         } catch (SQLException e) {
             try {
@@ -386,6 +398,14 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
         } catch (ConnectionPoolException e) {
             throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method deleteQuestionWithAnswers()", e);
         } finally {
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method deleteQuestionWithAnswers() in" +
+                            "attempt to setAutoCommit(true)", e);
+                }
+            }
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }

@@ -52,7 +52,6 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
                 preparedStatement.executeUpdate();
             }
             connection.commit();
-            connection.setAutoCommit(true);
         } catch (SQLException e) {
             try {
                 connection.rollback();
@@ -65,6 +64,14 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
         } catch (ConnectionPoolException e) {
             throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestLogDAOImpl method writeAnswerLog()", e);
         } finally {
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    logger.log(Level.ERROR, "SQLException in SQLTestLogDAOImpl method writeAnswerLog() in" +
+                            "attempt to setAutoCommit(true)", e);
+                }
+            }
             connectionPool.closeConnection(connection, preparedStatement);
         }
 

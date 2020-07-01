@@ -488,7 +488,6 @@ public class SQLTestDAOImpl implements TestDAO {
             preparedStatement.executeUpdate();
 
             connection.commit();
-            connection.setAutoCommit(true);
 
         } catch (SQLException e) {
             try {
@@ -502,6 +501,14 @@ public class SQLTestDAOImpl implements TestDAO {
         } catch (ConnectionPoolException e) {
             throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method deleteTestById()", e);
         } finally {
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method deleteTestById() in" +
+                            "attempt to setAutoCommit(true)", e);
+                }
+            }
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
     }

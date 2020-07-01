@@ -391,7 +391,6 @@ public class SQLUserDAOImpl implements UserDAO {
                 preparedStatement.executeUpdate();
             }
             connection.commit();
-            connection.setAutoCommit(true);
 
         } catch (ConnectionPoolException e) {
             throw new DAOConnectionPoolException("SQLException in SQLUserDAOImpl insertAssignment() method", e);
@@ -405,6 +404,14 @@ public class SQLUserDAOImpl implements UserDAO {
             logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl insertAssignment() method", e);
             throw new DAOSqlException("SQLException in SQLUserDAOImpl insertAssignment() method", e);
         } finally {
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl method insertAssignment() in" +
+                            "attempt to setAutoCommit(true)", e);
+                }
+            }
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }
