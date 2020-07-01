@@ -1,4 +1,4 @@
-package by.jwd.testsys.logic.sender;
+package by.jwd.testsys.logic.util;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -17,7 +17,7 @@ public class SslSender {
         return instance;
     }
 
-    public void inializeSalSender(Properties props) {
+    public void initializeSalSender(Properties props) {
         this.props = props;
         this.username = props.getProperty("mail.username");
         this.password = props.getProperty("mail.password");

@@ -49,6 +49,7 @@ public class UserValidatorImpl implements UserValidator {
         return validationResult;
     }
 
+
     /**
      * login c ограничением 5-15 символов,
      * которыми могут быть буквы и цифры,
@@ -64,7 +65,8 @@ public class UserValidatorImpl implements UserValidator {
      * которыми могут быть буквы и цифры,
      * символ подчеркивания, дефис.
      */
-    private boolean validatePassword(String password) {
+    @Override
+    public boolean validatePassword(String password) {
         return password.matches(PASSWORD_PATTERN);
     }
 

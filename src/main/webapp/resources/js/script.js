@@ -12,9 +12,9 @@ function menuLinkHelper() {
     let urlParams = window.location.search.toString().split('&');
     urlParams.forEach(elem => {
         if (elem.includes('command')) {
-            let command=elem.split('=')[1];
-            let menuLinkActive=document.querySelector(".nav-item > a[href*='"+command+"']");
-            if(menuLinkActive!=null){
+            let command = elem.split('=')[1];
+            let menuLinkActive = document.querySelector(".nav-item > a[href*='" + command + "']");
+            if (menuLinkActive != null) {
                 menuLinkActive.classList.add('active');
             }
         }
@@ -283,11 +283,22 @@ async function getContinuedQuestion() {
     getQuestion();
 }
 
+async function changePassword(obj) {
 
-async function registerUser(form) {
 
+    let formData = new FormData(obj);
+    let response = await fetch("/test-system/ajax?command=change_password", {
+        method: 'POST',
+        body: formData,
+    });
+
+
+    if (response.ok) {
+        let json = await response.json();
+        document.getElementById('passMessage').innerHTML = generateMessageDiv(json);
+
+    }
 }
-
 
 
 

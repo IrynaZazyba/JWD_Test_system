@@ -30,14 +30,12 @@ public class EditUser implements AjaxCommand {
         String answer;
 
         String login = request.getParameter(RequestParameterName.USER_LOGIN_PARAMETER);
-        String password = request.getParameter(RequestParameterName.USER_PASSWORD_PARAMETER);
         String first_name = request.getParameter(RequestParameterName.USER_FIRST_NAME_PARAMETER);
         String last_name = request.getParameter(RequestParameterName.USER_LAST_NAME_PARAMETER);
         String email = request.getParameter(RequestParameterName.USER_EMAIL_PARAMETER);
 
         User user = new User.Builder()
                 .withLogin(login)
-                .withPassword(password)
                 .withFirstName(first_name)
                 .withLastName(last_name)
                 .withEmail(email)
@@ -90,10 +88,6 @@ public class EditUser implements AjaxCommand {
         for (String param : params) {
             if (param.equals(InvalidParam.INVALID_LOGIN.toString())) {
                 answer.put(InvalidParam.INVALID_LOGIN.toString().toLowerCase(), bundle.getString("message.invalid_login"));
-            }
-
-            if (param.equals(InvalidParam.INVALID_PASSWORD.toString())) {
-                answer.put(InvalidParam.INVALID_LOGIN.toString().toLowerCase(), bundle.getString("message.invalid_password"));
             }
 
             if (param.equals((InvalidParam.INVALID_FIRST_NAME.toString()))) {

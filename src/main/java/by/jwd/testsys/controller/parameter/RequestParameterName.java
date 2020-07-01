@@ -8,6 +8,7 @@ public final class RequestParameterName {
     public static final String COMMAND_NAME = "command";
     public static final String USER_LOGIN_PARAMETER = "login";
     public static final String USER_PASSWORD_PARAMETER = "password";
+    public static final String USER_OLD_PASSWORD_PARAMETER = "oldPassword";
     public static final String USER_EMAIL_PARAMETER = "email";
     public static final String USER_FIRST_NAME_PARAMETER = "first_name";
     public static final String USER_LAST_NAME_PARAMETER = "last_name";

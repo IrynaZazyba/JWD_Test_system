@@ -10,7 +10,7 @@ import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.factory.DAOFactoryProvider;
 import by.jwd.testsys.logic.AdminService;
 import by.jwd.testsys.logic.exception.*;
-import by.jwd.testsys.logic.sender.SslSender;
+import by.jwd.testsys.logic.util.SslSender;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -6,6 +6,7 @@ import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.controller.command.front.Command;
 import by.jwd.testsys.controller.command.front.ForwardCommandException;
+import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.UserService;
 import by.jwd.testsys.logic.factory.ServiceFactory;
@@ -41,22 +42,22 @@ public class SignIn implements Command {
         HttpSession session = request.getSession();
 
         try {
-            User userByLogin = userService.userByLoginPassword(login, password);
+            User userByLogin = userService.checkUserCredentials(login, password);
 
-            if (userByLogin != null) {
+            if (userByLogin.getId()!=0) {
                 session.setAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE, userByLogin.getId());
                 session.setAttribute(SessionAttributeName.USER_LOGIN_SESSION_ATTRIBUTE, userByLogin.getLogin());
                 session.setAttribute(SessionAttributeName.USER_ROLE_SESSION_ATTRIBUTE, userByLogin.getRole());
                 response.sendRedirect(request.getContextPath());
             } else {
-                ResourceBundle resourceBundle = ResourceBundle.getBundle(LOCAL_FILE_PACKAGE+ File.separator+LOCAL_FILE_NAME);
+                ResourceBundle resourceBundle = ResourceBundle.getBundle(LOCAL_FILE_PACKAGE + File.separator + LOCAL_FILE_NAME);
                 request.setAttribute(RequestParameterName.SIGN_IN_ERROR, resourceBundle.getString(LOCAL_MESSAGE_INVALID_SIGN_IN));
                 forwardToPage(request, response, JspPageName.START_JSP_PAGE);
             }
 
-        } catch (ServiceException e) {
+        } catch(ServiceException e) {
             response.sendRedirect(JspPageName.ERROR_PAGE);
-        } catch (ForwardCommandException e) {
+        } catch(ForwardCommandException e){
             logger.log(Level.ERROR, "Forward to page Exception in SignIn command", e);
             response.sendRedirect(JspPageName.ERROR_PAGE);
         }

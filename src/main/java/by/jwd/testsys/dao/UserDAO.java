@@ -16,8 +16,6 @@ public interface UserDAO {
 
     User create(User user) throws DAOException;
 
-    User getUserByLoginPassword(String login, String password) throws DAOException;
-
     User getUserById(int id) throws DAOException;
 
     User updateUser(User user) throws DAOException;
@@ -43,4 +41,7 @@ public interface UserDAO {
     void updateAssignment(int assignmentId, boolean isCompleted) throws DAOSqlException;
 
     Integer writeAssignment(Assignment assignment) throws DAOSqlException;
+
+    void updateUserPassword(int userId, String password) throws DAOException;
+
 }

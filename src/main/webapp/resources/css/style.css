@@ -448,3 +448,9 @@ input:checked {
 .m-t-30 {
     margin-top: 30px;
 }
+
+.userAccountCard{
+    border: 1px solid lightgray;
+    border-radius: .5rem;
+    padding: 15px;
+}

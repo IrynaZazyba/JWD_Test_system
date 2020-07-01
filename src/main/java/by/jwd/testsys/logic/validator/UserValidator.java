@@ -7,5 +7,5 @@ import java.util.Set;
 public interface UserValidator {
 
     Set<String> validate(User user);
-
+    boolean validatePassword(String password);
 }

@@ -1,19 +1,16 @@
 package by.jwd.testsys.logic;
 
-import by.jwd.testsys.bean.Assignment;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.logic.exception.ExistsUserException;
 import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.exception.ServiceException;
-import by.jwd.testsys.logic.exception.TestServiceException;
 
-import java.time.LocalDate;
 import java.util.Set;
 
 
 public interface UserService {
 
-    User userByLoginPassword(String userLogin, String userPassword) throws ServiceException;
+    User checkUserCredentials(String userLogin, String userPassword) throws ServiceException;
 
     User registerUser(User user) throws ServiceException, ExistsUserException;
 
@@ -26,4 +23,6 @@ public interface UserService {
     Set<User> getUsersWithAssignment(int testId, int testTypeId, boolean isCompleted) throws ServiceException;
 
     Set<String> validateUserData(String login, String password, String firstName, String lastName, String email);
+
+    void changePassword(int userId,String oldPassword, String newPassword) throws ServiceException,InvalidUserDataException;
 }

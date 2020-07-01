@@ -39,109 +39,149 @@
     <jsp:include page="parts/nav-menu.jsp"/>
 
     <div class="row height-90">
-        <div class="col-2"></div>
-        <div class="col-8">
-            <div class="tab-content " id="v-pills-tabContent">
-                <div class="tab-pane fade  active show " id="v-pills-home" role="tabpanel"
-                     aria-labelledby="v-pills-home-tab">
-
-
-                    <div class="row m-t-15">
-                        <div class="col-sm-3 p-l-27 p-t-27">
-                            <div class="media">
-                                <img src="resources/img/minava.png" class="mr-3 img-size round bor" alt="ava">
-                            </div>
-                        </div>
-                        <div class="col-sm-9 p-l-27">
-
-
-                            <div class="form">
-                                <form id="formElem" onsubmit="userAccount();return false;" enctype="multipart/form-data"
-                                      accept-charset="UTF-8"
-                                      class="form-horizontal m-0" role="form">
-                                    <input type="hidden" name="command" value="edit_user"/>
-                                    <div class="form-group">
-                                        <div>
-
-                                            <div id="message">
-
-                                            </div>
-
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="row">
-
-                                                <label class="col-sm-3 control-label">${lable_first_name}</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control" required
-                                                           name="first_name"
-                                                           value="${requestScope.user_info.firstName}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <label class="col-sm-3 control-label">${lable_last_name}</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control" required
-                                                           name="last_name" value="${requestScope.user_info.lastName}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <label class="col-sm-3 control-label" for="email">${lable_email}</label>
-                                                <div class="col-sm-9">
-                                                    <input type="email" class="form-control" id="email"
-                                                           name="email" value="${requestScope.user_info.email}"
-                                                           aria-describedby="emailHelp">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <label class="col-sm-3  control-label ">${lable_login}</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control" required name="login"
-                                                           value="${requestScope.user_info.login}">
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <label class="col-sm-3 control-label">${lable_password}</label>
-                                                <div class="col-sm-9 ">
-                                                    <input type="password" class="form-control" required
-                                                           name="password" value="${requestScope.user_info.password}">
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <div class="col-sm-offset-2 col-sm-10 p-top-7">
-                                                    <button type="submit"
-                                                            class="card-btn btn btn-outline-primary">${button_save_changes}
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div><!-- form  -->
-                        </div>
+        <div class="col-2">
+            <div class="row m-t-15">
+                <div class="col p-l-27 p-t-27">
+                    <div class="media">
+                        <img src="resources/img/minava.png" class="mr-3 img-size round bor" alt="ava">
                     </div>
                 </div>
             </div>
+
         </div>
-        <div class="col-2"></div>
+        <div class="col-4">
+            <h5>Редактировать данные</h5>
+            <div class="form userAccountCard">
+                <form id="formElem" onsubmit="userAccount();return false;" enctype="multipart/form-data"
+                      accept-charset="UTF-8"
+                      class="form-horizontal m-0" role="form">
+                    <input type="hidden" name="command" value="edit_user"/>
+                    <div class="form-group">
+                        <div>
+
+                            <div id="message">
+
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+
+                                <label class="col-sm-3 control-label">${lable_first_name}</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" required
+                                           name="first_name"
+                                           value="${requestScope.user_info.firstName}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-3 control-label">${lable_last_name}</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" required
+                                           name="last_name" value="${requestScope.user_info.lastName}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-3 control-label" for="email">${lable_email}</label>
+                                <div class="col-sm-9">
+                                    <input type="email" class="form-control" id="email"
+                                           name="email" value="${requestScope.user_info.email}"
+                                           aria-describedby="emailHelp">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-3  control-label ">${lable_login}</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" required name="login"
+                                           value="${requestScope.user_info.login}">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-3 control-label">${lable_password}</label>
+                                <div class="col-sm-9 ">
+                                    <input type="password" class="form-control" required
+                                           name="password" value="${requestScope.user_info.password}">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-offset-2 col-sm-10 p-top-7">
+                                    <button type="submit"
+                                            class="card-btn btn btn-outline-primary">${button_save_changes}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-4">
+            <h5>Сменить пароль</h5>
+            <div class="form userAccountCard">
+                <form id="changePassword" onsubmit="changePassword(this);return false;" enctype="multipart/form-data"
+                      accept-charset="UTF-8"
+                      class="form-horizontal m-0" role="form">
+                    <input type="hidden" name="command" value="change_password"/>
+                    <div class="form-group">
+                        <div>
+
+                            <div id="passMessage">
+
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-3 control-label">Old password</label>
+                                <div class="col-sm-9 ">
+                                    <input type="password" class="form-control" required
+                                           name="oldPassword">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-3 control-label">New password</label>
+                                <div class="col-sm-9 ">
+                                    <input type="password" class="form-control" required
+                                           name="password">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-offset-2 col-sm-10 p-top-7">
+                                    <button type="submit"
+                                            class="card-btn btn btn-outline-primary">Change password
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
 
+        </div>
+        <div class="col-1"></div>
     </div>
-</div>
-<div id="content bor"></div>
+    <div id="content bor"></div>
 
 
 </div>

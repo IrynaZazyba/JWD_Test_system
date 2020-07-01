@@ -32,16 +32,14 @@ public class SQLUserDAOImpl implements UserDAO {
             " from users INNER JOIN role ON users.role_id=role.id";
     private static final String INSERT_USER = "INSERT INTO users (login, password, first_name, last_name,email, role_id) " +
             "VALUES (?,?,?,?,?,?)";
-    private static final String SELECT_USER_BY_LOGIN_PASSWORD = "SELECT users.id,login,password,first_name,last_name," +
-            "title, email FROM users INNER JOIN role ON users.role_id=role.id WHERE login=? AND password=?";
     private static final String SELECT_ROLE_ID = "SELECT id FROM role WHERE title=?";
     private static final String SELECT_USER_BY_LOGIN = "SELECT users.id,login,password,first_name,last_name," +
             "title, email FROM users INNER JOIN role ON users.role_id=role.id WHERE login=?";
     private static final String SELECT_USER_BY_ID = "SELECT users.id,login,password,first_name,last_name," +
             "title, email FROM users INNER JOIN role ON users.role_id=role.id WHERE users.id=?";
-    private static final String UPDATE_USER = "UPDATE users SET login=?, password=?, first_name=?, last_name=?," +
+    private static final String UPDATE_USER = "UPDATE users SET login=?, first_name=?, last_name=?," +
             "role_id=?, email=? WHERE id=?";
-
+    private static final String UPDATE_USER_PASSWORD = "UPDATE users SET password=? WHERE id=?";
     private static final String WRITE_ASSIGNMENT = "INSERT INTO `assignment`" +
             " (`date`,`deadline`, `test_id`, `user_id`, `completed`) " +
             "VALUES (?,?,?,?,?)";
@@ -74,7 +72,7 @@ public class SQLUserDAOImpl implements UserDAO {
     private static final String UPDATE_ASSIGNMENT_DELETED_AT = "UPDATE `assignment` SET `deleted_at`=? where id=?";
 
 
-    private static final String ASSIGNMENT_TEST_TITLE_COLUMN="title";
+    private static final String ASSIGNMENT_TEST_TITLE_COLUMN = "title";
     private static final String ASSIGNMENT_ID_COLUMN_ALIAS = "asgn_id";
     private static final String USER_ID_COLUMN_ALIAS = "u_id";
 
@@ -156,36 +154,6 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User getUserByLoginPassword(String login, String password) throws DAOException {
-        User user = null;
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN_PASSWORD);
-            preparedStatement.setString(1, login);
-            preparedStatement.setString(2, password);
-
-            resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                user = buildUser(resultSet);
-            }
-
-        } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLUserDAOImpl getUserByLoginPassword() method", e);
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl getUserByLoginPassword() method", e);
-            throw new DAOSqlException("SQLException in SQLUserDAOImpl getUserByLoginPassword() method", e);
-        } finally {
-            connectionPool.closeConnection(connection, preparedStatement, resultSet);
-        }
-        return user;
-    }
-
-
-    //todo return id user
-    @Override
     public User getUserByLogin(String userLogin) throws DAOException {
         User user = null;
         Connection connection = null;
@@ -264,12 +232,35 @@ public class SQLUserDAOImpl implements UserDAO {
         return updatedUser;
     }
 
+
+    @Override
+    public void updateUserPassword(int userId, String password) throws DAOException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(UPDATE_USER_PASSWORD);
+            preparedStatement.setString(1, password);
+            preparedStatement.setInt(2, userId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl updateUser() method", e);
+            throw new DAOSqlException("SQLException in SQLUserDAOImpl updateUser() method", e);
+        } catch (ConnectionPoolException e) {
+            throw new DAOConnectionPoolException("ConnectionPoolException in SQLUserDAOImpl updateUser() method", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
+        }
+    }
+
+
     @Override
     public Set<Assignment> getUserAssignment(int user_id) throws DAOException {
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet=null;
+        ResultSet resultSet = null;
         Set<Assignment> assignments = new HashSet<>();
         try {
             connection = connectionPool.takeConnection();
@@ -327,7 +318,7 @@ public class SQLUserDAOImpl implements UserDAO {
     public Assignment getUserAssignmentByAssignmentId(int assignmentId) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet=null;
+        ResultSet resultSet = null;
         Assignment assignment = null;
 
         try {
@@ -486,7 +477,7 @@ public class SQLUserDAOImpl implements UserDAO {
                 int id = resultSet.getInt(USER_ID_COLUMN_ALIAS);
                 String firstName = resultSet.getString(USER_FIRST_NAME_COLUMN);
                 String lastName = resultSet.getString(USER_LAST_NAME_COLUMN);
-                User user= new User.Builder().withId(id).withFirstName(firstName).withLastName(lastName).build();
+                User user = new User.Builder().withId(id).withFirstName(firstName).withLastName(lastName).build();
                 user.setAssignment(new HashSet<>());
 
                 String t_title = resultSet.getString(ASSIGNMENT_TEST_TITLE_COLUMN);
@@ -627,7 +618,7 @@ public class SQLUserDAOImpl implements UserDAO {
             logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method writeAssignment()", e);
             throw new DAOSqlException("SQLException in SQLTestDAOImpl method writeAssignment()", e);
         } finally {
-            connectionPool.closeConnection(connection, preparedStatement,generatedKeys);
+            connectionPool.closeConnection(connection, preparedStatement, generatedKeys);
         }
         return assignmentId;
     }

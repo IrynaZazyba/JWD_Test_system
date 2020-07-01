@@ -10,25 +10,41 @@ import by.jwd.testsys.logic.UserService;
 import by.jwd.testsys.logic.exception.ExistsUserException;
 import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.exception.ServiceException;
+import by.jwd.testsys.logic.util.HashStringHelper;
 import by.jwd.testsys.logic.validator.UserValidator;
 import by.jwd.testsys.logic.validator.factory.ValidatorFactory;
+import by.jwd.testsys.logic.validator.util.InvalidParam;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
 public class UserServiceImpl implements UserService {
 
+    private final static Logger logger = LogManager.getLogger();
+
     private final DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
     private UserDAO userDao = daoFactory.getUserDao();
 
     @Override
-    public User userByLoginPassword(String userLogin, String userPassword) throws ServiceException {
+    public User checkUserCredentials(String userLogin, String userPassword) throws ServiceException {
 
         User userByLogin;
         try {
-            userByLogin = userDao.getUserByLoginPassword(userLogin, userPassword);
+            userByLogin = userDao.getUserByLogin(userLogin);
+            boolean checkResult = false;
+            if (userByLogin != null) {
+                checkResult = HashStringHelper.checkPassword(userPassword, userByLogin.getPassword());
+            }
+
+            if (userByLogin == null || !checkResult) {
+                return new User();
+            }
         } catch (DAOException e) {
-            throw new ServiceException("Exception in UserServiceImpl method userByLoginPassword().", e);
+            throw new ServiceException("Exception in UserServiceImpl method checkUserCredentials().", e);
         }
         return userByLogin;
     }
@@ -40,6 +56,9 @@ public class UserServiceImpl implements UserService {
             User userByLogin = userDao.getUserByLogin(user.getLogin());
 
             if (userByLogin == null) {
+                String password = user.getPassword();
+                String hashedPassword = HashStringHelper.hashPassword(password);
+                user.setPassword(hashedPassword);
                 userCreated = userDao.create(user);
             } else {
                 throw new ExistsUserException("Such login alreadyExists.");
@@ -119,6 +138,42 @@ public class UserServiceImpl implements UserService {
                 .withEmail(email)
                 .build();
         return userValidator.validate(registerUser);
+    }
+
+    @Override
+    public void changePassword(int userId, String oldPassword, String newPassword) throws ServiceException {
+
+        ValidatorFactory validatorFactory = ValidatorFactory.getInstance();
+        UserValidator userValidator = validatorFactory.getUserValidator();
+
+//todo проверить что старый пароль?
+        Set<String> validationResult;
+        if (!userValidator.validatePassword(newPassword)) {
+            logger.log(Level.ERROR, "Invalid password");
+            validationResult = new HashSet<>();
+            validationResult.add(InvalidParam.INVALID_PASSWORD.toString());
+            throw new InvalidUserDataException("Invalid user data.", validationResult);
+        }
+
+        try {
+            User userById = userDao.getUserById(userId);
+            boolean isValid = HashStringHelper.checkPassword(oldPassword, userById.getPassword());
+            if (!isValid) {
+                logger.log(Level.ERROR, "Old password invalid");
+                validationResult = new HashSet<>();
+                validationResult.add(InvalidParam.PASSWORD_MISMATCH.toString());
+                throw new InvalidUserDataException("Invalid user data.");
+            }
+
+            String newHashedPassword = HashStringHelper.hashPassword(newPassword);
+            userDao.updateUserPassword(userId, newHashedPassword);
+
+        } catch (DAOException e) {
+            //todo UserServiceException
+            throw new ServiceException("Exception in UserServiceImpl method changePassword().", e);
+        }
+
+
     }
 
 }

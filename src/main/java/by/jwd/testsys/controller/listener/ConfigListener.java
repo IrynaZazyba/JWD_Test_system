@@ -1,7 +1,6 @@
 package by.jwd.testsys.controller.listener;
 
-import by.jwd.testsys.logic.sender.SslSender;
-import com.google.protobuf.compiler.PluginProtos;
+import by.jwd.testsys.logic.util.SslSender;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,8 +8,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Properties;
 
 @WebListener
@@ -31,7 +28,7 @@ public class ConfigListener implements ServletContextListener {
             properties.load(input);
 
             SslSender instance = SslSender.getInstance();
-            instance.inializeSalSender(properties);
+            instance.initializeSalSender(properties);
         } catch (IOException e) {
             //todo
             e.printStackTrace();
