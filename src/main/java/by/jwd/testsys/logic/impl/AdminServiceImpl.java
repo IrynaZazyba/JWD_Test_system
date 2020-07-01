@@ -115,7 +115,6 @@ public class AdminServiceImpl implements AdminService {
         return testData;
     }
 
-    //todo Изменить на параметр
     @Override
     public void changeTestIsEdited(int testId, boolean isEdited) throws AdminServiceException {
         try {

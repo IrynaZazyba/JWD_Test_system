@@ -362,7 +362,6 @@ public class SQLTestDAOImpl implements TestDAO {
         return tests;
     }
 
-    //todo передавать deleted
     @Override
     public int getCountTests(int typeId) throws DAOException {
         Connection connection = null;

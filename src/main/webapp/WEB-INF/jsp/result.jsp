@@ -38,7 +38,9 @@
         <div class="col-8">
             <div class="row">
                 <div class="card border-info mb-3" style="min-width: 100%;">
-                    <div class="card-header">${title_result}</div>
+                    <div class="card-header">${title_result}
+                    <res:result-tag rightCountQuestion="${requestScope.testResult.rightCountQuestion}"
+                                    countTestQuestion="${requestScope.testResult.countTestQuestion}"/></div>
                     <div class="card-body text-info">
                         <h5 class="card-title">${requestScope.test_name}</h5>
                         <p class="card-text">
