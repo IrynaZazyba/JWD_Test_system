@@ -11,6 +11,8 @@ import by.jwd.testsys.dao.factory.DAOFactoryProvider;
 import by.jwd.testsys.logic.AdminService;
 import by.jwd.testsys.logic.exception.*;
 import by.jwd.testsys.logic.util.SslSender;
+import by.jwd.testsys.logic.validator.FrontDataValidator;
+import by.jwd.testsys.logic.validator.factory.ValidatorFactory;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,24 +23,27 @@ public class AdminServiceImpl implements AdminService {
 
     private final DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
     private TestDAO testDAO = daoFactory.getTestDao();
-    private UserDAO userDAO=daoFactory.getUserDao();
+    private UserDAO userDAO = daoFactory.getUserDao();
     private QuestionAnswerDAO questionAnswerDAO = daoFactory.getQuestionAnswerDao();
+
+    private ValidatorFactory validatorFactory = ValidatorFactory.getInstance();
+    private FrontDataValidator frontDataValidator = validatorFactory.getFrontDataValidator();
 
     private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT = "BeeTesting test assignment";
     private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_TEST = "you have been assigned to the test ";
     private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_KEY = "Key: ";
     private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_DEADLINE = "Deadline: ";
     private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_REGARDS = "Best regards,\n \"Bee testing\" team.";
-    private static final String COMMA=",";
-    private static final String QUOTATION_MARK="\"";
-    private static final String NEW_LINE="\n";
-    private static final String DOT=".";
+    private static final String COMMA = ",";
+    private static final String QUOTATION_MARK = "\"";
+    private static final String NEW_LINE = "\n";
+    private static final String DOT = ".";
 
 
     @Override
     public void deleteTest(int testId) throws AdminServiceException, InvalidDeleteActionServiceException {
         try {
-            int countIncompleteTestAssignment = testDAO.getCountTestAssignment(testId,false);
+            int countIncompleteTestAssignment = testDAO.getCountTestAssignment(testId, false);
             if (countIncompleteTestAssignment != 0) {
                 throw new InvalidDeleteActionServiceException("Impossible to delete current test. Assignment exists.");
             }
@@ -116,7 +121,11 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void changeTestIsEdited(int testId, boolean isEdited) throws AdminServiceException {
+    public void changeTestIsEdited(int testId, boolean isEdited) throws AdminServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(testId)) {
+            throw new InvalidUserDataException("Invalid assignmentId in AdminService changeTestIsEdited() method");
+        }
         try {
             testDAO.updateTestIsEdited(testId, isEdited);
         } catch (DAOException e) {
@@ -235,7 +244,7 @@ public class AdminServiceImpl implements AdminService {
         try {
             for (String id : assignUsersId) {
                 int userId = Integer.parseInt(id);
-                Assignment assignment =userDAO.getUserAssignmentByTestId(userId, testId);
+                Assignment assignment = userDAO.getUserAssignmentByTestId(userId, testId);
                 if (assignment == null) {
                     usersId.add(userId);
                     User user = userDAO.getUserById(userId);
@@ -264,13 +273,13 @@ public class AdminServiceImpl implements AdminService {
 
     private void sendTestKeyToUsers(Set<User> assignedUsers, int testId, LocalDate deadline) throws DAOException {
 
-            Test testInfo = testDAO.getTestInfo(testId);
-            SslSender sender = SslSender.getInstance();
+        Test testInfo = testDAO.getTestInfo(testId);
+        SslSender sender = SslSender.getInstance();
 
-            for (User user : assignedUsers) {
-                String message = buildEmailMessage(user.getFirstName(), testInfo.getTitle(), testInfo.getKey(), deadline);
-                sender.send(EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT, message, user.getEmail());
-            }
+        for (User user : assignedUsers) {
+            String message = buildEmailMessage(user.getFirstName(), testInfo.getTitle(), testInfo.getKey(), deadline);
+            sender.send(EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT, message, user.getEmail());
+        }
 
     }
 
@@ -279,10 +288,10 @@ public class AdminServiceImpl implements AdminService {
         message.append(userName)
                 .append(COMMA)
                 .append(EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_TEST)
-                .append(QUOTATION_MARK).append(testName).append(QUOTATION_MARK).append(DOT+NEW_LINE);
-        message.append(EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_DEADLINE).append(deadline).append(DOT+NEW_LINE);
+                .append(QUOTATION_MARK).append(testName).append(QUOTATION_MARK).append(DOT + NEW_LINE);
+        message.append(EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_DEADLINE).append(deadline).append(DOT + NEW_LINE);
         if (key != null) {
-            message.append(EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_KEY).append(key).append(DOT+NEW_LINE);
+            message.append(EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_KEY).append(key).append(DOT + NEW_LINE);
         }
         message.append(EMAIL_ABOUT_TEST_ASSIGNMENT_REGARDS);
         return message.toString();

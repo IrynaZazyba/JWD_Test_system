@@ -75,6 +75,7 @@ public class UserServiceImpl implements UserService {
         User userFromDB;
         try {
             userFromDB = userDao.getUserById(id);
+            userFromDB.setPassword(null);
         } catch (DAOException e) {
             throw new ServiceException("Exception in UserServiceImpl method userInfoToAccount().", e);
         }
@@ -162,7 +163,7 @@ public class UserServiceImpl implements UserService {
                 logger.log(Level.ERROR, "Old password invalid");
                 validationResult = new HashSet<>();
                 validationResult.add(InvalidParam.PASSWORD_MISMATCH.toString());
-                throw new InvalidUserDataException("Invalid user data.");
+                throw new InvalidUserDataException("Invalid user data.",validationResult);
             }
 
             String newHashedPassword = HashStringHelper.hashPassword(newPassword);

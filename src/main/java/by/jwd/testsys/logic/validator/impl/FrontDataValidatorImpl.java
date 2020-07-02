@@ -15,8 +15,8 @@ public class FrontDataValidatorImpl implements FrontDataValidator {
     }
 
     @Override
-    public boolean validateNumber(String number) {
-        return number.matches(ONLY_NUMBER);
+    public boolean validateId(int id) {
+        return id>0;
     }
 
     @Override

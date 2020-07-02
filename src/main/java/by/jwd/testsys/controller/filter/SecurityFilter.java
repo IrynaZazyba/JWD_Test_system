@@ -31,11 +31,14 @@ public class SecurityFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpSession session = httpServletRequest.getSession();
 
+        String parameter1 = httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME);
+
         if (httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME) == null) {
             session.setAttribute(SessionAttributeName.SECURITY, SessionAttributeName.SECURITY);
         }
-
+//todo
         String parameter = httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME);
+
         if (session != null && session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE) == null
                 && !httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME).
                 equals(CommandName.SIGN_IN.toString().toLowerCase())

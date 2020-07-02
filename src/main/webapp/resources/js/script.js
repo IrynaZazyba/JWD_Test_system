@@ -296,6 +296,7 @@ async function changePassword(obj) {
     if (response.ok) {
         let json = await response.json();
         document.getElementById('passMessage').innerHTML = generateMessageDiv(json);
+    } else {
 
     }
 }

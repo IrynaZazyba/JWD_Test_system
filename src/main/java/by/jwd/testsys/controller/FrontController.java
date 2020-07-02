@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 
@@ -43,10 +44,15 @@ public class FrontController extends HttpServlet {
 
     private void doProcess(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String commandName = req.getParameter(RequestParameterName.COMMAND_NAME);
-        String security = (String)req.getSession().getAttribute(SessionAttributeName.SECURITY);
+        HttpSession session = req.getSession();
+        String security = (String) session.getAttribute(SessionAttributeName.SECURITY);
         CommandProvider commandProvider = CommandProvider.getInstance();
-        Command command = commandProvider.getFrontCommand(commandName,security);
+        Command command = commandProvider.getFrontCommand(commandName, security);
+        if (security != null) {
+            session.removeAttribute(SessionAttributeName.SECURITY);
+        }
         command.execute(req, resp);
+
     }
 
 

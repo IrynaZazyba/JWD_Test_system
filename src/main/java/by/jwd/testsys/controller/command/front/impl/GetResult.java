@@ -9,6 +9,7 @@ import by.jwd.testsys.controller.parameter.JspPageName;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.TestService;
+import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.exception.TestServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import org.apache.logging.log4j.Level;
@@ -28,6 +29,7 @@ public class GetResult implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         int assignmentId = Integer.parseInt(request.getParameter(RequestParameterName.ASSIGNMENT_ID));
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
@@ -43,7 +45,7 @@ public class GetResult implements Command {
             }
 
             Test testInfo = testService.getTestInfo(assignment.getTest().getId());
-            Result result=testService.getResultInfo(assignment, testInfo);
+            Result result = testService.getResultInfo(assignment, testInfo);
 
 
             request.setAttribute(RequestParameterName.USER_TEST_RESULT, result);
@@ -54,7 +56,10 @@ public class GetResult implements Command {
         } catch (TestServiceException e) {
             response.sendRedirect(JspPageName.ERROR_PAGE);
         } catch (ForwardCommandException e) {
-            logger.log(Level.ERROR,"Forward to page Exception in GetResult command", e);
+            logger.log(Level.ERROR, "Forward to page Exception in GetResult command", e);
+            response.sendRedirect(JspPageName.ERROR_PAGE);
+        } catch (InvalidUserDataException e) {
+            logger.log(Level.ERROR, "InvalidUserDAta Exception in GetResult command", e);
             response.sendRedirect(JspPageName.ERROR_PAGE);
         }
 

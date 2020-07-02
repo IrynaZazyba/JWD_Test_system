@@ -2,13 +2,14 @@ package by.jwd.testsys.controller.command.front.impl;
 
 import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.bean.Type;
+import by.jwd.testsys.controller.command.front.Command;
+import by.jwd.testsys.controller.command.front.ForwardCommandException;
 import by.jwd.testsys.controller.parameter.JspPageName;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
-import by.jwd.testsys.controller.command.front.Command;
-import by.jwd.testsys.controller.command.front.ForwardCommandException;
-import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.TestService;
+import by.jwd.testsys.logic.exception.InvalidUserDataException;
+import by.jwd.testsys.logic.exception.TestServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -37,18 +38,20 @@ public class ShowTestsPage implements Command {
             List<Type> tests = testService.typeWithTests(userId);
             req.setAttribute(RequestParameterName.TEST_TYPES_LIST, tests);
 
-            Set<Test> userAssignedTests=testService.getUserAssignmentTests(userId);
-            req.setAttribute(RequestParameterName.USER_ASSIGNMENT,userAssignedTests);
+            Set<Test> userAssignedTests = testService.getUserAssignmentTests(userId);
+            req.setAttribute(RequestParameterName.USER_ASSIGNMENT, userAssignedTests);
             session.setAttribute(SessionAttributeName.QUERY_STRING, req.getQueryString());
 
             forwardToPage(req, resp, JspPageName.START_MENU_PAGE);
 
-        } catch (ServiceException  e) {
+        } catch (TestServiceException e) {
             resp.sendRedirect(JspPageName.ERROR_PAGE);
         } catch (ForwardCommandException e) {
-            logger.log(Level.ERROR,"Forward to page Exception in ShowTestsPage command", e);
+            logger.log(Level.ERROR, "Forward to page Exception in ShowTestsPage command", e);
             resp.sendRedirect(JspPageName.ERROR_PAGE);
-
+        } catch (InvalidUserDataException e) {
+            logger.log(Level.ERROR, "InvalidUserData Exception in ShowTestsPage command", e);
+            resp.sendRedirect(JspPageName.ERROR_PAGE);
         }
     }
 }

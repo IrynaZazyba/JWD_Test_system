@@ -2,7 +2,7 @@ package by.jwd.testsys.logic.validator;
 
 public interface FrontDataValidator {
 
-    boolean validateNumber(String number);
+    boolean validateId(int id);
 
     boolean validateTime(String time);
 

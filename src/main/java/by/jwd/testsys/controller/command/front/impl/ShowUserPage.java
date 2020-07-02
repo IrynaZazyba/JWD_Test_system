@@ -37,7 +37,7 @@ public class ShowUserPage implements Command {
             req.setAttribute(RequestParameterName.USER_ACCOUNT_INFO, userInfoToAccount);
 
             session.setAttribute(SessionAttributeName.QUERY_STRING,req.getQueryString());
-            forwardToPage(req, resp, JspPageName.JSP_PAGE_PATH);
+            forwardToPage(req, resp, JspPageName.USER_ACCOUNT_PAGE);
 
         } catch (ServiceException e) {
             resp.sendRedirect(JspPageName.ERROR_PAGE);

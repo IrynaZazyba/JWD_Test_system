@@ -8,6 +8,7 @@ import by.jwd.testsys.controller.parameter.JspPageName;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.TestService;
+import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.exception.TestServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import org.apache.logging.log4j.Level;
@@ -33,27 +34,26 @@ public class ShowExeTestPage implements Command {
 
         HttpSession session = req.getSession(false);
         int user_id = (int) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
+        int testId = Integer.parseInt(req.getParameter(RequestParameterName.TEST_ID));
 
-        Test test;
         try {
-
-            int testId = Integer.parseInt(req.getParameter(RequestParameterName.TEST_ID));
             Result result = testService.checkResult(user_id, testId);
-            test = testService.getTestInfo(testId);
-            test.setStarted(result!=null);
+            Test test = testService.getTestInfo(testId);
+            test.setStarted(result != null);
             req.setAttribute(RequestParameterName.TEST_INFO, test);
-
             session.setAttribute(SessionAttributeName.QUERY_STRING, req.getQueryString());
 
             forwardToPage(req, resp, JspPageName.EXE_TEST_PAGE);
+
         } catch (TestServiceException e) {
             resp.sendRedirect(JspPageName.ERROR_PAGE);
         } catch (ForwardCommandException e) {
-            logger.log(Level.ERROR,"Forward to page Exception in ShowExeTestPage command", e);
+            logger.log(Level.ERROR, "Forward to page Exception in ShowExeTestPage command", e);
             resp.sendRedirect(JspPageName.ERROR_PAGE);
-
+        } catch (InvalidUserDataException e) {
+            logger.log(Level.ERROR, "InvalidUserData Exception in ShowExeTestPage command", e);
+            resp.sendRedirect(JspPageName.ERROR_PAGE);
         }
-
 
     }
 }

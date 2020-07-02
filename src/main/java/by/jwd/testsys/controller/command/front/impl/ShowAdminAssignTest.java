@@ -42,7 +42,6 @@ public class ShowAdminAssignTest implements Command {
         } catch (ForwardCommandException e) {
             logger.log(Level.ERROR, "Forward to page Exception in ShowAdminAssignTest command", e);
             response.sendRedirect(JspPageName.ERROR_PAGE);
-
         }
     }
 

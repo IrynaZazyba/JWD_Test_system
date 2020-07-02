@@ -7,6 +7,7 @@ import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.factory.DAOFactoryProvider;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.*;
+import by.jwd.testsys.logic.validator.FrontDataValidator;
 import by.jwd.testsys.logic.validator.TestValidator;
 import by.jwd.testsys.logic.validator.factory.ValidatorFactory;
 import org.apache.logging.log4j.Level;
@@ -36,10 +37,10 @@ public class TestServiceImpl implements TestService {
 
     private ValidatorFactory validatorFactory = ValidatorFactory.getInstance();
     private TestValidator testValidator = validatorFactory.getTestValidator();
-
+    private FrontDataValidator frontDataValidator = validatorFactory.getFrontDataValidator();
 
     @Override
-    public List<Type> allTestsType() throws ServiceException {
+    public List<Type> allTestsType() throws TestServiceException {
         List<Type> testsType;
         try {
             testsType = testDAO.getTypes();
@@ -50,7 +51,12 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public List<Type> typeWithTests(int userId) throws ServiceException {
+    public List<Type> typeWithTests(int userId) throws TestServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(userId)) {
+            throw new InvalidUserDataException("Invalid userId in TestServiceImpl typeWithTests() method");
+        }
+
         List<Type> testsType;
 
         try {
@@ -82,7 +88,7 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Set<Test> getUserAssignmentTests(int userId) throws ServiceException {
+    public Set<Test> getUserAssignmentTests(int userId) throws TestServiceException {
         Set<Test> assignmentTest;
         try {
             assignmentTest = testDAO.getAssignedTests(userId);
@@ -220,9 +226,9 @@ public class TestServiceImpl implements TestService {
         Set<Result> result;
 
         try {
-            result=testResultDAO.getTestResult(typeId,testId,userId,date);
+            result = testResultDAO.getTestResult(typeId, testId, userId, date);
         } catch (DAOException e) {
-            throw new TestLogServiceException("DAOException in TestLogServiceImpl method receiveResultData()."+
+            throw new TestLogServiceException("DAOException in TestLogServiceImpl method receiveResultData()." +
                     "Impossible to receive result data", e);
         }
         return result;
@@ -336,8 +342,12 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Set<Statistic> getUserTestStatistic(int userId) throws TestServiceException {
+    public Set<Statistic> getUserTestStatistic(int userId) throws TestServiceException, InvalidUserDataException {
         try {
+            if (!frontDataValidator.validateId(userId)) {
+                throw new InvalidUserDataException("Invalid id");
+            }
+
             return testResultDAO.getUserTestStatistic(userId);
         } catch (DAOException e) {
             throw new TestServiceException("DAOException in TestService getUserTestStatistic() method", e);
@@ -346,7 +356,12 @@ public class TestServiceImpl implements TestService {
 
 
     @Override
-    public Assignment getAssignment(int assignmentId) throws TestServiceException {
+    public Assignment getAssignment(int assignmentId) throws TestServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(assignmentId)) {
+            throw new InvalidUserDataException("Invalid assignmentId in TestService getAssignment() method");
+        }
+
         Assignment testAssignment;
         try {
             testAssignment = userDAO.getUserAssignmentByAssignmentId(assignmentId);
@@ -392,7 +407,11 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Result checkResult(int userId, int testId) throws TestServiceException {
+    public Result checkResult(int userId, int testId) throws TestServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(userId) || !frontDataValidator.validateId(testId)) {
+            throw new InvalidUserDataException("Invalid id in TestServiceImpl checkResult() method");
+        }
 
         Result testResult = null;
         try {
@@ -419,7 +438,12 @@ public class TestServiceImpl implements TestService {
 
 
     @Override
-    public Set<Test> getAllTestByTypeId(int typeId, int currentPage) throws TestServiceException {
+    public Set<Test> getAllTestByTypeId(int typeId, int currentPage) throws TestServiceException, InvalidUserDataException {
+
+
+        if (!frontDataValidator.validateId(typeId)) {
+            throw new InvalidUserDataException("Invalid assignmentId in TestService getAllTestByTypeId() method");
+        }
 
         int recordsPerPage = 11;
         int start = currentPage * recordsPerPage - recordsPerPage;

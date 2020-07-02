@@ -23,7 +23,7 @@ public interface AdminService {
 
     Test receiveTestWithQuestionsAndAnswers(int testId) throws AdminServiceException;
 
-    void changeTestIsEdited(int testId, boolean isEdited) throws AdminServiceException;
+    void changeTestIsEdited(int testId, boolean isEdited) throws AdminServiceException, InvalidUserDataException;
 
     void updateQuestionWithAnswers(int questionId,
                                    String question,

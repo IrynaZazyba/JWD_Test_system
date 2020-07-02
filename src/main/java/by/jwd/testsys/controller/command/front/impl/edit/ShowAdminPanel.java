@@ -8,7 +8,8 @@ import by.jwd.testsys.controller.parameter.JspPageName;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.TestService;
-import by.jwd.testsys.logic.exception.ServiceException;
+import by.jwd.testsys.logic.exception.InvalidUserDataException;
+import by.jwd.testsys.logic.exception.TestServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -45,7 +46,7 @@ public class ShowAdminPanel implements Command {
                 activeTypeId = types.get(0).getId();
             }
 
-
+//todo pagination + validate currentPage
             String currentPage = request.getParameter("currentPage");
             int page = 1;
             if (currentPage != null) {
@@ -67,11 +68,13 @@ public class ShowAdminPanel implements Command {
             session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
             forwardToPage(request, response, JspPageName.ADMIN_PANEL);
 
-        } catch (ServiceException e) {
+        } catch (TestServiceException e) {
             response.sendRedirect(JspPageName.ERROR_PAGE);
         } catch (ForwardCommandException e) {
-            e.printStackTrace();
             logger.log(Level.ERROR, "Forward to page Exception in ShowAdminPanel command", e);
+            response.sendRedirect(JspPageName.ERROR_PAGE);
+        } catch (InvalidUserDataException e) {
+            logger.log(Level.ERROR, "InvalidUserData Exception in ShowAdminPanel command", e);
             response.sendRedirect(JspPageName.ERROR_PAGE);
         }
 
