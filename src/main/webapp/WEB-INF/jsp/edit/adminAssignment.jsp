@@ -56,6 +56,7 @@
 <fmt:message bundle="${loc}" key="assignment.button.assign" var="button_assign"/>
 <fmt:message bundle="${loc}" key="assignment.button.show" var="button_show"/>
 <fmt:message bundle="${loc}" key="assignment.message.empty_data" var="message_empty_data"/>
+<fmt:message bundle="${loc}" key="assignment.message.email_failure" var="message_email_failure"/>
 
 
 <div class="container-fluid p-0">
@@ -140,6 +141,10 @@
                                 <div id="assignmentError" class="alert alert-danger" role="alert"
                                      style="display: none;">
                                     ${message_empty_data}
+                                </div>
+                                <div id="emailFailure" class="alert alert-danger" role="alert"
+                                     style="display: none;">
+                                    ${message_email_failure}
                                 </div>
 
                             </div>

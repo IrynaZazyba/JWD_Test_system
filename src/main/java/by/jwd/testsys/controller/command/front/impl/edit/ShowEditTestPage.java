@@ -25,8 +25,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class ShowEditTestPage implements Command {
-    private static Logger logger = LogManager.getLogger();
 
+    private static Logger logger = LogManager.getLogger(ShowEditTestPage.class);
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

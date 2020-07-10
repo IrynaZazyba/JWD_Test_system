@@ -14,31 +14,21 @@ public interface TestService {
 
     List<Type> allTestsType() throws TestServiceException;
 
-    List<Type> typeWithTests(int userId) throws TestServiceException, InvalidUserDataException;
-
-    Set<Test> getUserAssignmentTests(int userId) throws TestServiceException;
+    Set<Test> getUserAssignmentTests(int userId) throws TestServiceException, InvalidUserDataException;
 
     Question getQuestionByTestId(Assignment assignment) throws TestServiceException, TimeIsOverServiceException;
 
-    Test getTestInfo(int id) throws TestServiceException;
+    Test getTestInfo(int id) throws TestServiceException, InvalidUserDataException;
 
-    Assignment checkTestAssignment(int testId, int userId) throws TestServiceException;
+    Assignment checkTestAssignment(int testId, int userId) throws TestServiceException, InvalidUserDataException;
 
     void checkPermission(int userId, int testId, String key) throws TestServiceException, InvalidUserDataException, InvalidTestKeyException;
 
-    Set<Result> receiveResultData(int typeId, int testId, int userId, LocalDate date) throws TestLogServiceException;
-
-    boolean checkKey(String key, int testId) throws TestServiceException;
-
-//    Integer getTestKey(int testId) throws TestServiceException;
+    Set<Result> receiveResultData(int typeId, int testId, int userId, LocalDate date) throws TestLogServiceException, InvalidUserDataException;
 
     long calculateTestDuration(Assignment assignment) throws TestServiceException, TimeIsOverServiceException;
 
     void completeTest(Assignment assignment, LocalDateTime localDateTime) throws TestServiceException;
-
-    LocalDateTime getStartTestTime(int assignmentId) throws TestServiceException;
-
-    LocalTime getTestDuration(int assignmentId) throws TestServiceException;
 
     Result getResultInfo(Assignment assignment, Test test) throws TestServiceException;
 
@@ -48,9 +38,11 @@ public interface TestService {
 
     Result checkResult(int userId, int testId) throws TestServiceException, InvalidUserDataException;
 
-    Set<Test> getNotEditedTestByTypeId(int typeId) throws TestServiceException;
+    Set<Test> getNotEditedTestByTypeId(int typeId) throws TestServiceException, InvalidUserDataException;
 
-    Set<Test> getAllTestByTypeId(int typeId, int currentPage) throws TestServiceException, InvalidUserDataException;
+    Set<Test> getTestByTypeId(int typeId, int currentPage, int recordsPerPage) throws TestServiceException, InvalidUserDataException;
 
-    int receiveCountTestPages(int typeId) throws TestServiceException;
+    Set<Test> getTestsPermittedForUser(int typeId, int currentPage, int recordsPerPage) throws TestServiceException, InvalidUserDataException;
+
+    int receiveNumberTestPages(int testId, int recordsPerPage, boolean isEdited, boolean isExistsKey) throws TestServiceException, InvalidUserDataException;
 }

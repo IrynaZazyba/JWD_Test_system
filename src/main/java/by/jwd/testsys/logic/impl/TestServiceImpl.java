@@ -26,7 +26,8 @@ import java.util.Set;
 
 public class TestServiceImpl implements TestService {
 
-    private final static Logger logger = LogManager.getLogger();
+    private final static Logger logger = LogManager.getLogger(TestServiceImpl.class);
+    private final static int DEFAULT_DEADLINE_VALUE = 7;
 
     private final DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
     private TestDAO testDAO = daoFactory.getTestDao();
@@ -50,45 +51,53 @@ public class TestServiceImpl implements TestService {
         return testsType;
     }
 
+//    @Override
+//    public List<Type> typeWithTests(int userId) throws TestServiceException, InvalidUserDataException {
+//
+//        if (!frontDataValidator.validateId(userId)) {
+//            throw new InvalidUserDataException("Invalid userId in TestServiceImpl typeWithTests() method");
+//        }
+//
+//        List<Type> testsType;
+//
+//        try {
+//            testsType = testDAO.getTypes();
+//
+//            for (Type type : testsType) {
+//                Set<Test> tests = testDAO.getTests(type.getId(), false);
+//                type.setTests(tests);
+//            }
+//
+//            for (Type testType : testsType) {
+//                Set<Test> tests = testType.getTests();
+//                for (Test test : tests) {
+//                    int testId = test.getId();
+//
+//                    int countQuestion = questionAnswerDAO.getCountQuestion(testId);
+//                    test.setCountQuestion(countQuestion);
+//                    Assignment userAssignment = userDAO.getUserAssignmentByTestId(userId, testId);
+//                    if (userAssignment != null) {
+//                        Result testResult = testResultDAO.getTestResult(userAssignment);
+//                        test.setStarted(testResult != null);
+//                    } else {
+//                        test.setStarted(false);
+//                    }
+//                }
+//            }
+//
+//        } catch (DAOException e) {
+//            throw new TestServiceException("DAOException in TestService typeWithTests() method", e);
+//        }
+//        return testsType;
+//    }
+
     @Override
-    public List<Type> typeWithTests(int userId) throws TestServiceException, InvalidUserDataException {
+    public Set<Test> getUserAssignmentTests(int userId) throws TestServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(userId)) {
             throw new InvalidUserDataException("Invalid userId in TestServiceImpl typeWithTests() method");
         }
 
-        List<Type> testsType;
-
-        try {
-            testsType = testDAO.getTypes();
-
-            for (Type type : testsType) {
-                Set<Test> tests = testDAO.getTests(type.getId(), false);
-                type.setTests(tests);
-            }
-
-            for (Type testType : testsType) {
-                Set<Test> tests = testType.getTests();
-                for (Test test : tests) {
-                    int testId = test.getId();
-                    Assignment userAssignment = userDAO.getUserAssignmentByTestId(userId, testId);
-                    if (userAssignment != null) {
-                        Result testResult = testResultDAO.getTestResult(userAssignment);
-                        test.setStarted(testResult != null);
-                    } else {
-                        test.setStarted(false);
-                    }
-                }
-            }
-
-        } catch (DAOException e) {
-            throw new TestServiceException("DAOException in TestService typeWithTests() method", e);
-        }
-        return testsType;
-    }
-
-    @Override
-    public Set<Test> getUserAssignmentTests(int userId) throws TestServiceException {
         Set<Test> assignmentTest;
         try {
             assignmentTest = testDAO.getAssignedTests(userId);
@@ -121,12 +130,17 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Test getTestInfo(int id) throws TestServiceException {
+    public Test getTestInfo(int testId) throws TestServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(testId)) {
+            throw new InvalidUserDataException("Invalid userId in TestServiceImpl typeWithTests() method");
+        }
+
         Test test;
         try {
-            test = testDAO.getTestInfo(id);
+            test = testDAO.getTestInfo(testId);
             int countQuestion = questionAnswerDAO.getCountQuestion(test.getId());
-            test.setId(id);
+            test.setId(testId);
             test.setCountQuestion(countQuestion);
 
         } catch (DAOException e) {
@@ -136,7 +150,13 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Assignment checkTestAssignment(int testId, int userId) throws TestServiceException {
+    public Assignment checkTestAssignment(int testId, int userId) throws TestServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(testId) ||
+                !frontDataValidator.validateId(userId)) {
+            throw new InvalidUserDataException("Invalid userId in TestServiceImpl typeWithTests() method");
+        }
+
 
         Assignment assignment;
         try {
@@ -152,7 +172,7 @@ public class TestServiceImpl implements TestService {
                 assignment = new Assignment.Builder()
                         .withUser(user)
                         .withAssignmentDate(LocalDate.now())
-                        .withDeadline(LocalDate.now().plusDays(7))             //todo deadline
+                        .withDeadline(LocalDate.now().plusDays(DEFAULT_DEADLINE_VALUE))
                         .withTest(test)
                         .build();
                 Integer integer = userDAO.writeAssignment(assignment);
@@ -171,12 +191,17 @@ public class TestServiceImpl implements TestService {
     @Override
     public void checkPermission(int userId, int testId, String key) throws TestServiceException, InvalidUserDataException, InvalidTestKeyException {
 
-        String validationResult;
+        if (!frontDataValidator.validateId(testId) ||
+                !frontDataValidator.validateId(userId) ||
+                !testValidator.validateKey(key)) {
+            throw new InvalidUserDataException("Invalid userId in TestServiceImpl typeWithTests() method");
+        }
+
 
         if (key != null) {
-            validationResult = testValidator.validate(key);
-            if (validationResult != null) {
-                throw new InvalidTestKeyException("Invalid user data.", validationResult);
+
+            if (!testValidator.validateKey(key)) {
+                throw new InvalidTestKeyException("Invalid user data.");
             }
         }
 
@@ -201,19 +226,14 @@ public class TestServiceImpl implements TestService {
                     logger.log(Level.ERROR, "Invalid key");
                     throw new InvalidTestKeyException("Invalid key");
                 }
-
-                //todo builder
                 result = createResult(assignment);
                 testResultDAO.insertResult(result);
             }
 
             if (testKey == null && assignment != null && result == null) {
-
-                //todo builder
                 result = createResult(assignment);
                 testResultDAO.insertResult(result);
             }
-
 
         } catch (DAOException e) {
             throw new TestServiceException("DAOException in TestService checkPermission() method", e);
@@ -222,7 +242,14 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Set<Result> receiveResultData(int typeId, int testId, int userId, LocalDate date) throws TestLogServiceException {
+    public Set<Result> receiveResultData(int typeId, int testId, int userId, LocalDate date) throws TestLogServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(typeId) ||
+                !frontDataValidator.validateId(testId) ||
+                !frontDataValidator.validateId(userId)) {
+            throw new InvalidUserDataException("Invalid userId in TestServiceImpl typeWithTests() method");
+        }
+
         Set<Result> result;
 
         try {
@@ -234,17 +261,14 @@ public class TestServiceImpl implements TestService {
         return result;
     }
 
-    @Override
-    public boolean checkKey(String key, int testId) throws TestServiceException {
+    private boolean checkKey(String key, int testId) throws DAOException {
+
         boolean isValid = false;
-        try {
-            String testKey = testDAO.getTestKey(testId);
-            if (testKey.equals(key)) {
-                isValid = true;
-            }
-        } catch (DAOException e) {
-            throw new TestServiceException("DAOException in TestService checkKey() method", e);
+        String testKey = testDAO.getTestKey(testId);
+        if (testKey.equals(key)) {
+            isValid = true;
         }
+
         return isValid;
     }
 
@@ -287,37 +311,14 @@ public class TestServiceImpl implements TestService {
     }
 
 
-    @Override
-    public LocalDateTime getStartTestTime(int assignmentId) throws TestServiceException {
-        LocalDateTime localDateTime;
-        try {
-            Timestamp testStartDateTime = testResultDAO.getTestStartDateTime(assignmentId);
-            localDateTime = testStartDateTime.toLocalDateTime();
-
-        } catch (DAOException e) {
-            throw new TestServiceException("DAOException in TestService getStartTestTime() method", e);
-        }
-        return localDateTime;
-    }
-
-
-    //todo
-    @Override
-    public LocalTime getTestDuration(int assignmentId) throws TestServiceException {
-        LocalTime duration;
-        try {
-            duration = testDAO.getTestDuration(assignmentId);
-        } catch (DAOException e) {
-            throw new TestServiceException("DAOException in TestService getTestDuration() method", e);
-        }
-        return duration;
-    }
-
-    private void checkTestDuration(Assignment assignment) throws TestServiceException, TimeIsOverServiceException {
+    private void checkTestDuration(Assignment assignment) throws TimeIsOverServiceException, DAOException {
 
         int assignmentId = assignment.getId();
-        LocalTime testDuration = getTestDuration(assignmentId);
-        LocalDateTime startTestTime = getStartTestTime(assignmentId);
+        LocalTime testDuration = testDAO.getTestDuration(assignmentId);
+
+        Timestamp testStartDateTime = testResultDAO.getTestStartDateTime(assignmentId);
+        LocalDateTime startTestTime = testStartDateTime.toLocalDateTime();
+
         Duration duration = Duration.between(startTestTime, LocalDateTime.now());
 
         if (duration.toSeconds() >= testDuration.toSecondOfDay()) {
@@ -343,11 +344,12 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public Set<Statistic> getUserTestStatistic(int userId) throws TestServiceException, InvalidUserDataException {
-        try {
-            if (!frontDataValidator.validateId(userId)) {
-                throw new InvalidUserDataException("Invalid id");
-            }
 
+        if (!frontDataValidator.validateId(userId)) {
+            throw new InvalidUserDataException("Invalid id");
+        }
+
+        try {
             return testResultDAO.getUserTestStatistic(userId);
         } catch (DAOException e) {
             throw new TestServiceException("DAOException in TestService getUserTestStatistic() method", e);
@@ -426,7 +428,12 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Set<Test> getNotEditedTestByTypeId(int typeId) throws TestServiceException {
+    public Set<Test> getNotEditedTestByTypeId(int typeId) throws TestServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(typeId)) {
+            throw new InvalidUserDataException("Invalid id in TestServiceImpl checkResult() method");
+        }
+
         Set<Test> tests;
         try {
             tests = testDAO.getTests(typeId, false);
@@ -438,20 +445,44 @@ public class TestServiceImpl implements TestService {
 
 
     @Override
-    public Set<Test> getAllTestByTypeId(int typeId, int currentPage) throws TestServiceException, InvalidUserDataException {
+    public Set<Test> getTestByTypeId(int typeId, int currentPage, int recordsPerPage) throws TestServiceException, InvalidUserDataException {
 
-
-        if (!frontDataValidator.validateId(typeId)) {
-            throw new InvalidUserDataException("Invalid assignmentId in TestService getAllTestByTypeId() method");
+        if (!frontDataValidator.validateId(typeId) ||
+                !frontDataValidator.validatePositiveNumber(currentPage) ||
+                !frontDataValidator.validatePositiveNumber(recordsPerPage)) {
+            throw new InvalidUserDataException("Invalid assignmentId in TestService getTestByTypeId() method");
         }
 
-        int recordsPerPage = 11;
         int start = currentPage * recordsPerPage - recordsPerPage;
         Set<Test> tests;
         try {
             tests = testDAO.getTestsByLimit(typeId, start, recordsPerPage);
         } catch (DAOException e) {
-            throw new TestServiceException("DAOException in TestService getAllTestByTypeId() method", e);
+            throw new TestServiceException("DAOException in TestService getTestByTypeId() method", e);
+        }
+        return tests;
+    }
+
+
+    @Override
+    public Set<Test> getTestsPermittedForUser(int typeId, int currentPage, int recordsPerPage) throws TestServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(typeId) ||
+                !frontDataValidator.validatePositiveNumber(currentPage) ||
+                !frontDataValidator.validatePositiveNumber(recordsPerPage)) {
+            throw new InvalidUserDataException("Invalid assignmentId in TestService getTestByTypeId() method");
+        }
+
+        int start = currentPage * recordsPerPage - recordsPerPage;
+        Set<Test> tests;
+        try {
+            tests = testDAO.getTestsByLimit(typeId, start, recordsPerPage, false, false);
+            for (Test test : tests) {
+                int countQuestion = questionAnswerDAO.getCountQuestion(test.getId());
+                test.setCountQuestion(countQuestion);
+            }
+        } catch (DAOException e) {
+            throw new TestServiceException("DAOException in TestService getTestByTypeId() method", e);
         }
         return tests;
     }
@@ -459,11 +490,11 @@ public class TestServiceImpl implements TestService {
 
     private Result createResult(Assignment assignment) throws TestServiceException {
 
-        //todo builder
         int testId = assignment.getTest().getId();
 
         Result result = new Result.Builder().withDateStart(LocalDateTime.now()).withAssignment(assignment).build();
         int countQuestion;
+
         try {
             countQuestion = questionAnswerDAO.getCountQuestion(testId);
             result.setCountTestQuestion(countQuestion);
@@ -477,18 +508,31 @@ public class TestServiceImpl implements TestService {
 
 
     @Override
-    public int receiveCountTestPages(int typeId) throws TestServiceException {
-        int countPageRows = 11;
-        int countTest;
+    public int receiveNumberTestPages(int typeId, int recordsPerPage, boolean isEdited, boolean isExistsKey) throws TestServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(typeId) ||
+                !frontDataValidator.validatePositiveNumber(recordsPerPage)) {
+            throw new InvalidUserDataException("Invalid assignmentId in TestService getTestByTypeId() method");
+        }
+
+
         int numberOfPages;
+        int numberRecords;
+
         try {
-            countTest = testDAO.getCountTests(typeId);
-            numberOfPages = countTest / countPageRows;
-            if (numberOfPages % countPageRows > 0) {
-                numberOfPages++;
+            if (!isEdited) {
+                numberRecords = testDAO.getCountTests(typeId, isEdited, isExistsKey);
+            } else {
+                numberRecords = testDAO.getCountTests(typeId);
             }
+
         } catch (DAOException e) {
-            throw new TestServiceException("DAOException in TestService receiveCountTestPages() method", e);
+            throw new TestServiceException("DAOException in TestService receiveNumberTestPages() method", e);
+        }
+
+        numberOfPages = numberRecords / recordsPerPage;
+        if (numberOfPages % recordsPerPage > 0) {
+            numberOfPages++;
         }
 
         return numberOfPages;

@@ -21,6 +21,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.sql.Types.NULL;
+
 public class SQLTestDAOImpl implements TestDAO {
 
     private static Logger logger = LogManager.getLogger();
@@ -54,7 +56,6 @@ public class SQLTestDAOImpl implements TestDAO {
 
     private static final String DELETE_QUESTIONS_BY_TEST_ID = "UPDATE `question` set deleted_at=? WHERE test_id=?";
 
-
     private static final String DELETE_ANSWER_BY_QUESTION_ID = "UPDATE `answer` set deleted_at=? WHERE question_id=?";
 
     private static final String GET_QUESTIONS_ID_TO_TEST = "SELECT id from question where test_id=?";
@@ -69,12 +70,21 @@ public class SQLTestDAOImpl implements TestDAO {
     private static final String SELECT_ALL_TESTS_BY_TYPE_ID_LIMIT_PAGE = "SELECT id, title,`key`, time FROM `test` " +
             "WHERE type_id=? and deleted_at is null LIMIT ?,?";
 
+    private static final String SELECT_TESTS_BY_TYPE_ID_PARAMS="SELECT id, title,`key`, time FROM `test`" +
+            "WHERE type_id=? and deleted_at is null and is_edited=?";
+
     private static final String GET_COUNT_TESTS_BY_TYPE_ID = "SELECT count(id) as countRow FROM `test` " +
             "WHERE type_id=? and deleted_at is null";
 
     private static final String SELECT_ALL_TYPES = "SELECT id, title from type WHERE deleted_at IS null";
     private static final String SELECT_TYPE_BY_TITLE = "SELECT id, title from type WHERE deleted_at IS null AND title=?";
     private static final String INSERT_TYPE = "INSERT INTO type (title) VALUES (?)";
+
+    private final static String SQL_CONDITION_TEST_KEY_IS_NOT_NULL=" AND `key` is not null";
+    private final static String SQL_CONDITION_TEST_KEY_IS_NULL=" AND `key` is null";
+    private final static String SQL_CONDITION_LIMIT="  LIMIT ?,?";
+    private final static String SQL_CONDITION_TEST_IS_EDITED_FALSE=" AND is_edited=false";
+    private final static String SQL_CONDITION_TEST_IS_EDITED_TRUE=" AND is_edited=true";
 
 
     private static final String TEST_ID_COLUMN = "id";
@@ -85,8 +95,8 @@ public class SQLTestDAOImpl implements TestDAO {
     private static final String COUNT_TEST_ROW = "countRow";
     private static final String TEST_ID_COLUMN_ALIAS = "t_id";
     private static final String TEST_TITLE_COLUMN_ALIAS = "t_title";
-    private static final String TYPE_TITLE_COLUMN= "title";
-    private static final String TYPE_ID_COLUMN= "id";
+    private static final String TYPE_TITLE_COLUMN = "title";
+    private static final String TYPE_ID_COLUMN = "id";
     private static final String TYPE_TITLE_COLUMN_ALIAS = "type_title";
     private static final String TYPE_ID_COLUMN_ALIAS = "type_id";
     private static final String QUESTION_ID_COLUMN = "id";
@@ -135,7 +145,7 @@ public class SQLTestDAOImpl implements TestDAO {
             resultSet = statement.executeQuery(SELECT_ALL_TYPES);
             typesFromDB = new ArrayList<>();
             while (resultSet.next()) {
-               Type type=buildType(resultSet);
+                Type type = buildType(resultSet);
                 typesFromDB.add(type);
             }
         } catch (ConnectionPoolException e) {
@@ -185,7 +195,7 @@ public class SQLTestDAOImpl implements TestDAO {
             preparedStatement.setString(1, title);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-              type=buildType(resultSet);
+                type = buildType(resultSet);
             }
         } catch (ConnectionPoolException e) {
             throw new DAOSqlException("ConnectionPoolException in SQLTestTypeDAOImpl getTypeByTitle() method.", e);
@@ -193,7 +203,7 @@ public class SQLTestDAOImpl implements TestDAO {
             logger.log(Level.ERROR, "SQLException in SQLTestTypeDAOImpl getTypeByTitle() method", e);
             throw new DAOSqlException("SQLException in SQLTestTypeDAOImpl getTypeByTitle() method.", e);
         } finally {
-            connectionPool.closeConnection(connection, preparedStatement,resultSet);
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return type;
     }
@@ -362,6 +372,51 @@ public class SQLTestDAOImpl implements TestDAO {
         return tests;
     }
 
+
+    @Override
+    public Set<Test> getTestsByLimit(int typeId, int from, int to, boolean isEdited, boolean isExistsKey) throws DAOException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Set<Test> tests = new HashSet<>();
+
+        try {
+            connection = connectionPool.takeConnection();
+            String query=SELECT_TESTS_BY_TYPE_ID_PARAMS;
+            if(isExistsKey){
+                query=query+SQL_CONDITION_TEST_KEY_IS_NOT_NULL;
+            }else{
+                query=query+SQL_CONDITION_TEST_KEY_IS_NULL;
+            }
+
+            query=query+SQL_CONDITION_LIMIT;
+
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, typeId);
+            preparedStatement.setBoolean(2,isEdited);
+            preparedStatement.setInt(3, from);
+            preparedStatement.setInt(4, to);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Test test = buildTest(resultSet);
+                int id = resultSet.getInt(TEST_ID_COLUMN);
+                test.setId(id);
+                tests.add(test);
+            }
+        } catch (ConnectionPoolException e) {
+            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method getTestsByLimit()", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getTestsByLimit()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method getTestsByLimit()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+        }
+
+        return tests;
+    }
+
+
     @Override
     public int getCountTests(int typeId) throws DAOException {
         Connection connection = null;
@@ -388,6 +443,46 @@ public class SQLTestDAOImpl implements TestDAO {
         return countNotDeletedTests;
     }
 
+
+    @Override
+    public int getCountTests(int typeId, boolean isEdited, boolean isExistsKey) throws DAOException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        int countNotDeletedTests = 0;
+
+        try {
+            connection = connectionPool.takeConnection();
+            String query = GET_COUNT_TESTS_BY_TYPE_ID;
+            if (!isEdited) {
+                query =query+ SQL_CONDITION_TEST_IS_EDITED_FALSE;
+            } else {
+                query =query+ SQL_CONDITION_TEST_IS_EDITED_TRUE;
+            }
+
+            if (isExistsKey) {
+                query = query+SQL_CONDITION_TEST_KEY_IS_NOT_NULL;
+            } else {
+                query =query+ SQL_CONDITION_TEST_KEY_IS_NULL;
+            }
+
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, typeId);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                countNotDeletedTests = resultSet.getInt(COUNT_TEST_ROW);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getCountTests()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method getCountTests()", e);
+        } catch (ConnectionPoolException e) {
+            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method getCountTests()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+        }
+        return countNotDeletedTests;
+    }
 
     @Override
     public int getCountTestAssignment(int testId, boolean isCompleted) throws DAOException {

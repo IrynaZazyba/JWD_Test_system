@@ -3,6 +3,8 @@ package by.jwd.testsys.controller.command.ajax.impl;
 import by.jwd.testsys.bean.Assignment;
 import by.jwd.testsys.bean.Question;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
+import by.jwd.testsys.controller.command.ajax.impl.edit.ChangePassword;
+import by.jwd.testsys.controller.command.front.impl.edit.ShowAdminPanel;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.TestLogService;
@@ -10,6 +12,9 @@ import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.*;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import com.google.gson.Gson;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ShowQuestion implements AjaxCommand {
+
+    private final static Logger logger = LogManager.getLogger(ShowQuestion.class);
 
 
     @Override
@@ -37,8 +44,8 @@ public class ShowQuestion implements AjaxCommand {
         Assignment assignment = null;
         try {
 
-            testService.checkPermission(user_id, test_id, key);
             assignment = testService.checkTestAssignment(test_id, user_id);
+            testService.checkPermission(user_id, test_id, key);
 
 
             int questionLogId;
@@ -47,7 +54,6 @@ public class ShowQuestion implements AjaxCommand {
 
             if (questionByTestId != null) {
                 questionLogId = testLogService.writeQuestionLog(questionByTestId.getId(), assignment.getId());
-
 
                 long time= testService.calculateTestDuration(assignment);
 
@@ -69,7 +75,7 @@ public class ShowQuestion implements AjaxCommand {
                 answer = gson.toJson(map);
             }
 
-        } catch (TestLogServiceException | TestServiceException | InvalidUserDataException e) {
+        } catch (TestLogServiceException | TestServiceException e) {
             response.setStatus(500);
             Map<String, Object> map = new HashMap<>();
             map.put("page", "errorPage.jsp");
@@ -84,6 +90,13 @@ public class ShowQuestion implements AjaxCommand {
         } catch (InvalidTestKeyException e) {
             Map<String, Object> map = new HashMap<>();
             map.put("invalid_key", "true");
+            Gson gson = new Gson();
+            return gson.toJson(map);
+        } catch (InvalidUserDataException e) {
+            logger.log(Level.ERROR, "Invalid user data in ShowQuestion command method execute()");
+            response.setStatus(500);
+            Map<String, Object> map = new HashMap<>();
+            map.put("page", "errorPage.jsp");
             Gson gson = new Gson();
             return gson.toJson(map);
         }

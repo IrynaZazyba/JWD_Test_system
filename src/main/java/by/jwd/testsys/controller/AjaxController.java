@@ -20,7 +20,6 @@ import java.io.PrintWriter;
 public class AjaxController extends HttpServlet {
 
     private static final long serialVersionUID = 1071754507052524007L;
-    private static Logger logger = LogManager.getLogger();
 
     @Override
     public void init() throws ServletException {

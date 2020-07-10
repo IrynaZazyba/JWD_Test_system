@@ -19,6 +19,7 @@
 <fmt:message bundle="${loc}" key="nav-item.article" var="nav_item_articles"/>
 <fmt:message bundle="${loc}" key="nav-item.assign_test" var="nav_item_assign_test"/>
 <fmt:message bundle="${loc}" key="nav-item.results" var="nav_item_results"/>
+<fmt:message bundle="${loc}" key="nav-item.assigned_test" var="nav_item_assigned_tests"/>
 
 
 
@@ -40,14 +41,14 @@
                     <a class="nav-link nav-vrl item-start"
                        href="${pageContext.request.contextPath}/test?command=show_tests_page">${nav_item_tests}</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-vrl item-start"
+                       href="${pageContext.request.contextPath}/test?command=show_assigned_tests_page">${nav_item_assigned_tests}</a>
+                </li>
             </c:if>
 
 
             <c:if test="${sessionScope.user_role=='ADMIN'}">
-                <li class="nav-item">
-                    <a class="nav-link nav-vrl item-start"
-                       href="${pageContext.request.contextPath}/test?command=assign_test">${nav_item_assign_test}</a>
-                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle nav-vrl item-start" href="#" id="navbarDropdown"
                        role="button" role="tab"
@@ -55,7 +56,11 @@
                             ${nav_item_admin}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="${pageContext.request.contextPath}/test?command=show_admin_panel">${nav_item_admin_tests}</a>
+                        <a class="dropdown-item"
+                           href="${pageContext.request.contextPath}/test?command=show_admin_panel">${nav_item_admin_tests}</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item"
+                           href="${pageContext.request.contextPath}/test?command=assign_test">${nav_item_assign_test}</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">${nav_item_admin_users}</a>
                     </div>

@@ -5,9 +5,14 @@ import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.UserService;
+import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.exception.ServiceException;
+import by.jwd.testsys.logic.exception.UserServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import com.google.gson.Gson;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +22,7 @@ import java.util.Set;
 
 public class GetAssignedUsers implements AjaxCommand {
 
+    private static Logger logger = LogManager.getLogger(GetAssignedUsers.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
@@ -55,7 +61,10 @@ public class GetAssignedUsers implements AjaxCommand {
             usersWithTestAssignment.put("setUsers", usersWithAssignment);
             answer = gson.toJson(usersWithTestAssignment);
 
-        } catch (ServiceException e) {
+        } catch (UserServiceException e) {
+            response.setStatus(500);
+        } catch (InvalidUserDataException e) {
+            logger.log(Level.ERROR, "InvalidUserData Exception in GetAssignedUsers command", e);
             response.setStatus(500);
         }
 

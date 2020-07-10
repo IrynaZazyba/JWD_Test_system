@@ -4,6 +4,8 @@ public interface FrontDataValidator {
 
     boolean validateId(int id);
 
+    boolean validatePositiveNumber(int id);
+
     boolean validateTime(String time);
 
     boolean validateOnlyLatinLetters(String str);

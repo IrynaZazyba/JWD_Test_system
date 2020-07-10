@@ -36,136 +36,114 @@
         <div class="col-2 background-gradient height-100 p-l-15 p-r-0">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
-                <a class="nav-link vertical-menu active" id="v-pills-assigned_test-tab" data-toggle="pill"
-                   href="#v-pills-assigned_test"
-                   role="tab"
-                   aria-controls="v-pills-assigned_test" aria-selected="true">${assigned_test}</a>
+                <c:forEach var="type" items="${requestScope.testTypes}">
+                    <c:if test="${type.id==requestScope.activeTypeId}">
+                        <a class="nav-link vertical-menu active " id="v-pills-admin-${type.id}"
+                           href="${pageContext.request.contextPath}/test?command=show_tests_page&typeId=${type.id}"
+                           role="tab"
+                           aria-controls="v-pills-test" aria-selected="true"><c:out value="${type.title}"/></a>
+                    </c:if>
+                    <c:if test="${type.id!=requestScope.activeTypeId}">
 
-                <hr>
-                <c:forEach var="item" items="${requestScope.testTypes}">
-                    <a class="nav-link vertical-menu" id="v-pills-${item.id}-tab" data-toggle="pill"
-                       href="#v-pills-${item.id}"
-                       role="tab"
-                       aria-controls="v-pills-${item.id}" aria-selected="true">
-                        <c:out value="${item.title}"/></a>
+                        <a class="nav-link vertical-menu " id="v-pills-admin-${type.id}"
+                           href="${pageContext.request.contextPath}/test?command=show_tests_page&typeId=${type.id}"
+                           role="tab"
+                           aria-controls="v-pills-test" aria-selected="true"><c:out value="${type.title}"/></a>
+                    </c:if>
                 </c:forEach>
 
             </div>
         </div>
-        <div class="col-9">
-            <div class="tab-content" id="v-pills-tabContent">
+        <div class="col-10">
 
-                <div class="tab-pane fade active show  " id="v-pills-assigned_test" role="tabpanel"
-                     aria-labelledby="v-pills-assigned_test-tab">
-                    <div class="row m-t-35">
 
-                    <c:forEach var="item" items="${requestScope.userAssignedTests}">
+            <div class="row m-t-35">
+                <c:forEach var="itm" items="${requestScope.testsInfoData}">
+                    <div class="t-card">
                         <div class="col-2 card-main">
                             <div class="card-section card-section-third border rounded">
                                 <div class="card-header card-header-third rounded">
                                     <div class="ribbon ribbon-top-type-left"><span></span></div>
-                                    <div class="ribbon-type ribbon-top-asgmt-left"><span>${item.type.title}</span>
+                                    <div class="ribbon-type ribbon-top-asgmt-left">
+                                        <span>${requestScope.testTypeTitle}</span>
                                     </div>
 
                                 </div>
                                 <div class="card-body text-center mb-2 card-test">
-                                    <h5 class="name-test">${item.title}</h5>
+                                    <h6 class="name-test">${itm.title}</h6>
                                     <hr>
 
-                                    <p class="card-text time-quest">${item.duration} min</p>
-                                    <p class="card-text time-quest">${item.countQuestion}questions</p>
+                                    <p class="card-text time-quest">${itm.duration} min</p>
+                                    <p class="card-text time-quest">${itm.countQuestion} questions</p>
 
 
                                 </div>
-                                <form method="GET" action="test">
-                                    <input type="hidden" name="command" value="show_exe_test_page"/>
-                                    <input type="hidden" name="testId" value="${item.id}"/>
-                                    <button type="submit"
-                                            class="card-btn btn btn-outline-primary d-block mx-auto">
-                                            ${button_get_started }
-                                    </button>
-                                </form>
+
+
+                                <c:if test="${itm.flag==0}">
+
+                                    <form method="GET" action="test">
+                                        <input type="hidden" name="command" value="show_exe_test_page"/>
+                                        <input type="hidden" name="testId" value="${itm.id}"/>
+                                        <button type="submit"
+                                                class="card-btn btn btn-outline-primary d-block mx-auto">
+                                                ${button_get_started}
+                                        </button>
+                                    </form>
+
+                                </c:if>
+                                <c:if test="${itm.flag==1}">
+
+                                    <form onsubmit="getContinuedQuestion(); return false" id="exeTest"
+                                          enctype="multipart/form-data"
+                                          accept-charset="UTF-8" class="key-form" role="form">
+                                        <input type="hidden" name="command" value="save_answer"/>
+                                        <input type="hidden" id="testId" name="testId"
+                                               value="${itm.id}"/>
+
+
+                                        <button type="submit"
+                                                class="card-btn btn btn-outline-primary d-block mx-auto">
+                                                ${button_continue}
+                                        </button>
+                                    </form>
+
+                                </c:if>
+
                             </div>
-                        </div>
-                    </c:forEach>
-                    </div>
-
-
-
-                </div>
-
-                <c:forEach var="item" items="${requestScope.testTypes}">
-
-                    <div class="tab-pane fade  " id="v-pills-${item.id}" role="tabpanel"
-                         aria-labelledby="v-pills-${item.id}-tab">
-
-                        <div class="row m-t-35">
-                            <c:forEach var="itm" items="${item.tests}">
-                                <div class="col-2 card-main">
-                                    <div class="card-section card-section-third border rounded">
-                                        <div class="card-header card-header-third rounded">
-                                            <div class="ribbon ribbon-top-type-left"><span></span></div>
-                                            <div class="ribbon-type ribbon-top-asgmt-left"><span>${item.title}</span>
-                                            </div>
-
-                                        </div>
-                                        <div class="card-body text-center mb-2 card-test">
-                                            <h5 class="name-test">${itm.title}</h5>
-                                            <hr>
-
-                                            <p class="card-text time-quest">${itm.duration} min</p>
-                                            <p class="card-text time-quest">${itm.countQuestion} questions</p>
-
-
-                                        </div>
-
-
-                                        <c:if test="${itm.flag==0}">
-
-                                            <form method="GET" action="test">
-                                                <input type="hidden" name="command" value="show_exe_test_page"/>
-                                                <input type="hidden" name="testId" value="${itm.id}"/>
-                                                <button type="submit"
-                                                        class="card-btn btn btn-outline-primary d-block mx-auto">
-                                                        ${button_get_started}
-                                                </button>
-                                            </form>
-
-                                        </c:if>
-                                        <c:if test="${itm.flag==1}">
-
-                                            <form onsubmit="getContinuedQuestion(); return false" id="exeTest" enctype="multipart/form-data"
-                                            accept-charset="UTF-8" class="key-form" role="form">
-                                            <input type="hidden" name="command" value="save_answer"/>
-                                            <input type="hidden" id="testId" name="testId"
-                                                   value="${itm.id}"/>
-
-
-                                            <button type="submit"
-                                                    class="card-btn btn btn-outline-primary d-block mx-auto">
-                                                    ${button_continue}
-                                            </button>
-                                            </form>
-
-                                        </c:if>
-
-                                    </div>
-                                </div>
-                            </c:forEach>
                         </div>
                     </div>
                 </c:forEach>
-
             </div>
+            <nav aria-label="..." class="m-t-27">
+                <ul class="pagination pagination-sm pagination_center">
+                    <c:forEach var="i" begin="1" end="${requestScope.countPages}">
+                        <c:if test="${i==requestScope.currentPage}">
+
+                            <li class="page-item page-item-change active" aria-current="page">
+                                                <span class="page-link">${i}
+                                                            <span class="sr-only">(current)</span>
+                                                            </span>
+                            </li>
+                        </c:if>
+
+                        <c:if test="${i!=requestScope.currentPage}">
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="${pageContext.request.contextPath}/test?command=show_tests_page&currentPage=${i}">
+                                        ${i}
+                                </a>
+                            </li>
+                        </c:if>
+                    </c:forEach>
+                </ul>
+            </nav>
         </div>
 
     </div>
-</div>
-</div>
-<div id="content bor"></div>
-
 
 </div>
+
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="" crossorigin="anonymous"></script>
 <script src="resources/js/bootstrap.min.js.map"

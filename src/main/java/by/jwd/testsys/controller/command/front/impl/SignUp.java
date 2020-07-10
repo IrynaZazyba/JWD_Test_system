@@ -56,7 +56,7 @@ public class SignUp implements Command {
 
                 request.setAttribute(RequestParameterName.SIGN_UP_SUCCESS_MESSAGE,RequestParameterName.SIGN_UP_SUCCESS_MESSAGE);
                 forwardToPage(request, response, JspPageName.START_JSP_PAGE);
-
+//todo query locale
 
             } catch (ServiceException | ForwardCommandException e) {
                 logger.log(Level.ERROR, e.getMessage(), e);

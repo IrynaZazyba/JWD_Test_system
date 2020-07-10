@@ -57,7 +57,7 @@
                         Произошла ошибка при сохранении данных.
                     </div>
 
-                    <form onsubmit="saveTestInfo(this);return false;" enctype="multipart/form-data"
+                    <form id="addTestForm" onsubmit="saveTestInfo(this);return false;" enctype="multipart/form-data"
                           accept-charset="UTF-8" class="key-form" role="form">
                         <div class="form-group">
                             <label for="testType">Раздел</label>
@@ -70,10 +70,22 @@
                         <div class="form-group">
                             <label for="testTitle">Название</label>
                             <input required type="text" class="form-control" name="testTitle" id="testTitle">
+                            <small id="testTitleHelpInline" class="text-muted">
+                                Must be no longer than 20 characters.
+                            </small>
+                            <div class="invalid-feedback">
+                                Please provide a valid test title.
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="keyValue">Ключ</label>
                             <input type="text" class="form-control" name="testKey" id="keyValue">
+                            <small id="keyHelpInline" class="text-muted">
+                                Must be 4-7 characters long (letters and numbers).
+                            </small>
+                            <div class="invalid-feedback">
+                                Please provide a valid key.
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="duration">Продолжительность, чч:mm</label>

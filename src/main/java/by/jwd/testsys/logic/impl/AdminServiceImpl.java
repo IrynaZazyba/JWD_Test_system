@@ -12,7 +12,9 @@ import by.jwd.testsys.logic.AdminService;
 import by.jwd.testsys.logic.exception.*;
 import by.jwd.testsys.logic.util.SslSender;
 import by.jwd.testsys.logic.validator.FrontDataValidator;
+import by.jwd.testsys.logic.validator.TestValidator;
 import by.jwd.testsys.logic.validator.factory.ValidatorFactory;
+import by.jwd.testsys.logic.validator.impl.TestValidatorImpl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,6 +30,7 @@ public class AdminServiceImpl implements AdminService {
 
     private ValidatorFactory validatorFactory = ValidatorFactory.getInstance();
     private FrontDataValidator frontDataValidator = validatorFactory.getFrontDataValidator();
+    private TestValidator testValidator = validatorFactory.getTestValidator();
 
     private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT = "BeeTesting test assignment";
     private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_TEST = "you have been assigned to the test ";
@@ -41,7 +44,12 @@ public class AdminServiceImpl implements AdminService {
 
 
     @Override
-    public void deleteTest(int testId) throws AdminServiceException, InvalidDeleteActionServiceException {
+    public void deleteTest(int testId) throws AdminServiceException, InvalidDeleteActionServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(testId)) {
+            throw new InvalidUserDataException("Invalid testId in AdminServiceImpl deleteTest() method");
+        }
+
         try {
             int countIncompleteTestAssignment = testDAO.getCountTestAssignment(testId, false);
             if (countIncompleteTestAssignment != 0) {
@@ -55,7 +63,21 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public int createTest(int typeId, String title, String key, LocalTime duration) throws AdminServiceException {
+    public int createTest(int typeId, String title, String key, LocalTime duration) throws AdminServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(typeId)) {
+            throw new InvalidUserDataException("Invalid typeId in AdminServiceImpl createTest() method");
+        }
+
+        if (!testValidator.validateTestTitle(title)) {
+            throw new InvalidUserDataException("Invalid title in AdminServiceImpl createTest() method");
+        }
+
+        if (!testValidator.validateKey(key)) {
+            throw new InvalidUserDataException("Invalid key in AdminServiceImpl createTest() method");
+        }
+
+
         int generatedTestId;
         if (key.equals("")) {
             key = null;
@@ -70,7 +92,25 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void updateTestData(int testId, int typeId, String title, String key, LocalTime duration) throws AdminServiceException {
+    public void updateTestData(int testId, int typeId, String title, String key, LocalTime duration) throws AdminServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(testId)) {
+            throw new InvalidUserDataException("Invalid typeId in AdminServiceImpl updateTestData() method");
+        }
+
+        if (!frontDataValidator.validateId(typeId)) {
+            throw new InvalidUserDataException("Invalid typeId in AdminServiceImpl updateTestData() method");
+        }
+
+        if (!testValidator.validateTestTitle(title)) {
+            throw new InvalidUserDataException("Invalid title in AdminServiceImpl updateTestData() method");
+        }
+
+        if (!testValidator.validateKey(key)) {
+            throw new InvalidUserDataException("Invalid key in AdminServiceImpl updateTestData() method");
+        }
+
+
         Test test = new Test.Builder()
                 .withId(testId).withTitle(title).withKey(key).withDuration(duration).withEdited(true).build();
         try {
@@ -107,7 +147,12 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Test receiveTestWithQuestionsAndAnswers(int testId) throws AdminServiceException {
+    public Test receiveTestWithQuestionsAndAnswers(int testId) throws AdminServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(testId)) {
+            throw new InvalidUserDataException("Invalid testId in AdminServiceImpl receiveTestWithQuestionsAndAnswers() method");
+        }
+
         Test testData;
         try {
             testData = testDAO.getTestInfo(testId);
@@ -124,7 +169,7 @@ public class AdminServiceImpl implements AdminService {
     public void changeTestIsEdited(int testId, boolean isEdited) throws AdminServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(testId)) {
-            throw new InvalidUserDataException("Invalid assignmentId in AdminService changeTestIsEdited() method");
+            throw new InvalidUserDataException("Invalid testId in AdminService changeTestIsEdited() method");
         }
         try {
             testDAO.updateTestIsEdited(testId, isEdited);
@@ -184,17 +229,25 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void completeTestCreation(int testID) throws AdminServiceException {
+    public void completeTestCreation(int testId) throws AdminServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(testId)) {
+            throw new InvalidUserDataException("Invalid testId in AdminService completeTestCreation() method");
+        }
 
         try {
-            testDAO.updateTestIsEdited(testID, false);
+            testDAO.updateTestIsEdited(testId, false);
         } catch (DAOException e) {
             throw new AdminServiceException("DAOException in AdminServiceImpl completeTestCreation() method", e);
         }
     }
 
     @Override
-    public void deleteQuestionWithAnswers(int questionId) throws AdminServiceException {
+    public void deleteQuestionWithAnswers(int questionId) throws AdminServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(questionId)) {
+            throw new InvalidUserDataException("Invalid questionId in AdminService deleteQuestionWithAnswers() method");
+        }
 
         try {
             questionAnswerDAO.deleteQuestionWithAnswers(questionId, LocalDateTime.now());
@@ -204,7 +257,11 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void addTestType(String testTypeTitle) throws AdminServiceException, ExistsTypeAdminServiceException {
+    public void addTestType(String testTypeTitle) throws AdminServiceException, ExistsTypeAdminServiceException, InvalidUserDataException {
+
+        if (!testValidator.validateTypeTitle(testTypeTitle)) {
+            throw new InvalidUserDataException("Invalid testTypeTitle in AdminService addTestType() method");
+        }
 
         try {
             Type typeByTitle = testDAO.getTypeByTitle(testTypeTitle);
@@ -220,9 +277,14 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void deleteAssignment(int assignment_id) throws ServiceException {
+    public void deleteAssignment(int assignmentId) throws AdminServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(assignmentId)) {
+            throw new InvalidUserDataException("Invalid assignmentId in AdminService deleteAssignment() method");
+        }
+
         try {
-            userDAO.deleteAssignment(assignment_id, LocalDate.now());
+            userDAO.deleteAssignment(assignmentId, LocalDate.now());
         } catch (DAOSqlException e) {
             throw new AdminServiceException("DAOException in AdminServiceImpl deleteAssignment() method", e);
         }
@@ -230,20 +292,29 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Map<String, Set<User>> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws ServiceException, DateOutOfRangeException {
+    public Map<String, Set<User>> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId)
+            throws InvalidUserDataException, AdminServiceException {
+
+        if (!frontDataValidator.validateId(testId)) {
+            throw new InvalidUserDataException("Invalid testId in AdminService assignTestToUsers() method");
+        }
 
         List<Integer> usersId = new ArrayList<>();
         Map<String, Set<User>> assignmentResult = new HashMap<>();
         Set<User> existsAssignment = new HashSet<>();
         Set<User> successAssignment = new HashSet<>();
 
-        if (!isWithinRange(deadline)) {
-            throw new DateOutOfRangeException("Deadline date isn't valid");
+        if (!testValidator.validateDeadlineDate(deadline)) {
+            throw new InvalidUserDataException("Invalid deadline in AdminService assignTestToUsers() method");
         }
 
         try {
             for (String id : assignUsersId) {
                 int userId = Integer.parseInt(id);
+                if (!frontDataValidator.validateId(userId)) {
+                    throw new InvalidUserDataException("Invalid userId in AdminService assignTestToUsers() method");
+                }
+
                 Assignment assignment = userDAO.getUserAssignmentByTestId(userId, testId);
                 if (assignment == null) {
                     usersId.add(userId);
@@ -258,7 +329,6 @@ public class AdminServiceImpl implements AdminService {
             assignmentResult.put("successAssignment", successAssignment);
             assignmentResult.put("existsAssignment", existsAssignment);
             userDAO.insertAssignment(LocalDate.now(), deadline, testId, usersId);
-            sendTestKeyToUsers(successAssignment, testId, deadline);
         } catch (DAOException e) {
             throw new AdminServiceException("DAOException in AdminServiceImpl assignTestToUsers() method", e);
         }
@@ -267,20 +337,25 @@ public class AdminServiceImpl implements AdminService {
     }
 
 
-    private boolean isWithinRange(LocalDate deadline) {
-        return deadline.isAfter(LocalDate.now());
-    }
+    @Override
+    public boolean sendTestKeyToUsers(Set<User> assignedUsers, int testId, LocalDate deadline) throws AdminServiceException {
 
-    private void sendTestKeyToUsers(Set<User> assignedUsers, int testId, LocalDate deadline) throws DAOException {
+        Test testInfo = null;
+        try {
+            testInfo = testDAO.getTestInfo(testId);
+            SslSender sender = SslSender.getInstance();
 
-        Test testInfo = testDAO.getTestInfo(testId);
-        SslSender sender = SslSender.getInstance();
-
-        for (User user : assignedUsers) {
-            String message = buildEmailMessage(user.getFirstName(), testInfo.getTitle(), testInfo.getKey(), deadline);
-            sender.send(EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT, message, user.getEmail());
+            for (User user : assignedUsers) {
+                String message = buildEmailMessage(user.getFirstName(), testInfo.getTitle(), testInfo.getKey(), deadline);
+                sender.send(EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT, message, user.getEmail());
+            }
+        } catch (DAOException e) {
+            throw new AdminServiceException("DAOException in AdminServiceImpl sendTestKeyToUsers() method", e);
+        } catch (FaildSendMailException e) {
+            //todo logger
+            return false;
         }
-
+        return true;
     }
 
     private String buildEmailMessage(String userName, String testName, String key, LocalDate deadline) {

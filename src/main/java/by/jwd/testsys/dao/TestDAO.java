@@ -32,9 +32,13 @@ public interface TestDAO {
 
     Set<Test> getTestsByLimit(int typeId, int from, int to) throws DAOException;
 
+    Set<Test> getTestsByLimit(int typeId, int from, int to, boolean isEdited, boolean isExistsKey) throws DAOException;
+
     int getCountTests(int typeId) throws DAOException;
 
     void deleteTestById(int testId, LocalDateTime deletedDate) throws DAOException;
+
+    int getCountTests(int typeId, boolean isEdited, boolean isExistsKey) throws DAOException;
 
     int getCountTestAssignment(int testId, boolean isCompleted) throws DAOException;
 

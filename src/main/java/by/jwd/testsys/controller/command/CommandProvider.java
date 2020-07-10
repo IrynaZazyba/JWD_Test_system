@@ -26,7 +26,9 @@ public final class CommandProvider {
         frontRepository.put(CommandName.SIGN_IN, new SignIn());
         frontRepository.put(CommandName.SIGN_OUT, new SignOut());
         frontRepository.put(CommandName.SIGN_UP, new SignUp());
+
         frontRepository.put(CommandName.SHOW_TESTS_PAGE, new ShowTestsPage());
+
         frontRepository.put(CommandName.SHOW_USER_ACCOUNT, new ShowUserPage());
         frontRepository.put(CommandName.WRONG_REQUEST, new WrongRequest());
         frontRepository.put(CommandName.CHANGE_LANGUAGE, new ChangeLocal());
@@ -40,6 +42,7 @@ public final class CommandProvider {
         frontRepository.put(CommandName.ADD_TEST, new AddTestPage());
         frontRepository.put(CommandName.EDIT_TEST, new ShowEditTestPage());
         frontRepository.put(CommandName.PREVIEW_TEST, new ShowPreviewTestPage());
+        frontRepository.put(CommandName.SHOW_ASSIGNED_TESTS_PAGE, new ShowAssignedTestsPage());
 
 
         ajaxRepository.put(AjaxCommandName.EDIT_USER, new EditUser());
@@ -67,21 +70,14 @@ public final class CommandProvider {
         return instance;
     }
 
-    public Command getFrontCommand(String name, String security) {
-        CommandName commandName;
-        Command command;
+    public Command getFrontCommand(String name) {
+        CommandName commandName=CommandName.valueOf(name.toUpperCase());
+        Command command=frontRepository.get(commandName);
 
-        if (name == null || security != null) {
+        if (command == null) {
             command = frontRepository.get(CommandName.WRONG_REQUEST);
-        } else {
-
-            commandName = CommandName.valueOf(name.toUpperCase());
-            command = frontRepository.get(commandName);
-
-            if (command == null) {
-                command = frontRepository.get(CommandName.WRONG_REQUEST);
-            }
         }
+
         return command;
     }
 

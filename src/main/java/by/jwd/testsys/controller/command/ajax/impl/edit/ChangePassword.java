@@ -7,8 +7,12 @@ import by.jwd.testsys.logic.UserService;
 import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
+import by.jwd.testsys.logic.impl.UserServiceImpl;
 import by.jwd.testsys.logic.validator.util.InvalidParam;
 import com.google.gson.Gson;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +24,8 @@ import java.util.ResourceBundle;
 
 
 public class ChangePassword implements AjaxCommand {
+
+    private final static Logger logger = LogManager.getLogger(ChangePassword.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
@@ -47,6 +53,8 @@ public class ChangePassword implements AjaxCommand {
             answer = gson.toJson(mapAnswer);
 
         } catch (InvalidUserDataException e) {
+            logger.log(Level.ERROR, "Invalid user data in ChangePassword command method execute()");
+
             for (String mess : e.getInvalidData()) {
                 if (mess.equals(InvalidParam.INVALID_PASSWORD.toString())) {
                     mapAnswer.put(InvalidParam.INVALID_LOGIN.toString().toLowerCase(), bundle.getString("message.invalid_password"));

@@ -454,3 +454,9 @@ input:checked {
     border-radius: .5rem;
     padding: 15px;
 }
+
+.t-card{
+    padding-top: 25px;
+    margin-left: -5px;
+    margin-right: -15px
+}

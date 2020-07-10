@@ -28,17 +28,21 @@ public class SQLUserDAOImpl implements UserDAO {
     private final ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
     private ConnectionPoolDAO connectionPool = connectionPoolFactory.getMySqlConnectionPoolDAO();
 
-    private static final String SELECT_ALL_USERS = "SELECT users.id, login,password, first_name, last_name, email, role.title" +
+    private static final String SELECT_ALL_USERS = "SELECT users.id, login,first_name, last_name, email, role.title" +
             " from users INNER JOIN role ON users.role_id=role.id";
     private static final String INSERT_USER = "INSERT INTO users (login, password, first_name, last_name,email, role_id) " +
             "VALUES (?,?,?,?,?,?)";
     private static final String SELECT_ROLE_ID = "SELECT id FROM role WHERE title=?";
-    private static final String SELECT_USER_BY_LOGIN = "SELECT users.id,login,password,first_name,last_name," +
+    private static final String SELECT_USER_BY_LOGIN = "SELECT users.id,login,first_name,last_name," +
             "title, email FROM users INNER JOIN role ON users.role_id=role.id WHERE login=?";
-    private static final String SELECT_USER_BY_ID = "SELECT users.id,login,password,first_name,last_name," +
+    private static final String SELECT_USER_BY_ID = "SELECT users.id,login,first_name,last_name," +
             "title, email FROM users INNER JOIN role ON users.role_id=role.id WHERE users.id=?";
-    private static final String UPDATE_USER = "UPDATE users SET login=?, first_name=?, last_name=?," +
+
+    private static final String SELECT_PASSWORD_BY_USER_ID = "SELECT password FROM users WHERE id=?";
+
+    private static final String UPDATE_USER = "UPDATE users SET login=?,first_name=?, last_name=?," +
             "role_id=?, email=? WHERE id=?";
+    //todo 2 метода для пароля
     private static final String UPDATE_USER_PASSWORD = "UPDATE users SET password=? WHERE id=?";
     private static final String WRITE_ASSIGNMENT = "INSERT INTO `assignment`" +
             " (`date`,`deadline`, `test_id`, `user_id`, `completed`) " +
@@ -204,6 +208,31 @@ public class SQLUserDAOImpl implements UserDAO {
     }
 
     @Override
+    public String getPassword(int userId) throws DAOException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        String password = null;
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_PASSWORD_BY_USER_ID);
+            preparedStatement.setInt(1, userId);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                password = resultSet.getString("password");
+            }
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl getPassword() method", e);
+            throw new DAOSqlException("SQLException in SQLUserDAOImpl getPassword() method", e);
+        } catch (ConnectionPoolException e) {
+            throw new DAOConnectionPoolException("ConnectionPoolException in SQLUserDAOImpl getPassword() method", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+        }
+        return password;
+    }
+
+    @Override
     public User updateUser(User user) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -213,12 +242,11 @@ public class SQLUserDAOImpl implements UserDAO {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(UPDATE_USER);
             preparedStatement.setString(1, user.getLogin());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setString(3, user.getFirstName());
-            preparedStatement.setString(4, user.getLastName());
-            preparedStatement.setInt(5, getRoleId(user.getRole()));
-            preparedStatement.setString(6, user.getEmail());
-            preparedStatement.setInt(7, user.getId());
+            preparedStatement.setString(2, user.getFirstName());
+            preparedStatement.setString(3, user.getLastName());
+            preparedStatement.setInt(4, getRoleId(user.getRole()));
+            preparedStatement.setString(5, user.getEmail());
+            preparedStatement.setInt(6, user.getId());
             preparedStatement.executeUpdate();
             updatedUser = user;
         } catch (SQLException e) {
@@ -645,7 +673,6 @@ public class SQLUserDAOImpl implements UserDAO {
     private User buildUser(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt(USER_ID_COLUMN);
         String login = resultSet.getString(USER_LOGIN_COLUMN);
-        String password = resultSet.getString(USER_PASSWORD_COLUMN);
         String firstName = resultSet.getString(USER_FIRST_NAME_COLUMN);
         String lastName = resultSet.getString(USER_LAST_NAME_COLUMN);
         String email = resultSet.getString(USER_EMAIL_COLUMN);
@@ -653,7 +680,6 @@ public class SQLUserDAOImpl implements UserDAO {
         return new User.Builder()
                 .withId(id)
                 .withLogin(login)
-                .withPassword(password)
                 .withFirstName(firstName)
                 .withLastName(lastName)
                 .withEmail(email)

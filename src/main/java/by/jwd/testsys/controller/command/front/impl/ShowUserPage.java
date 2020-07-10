@@ -7,7 +7,9 @@ import by.jwd.testsys.controller.parameter.JspPageName;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.UserService;
+import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.exception.ServiceException;
+import by.jwd.testsys.logic.exception.UserServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -39,10 +41,13 @@ public class ShowUserPage implements Command {
             session.setAttribute(SessionAttributeName.QUERY_STRING,req.getQueryString());
             forwardToPage(req, resp, JspPageName.USER_ACCOUNT_PAGE);
 
-        } catch (ServiceException e) {
+        } catch (UserServiceException e) {
             resp.sendRedirect(JspPageName.ERROR_PAGE);
         } catch (ForwardCommandException e) {
             logger.log(Level.ERROR,"Forward to page Exception in ShowUserPage command", e);
+            resp.sendRedirect(JspPageName.ERROR_PAGE);
+        } catch (InvalidUserDataException e) {
+            logger.log(Level.ERROR, "InvalidUserData Exception in ShowUserPage command", e);
             resp.sendRedirect(JspPageName.ERROR_PAGE);
         }
 

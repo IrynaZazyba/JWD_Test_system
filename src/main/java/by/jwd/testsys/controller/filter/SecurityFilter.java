@@ -12,9 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-/**
- * Sets character encoding for every request.
- */
 
 @WebFilter(urlPatterns = {"/test"}, dispatcherTypes = DispatcherType.REQUEST)
 public class SecurityFilter implements Filter {
@@ -31,15 +28,9 @@ public class SecurityFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpSession session = httpServletRequest.getSession();
 
-        String parameter1 = httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME);
 
-        if (httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME) == null) {
-            session.setAttribute(SessionAttributeName.SECURITY, SessionAttributeName.SECURITY);
-        }
-//todo
-        String parameter = httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME);
-
-        if (session != null && session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE) == null
+        if (httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME) == null||
+                session != null && session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE) == null
                 && !httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME).
                 equals(CommandName.SIGN_IN.toString().toLowerCase())
                 && !httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME).
@@ -47,9 +38,11 @@ public class SecurityFilter implements Filter {
                 && !httpServletRequest.getParameter(RequestParameterName.COMMAND_NAME).
                 equals(CommandName.CHANGE_LANGUAGE.toString().toLowerCase())) {
 
-            session.setAttribute(SessionAttributeName.SECURITY, SessionAttributeName.SECURITY);
+            HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+            httpServletResponse.sendRedirect(JspPageName.START_PAGE);
+        } else {
+            filterChain.doFilter(httpServletRequest, servletResponse);
         }
-        filterChain.doFilter(httpServletRequest, servletResponse);
     }
 
     @Override

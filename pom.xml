@@ -15,8 +15,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.12</maven.compiler.source>
+        <maven.compiler.target>1.12</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -98,6 +98,14 @@
                     <uriEncoding>UTF-8</uriEncoding>
                     <url>http://localhost:8080/manager/text</url>
                     <server>tomcat-server</server>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.2</version>
+                <configuration>
+                    <release>12</release>
                 </configuration>
             </plugin>
         </plugins>

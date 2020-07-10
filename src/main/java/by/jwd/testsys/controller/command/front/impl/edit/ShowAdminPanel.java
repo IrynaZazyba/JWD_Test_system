@@ -4,6 +4,7 @@ import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.bean.Type;
 import by.jwd.testsys.controller.command.front.Command;
 import by.jwd.testsys.controller.command.front.ForwardCommandException;
+import by.jwd.testsys.controller.command.util.GetParameterFromRequestHelper;
 import by.jwd.testsys.controller.parameter.JspPageName;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
@@ -25,11 +26,11 @@ import java.util.Set;
 
 public class ShowAdminPanel implements Command {
 
-    private static Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger(ShowAdminPanel.class);
+    private final static int NUMBER_OF_RECORDS_PER_PAGE=11;
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         TestService testService = serviceFactory.getTestService();
@@ -38,32 +39,18 @@ public class ShowAdminPanel implements Command {
         try {
 
             List<Type> types = testService.allTestsType();
-            String typeId = request.getParameter(RequestParameterName.TEST_TYPE_ID);
-            int activeTypeId = 0;
-            if (typeId != null) {
-                activeTypeId = Integer.parseInt(typeId);
-            } else {
-                activeTypeId = types.get(0).getId();
-            }
+            int activeTypeId = GetParameterFromRequestHelper.getActiveTypeId(request, types);
+            int page = GetParameterFromRequestHelper.getCurrentPage(request);
 
-//todo pagination + validate currentPage
-            String currentPage = request.getParameter("currentPage");
-            int page = 1;
-            if (currentPage != null) {
-                page = Integer.parseInt(currentPage);
-            }
-
-            Set<Test> testByTypeId = testService.getAllTestByTypeId(activeTypeId, page);
+            Set<Test> testByTypeId = testService.getTestByTypeId(activeTypeId, page, NUMBER_OF_RECORDS_PER_PAGE);
 
             request.setAttribute(RequestParameterName.TEST_TYPES_LIST, types);
             request.setAttribute(RequestParameterName.INFO_ABOUT_TESTS, testByTypeId);
             request.setAttribute(RequestParameterName.ACTIVE_TYPE_ID, activeTypeId);
+            request.setAttribute(RequestParameterName.CURRENT_PAGE, page);
 
-
-            request.setAttribute("currentPage", page);
-            int countPages = testService.receiveCountTestPages(activeTypeId);
-            request.setAttribute("countPages", countPages);
-
+            int countPages = testService.receiveNumberTestPages(activeTypeId,NUMBER_OF_RECORDS_PER_PAGE,true,true);
+            request.setAttribute(RequestParameterName.COUNT_PAGES, countPages);
 
             session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
             forwardToPage(request, response, JspPageName.ADMIN_PANEL);

@@ -2,6 +2,7 @@ package by.jwd.testsys.logic;
 
 import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.bean.User;
+import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.logic.exception.*;
 
 import java.time.LocalDate;
@@ -13,15 +14,15 @@ import java.util.Set;
 public interface AdminService {
 
 
-    void deleteTest(int testId) throws AdminServiceException, InvalidDeleteActionServiceException;
+    void deleteTest(int testId) throws AdminServiceException, InvalidDeleteActionServiceException, InvalidUserDataException;
 
-    int createTest(int typeId, String title, String key, LocalTime duration) throws AdminServiceException;
+    int createTest(int typeId, String title, String key, LocalTime duration) throws AdminServiceException, InvalidUserDataException;
 
-    void updateTestData(int testId, int typeId, String title, String key, LocalTime duration) throws AdminServiceException;
+    void updateTestData(int testId, int typeId, String title, String key, LocalTime duration) throws AdminServiceException, InvalidUserDataException;
 
     void createQuestionAnswer(String question, Map<Integer, String> answers, List<Integer> rightAnswers, int testId) throws AdminServiceException;
 
-    Test receiveTestWithQuestionsAndAnswers(int testId) throws AdminServiceException;
+    Test receiveTestWithQuestionsAndAnswers(int testId) throws AdminServiceException, InvalidUserDataException;
 
     void changeTestIsEdited(int testId, boolean isEdited) throws AdminServiceException, InvalidUserDataException;
 
@@ -33,13 +34,15 @@ public interface AdminService {
                                    List<Integer> rightAnswersId,
                                    List<Integer> rightAddedAnswersId) throws AdminServiceException;
 
-    void completeTestCreation(int testID) throws AdminServiceException;
+    void completeTestCreation(int testID) throws AdminServiceException, InvalidUserDataException;
 
-    void deleteQuestionWithAnswers(int questionId) throws AdminServiceException;
+    void deleteQuestionWithAnswers(int questionId) throws AdminServiceException, InvalidUserDataException;
 
-    void addTestType(String testTypeTitle) throws AdminServiceException, ExistsTypeAdminServiceException;
+    void addTestType(String testTypeTitle) throws AdminServiceException, ExistsTypeAdminServiceException, InvalidUserDataException;
 
     void deleteAssignment(int assignment_id) throws ServiceException;
 
-    Map<String, Set<User>> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws ServiceException, DateOutOfRangeException;
+    Map<String, Set<User>> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws InvalidUserDataException, AdminServiceException;
+
+    boolean sendTestKeyToUsers(Set<User> assignedUsers, int testId, LocalDate deadline) throws AdminServiceException;
 }

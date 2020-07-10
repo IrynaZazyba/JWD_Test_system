@@ -5,6 +5,7 @@ import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.logic.TestLogService;
 import by.jwd.testsys.logic.TestService;
+import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.exception.TestLogServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import com.google.gson.Gson;
@@ -53,7 +54,10 @@ public class ShowResultData implements AjaxCommand {
             assignmentResult.put("results", results);
             answer=gson.toJson(assignmentResult);
 
+            //todo
         } catch (TestLogServiceException e) {
+            e.printStackTrace();
+        } catch (InvalidUserDataException e) {
             e.printStackTrace();
         }
 

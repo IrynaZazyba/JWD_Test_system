@@ -91,50 +91,74 @@ function generateQuestionView(formData) {
 
 async function saveTestInfo(obj) {
 
+
+    let invalidClass = document.getElementsByClassName('is-invalid');
+    console.log(invalidClass);
+    if (invalidClass.length!==0) {
+        Array.from(invalidClass).forEach(elem => elem.classList.remove('is-invalid'));
+    }
+
+    let addTestForm = document.getElementById("addTestForm");
+
+    let key = addTestForm.testKey.value;
+    let testTitle = addTestForm.testTitle.value;
+
+    let result = /[a-zA-Z0-9]{4,7}/g.test(key);
+
+    if (!result) {
+        addTestForm.testKey.classList.add('is-invalid');
+    }
+
+    if (testTitle.length > 20) {
+        addTestForm.testTitle.classList.add('is-invalid')
+    }
+
     let divButtonBack = document.getElementById('buttonBack');
 
+    if (result && testTitle.length <20) {
 
-    let successMessageDiv = document.getElementById('successCreatedTest');
-    if (successMessageDiv.style.display === 'block') {
-        successMessageDiv.style.display = 'none';
-    }
-
-    let dangerMessageDiv = document.getElementById('dangerCreatedTest');
-    if (dangerMessageDiv.style.display === 'block') {
-        dangerMessageDiv.style.display = 'none';
-    }
-
-    let formData = new FormData(obj);
-
-    let testId = document.querySelector("#testId > input[type=hidden]");
-    if (testId != null) {
-        formData.append("testId", testId.value);
-    }
-    let response = await
-        fetch("/test-system/ajax?command=create_test", {
-            method: 'POST',
-            body: formData,
-        });
-
-
-    if (response.ok) {
-        if (divButtonBack != null) {
-            divButtonBack.remove();
+        let successMessageDiv = document.getElementById('successCreatedTest');
+        if (successMessageDiv.style.display === 'block') {
+            successMessageDiv.style.display = 'none';
         }
 
-        document.getElementById("questionEditForm-tab").classList.remove('disabled');
-        // document.getElementById("preview").setAttribute("onclick","document.location=")
-
-        let json = await response.json();
-
-        if (json != null) {
-            document.getElementById('testId').insertAdjacentHTML('afterbegin', "<input type='hidden' name='testId' value='" + json.testId + "'>");
+        let dangerMessageDiv = document.getElementById('dangerCreatedTest');
+        if (dangerMessageDiv.style.display === 'block') {
+            dangerMessageDiv.style.display = 'none';
         }
-        successMessageDiv.style.display = 'block';
 
-    } else {
-        dangerMessageDiv.style.display = 'block';
+        let formData = new FormData(obj);
 
+        let testId = document.querySelector("#testId > input[type=hidden]");
+        if (testId != null) {
+            formData.append("testId", testId.value);
+        }
+        let response = await
+            fetch("/test-system/ajax?command=create_test", {
+                method: 'POST',
+                body: formData,
+            });
+
+
+        if (response.ok) {
+            if (divButtonBack != null) {
+                divButtonBack.remove();
+            }
+
+            document.getElementById("questionEditForm-tab").classList.remove('disabled');
+            // document.getElementById("preview").setAttribute("onclick","document.location=")
+
+            let json = await response.json();
+
+            if (json != null) {
+                document.getElementById('testId').insertAdjacentHTML('afterbegin', "<input type='hidden' name='testId' value='" + json.testId + "'>");
+            }
+            successMessageDiv.style.display = 'block';
+
+        } else {
+            dangerMessageDiv.style.display = 'block';
+
+        }
     }
 }
 
@@ -383,4 +407,26 @@ async function addTestType() {
         document.getElementById("testTypeTitle").classList.add('is-invalid');
     }
 
+}
+
+
+function validateAddTestForm() {
+
+    let addTestForm = document.getElementById("addTestForm");
+
+    let key = addTestForm.testKey.value;
+    let testTitle = addTestForm.testTitle.value;
+
+    let result = /[a-zA-Z0-9]{4,7}/g.test(key);
+    if (!result || testTitle.length > 20) {
+
+    }
+
+    if (!result) {
+        addTestForm.testKey.classList.add('is-invalid');
+    }
+
+    if (testTitle.length > 20) {
+        addTestForm.testTitle.classList.add('is-invalid')
+    }
 }

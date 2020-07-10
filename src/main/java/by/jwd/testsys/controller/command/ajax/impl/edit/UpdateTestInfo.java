@@ -4,13 +4,19 @@ import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.logic.AdminService;
 import by.jwd.testsys.logic.exception.AdminServiceException;
+import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalTime;
 
 public class UpdateTestInfo implements AjaxCommand {
+
+    private final static Logger logger = LogManager.getLogger(UpdateTestInfo.class);
 
 
     @Override
@@ -29,6 +35,9 @@ public class UpdateTestInfo implements AjaxCommand {
         try {
             adminService.updateTestData(testId, typeId, testTitle, testKey, duration);
         } catch (AdminServiceException e) {
+            response.setStatus(500);
+        } catch (InvalidUserDataException e) {
+            logger.log(Level.ERROR, "Invalid user data in UpdateTestInfo command method execute()");
             response.setStatus(500);
         }
 

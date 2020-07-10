@@ -1,9 +1,8 @@
 package by.jwd.testsys.controller;
 
-import by.jwd.testsys.controller.parameter.RequestParameterName;
-import by.jwd.testsys.controller.command.front.Command;
 import by.jwd.testsys.controller.command.CommandProvider;
-import by.jwd.testsys.controller.parameter.SessionAttributeName;
+import by.jwd.testsys.controller.command.front.Command;
+import by.jwd.testsys.controller.parameter.RequestParameterName;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -11,7 +10,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 
@@ -44,13 +42,8 @@ public class FrontController extends HttpServlet {
 
     private void doProcess(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String commandName = req.getParameter(RequestParameterName.COMMAND_NAME);
-        HttpSession session = req.getSession();
-        String security = (String) session.getAttribute(SessionAttributeName.SECURITY);
         CommandProvider commandProvider = CommandProvider.getInstance();
-        Command command = commandProvider.getFrontCommand(commandName, security);
-        if (security != null) {
-            session.removeAttribute(SessionAttributeName.SECURITY);
-        }
+        Command command = commandProvider.getFrontCommand(commandName);
         command.execute(req, resp);
 
     }

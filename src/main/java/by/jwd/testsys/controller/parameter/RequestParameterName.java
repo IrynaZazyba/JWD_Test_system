@@ -45,6 +45,9 @@ public final class RequestParameterName {
     public static final String FULL_TEST_DATA="testData";
     public static final String QUESTION_ID = "questionId";
     public static final String USER_TEST_RESULT= "testResult";
+    public static final String CURRENT_PAGE= "currentPage";
+    public static final String COUNT_PAGES= "countPages";
+
 
 
 

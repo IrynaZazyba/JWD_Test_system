@@ -66,6 +66,12 @@ async function assignUser() {
     if (document.getElementById("assignmentError").style.display === "block") {
         document.getElementById("assignmentError").style.display = 'none';
     }
+
+    if (document.getElementById("emailFailure").style.display === 'block') {
+        document.getElementById("emailFailure").style.display = 'none';
+    }
+
+
     if (document.getElementById("alert").style.display === 'block') {
         document.getElementById("existsAssignment").innerHTML = '';
         document.getElementById("alert").style.display = 'none';
@@ -83,19 +89,25 @@ async function assignUser() {
 
     });
 
+
     if (response.ok) {
         let json = await response.json();
         if (json.existsAssignment.length !== 0) {
             document.getElementById("alert").style.display = 'block';
             document.getElementById("existsAssignment").insertAdjacentHTML('afterbegin', generateAssignmentResultMessage(json.existsAssignment));
         }
+
         if (json.successAssignment.length !== 0) {
             document.getElementById("success").style.display = 'block';
             document.getElementById("successMessage").insertAdjacentHTML('afterbegin', generateAssignmentResultMessage(json.successAssignment));
         }
+
+        if (json.hasOwnProperty("emailFailure")) {
+            document.getElementById("emailFailure").style.display = "block";
+        }
+
     } else {
         document.getElementById("assignmentError").style.display = "block";
-        // document.getElementById('date').classList.add('is-invalid');
     }
 
 }
