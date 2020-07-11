@@ -3,6 +3,7 @@ package by.jwd.testsys.controller.command.ajax.impl.edit;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.logic.AdminService;
 import by.jwd.testsys.logic.exception.AdminServiceException;
+import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,6 +66,9 @@ public class UpdateQuestion implements AjaxCommand {
             adminService.updateQuestionWithAnswers(questionId, question, deletedAnswers, answers, addedAnswers, rightAnswerId, rightAddedAnswerId);
         } catch (AdminServiceException e) {
             response.setStatus(500);
+        } catch (InvalidUserDataException e) {
+            //todo
+            e.printStackTrace();
         }
 
         return answer;

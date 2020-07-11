@@ -23,9 +23,9 @@ public final class RequestParameterName {
     public static final String TEST_NAME = "test_name";
     public static final String TEST_TYPE_ID = "typeId";
     public static final String TEST_TYPE_TITLE = "testTypeTitle";
-    public static final String TEST_TITLE="testTitle";
-    public static final String TEST_KEY="testKey";
-    public static final String TEST_DURATION="testDuration";
+    public static final String TEST_TITLE = "testTitle";
+    public static final String TEST_KEY = "testKey";
+    public static final String TEST_DURATION = "testDuration";
 
     public static final String LIST_TYPE_WITH_TESTS = "type_tests";
     public static final String SET_STUDENTS = "users";
@@ -39,16 +39,21 @@ public final class RequestParameterName {
     public static final String TEST_INFO = "testInfo";
     public static final String INFO_ABOUT_TESTS = "testsInfoData";
 
-    public static final String DATE="date";
-    public static final String USER_ID="userId";
-    public static final String ACTIVE_TYPE_ID="activeTypeId";
-    public static final String FULL_TEST_DATA="testData";
+    public static final String DATE = "date";
+    public static final String USER_ID = "userId";
+    public static final String ACTIVE_TYPE_ID = "activeTypeId";
+    public static final String FULL_TEST_DATA = "testData";
     public static final String QUESTION_ID = "questionId";
-    public static final String USER_TEST_RESULT= "testResult";
-    public static final String CURRENT_PAGE= "currentPage";
-    public static final String COUNT_PAGES= "countPages";
+    public static final String QUESTION = "question";
 
+    public static final String USER_TEST_RESULT = "testResult";
+    public static final String CURRENT_PAGE = "currentPage";
+    public static final String COUNT_PAGES = "countPages";
 
-
-
+    public static final String TEST_RESULTS = "results";
+    public static final String QUESTION_LOG_ID = "questionLogId";
+    public static final String PAGE = "page";
+    public static final String TIME_IS_OVER = "timeIsOver";
+    public static final String INVALID_KEY = "invalidKey";
+    public static final String ANSWER_ID = "answerId";
 }

@@ -139,8 +139,8 @@ public class TestServiceImpl implements TestService {
         Test test;
         try {
             test = testDAO.getTestInfo(testId);
-            int countQuestion = questionAnswerDAO.getCountQuestion(test.getId());
             test.setId(testId);
+            int countQuestion = questionAnswerDAO.getCountQuestion(testId);
             test.setCountQuestion(countQuestion);
 
         } catch (DAOException e) {
@@ -192,8 +192,7 @@ public class TestServiceImpl implements TestService {
     public void checkPermission(int userId, int testId, String key) throws TestServiceException, InvalidUserDataException, InvalidTestKeyException {
 
         if (!frontDataValidator.validateId(testId) ||
-                !frontDataValidator.validateId(userId) ||
-                !testValidator.validateKey(key)) {
+                !frontDataValidator.validateId(userId)) {
             throw new InvalidUserDataException("Invalid userId in TestServiceImpl typeWithTests() method");
         }
 
@@ -223,6 +222,7 @@ public class TestServiceImpl implements TestService {
             if (testKey != null && assignment != null && result == null) {
 
                 if (!checkKey(key, testId)) {
+                    //todo здесь ли
                     logger.log(Level.ERROR, "Invalid key");
                     throw new InvalidTestKeyException("Invalid key");
                 }
@@ -247,7 +247,7 @@ public class TestServiceImpl implements TestService {
         if (!frontDataValidator.validateId(typeId) ||
                 !frontDataValidator.validateId(testId) ||
                 !frontDataValidator.validateId(userId)) {
-            throw new InvalidUserDataException("Invalid userId in TestServiceImpl typeWithTests() method");
+            throw new InvalidUserDataException("Invalid userId in TestServiceImpl receiveResultData() method");
         }
 
         Set<Result> result;

@@ -71,7 +71,7 @@ async function getQuestion() {
 
     if (document.getElementById("key_value") != null) {
         let key = document.getElementById("key_value").value;
-        dataToGetQuestion.append("key", key);
+        dataToGetQuestion.append("testKey", key);
     }
 
     if (document.getElementById("conditions") != null) {
@@ -93,7 +93,7 @@ async function getQuestion() {
 
         let json = await response.json();
 
-        if (json.time_is_over != null) {
+        if (json.timeIsOver != null) {
             hideKeyConditions();
             hideQuestion();
             document.getElementById("card-body").insertAdjacentHTML('afterbegin', generateHiddenAssignIdInput(json));
@@ -101,7 +101,7 @@ async function getQuestion() {
             document.getElementById("timeIsEnded").style.visibility = 'visible';
             document.getElementById("countdown").className = "hidden";
 
-        } else if (json.invalid_key) {
+        } else if (json.invalidKey) {
             document.getElementById("invalid_key").style.visibility = 'visible';
 
         } else {
@@ -114,9 +114,9 @@ async function getQuestion() {
 
             if (json.question != null) {
 
-                if (json.duration != null && document.getElementById("timer").style.visibility === 'hidden') {
+                if (json.testDuration != null && document.getElementById("timer").style.visibility === 'hidden') {
                     document.getElementById('timer').style.visibility = 'visible';
-                    startTimer(json.duration);
+                    startTimer(json.testDuration);
                 }
 
                 document.getElementById('quest').style.visibility = 'visible';
@@ -160,13 +160,13 @@ function generateHiddenAssignIdInput(json) {
 function generateCheckBox(json) {
 
     let htmlCode = "<div id=\"js_quest\"><h4 id=\"text_question\" class=\"name-test text-ctr\">" + json.question.question + "</h4><hr>" +
-        "<input type=\"hidden\" name=\"question_log_id\" value=\"" + json.question_log_id + "\">";
+        "<input type=\"hidden\" name=\"questionLogId\" value=\"" + json.questionLogId + "\">";
 
 
     for (let key of Object.keys(json.question.answers)) {
         let idAnsw = json.question.answers[key].id;
         htmlCode = htmlCode + "<div class=\"form-check check-box-style\">" +
-            "<input class=\"form-check-input \" name=\"answer\" type=\"checkbox\" value=\"" + idAnsw + "\" id=\"" + idAnsw + "\">" +
+            "<input class=\"form-check-input \" name=\"answerId\" type=\"checkbox\" value=\"" + idAnsw + "\" id=\"" + idAnsw + "\">" +
             "<label class=\"form-check-label\" for=\"" + idAnsw + "\">" +
             "<h5>" + json.question.answers[key].answer + "</h5>" +
             "</label></div>";

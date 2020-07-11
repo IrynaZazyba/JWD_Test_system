@@ -33,16 +33,16 @@ public class ShowExeTestPage implements Command {
         TestService testService = serviceFactory.getTestService();
 
         HttpSession session = req.getSession(false);
-        int user_id = (int) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
+        int userId = (int) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
         int testId = Integer.parseInt(req.getParameter(RequestParameterName.TEST_ID));
 
         try {
-            Result result = testService.checkResult(user_id, testId);
+            Result result = testService.checkResult(userId, testId);
             Test test = testService.getTestInfo(testId);
             test.setStarted(result != null);
             req.setAttribute(RequestParameterName.TEST_INFO, test);
-            session.setAttribute(SessionAttributeName.QUERY_STRING, req.getQueryString());
 
+            session.setAttribute(SessionAttributeName.QUERY_STRING, req.getQueryString());
             forwardToPage(req, resp, JspPageName.EXE_TEST_PAGE);
 
         } catch (TestServiceException e) {

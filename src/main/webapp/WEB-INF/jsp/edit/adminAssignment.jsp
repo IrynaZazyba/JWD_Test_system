@@ -93,7 +93,7 @@
                                 <input type="hidden" name="command" value="assign_test"/>
                                 <div class="form-group">
                                     <label for="testType"><c:out value="${lable_test_type}"/></label>
-                                    <select required class="form-control" name="testTypeId" id="testType">
+                                    <select required class="form-control" name="typeId" id="testType">
                                         <option value="0" selected><c:out value="${view_all}"/></option>
                                         <c:forEach var="item" items="${requestScope.type_tests}">
                                             <option value="${item.id}">${item.title}</option>

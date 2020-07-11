@@ -16,7 +16,7 @@ public class FrontDataValidatorImpl implements FrontDataValidator {
 
     @Override
     public boolean validateId(int id) {
-        return id>0;
+        return id>=0;
     }
 
     @Override

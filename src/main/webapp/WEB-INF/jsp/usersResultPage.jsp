@@ -68,7 +68,7 @@
                         <div class="col-3">
                             <div class="form-group">
                                 <label for="testType"><c:out value="${lable_test_type}"/></label>
-                                <select class="form-control" name="testTypeId" id="testType">
+                                <select class="form-control" name="typeId" id="testType">
                                     <option  value=""><c:out value="${view_all}"/></option>
                                     <c:forEach var="item" items="${requestScope.type_tests}">
                                         <option value="${item.id}">${item.title}</option>
@@ -87,7 +87,7 @@
                         <div class="col-3">
                             <div class="form-group">
                                 <label for="students"><c:out value="${lable_users}"/></label>
-                                <select class="form-control" name="assigned_users" id="students">
+                                <select class="form-control" name="userId" id="students">
                                     <option  value=""><c:out value="${view_all}"/></option>
                                     <c:forEach var="user" items="${requestScope.users}">
                                         <option value="${user.id}">${user.firstName} ${user.lastName}</option>
@@ -97,8 +97,7 @@
                         </div>
                         <div class="col-2">
                             <label for="date"><c:out value="${lable_date}"/></label>
-                            <input id="date" type="date" class="form-control mydate" name="date"
-                                   min="${requestScope.dateNow}">
+                            <input id="date" type="date" class="form-control mydate" name="date">
                             <div class="invalid-feedback">
                                 <c:out value="${message_invalid_date}"/>
                             </div>

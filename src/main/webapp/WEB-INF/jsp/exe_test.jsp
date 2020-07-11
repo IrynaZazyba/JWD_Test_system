@@ -81,7 +81,7 @@
                                         <label class="col-sm-3 text-ctr control-label p-0">${input_enter_key}</label>
                                         <div class="col-sm-3">
                                             <input id="key_value" type="text" class="form-control" required
-                                                   name="key">
+                                                   name="testKey">
                                         </div>
                                     </div>
                                 </div>

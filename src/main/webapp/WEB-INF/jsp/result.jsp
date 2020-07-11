@@ -88,7 +88,7 @@
             integrity="" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
             integrity="" crossorigin="anonymous"></script>
-    <script src="resources/js/pie.js"></script>
+    <script src="resources/js/resultChart.js"></script>
 
 </body>
 

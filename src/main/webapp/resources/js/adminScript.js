@@ -13,7 +13,7 @@
 
 /*select*/
 let form = document.forms.assign;
-let type = form.elements.testTypeId;
+let type = form.elements.typeId;
 type.onchange = changeResultStatisticOption;
 
 let formAssignAction = document.forms.assignAction;

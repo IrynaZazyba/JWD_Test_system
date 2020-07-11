@@ -11,4 +11,8 @@ public interface TestValidator {
     boolean validateTypeTitle(String typeTitle);
 
     boolean validateDeadlineDate(LocalDate deadline);
+
+    boolean validateQuestionTitle(String question);
+
+    boolean validateAnswerTitle(String answer);
 }

@@ -20,7 +20,7 @@ public interface AdminService {
 
     void updateTestData(int testId, int typeId, String title, String key, LocalTime duration) throws AdminServiceException, InvalidUserDataException;
 
-    void createQuestionAnswer(String question, Map<Integer, String> answers, List<Integer> rightAnswers, int testId) throws AdminServiceException;
+    void createQuestionAnswer(String question, Map<Integer, String> answers, List<Integer> rightAnswers, int testId) throws AdminServiceException, InvalidUserDataException;
 
     Test receiveTestWithQuestionsAndAnswers(int testId) throws AdminServiceException, InvalidUserDataException;
 
@@ -32,7 +32,7 @@ public interface AdminService {
                                    Map<Integer, String> answers,
                                    Map<Integer, String> addedAnswers,
                                    List<Integer> rightAnswersId,
-                                   List<Integer> rightAddedAnswersId) throws AdminServiceException;
+                                   List<Integer> rightAddedAnswersId) throws AdminServiceException, InvalidUserDataException;
 
     void completeTestCreation(int testID) throws AdminServiceException, InvalidUserDataException;
 
@@ -44,5 +44,5 @@ public interface AdminService {
 
     Map<String, Set<User>> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws InvalidUserDataException, AdminServiceException;
 
-    boolean sendTestKeyToUsers(Set<User> assignedUsers, int testId, LocalDate deadline) throws AdminServiceException;
+    boolean sendTestKeyToUsers(Set<User> assignedUsers, int testId, LocalDate deadline) throws AdminServiceException, InvalidUserDataException;
 }

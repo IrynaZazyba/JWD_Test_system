@@ -48,7 +48,6 @@
                                         <div class="card-body text-center mb-2 card-test">
                                             <h6 class="name-test">${item.title}</h6>
                                             <hr>
-va
                                             <p class="card-text time-quest">${item.duration} min</p>
                                             <p class="card-text time-quest">${item.countQuestion}questions</p>
 

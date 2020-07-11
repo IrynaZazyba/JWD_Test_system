@@ -15,6 +15,9 @@ import by.jwd.testsys.logic.validator.FrontDataValidator;
 import by.jwd.testsys.logic.validator.TestValidator;
 import by.jwd.testsys.logic.validator.factory.ValidatorFactory;
 import by.jwd.testsys.logic.validator.impl.TestValidatorImpl;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +25,8 @@ import java.time.LocalTime;
 import java.util.*;
 
 public class AdminServiceImpl implements AdminService {
+
+    private final static Logger logger = LogManager.getLogger(AdminServiceImpl.class);
 
     private final DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
     private TestDAO testDAO = daoFactory.getTestDao();
@@ -121,7 +126,18 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void createQuestionAnswer(String question, Map<Integer, String> answers, List<Integer> rightAnswers, int testId) throws AdminServiceException {
+    public void createQuestionAnswer(String question,
+                                     Map<Integer, String> answers,
+                                     List<Integer> rightAnswers,
+                                     int testId) throws AdminServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(testId) ||
+                !testValidator.validateQuestionTitle(question)) {
+            throw new InvalidUserDataException("Invalid data in AdminServiceImpl createQuestionAnswer() method");
+        }
+
+        validateData(answers);
+        validateData(rightAnswers);
 
         Question createdQuestion = new Question.Builder().withQuestion(question).build();
         Set<Answer> createdAnswers = new HashSet<>();
@@ -138,12 +154,28 @@ public class AdminServiceImpl implements AdminService {
                 createdAnswers.add(answer);
             });
             createdQuestion.setAnswers(createdAnswers);
+
             questionAnswerDAO.saveQuestionWithAnswers(createdQuestion, testId);
         } catch (DAOException e) {
             throw new AdminServiceException("DAOException in AdminServiceImpl createQuestionAnswer() method", e);
         }
+    }
 
+    private void validateData(List<Integer> rightAnswers) throws InvalidUserDataException {
+        for (Integer answerId : rightAnswers) {
+            if (!frontDataValidator.validateId(answerId)) {
+                throw new InvalidUserDataException("Invalid answerId in AdminServiceImpl createQuestionAnswer() method");
+            }
+        }
+    }
 
+    private void validateData(Map<Integer, String> answers) throws InvalidUserDataException {
+        for (Map.Entry<Integer, String> answer : answers.entrySet()) {
+            if (!frontDataValidator.validateId(answer.getKey()) ||
+                    !testValidator.validateAnswerTitle(answer.getValue())) {
+                throw new InvalidUserDataException("Invalid answer data in AdminServiceImpl createQuestionAnswer() method");
+            }
+        }
     }
 
     @Override
@@ -178,7 +210,6 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
-
     @Override
     public void updateQuestionWithAnswers(int questionId,
                                           String question,
@@ -186,7 +217,17 @@ public class AdminServiceImpl implements AdminService {
                                           Map<Integer, String> answers,
                                           Map<Integer, String> addedAnswers,
                                           List<Integer> rightAnswersId,
-                                          List<Integer> rightAddedAnswersId) throws AdminServiceException {
+                                          List<Integer> rightAddedAnswersId) throws AdminServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(questionId) ||
+                !testValidator.validateQuestionTitle(question)) {
+            throw new InvalidUserDataException("Invalid testId in AdminService changeTestIsEdited() method");
+        }
+        validateData(rightAddedAnswersId);
+        validateData(rightAnswersId);
+        validateData(answers);
+        validateData(addedAnswers);
+
 
         Question updatedQuestion = new Question.Builder().withId(questionId).withQuestion(question).build();
         Set<Answer> answerToUpdate = new HashSet<>();
@@ -197,7 +238,11 @@ public class AdminServiceImpl implements AdminService {
         if (!deletedAnswers.equals("")) {
             String[] answersIdToDelete = deletedAnswers.split(",");
             for (String s : answersIdToDelete) {
-                answerToDelete.add(Integer.parseInt(s));
+                int deletedAnswerId = Integer.parseInt(s);
+                if (!frontDataValidator.validateId(deletedAnswerId)) {
+                    throw new InvalidUserDataException("Invalid deletedAnswerId in AdminService changeTestIsEdited() method");
+                }
+                answerToDelete.add(deletedAnswerId);
             }
         }
 
@@ -338,9 +383,17 @@ public class AdminServiceImpl implements AdminService {
 
 
     @Override
-    public boolean sendTestKeyToUsers(Set<User> assignedUsers, int testId, LocalDate deadline) throws AdminServiceException {
+    public boolean sendTestKeyToUsers(Set<User> assignedUsers, int testId, LocalDate deadline) throws AdminServiceException, InvalidUserDataException {
 
-        Test testInfo = null;
+        if (!frontDataValidator.validateId(testId)) {
+            throw new InvalidUserDataException("Invalid testId in AdminService sendTestKeyToUsers() method");
+        }
+
+        if (!testValidator.validateDeadlineDate(deadline)) {
+            throw new InvalidUserDataException("Invalid deadline in AdminService sendTestKeyToUsers() method");
+        }
+
+        Test testInfo;
         try {
             testInfo = testDAO.getTestInfo(testId);
             SslSender sender = SslSender.getInstance();
@@ -352,7 +405,7 @@ public class AdminServiceImpl implements AdminService {
         } catch (DAOException e) {
             throw new AdminServiceException("DAOException in AdminServiceImpl sendTestKeyToUsers() method", e);
         } catch (FaildSendMailException e) {
-            //todo logger
+            logger.log(Level.ERROR, "Failure in attempt to send email in AdminServiceImpl sendTestKeyToUsers() method", e);
             return false;
         }
         return true;

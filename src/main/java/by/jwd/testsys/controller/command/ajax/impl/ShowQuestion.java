@@ -5,6 +5,7 @@ import by.jwd.testsys.bean.Question;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.command.ajax.impl.edit.ChangePassword;
 import by.jwd.testsys.controller.command.front.impl.edit.ShowAdminPanel;
+import by.jwd.testsys.controller.parameter.JspPageName;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.TestLogService;
@@ -26,79 +27,66 @@ import java.util.Map;
 public class ShowQuestion implements AjaxCommand {
 
     private final static Logger logger = LogManager.getLogger(ShowQuestion.class);
-
+    private final static boolean TRUE = true;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        String answer = null;
+        String answer;
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         TestService testService = serviceFactory.getTestService();
         TestLogService testLogService = serviceFactory.getTestLogService();
 
         int test_id = Integer.parseInt(request.getParameter(RequestParameterName.TEST_ID));
-        String key = request.getParameter("key");
+        String key = request.getParameter(RequestParameterName.TEST_KEY);
 
         HttpSession session = request.getSession(false);
         int user_id = (int) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
 
         Assignment assignment = null;
+        Map<String, Object> dataToPage = new HashMap<>();
+        Gson gson = new Gson();
         try {
 
             assignment = testService.checkTestAssignment(test_id, user_id);
             testService.checkPermission(user_id, test_id, key);
 
-
             int questionLogId;
             Question questionByTestId = testService.getQuestionByTestId(assignment);
 
-
             if (questionByTestId != null) {
                 questionLogId = testLogService.writeQuestionLog(questionByTestId.getId(), assignment.getId());
+                long time = testService.calculateTestDuration(assignment);
 
-                long time= testService.calculateTestDuration(assignment);
-
-                Map<String, Object> map = new HashMap<>();
-                map.put("question", questionByTestId);
-                map.put("assignId", assignment.getId());
-                map.put("question_log_id", questionLogId);
-                map.put("duration", time);
-                Gson gson = new Gson();
-                answer = gson.toJson(map);
+                dataToPage.put(RequestParameterName.QUESTION, questionByTestId);
+                dataToPage.put(RequestParameterName.ASSIGNMENT_ID, assignment.getId());
+                dataToPage.put(RequestParameterName.QUESTION_LOG_ID, questionLogId);
+                dataToPage.put(RequestParameterName.TEST_DURATION, time);
+                answer = gson.toJson(dataToPage);
             } else {
-
                 LocalDateTime testEndTime = LocalDateTime.now();
                 testService.completeTest(assignment, testEndTime);
 
-                Map<String, Object> map = new HashMap<>();
-                map.put("assignId", assignment.getId());
-                Gson gson = new Gson();
-                answer = gson.toJson(map);
+                dataToPage.put(RequestParameterName.ASSIGNMENT_ID, assignment.getId());
+                answer = gson.toJson(dataToPage);
             }
-
         } catch (TestLogServiceException | TestServiceException e) {
             response.setStatus(500);
-            Map<String, Object> map = new HashMap<>();
-            map.put("page", "errorPage.jsp");
-            Gson gson = new Gson();
-            return gson.toJson(map);
+            dataToPage.put(RequestParameterName.PAGE, JspPageName.ERROR_PAGE);
+            return gson.toJson(dataToPage);
         } catch (TimeIsOverServiceException e) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("time_is_over", "true");
-            map.put("assignId", assignment.getId());
-            Gson gson = new Gson();
-            return gson.toJson(map);
+            logger.log(Level.ERROR, "Time is over in ShowQuestion command method execute()", e);
+            dataToPage.put(RequestParameterName.TIME_IS_OVER, TRUE);
+            dataToPage.put(RequestParameterName.ASSIGNMENT_ID, assignment.getId());
+            return gson.toJson(dataToPage);
         } catch (InvalidTestKeyException e) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("invalid_key", "true");
-            Gson gson = new Gson();
-            return gson.toJson(map);
+            logger.log(Level.ERROR, "Invalid test key in ShowQuestion command method execute()", e);
+            dataToPage.put(RequestParameterName.INVALID_KEY, TRUE);
+            return gson.toJson(dataToPage);
         } catch (InvalidUserDataException e) {
-            logger.log(Level.ERROR, "Invalid user data in ShowQuestion command method execute()");
-            response.setStatus(500);
-            Map<String, Object> map = new HashMap<>();
-            map.put("page", "errorPage.jsp");
-            Gson gson = new Gson();
-            return gson.toJson(map);
+            logger.log(Level.ERROR, "Invalid user data in ShowQuestion command method execute()", e);
+            response.setStatus(409);
+            dataToPage.put(RequestParameterName.PAGE, JspPageName.ERROR_PAGE);
+            return gson.toJson(dataToPage);
         }
         return answer;
     }

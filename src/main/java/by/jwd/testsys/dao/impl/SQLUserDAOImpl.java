@@ -33,7 +33,7 @@ public class SQLUserDAOImpl implements UserDAO {
     private static final String INSERT_USER = "INSERT INTO users (login, password, first_name, last_name,email, role_id) " +
             "VALUES (?,?,?,?,?,?)";
     private static final String SELECT_ROLE_ID = "SELECT id FROM role WHERE title=?";
-    private static final String SELECT_USER_BY_LOGIN = "SELECT users.id,login,first_name,last_name," +
+    private static final String SELECT_USER_BY_LOGIN = "SELECT users.id,login,password,first_name,last_name," +
             "title, email FROM users INNER JOIN role ON users.role_id=role.id WHERE login=?";
     private static final String SELECT_USER_BY_ID = "SELECT users.id,login,first_name,last_name," +
             "title, email FROM users INNER JOIN role ON users.role_id=role.id WHERE users.id=?";
@@ -673,6 +673,7 @@ public class SQLUserDAOImpl implements UserDAO {
     private User buildUser(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt(USER_ID_COLUMN);
         String login = resultSet.getString(USER_LOGIN_COLUMN);
+        String password=resultSet.getString(USER_PASSWORD_COLUMN);
         String firstName = resultSet.getString(USER_FIRST_NAME_COLUMN);
         String lastName = resultSet.getString(USER_LAST_NAME_COLUMN);
         String email = resultSet.getString(USER_EMAIL_COLUMN);
@@ -680,6 +681,7 @@ public class SQLUserDAOImpl implements UserDAO {
         return new User.Builder()
                 .withId(id)
                 .withLogin(login)
+                .withPassword(password)
                 .withFirstName(firstName)
                 .withLastName(lastName)
                 .withEmail(email)

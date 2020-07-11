@@ -2,6 +2,7 @@ package by.jwd.testsys.controller.command.ajax.impl;
 
 import by.jwd.testsys.bean.Result;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
+import by.jwd.testsys.controller.command.front.impl.edit.ShowAdminPanel;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.logic.TestLogService;
 import by.jwd.testsys.logic.TestService;
@@ -9,6 +10,9 @@ import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.exception.TestLogServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import com.google.gson.Gson;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,29 +23,34 @@ import java.util.Set;
 
 public class ShowResultData implements AjaxCommand {
 
+    private static Logger logger = LogManager.getLogger(ShowResultData.class);
+    private static final String EMPTY_STRING = "";
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
 
-        LocalDate date = null;
+        LocalDate deadline = null;
         int userId = 0;
         int testTypeId = 0;
         int testId = 0;
 
-        if (!request.getParameter("testTypeId").equals("")) {
-            testTypeId = Integer.parseInt(request.getParameter("testTypeId"));
+        String typeIdParam = request.getParameter(RequestParameterName.TEST_TYPE_ID);
+        if (!typeIdParam.equals(EMPTY_STRING)) {
+            testTypeId = Integer.parseInt(typeIdParam);
         }
-        if (!request.getParameter(RequestParameterName.TEST_ID).equals("")) {
-            testId = Integer.parseInt(request.getParameter(RequestParameterName.TEST_ID));
+        String testIdParam = request.getParameter(RequestParameterName.TEST_ID);
+        if (!testIdParam.equals(EMPTY_STRING)) {
+            testId = Integer.parseInt(testIdParam);
         }
-        if (!request.getParameter("assigned_users").equals("")) {
-            userId = Integer.parseInt(request.getParameter("assigned_users") );
+        String assignedUserId = request.getParameter(RequestParameterName.USER_ID);
+        if (!assignedUserId.equals(EMPTY_STRING)) {
+            userId = Integer.parseInt(assignedUserId);
         }
 
-        if (!request.getParameter(RequestParameterName.DATE).equals("")) {
-            date = LocalDate.parse(request.getParameter(RequestParameterName.DATE));
+        String deadlineDate = request.getParameter(RequestParameterName.DATE);
+        if (!deadlineDate.equals(EMPTY_STRING)) {
+            deadline = LocalDate.parse(deadlineDate);
         }
-
 
         String answer = null;
         Map<String, Set<Result>> assignmentResult = new HashMap<>();
@@ -50,18 +59,15 @@ public class ShowResultData implements AjaxCommand {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         TestService testService = serviceFactory.getTestService();
         try {
-            Set<Result> results = testService.receiveResultData(testTypeId, testId, userId, date);
-            assignmentResult.put("results", results);
-            answer=gson.toJson(assignmentResult);
-
-            //todo
+            Set<Result> results = testService.receiveResultData(testTypeId, testId, userId, deadline);
+            assignmentResult.put(RequestParameterName.TEST_RESULTS, results);
+            answer = gson.toJson(assignmentResult);
         } catch (TestLogServiceException e) {
-            e.printStackTrace();
+            response.setStatus(500);
         } catch (InvalidUserDataException e) {
-            e.printStackTrace();
+            response.setStatus(409);
+            logger.log(Level.ERROR, "InvalidUserData Exception in ShowResultData command method execute()", e);
         }
-
-
         return answer;
     }
 
