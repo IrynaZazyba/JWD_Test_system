@@ -170,6 +170,8 @@ public class SQLUserDAOImpl implements UserDAO {
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 user = buildUser(resultSet);
+                String password = resultSet.getString(USER_PASSWORD_COLUMN);
+                user.setPassword(password);
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl getUserByLogin() method", e);
@@ -236,7 +238,7 @@ public class SQLUserDAOImpl implements UserDAO {
     public User updateUser(User user) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        User updatedUser;
+        User updatedUser=new User();
 
         try {
             connection = connectionPool.takeConnection();
@@ -673,7 +675,6 @@ public class SQLUserDAOImpl implements UserDAO {
     private User buildUser(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt(USER_ID_COLUMN);
         String login = resultSet.getString(USER_LOGIN_COLUMN);
-        String password=resultSet.getString(USER_PASSWORD_COLUMN);
         String firstName = resultSet.getString(USER_FIRST_NAME_COLUMN);
         String lastName = resultSet.getString(USER_LAST_NAME_COLUMN);
         String email = resultSet.getString(USER_EMAIL_COLUMN);
@@ -681,7 +682,6 @@ public class SQLUserDAOImpl implements UserDAO {
         return new User.Builder()
                 .withId(id)
                 .withLogin(login)
-                .withPassword(password)
                 .withFirstName(firstName)
                 .withLastName(lastName)
                 .withEmail(email)

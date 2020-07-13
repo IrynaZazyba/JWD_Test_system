@@ -23,7 +23,7 @@ function menuLinkHelper() {
 }
 
 
-async function userAccount() {
+async function changeUserInfo() {
 
     let formElem = document.getElementById("formElem");
     let response = await fetch("/test-system/ajax", {
@@ -34,31 +34,39 @@ async function userAccount() {
 
     if (response.ok) {
         let json = await response.json();
-        document.getElementById('message').innerHTML = generateMessageDiv(json);
+        document.getElementById('message').innerHTML = generateSuccessMessageDiv(json.message);
+        document.getElementById('message').style.display = 'block';
+
     } else {
-        alert("ERROR: " + response.status);
+        let errorAnswer = await response.json();
+        let message = errorAnswer.message;
+
+        if (Array.isArray(message)) {
+            message.forEach(mess => {
+                document.getElementById('message').innerHTML = generateDangerMessageDiv(mess);
+                document.getElementById('message').style.display = 'block';
+
+            });
+        } else {
+            document.getElementById('message').innerHTML = generateDangerMessageDiv(message);
+            document.getElementById('message').style.display = 'block';
+
+        }
     }
 
-
     setTimeout(function request() {
-        document.getElementById('edit_user_answer').remove();
+        document.getElementById('message').style.display = 'none';
     }, 2500);
 
 }
 
 
-function generateMessageDiv(json) {
-    let htmlCode = "";
-    if (json.status === 'ok') {
-        htmlCode = "<div class=\"alert alert-success\" id=\"edit_user_answer\" role=\"alert\">" + json.message + "</div>";
-    } else {
-        for (let mess of Object.keys(json)) {
-            if (mess !== "status") {
-                htmlCode = htmlCode + "<div class=\"alert alert-danger\" id=\"edit_user_" + mess + "\" role=\"alert\">" + json[mess] + "</div>";
-            }
-        }
-    }
-    return htmlCode;
+function generateSuccessMessageDiv(message) {
+    return "<div class=\"alert alert-success\" id=\"edit_user_answer\" role=\"alert\">" + message + "</div>";
+}
+
+function generateDangerMessageDiv(message) {
+    return "<div class=\"alert alert-danger\" id=\"edit_user_answer\" role=\"alert\">" + message + "</div>";
 }
 
 
@@ -295,10 +303,23 @@ async function changePassword(obj) {
 
     if (response.ok) {
         let json = await response.json();
-        document.getElementById('passMessage').innerHTML = generateMessageDiv(json);
+        document.getElementById('passMessage').innerHTML = generateSuccessMessageDiv(json.message);
+        document.getElementById('passMessage').style.display = 'block';
+
     } else {
+        let json = await response.json();
+        document.getElementById('passMessage').innerHTML = generateDangerMessageDiv(json.message);
+        document.getElementById('passMessage').style.display = 'block';
 
     }
+
+
+    setTimeout(function request() {
+        document.getElementById('passMessage').style.display = 'none';
+    }, 2500);
+
+
+
 }
 
 

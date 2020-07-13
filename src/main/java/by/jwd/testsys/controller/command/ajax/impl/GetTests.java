@@ -16,7 +16,6 @@ import java.util.Set;
 
 public class GetTests implements AjaxCommand {
 
-    private final static String RESPONSE_PARAMETER_SET_TESTS="tests";
 
 
     @Override
@@ -24,17 +23,18 @@ public class GetTests implements AjaxCommand {
 
         int typeId=Integer.parseInt(request.getParameter(RequestParameterName.TEST_TYPE_ID));
 
-        String answer=null;
-        Map<String, Object> responseParams = new HashMap<>();
-        Gson gson = new Gson();
-
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         TestService testService = serviceFactory.getTestService();
 
+        String answer=null;
+
         try {
             Set<Test> tests = testService.getNotEditedTestByTypeId(typeId);
-            responseParams.put(RESPONSE_PARAMETER_SET_TESTS, tests);
-            answer=gson.toJson(responseParams);
+
+            Map<String, Object> dataToPage = new HashMap<>();
+            Gson gson = new Gson();
+            dataToPage.put(RequestParameterName.INFO_ABOUT_TESTS, tests);
+            answer=gson.toJson(dataToPage);
 
         } catch (ServiceException e) {
            response.setStatus(500);

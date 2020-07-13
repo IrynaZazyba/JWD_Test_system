@@ -13,11 +13,11 @@ public interface UserService {
 
     User checkUserCredentials(String userLogin, String userPassword) throws UserServiceException;
 
-    User registerUser(User user) throws UserServiceException, ExistsUserException;
+    User registerUser(User user) throws UserServiceException, ExistsUserException, InvalidUserDataException;
 
     User userInfoToAccount(int id) throws UserServiceException, InvalidUserDataException;
 
-    User editUserInfo(User user) throws UserServiceException, InvalidUserDataException;
+    User editUserInfo(User user) throws UserServiceException, InvalidUserDataException, ExistsUserException;
 
     Set<User> getStudents() throws UserServiceException;
 

@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
 
     private ValidatorFactory validatorFactory = ValidatorFactory.getInstance();
     private FrontDataValidator frontDataValidator = validatorFactory.getFrontDataValidator();
+    private UserValidator userValidator = validatorFactory.getUserValidator();
 
 
     @Override
@@ -57,8 +58,16 @@ public class UserServiceImpl implements UserService {
         return userByLogin;
     }
 
+    //todo искл Invalid обработать
     @Override
-    public User registerUser(User user) throws UserServiceException, ExistsUserException {
+    public User registerUser(User user) throws UserServiceException, ExistsUserException, InvalidUserDataException {
+
+        Set<String> validateResult = userValidator.validate(user);
+
+        if (validateResult.size() != 0) {
+            throw new InvalidUserDataException("Invalid user data.", validateResult);
+        }
+
 
         User userCreated;
         try {
@@ -86,52 +95,52 @@ public class UserServiceImpl implements UserService {
             throw new InvalidUserDataException("Invalid userId in UserServiceImpl userInfoToAccount() method");
         }
 
-        User userFromDB;
         try {
-            userFromDB = userDao.getUserById(id);
+            return userDao.getUserById(id);
         } catch (DAOException e) {
             throw new UserServiceException("Exception in UserServiceImpl method userInfoToAccount().", e);
         }
-        return userFromDB;
     }
 
     @Override
-    public User editUserInfo(User user) throws UserServiceException, InvalidUserDataException {
-        User updatedUser;
+    public User editUserInfo(User user) throws UserServiceException, InvalidUserDataException, ExistsUserException {
 
-        ValidatorFactory validatorFactory = ValidatorFactory.getInstance();
-        UserValidator userValidator = validatorFactory.getUserValidator();
-
-        Set<String> validateResult = userValidator.validate(user);
+        Set<String> validateResult = userValidator.validate(user.getLogin(),user.getFirstName(),user.getLastName(),user.getEmail());
 
         if (validateResult.size() != 0) {
             throw new InvalidUserDataException("Invalid user data.", validateResult);
         }
 
         try {
-            updatedUser = userDao.updateUser(user);
+            User userById = userDao.getUserById(user.getId());
+            if(!userById.getLogin().equals(user.getLogin())){
+                User userByLogin = userDao.getUserByLogin(user.getLogin());
+                if (userByLogin != null) {
+                    throw new ExistsUserException("Such login alreadyExists.");
+                }
+            }
+
+            return userDao.updateUser(user);
         } catch (DAOException e) {
             throw new UserServiceException("Exception in UserServiceImpl method editUserInfo().", e);
         }
-        return updatedUser;
     }
 
     @Override
     public Set<User> getStudents() throws UserServiceException {
-        Set<User> students;
         try {
-            students = userDao.getUserByRole(Role.USER);
+            return userDao.getUserByRole(Role.USER);
         } catch (DAOException e) {
             throw new UserServiceException("Exception in UserServiceImpl method getStudents().", e);
         }
-        return students;
     }
 
     @Override
     public Set<User> getUsersWithAssignment(int testId, int testTypeId, boolean isCompleted) throws UserServiceException, InvalidUserDataException {
 
-        if (!frontDataValidator.validateId(testId)||
-        !frontDataValidator.validateId(testTypeId)) {
+
+        if (!frontDataValidator.validateId(testId) ||
+                !frontDataValidator.validateId(testTypeId)) {
             throw new InvalidUserDataException("Invalid userId in UserServiceImpl getUsersWithAssignment() method");
         }
 

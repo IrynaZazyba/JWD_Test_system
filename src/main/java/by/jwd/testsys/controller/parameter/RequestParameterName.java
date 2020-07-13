@@ -35,7 +35,6 @@ public final class RequestParameterName {
     public static final String ASSIGNED_USERS = "assigned_users";
     public static final String USER_ASSIGNMENT = "userAssignedTests";
     public static final String USER_TESTS_STATISTIC = "userTestStatistic";
-    public static final String PERCENTAGE_CORRECT_ANSWERS = "percentage";
     public static final String TEST_INFO = "testInfo";
     public static final String INFO_ABOUT_TESTS = "testsInfoData";
 
@@ -44,7 +43,7 @@ public final class RequestParameterName {
     public static final String ACTIVE_TYPE_ID = "activeTypeId";
     public static final String FULL_TEST_DATA = "testData";
     public static final String QUESTION_ID = "questionId";
-    public static final String QUESTION = "question";
+    public static final String QUESTION_TITLE = "question";
 
     public static final String USER_TEST_RESULT = "testResult";
     public static final String CURRENT_PAGE = "currentPage";
@@ -56,4 +55,15 @@ public final class RequestParameterName {
     public static final String TIME_IS_OVER = "timeIsOver";
     public static final String INVALID_KEY = "invalidKey";
     public static final String ANSWER_ID = "answerId";
+    public static final String COMPLETED = "completed";
+    public static final String USERS_INFO_ABOUT_TESTS = "usersTestInfo";
+
+    public static final String DELETED_ANSWERS = "deletedAnswers";
+    public final static String UPDATED_QUESTION_ID = "question-";
+    public final static String UPDATED_QUESTION_ANSWER_ID = "answer-";
+    public final static String UPDATED_QUESTION_RIGHT_ANSWER_ID = "check-";
+    public final static String UPDATED_QUESTION_ADDED_ANSWER_ID = "answerAdd";
+    public final static String UPDATED_QUESTION_ADDED_RIGHT_ANSWER_ID = "checkAdd";
+
+
 }

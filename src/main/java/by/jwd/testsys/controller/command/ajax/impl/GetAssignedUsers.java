@@ -3,10 +3,8 @@ package by.jwd.testsys.controller.command.ajax.impl;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
-import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.UserService;
 import by.jwd.testsys.logic.exception.InvalidUserDataException;
-import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.exception.UserServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import com.google.gson.Gson;
@@ -28,48 +26,60 @@ public class GetAssignedUsers implements AjaxCommand {
     public String execute(HttpServletRequest request, HttpServletResponse response) {
 
 
+        int testId = 0;
         String testIdValue = request.getParameter(RequestParameterName.TEST_ID);
-        int testId=0;
         if (testIdValue != null) {
             testId = Integer.parseInt(testIdValue);
         }
 
+        int testTypeId = 0;
         String testTypeIdValue = request.getParameter(RequestParameterName.TEST_TYPE_ID);
-        int testTypeId=0;
         if (testTypeIdValue != null) {
             testTypeId = Integer.parseInt(testTypeIdValue);
         }
 
-
-
-        String completed = request.getParameter("completed");
+        String completed = request.getParameter(RequestParameterName.COMPLETED);
+        boolean isCompleted =parseBooleanParameter(completed);
 
         String answer = null;
-        Map<String, Set<User>> usersWithTestAssignment = new HashMap<>();
-        Gson gson = new Gson();
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         UserService userService = serviceFactory.getUserService();
 
-        boolean isCompleted = false;
-        if (completed != null) {
-            isCompleted = true;
-        }
-
         try {
             Set<User> usersWithAssignment = userService.getUsersWithAssignment(testId, testTypeId, isCompleted);
-            usersWithTestAssignment.put("setUsers", usersWithAssignment);
-            answer = gson.toJson(usersWithTestAssignment);
+
+            Map<String, Set<User>> dataToPage = new HashMap<>();
+            Gson gson = new Gson();
+            dataToPage.put(RequestParameterName.USERS_INFO_ABOUT_TESTS, usersWithAssignment);
+            answer = gson.toJson(dataToPage);
 
         } catch (UserServiceException e) {
             response.setStatus(500);
         } catch (InvalidUserDataException e) {
             logger.log(Level.ERROR, "InvalidUserData Exception in GetAssignedUsers command", e);
-            response.setStatus(500);
+            response.setStatus(409);
         }
 
         return answer;
     }
 
+
+    //todo в отдельный класс
+    private boolean parseBooleanParameter(String booleanParam) {
+
+        if (booleanParam.equalsIgnoreCase("true") ||
+                booleanParam.equalsIgnoreCase("on") ||
+                booleanParam.equalsIgnoreCase("yes")) {
+            return true;
+        } else
+            if (booleanParam.equalsIgnoreCase("false") ||
+                booleanParam.equalsIgnoreCase("off") ||
+                booleanParam.equalsIgnoreCase("no")) {
+            return false;
+        } else {
+                throw  new NumberFormatException("Parameter "+booleanParam+" is not a boolean");
+        }
+    }
 
 }

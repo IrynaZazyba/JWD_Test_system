@@ -409,24 +409,3 @@ async function addTestType() {
 
 }
 
-
-function validateAddTestForm() {
-
-    let addTestForm = document.getElementById("addTestForm");
-
-    let key = addTestForm.testKey.value;
-    let testTitle = addTestForm.testTitle.value;
-
-    let result = /[a-zA-Z0-9]{4,7}/g.test(key);
-    if (!result || testTitle.length > 20) {
-
-    }
-
-    if (!result) {
-        addTestForm.testKey.classList.add('is-invalid');
-    }
-
-    if (testTitle.length > 20) {
-        addTestForm.testTitle.classList.add('is-invalid')
-    }
-}

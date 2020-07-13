@@ -9,6 +9,7 @@ import by.jwd.testsys.controller.command.front.ForwardCommandException;
 import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.UserService;
+import by.jwd.testsys.logic.exception.UserServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +26,7 @@ import java.util.ResourceBundle;
 
 public class SignIn implements Command {
 
-    private static Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger(SignIn.class);
     private static final String LOCAL_FILE_NAME = "local";
     private static final String LOCAL_FILE_PACKAGE = "local";
     private static final String LOCAL_MESSAGE_INVALID_SIGN_IN = "message.invalid_sign_in";
@@ -55,7 +56,7 @@ public class SignIn implements Command {
                 forwardToPage(request, response, JspPageName.START_JSP_PAGE);
             }
 
-        } catch(ServiceException e) {
+        } catch(UserServiceException e) {
             response.sendRedirect(JspPageName.ERROR_PAGE);
         } catch(ForwardCommandException e){
             logger.log(Level.ERROR, "Forward to page Exception in SignIn command", e);

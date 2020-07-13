@@ -38,7 +38,7 @@ public class UpdateTestInfo implements AjaxCommand {
             response.setStatus(500);
         } catch (InvalidUserDataException e) {
             logger.log(Level.ERROR, "Invalid user data in UpdateTestInfo command method execute()");
-            response.setStatus(500);
+            response.setStatus(409);
         }
 
         return answer;

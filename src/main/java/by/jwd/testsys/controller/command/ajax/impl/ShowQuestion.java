@@ -3,8 +3,6 @@ package by.jwd.testsys.controller.command.ajax.impl;
 import by.jwd.testsys.bean.Assignment;
 import by.jwd.testsys.bean.Question;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
-import by.jwd.testsys.controller.command.ajax.impl.edit.ChangePassword;
-import by.jwd.testsys.controller.command.front.impl.edit.ShowAdminPanel;
 import by.jwd.testsys.controller.parameter.JspPageName;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
@@ -57,7 +55,7 @@ public class ShowQuestion implements AjaxCommand {
                 questionLogId = testLogService.writeQuestionLog(questionByTestId.getId(), assignment.getId());
                 long time = testService.calculateTestDuration(assignment);
 
-                dataToPage.put(RequestParameterName.QUESTION, questionByTestId);
+                dataToPage.put(RequestParameterName.QUESTION_TITLE, questionByTestId);
                 dataToPage.put(RequestParameterName.ASSIGNMENT_ID, assignment.getId());
                 dataToPage.put(RequestParameterName.QUESTION_LOG_ID, questionLogId);
                 dataToPage.put(RequestParameterName.TEST_DURATION, time);

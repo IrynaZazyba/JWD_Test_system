@@ -17,7 +17,7 @@ let type = form.elements.typeId;
 type.onchange = changeResultStatisticOption;
 
 let formAssignAction = document.forms.assignAction;
-let formAssignType = formAssignAction.elements.testTypeId;
+let formAssignType = formAssignAction.elements.typeId;
 formAssignType.onchange = changeOption;
 
 function removeResult() {
@@ -54,8 +54,8 @@ async function changeOption() {
 
 function generateOptionSelect(json) {
     let options = "";
-    for (let key in json.tests) {
-        options = options + "<option class=\"js\" value=" + json.tests[key].id + ">" + json.tests[key].title + "</option>";
+    for (let key in json.testsInfoData) {
+        options = options + "<option class=\"js\" value=" + json.testsInfoData[key].id + ">" + json.testsInfoData[key].title + "</option>";
     }
     return options;
 }
@@ -122,8 +122,13 @@ function generateAssignmentResultMessage(users) {
 
 
 async function showUsersAssignedToTest() {
+
     let formData = document.getElementById('displayUsers');
     let form = new FormData(formData);
+
+   if(!form.hasOwnProperty('completed')){
+       form.append('completed','false');
+   }
 
     let response = await fetch("/test-system/ajax?command=get_assigned_users", {
         method: 'POST',
@@ -138,7 +143,7 @@ async function showUsersAssignedToTest() {
         document.getElementById("jsData").innerHTML = "";
 
         let json = await response.json();
-        document.getElementById("jsData").insertAdjacentHTML('afterbegin', generateUsersAssignmentTable(json.setUsers));
+        document.getElementById("jsData").insertAdjacentHTML('afterbegin', generateUsersAssignmentTable(json.usersTestInfo));
     } else {
         //todo сообщение
     }

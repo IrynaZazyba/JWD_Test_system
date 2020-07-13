@@ -93,7 +93,7 @@
                                 <input type="hidden" name="command" value="assign_test"/>
                                 <div class="form-group">
                                     <label for="testType"><c:out value="${lable_test_type}"/></label>
-                                    <select required class="form-control" name="typeId" id="testType">
+                                    <select class="form-control" name="typeId" id="testType" aria-required="true">
                                         <option value="0" selected><c:out value="${view_all}"/></option>
                                         <c:forEach var="item" items="${requestScope.type_tests}">
                                             <option value="${item.id}">${item.title}</option>
@@ -103,7 +103,7 @@
                                 <div class="form-group">
                                     <label for="testTitle"><c:out value="${lable_test}"/></label>
 
-                                    <select required class="form-control" name="testId" id="testTitle">
+                                    <select class="form-control" name="testId" id="testTitle" aria-required="true">
                                         <option value="0" selected><c:out value="${view_all}"/></option>
                                     </select>
 
@@ -119,7 +119,7 @@
                                 </div>
                                 <label for="date"><c:out value="${lable_deadline_date}"/></label>
                                 <input id="date" type="date" class="form-control mydate" name="date"
-                                       min="${requestScope.dateNow}">
+                                       min="${requestScope.dateNow}" required>
                                 <div class="invalid-feedback">
                                     <c:out value="${message_invalid_date}"/>
                                 </div>

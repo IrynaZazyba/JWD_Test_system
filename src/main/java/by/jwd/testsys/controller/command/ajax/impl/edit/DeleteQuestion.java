@@ -5,7 +5,6 @@ import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.logic.AdminService;
 import by.jwd.testsys.logic.exception.AdminServiceException;
 import by.jwd.testsys.logic.exception.InvalidUserDataException;
-import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.factory.ServiceFactory;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +24,6 @@ public class DeleteQuestion implements AjaxCommand {
         int questionId = Integer.parseInt(request.getParameter(RequestParameterName.QUESTION_ID));
 
         String answer = null;
-
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         AdminService adminService = serviceFactory.getAdminService();
 
@@ -35,8 +33,8 @@ public class DeleteQuestion implements AjaxCommand {
         } catch (AdminServiceException e) {
             response.setStatus(500);
         } catch (InvalidUserDataException e) {
-            logger.log(Level.ERROR, "Invalid user data in DeleteQuestion command method execute()");
-            response.setStatus(500);
+            logger.log(Level.ERROR, "Invalid user data in DeleteQuestion command method execute()",e);
+            response.setStatus(409);
         }
 
         return answer;

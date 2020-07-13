@@ -36,7 +36,6 @@ public class UserValidatorImpl implements UserValidator {
         }
         if (user.getFirstName() == null || !validateName(user.getFirstName())) {
             validationResult.add(InvalidParam.INVALID_FIRST_NAME.toString());
-
         }
 
         if (user.getLastName() == null || !validateName(user.getLastName())) {
@@ -44,6 +43,31 @@ public class UserValidatorImpl implements UserValidator {
         }
 
         if (user.getEmail() == null || !validateEmail(user.getEmail())) {
+            validationResult.add(InvalidParam.INVALID_EMAIL.toString());
+        }
+        return validationResult;
+    }
+
+
+    @Override
+    public Set<String> validate(String login, String firstName, String lastName, String email) {
+
+        Set<String> validationResult = new HashSet<>();
+
+
+        if (login == null || !validateLogin(login)) {
+            validationResult.add(InvalidParam.INVALID_LOGIN.toString());
+        }
+
+        if (firstName == null || !validateName(firstName)) {
+            validationResult.add(InvalidParam.INVALID_FIRST_NAME.toString());
+        }
+
+        if (lastName == null || !validateName(lastName)) {
+            validationResult.add(InvalidParam.INVALID_LAST_NAME.toString());
+        }
+
+        if (email == null || !validateEmail(email)) {
             validationResult.add(InvalidParam.INVALID_EMAIL.toString());
         }
         return validationResult;
@@ -80,7 +104,7 @@ public class UserValidatorImpl implements UserValidator {
     }
 
 
-    private boolean validateEmail(String email){
+    private boolean validateEmail(String email) {
         return email.matches(EMAIL_PATTERN);
     }
 }

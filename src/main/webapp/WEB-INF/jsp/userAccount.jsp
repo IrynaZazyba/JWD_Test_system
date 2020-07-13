@@ -58,7 +58,7 @@
         <div class="col-4">
             <h6>${title_edit_data}</h6>
             <div class="form userAccountCard">
-                <form id="formElem" onsubmit="userAccount();return false;" enctype="multipart/form-data"
+                <form id="formElem" onsubmit="changeUserInfo();return false;" enctype="multipart/form-data"
                       accept-charset="UTF-8"
                       class="form-horizontal m-0" role="form">
                     <input type="hidden" name="command" value="edit_user"/>

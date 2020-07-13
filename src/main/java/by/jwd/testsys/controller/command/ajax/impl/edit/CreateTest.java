@@ -23,6 +23,7 @@ public class CreateTest implements AjaxCommand {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
+
         String testId = request.getParameter(RequestParameterName.TEST_ID);
         int typeId = Integer.parseInt(request.getParameter(RequestParameterName.TEST_TYPE_ID));
         String testTitle = request.getParameter(RequestParameterName.TEST_TITLE);
@@ -32,6 +33,7 @@ public class CreateTest implements AjaxCommand {
         if (duration != null) {
             testDuration = LocalTime.parse(duration);
         }
+
         String answer = null;
         Map<String, Object> parameterMapForJson = new HashMap<>();
         Gson gson = new Gson();
@@ -40,7 +42,6 @@ public class CreateTest implements AjaxCommand {
         AdminService adminService = serviceFactory.getAdminService();
 
         try {
-
 
             if (testId != null) {
                 adminService.updateTestData(Integer.parseInt(testId), typeId, testTitle, testKey, testDuration);
@@ -54,7 +55,7 @@ public class CreateTest implements AjaxCommand {
         } catch (AdminServiceException e) {
             response.setStatus(500);
         } catch (InvalidUserDataException e) {
-            logger.log(Level.ERROR, "Invalid user data in CreateTest command method execute()");
+            logger.log(Level.ERROR, "Invalid user data in CreateTest command method execute()",e);
             response.setStatus(500);
         }
         return answer;

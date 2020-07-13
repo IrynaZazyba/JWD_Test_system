@@ -10,6 +10,7 @@ import by.jwd.testsys.logic.factory.ServiceFactory;
 import by.jwd.testsys.logic.impl.UserServiceImpl;
 import by.jwd.testsys.logic.validator.util.InvalidParam;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -26,6 +28,14 @@ import java.util.ResourceBundle;
 public class ChangePassword implements AjaxCommand {
 
     private final static Logger logger = LogManager.getLogger(ChangePassword.class);
+    private static final String MESSAGE_KEY = "message";
+
+    private static final String LOCAL_FILE_NAME = "local";
+    private static final String LOCAL_FILE_PACKAGE = "local";
+
+    private static final String LOCAL_MESSAGE_SUCCESS_USER_EDIT = "message.json.user_edit_changed";
+    private static final String LOCAL_MESSAGE_INVALID_PASSWORD = "message.invalid_password";
+    private static final String LOCAL_MESSAGE_MISMATCH_PASSWORD = "message.password_mismatch";
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
@@ -44,24 +54,25 @@ public class ChangePassword implements AjaxCommand {
         Gson gson = new Gson();
 
         Map<String, String> mapAnswer = new HashMap<>();
-        ResourceBundle bundle = ResourceBundle.getBundle("local/local", Locale.forLanguageTag(locale));
+        ResourceBundle bundle = ResourceBundle.
+                getBundle(LOCAL_FILE_PACKAGE + File.separator + LOCAL_FILE_NAME, Locale.forLanguageTag(locale));
 
         try {
             userService.changePassword(userId, oldPassword, newPassword);
-            mapAnswer.put("message", bundle.getString("message.json.user_edit_changed"));
-            mapAnswer.put("status", "ok");
+            mapAnswer.put(MESSAGE_KEY, bundle.getString(LOCAL_MESSAGE_SUCCESS_USER_EDIT));
             answer = gson.toJson(mapAnswer);
 
         } catch (InvalidUserDataException e) {
-            logger.log(Level.ERROR, "Invalid user data in ChangePassword command method execute()");
+            response.setStatus(409);
+            logger.log(Level.ERROR, "Invalid user data in ChangePassword command method execute()", e);
 
             for (String mess : e.getInvalidData()) {
                 if (mess.equals(InvalidParam.INVALID_PASSWORD.toString())) {
-                    mapAnswer.put(InvalidParam.INVALID_LOGIN.toString().toLowerCase(), bundle.getString("message.invalid_password"));
+                    mapAnswer.put(MESSAGE_KEY, bundle.getString(LOCAL_MESSAGE_INVALID_PASSWORD));
                 }
 
                 if (mess.equals(InvalidParam.PASSWORD_MISMATCH.toString())) {
-                    mapAnswer.put(InvalidParam.INVALID_LOGIN.toString().toLowerCase(), bundle.getString("message.password_mismatch"));
+                    mapAnswer.put(MESSAGE_KEY, bundle.getString(LOCAL_MESSAGE_MISMATCH_PASSWORD));
                 }
             }
             answer = gson.toJson(mapAnswer);
