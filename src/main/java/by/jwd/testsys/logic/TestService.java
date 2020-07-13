@@ -16,7 +16,7 @@ public interface TestService {
 
     Set<Test> getUserAssignmentTests(int userId) throws TestServiceException, InvalidUserDataException;
 
-    Question getQuestionByTestId(Assignment assignment) throws TestServiceException, TimeIsOverServiceException;
+    Question getQuestion(Assignment assignment) throws TestServiceException, TimeIsOverServiceException;
 
     Test getTestInfo(int id) throws TestServiceException, InvalidUserDataException;
 

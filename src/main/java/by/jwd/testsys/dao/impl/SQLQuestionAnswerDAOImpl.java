@@ -88,10 +88,10 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
                 question.setQuestion(resultSet.getString(QUESTION_QUESTION_COLUMN));
             }
         } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPool exception in getQuestionByTestId() method", e);
+            throw new DAOConnectionPoolException("ConnectionPool exception in getQuestion() method", e);
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "SQLException in getQuestionByTestId() method", e);
-            throw new DAOSqlException("SQLException in getQuestionByTestId() method", e);
+            logger.log(Level.ERROR, "SQLException in getQuestion() method", e);
+            throw new DAOSqlException("SQLException in getQuestion() method", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }

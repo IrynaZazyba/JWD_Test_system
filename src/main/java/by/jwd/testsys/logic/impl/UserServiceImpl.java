@@ -1,6 +1,5 @@
 package by.jwd.testsys.logic.impl;
 
-import by.jwd.testsys.bean.Role;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.dao.UserDAO;
 import by.jwd.testsys.dao.exception.DAOException;
@@ -9,15 +8,12 @@ import by.jwd.testsys.dao.factory.DAOFactoryProvider;
 import by.jwd.testsys.logic.UserService;
 import by.jwd.testsys.logic.exception.ExistsUserException;
 import by.jwd.testsys.logic.exception.InvalidUserDataException;
-import by.jwd.testsys.logic.exception.ServiceException;
 import by.jwd.testsys.logic.exception.UserServiceException;
 import by.jwd.testsys.logic.util.HashStringHelper;
 import by.jwd.testsys.logic.validator.FrontDataValidator;
-import by.jwd.testsys.logic.validator.TestValidator;
 import by.jwd.testsys.logic.validator.UserValidator;
 import by.jwd.testsys.logic.validator.factory.ValidatorFactory;
 import by.jwd.testsys.logic.validator.util.InvalidParam;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -58,16 +54,14 @@ public class UserServiceImpl implements UserService {
         return userByLogin;
     }
 
-    //todo искл Invalid обработать
     @Override
-    public User registerUser(User user) throws UserServiceException, ExistsUserException, InvalidUserDataException {
+    public synchronized User registerUser(User user) throws UserServiceException, ExistsUserException, InvalidUserDataException {
 
         Set<String> validateResult = userValidator.validate(user);
 
         if (validateResult.size() != 0) {
             throw new InvalidUserDataException("Invalid user data.", validateResult);
         }
-
 
         User userCreated;
         try {
@@ -127,17 +121,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<User> getStudents() throws UserServiceException {
+    public Set<User> getUsers() throws UserServiceException {
         try {
-            return userDao.getUserByRole(Role.USER);
+            return userDao.getAll();
         } catch (DAOException e) {
-            throw new UserServiceException("Exception in UserServiceImpl method getStudents().", e);
+            throw new UserServiceException("Exception in UserServiceImpl method getUsers().", e);
         }
     }
 
     @Override
     public Set<User> getUsersWithAssignment(int testId, int testTypeId, boolean isCompleted) throws UserServiceException, InvalidUserDataException {
-
 
         if (!frontDataValidator.validateId(testId) ||
                 !frontDataValidator.validateId(testTypeId)) {

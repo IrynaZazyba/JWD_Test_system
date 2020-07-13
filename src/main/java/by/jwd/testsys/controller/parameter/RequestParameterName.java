@@ -12,11 +12,11 @@ public final class RequestParameterName {
     public static final String USER_EMAIL_PARAMETER = "email";
     public static final String USER_FIRST_NAME_PARAMETER = "first_name";
     public static final String USER_LAST_NAME_PARAMETER = "last_name";
-    public static final String SIGN_IN_ERROR = "sign_in_error";
-    public static final String SIGN_UP_ERROR = "sign_up_error";
-    public static final String SIGN_UP_EXISTS_ERROR = "sign_up_exists_error";
+    public static final String SIGN_IN_ERROR = "signInError";
+    public static final String SIGN_UP_ERROR = "signUpError";
+    public static final String SIGN_UP_EXISTS_ERROR = "signUpExistsError";
 
-    public static final String SIGN_UP_SUCCESS_MESSAGE = "success_message";
+    public static final String SIGN_UP_SUCCESS_MESSAGE = "successMessage";
     public static final String TEST_TYPES_LIST = "testTypes";
     public static final String USER_ACCOUNT_INFO = "user_info";
     public static final String ASSIGNMENT_ID = "assignId";

@@ -95,9 +95,9 @@ public class SQLUserDAOImpl implements UserDAO {
 
 
     @Override
-    public List<User> getAll() throws DAOException {
+    public Set<User> getAll() throws DAOException {
 
-        List<User> usersFromDB;
+        Set<User> usersFromDB;
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -107,7 +107,7 @@ public class SQLUserDAOImpl implements UserDAO {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(SELECT_ALL_USERS);
 
-            usersFromDB = new ArrayList<>();
+            usersFromDB = new HashSet<>();
             while (resultSet.next()) {
                 usersFromDB.add(buildUser(resultSet));
             }

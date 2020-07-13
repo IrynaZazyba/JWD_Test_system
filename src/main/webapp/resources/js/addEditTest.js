@@ -182,10 +182,10 @@ function showModalWindowEditQuestion(obj) {
 
     let answerSize = document.querySelectorAll('.modal-body .answer').length;
     if (answerSize < 4) {
-        //todo insertButtonAddAnswer
-        document.querySelector(".modal-body div[id^='modal-']").insertAdjacentHTML('beforeend', "<button type='button' id='addAnswer' onclick='addAnswerInput()' class='btn btn-link btn-block'><i class='fas fa-plus'></i></button>")
+        insertButtonAddAnswer();
     }
 }
+
 
 function showModalWindowEditTestInfo(obj) {
     let modalBody = document.querySelector(".modal-body #testInfoFormEdit");

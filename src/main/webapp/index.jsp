@@ -40,7 +40,7 @@
 <fmt:message bundle="${loc}" key="nav-item.about" var="nav_item_about"/>
 
 
-<div class="container-fluid p-0">
+<div class="container-fluid colorForPage height-100 p-0">
 
     <jsp:include page="WEB-INF/jsp/parts/nav-menu.jsp"/>
 
@@ -86,12 +86,12 @@
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                         <c:choose>
-                            <c:when test="${not empty requestScope.sign_up_error}">
+                            <c:when test="${not empty requestScope.signUpError}">
                                 <a class="nav-item nav-link text-tab-start-form" id="nav-home-tab" data-toggle="tab"
                                    href="#nav-home" role="tab"
                                    aria-controls="nav-home" aria-selected="false">${nav_tabs_log_in}</a>
                             </c:when>
-                            <c:when test="${requestScope.sign_up_error==null}">
+                            <c:when test="${requestScope.signUpError==null}">
                                 <a class="nav-item nav-link text-tab-start-form active" id="nav-home-tab"
                                    data-toggle="tab" href="#nav-home"
                                    role="tab"
@@ -99,13 +99,13 @@
                             </c:when>
                         </c:choose>
                         <c:choose>
-                            <c:when test="${not empty requestScope.sign_up_error}">
+                            <c:when test="${not empty requestScope.signUpError}">
                                 <a class="nav-item nav-link text-tab-start-form active" id="nav-profile-tab"
                                    data-toggle="tab"
                                    href="#nav-profile" role="tab"
                                    aria-controls="nav-profile" aria-selected="true">${nav_tabs_sign_up}</a>
                             </c:when>
-                            <c:when test="${requestScope.sign_up_error==null}">
+                            <c:when test="${requestScope.signUpError==null}">
                                 <a class="nav-item nav-link text-tab-start-form" id="nav-profile-tab" data-toggle="tab"
                                    href="#nav-profile"
                                    role="tab"
@@ -116,11 +116,11 @@
                 </nav>
                 <div class="tab-content bor-gray-solid bor" id="nav-tabContent">
                     <c:choose>
-                    <c:when test="${not empty requestScope.sign_up_error}">
+                    <c:when test="${not empty requestScope.signUpError}">
                     <div class="tab-pane fade" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
 
                         </c:when>
-                        <c:when test="${requestScope.sign_up_error==null}">
+                        <c:when test="${requestScope.signUpError==null}">
                         <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
                              aria-labelledby="nav-home-tab">
                             </c:when>
@@ -132,12 +132,12 @@
                                     <input type="hidden" name="command" value="sign_in"/>
                                     <div class="form-group">
                                         <div>
-                                            <c:if test="${not empty requestScope.sign_in_error}">
+                                            <c:if test="${not empty requestScope.signInError}">
                                                 <div class="alert alert-danger" role="alert">
                                                     <c:out value="${message_invalid_sign_in}"/></div>
                                             </c:if>
 
-                                            <c:if test="${not empty requestScope.success_message}">
+                                            <c:if test="${not empty requestScope.successMessage}">
                                                 <div class="alert alert-success" role="alert">
                                                     <c:out value="${message_success_sign_up}"/></div>
                                             </c:if>
@@ -208,11 +208,11 @@
 
 
                         <c:choose>
-                        <c:when test="${not empty requestScope.sign_up_error}">
+                        <c:when test="${not empty requestScope.signUpError}">
                         <div class="tab-pane fade show active" id="nav-profile" role="tabpanel"
                              aria-labelledby="nav-profile-tab">
                             </c:when>
-                            <c:when test="${requestScope.sign_up_error==null}">
+                            <c:when test="${requestScope.signUpError==null}">
                             <div class="tab-pane fade" id="nav-profile" role="tabpanel"
                                  aria-labelledby="nav-profile-tab">
                                 </c:when>
@@ -243,7 +243,7 @@
                                                         <c:out value="${message_invalid_last_name}"/></div>
                                                 </c:if>
 
-                                                <c:if test="${not empty requestScope.sign_up_exists_error}">
+                                                <c:if test="${not empty requestScope.signUpExistsError}">
                                                     <div class="alert alert-danger" role="alert">
                                                         <c:out value="${message_exists_login}"/></div>
                                                 </c:if>

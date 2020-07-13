@@ -12,7 +12,7 @@ import java.util.Set;
 
 public interface UserDAO {
 
-    List<User> getAll() throws DAOException;
+    Set<User> getAll() throws DAOException;
 
     User create(User user) throws DAOException;
 

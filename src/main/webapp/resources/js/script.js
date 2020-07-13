@@ -210,7 +210,6 @@ async function sendAnswer() {
         });
 
         if (response.ok) {
-//todo
 
         } else {
             document.location.href = '/test-system/errorPage.jsp';

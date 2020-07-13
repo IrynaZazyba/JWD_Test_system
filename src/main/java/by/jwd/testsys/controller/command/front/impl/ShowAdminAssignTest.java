@@ -56,7 +56,7 @@ public class ShowAdminAssignTest implements Command {
             List<Type> typeWithTests = testService.allTestsType();
 
             request.setAttribute(RequestParameterName.LIST_TYPE_WITH_TESTS, typeWithTests);
-            Set<User> students = userService.getStudents();
+            Set<User> students = userService.getUsers();
             request.setAttribute(RequestParameterName.SET_STUDENTS, students);
             request.setAttribute(RequestParameterName.CURRENT_DATE, LocalDate.now());
         }

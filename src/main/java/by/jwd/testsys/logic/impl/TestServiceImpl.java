@@ -109,8 +109,7 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    //todo assign название
-    public Question getQuestionByTestId(Assignment assignment) throws TestServiceException, TimeIsOverServiceException {
+    public Question getQuestion(Assignment assignment) throws TestServiceException, TimeIsOverServiceException {
         Question question;
         try {
             int testId = assignment.getTest().getId();
@@ -123,7 +122,7 @@ public class TestServiceImpl implements TestService {
             }
 
         } catch (DAOException e) {
-            throw new TestServiceException("DAOException in TestService getQuestionByTestId() method", e);
+            throw new TestServiceException("DAOException in TestService getQuestion() method", e);
         }
 
         return question;
@@ -531,7 +530,7 @@ public class TestServiceImpl implements TestService {
         }
 
         numberOfPages = numberRecords / recordsPerPage;
-        if (numberOfPages % recordsPerPage > 0) {
+        if ((numberRecords % recordsPerPage) > 0) {
             numberOfPages++;
         }
 

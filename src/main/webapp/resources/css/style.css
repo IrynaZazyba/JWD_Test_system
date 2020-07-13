@@ -4,11 +4,6 @@
     border-color: #3EB489 #3EB489 #dee2e6 !important;
 }
 
-.body-img {
-    background-image: url("../img/img.jpg");
-    background-repeat: no-repeat;
-}
-
 .text-tab-start-form {
     color: #3EB489;
 }
@@ -449,14 +444,36 @@ input:checked {
     margin-top: 30px;
 }
 
-.userAccountCard{
+.userAccountCard {
     border: 1px solid lightgray;
     border-radius: .5rem;
     padding: 15px;
 }
 
-.t-card{
+.t-card {
     padding-top: 25px;
     margin-left: -5px;
     margin-right: -15px
 }
+
+.errorPagePicture {
+    width: 300px;
+    height: 150px;
+    display: block;
+    margin: 0 auto
+}
+
+.errorPageText {
+    width: 300px;
+    height: 150px;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    font-style: italic
+
+}
+
+.colorForPage{
+    background-color: #F5FFFE;
+}
+

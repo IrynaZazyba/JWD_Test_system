@@ -19,7 +19,7 @@ public interface UserService {
 
     User editUserInfo(User user) throws UserServiceException, InvalidUserDataException, ExistsUserException;
 
-    Set<User> getStudents() throws UserServiceException;
+    Set<User> getUsers() throws UserServiceException;
 
     Set<User> getUsersWithAssignment(int testId, int testTypeId, boolean isCompleted) throws UserServiceException, InvalidUserDataException;
 

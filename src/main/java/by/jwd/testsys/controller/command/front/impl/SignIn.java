@@ -53,6 +53,8 @@ public class SignIn implements Command {
             } else {
                 ResourceBundle resourceBundle = ResourceBundle.getBundle(LOCAL_FILE_PACKAGE + File.separator + LOCAL_FILE_NAME);
                 request.setAttribute(RequestParameterName.SIGN_IN_ERROR, resourceBundle.getString(LOCAL_MESSAGE_INVALID_SIGN_IN));
+
+                session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
                 forwardToPage(request, response, JspPageName.START_JSP_PAGE);
             }
 

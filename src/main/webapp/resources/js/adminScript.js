@@ -48,7 +48,7 @@ async function changeOption() {
         let json = await response.json();
         document.getElementById("testTitle").insertAdjacentHTML('beforeend', generateOptionSelect(json));
     } else {
-        //todo сообщение
+        document.location.href = '/test-system/errorPage.jsp';
     }
 }
 
@@ -145,7 +145,7 @@ async function showUsersAssignedToTest() {
         let json = await response.json();
         document.getElementById("jsData").insertAdjacentHTML('afterbegin', generateUsersAssignmentTable(json.usersTestInfo));
     } else {
-        //todo сообщение
+        document.location.href = '/test-system/errorPage.jsp';
     }
 
 }
@@ -200,7 +200,7 @@ async function changeOptionFormDisplay() {
         let json = await response.json();
         document.getElementById("test").insertAdjacentHTML('beforeend', generateOptionSelect(json));
     } else {
-        //todo сообщение
+        document.location.href = '/test-system/errorPage.jsp';
     }
 }
 
@@ -259,8 +259,7 @@ async function editAssignment(id) {
         document.getElementById(assignId).setAttribute('class', 'table-danger');
 
     } else {
-
-        //todo сообщение
+        document.location.href = '/test-system/errorPage.jsp';
     }
 
 }
