@@ -42,7 +42,6 @@ public class SQLUserDAOImpl implements UserDAO {
 
     private static final String UPDATE_USER = "UPDATE users SET login=?,first_name=?, last_name=?," +
             "role_id=?, email=? WHERE id=?";
-    //todo 2 метода для пароля
     private static final String UPDATE_USER_PASSWORD = "UPDATE users SET password=? WHERE id=?";
     private static final String WRITE_ASSIGNMENT = "INSERT INTO `assignment`" +
             " (`date`,`deadline`, `test_id`, `user_id`, `completed`) " +

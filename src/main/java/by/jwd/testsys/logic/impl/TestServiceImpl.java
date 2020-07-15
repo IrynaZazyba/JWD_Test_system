@@ -221,8 +221,6 @@ public class TestServiceImpl implements TestService {
             if (testKey != null && assignment != null && result == null) {
 
                 if (!checkKey(key, testId)) {
-                    //todo здесь ли
-                    logger.log(Level.ERROR, "Invalid key");
                     throw new InvalidTestKeyException("Invalid key");
                 }
                 result = createResult(assignment);

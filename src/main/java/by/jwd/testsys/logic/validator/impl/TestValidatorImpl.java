@@ -18,17 +18,20 @@ public class TestValidatorImpl implements TestValidator {
 
     @Override
     public boolean validateKey(String key) {
-        return !key.matches(TEST_KEY_PATTERN);
+        if(!key.equals("")) {
+            return key.matches(TEST_KEY_PATTERN);
+        }
+        return true;
     }
 
     @Override
     public boolean validateTestTitle(String testTitle) {
-        return testTitle.length() > TEST_TITLE_LENGTH;
+        return testTitle.length() <= TEST_TITLE_LENGTH&&testTitle.length()>0;
     }
 
     @Override
     public boolean validateTypeTitle(String typeTitle) {
-        return typeTitle.length() > TYPE_TITLE_LENGTH;
+        return typeTitle.length() <= TYPE_TITLE_LENGTH&&typeTitle.length()>0;
     }
 
     @Override
@@ -43,7 +46,7 @@ public class TestValidatorImpl implements TestValidator {
 
     @Override
     public boolean validateAnswerTitle(String answer) {
-        return answer.length() < ANSWER_LENGTH;
+        return answer.length() < ANSWER_LENGTH&& answer.length()>0;
     }
 
 }

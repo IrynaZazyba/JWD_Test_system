@@ -477,3 +477,11 @@ input:checked {
     background-color: #F5FFFE;
 }
 
+.colorRed{
+    background-color: rgba(255, 66, 100, 0.57);
+}
+
+.borderError{
+    border-color: red;
+}
+

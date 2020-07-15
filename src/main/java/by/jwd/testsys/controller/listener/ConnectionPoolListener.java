@@ -14,7 +14,7 @@ import javax.servlet.annotation.WebListener;
 @WebListener
 public class ConnectionPoolListener implements ServletContextListener {
 
-    private Logger logger = LogManager.getLogger();
+    private Logger logger = LogManager.getLogger(ConnectionPoolListener.class);
 
     public ConnectionPoolListener() {
     }

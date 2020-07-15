@@ -94,7 +94,7 @@ async function saveTestInfo(obj) {
 
     let invalidClass = document.getElementsByClassName('is-invalid');
     console.log(invalidClass);
-    if (invalidClass.length!==0) {
+    if (invalidClass.length !== 0) {
         Array.from(invalidClass).forEach(elem => elem.classList.remove('is-invalid'));
     }
 
@@ -105,7 +105,7 @@ async function saveTestInfo(obj) {
 
     let result = /[a-zA-Z0-9]{4,7}/g.test(key);
 
-    if (!result) {
+    if (key !== "" && !result) {
         addTestForm.testKey.classList.add('is-invalid');
     }
 
@@ -115,7 +115,7 @@ async function saveTestInfo(obj) {
 
     let divButtonBack = document.getElementById('buttonBack');
 
-    if (result && testTitle.length <20) {
+    if ((key === "" || result) && testTitle.length < 20) {
 
         let successMessageDiv = document.getElementById('successCreatedTest');
         if (successMessageDiv.style.display === 'block') {
@@ -223,7 +223,7 @@ function generateInput() {
         "<div class='input-group-text'>" +
         "<input type='checkbox'  name='checkAdd-" + countInsertedAnswer + "' aria-label='Checkbox for following text input'></div>" +
         "</div>" +
-        "<input  class='form-control' name='answerAdd-" + countInsertedAnswer + "' aria-label='Text input with checkbox'></input>" +
+        "<input required class='form-control' name='answerAdd-" + countInsertedAnswer + "' aria-label='Text input with checkbox'></input>" +
         "<button onclick='deleteAnswer(this); return false;' type='button' id='answer-add-" + countInsertedAnswer + "' class='btn btn-link editAnswerButton'><i class='far fa-trash-alt'></i></button></div></div></div>";
 }
 
@@ -248,25 +248,35 @@ async function updateQuestion(button) {
 
     let form = document.querySelector(".modal-body form");
     let dataF = new FormData(form);
-    dataF.append("deletedAnswers", answerToDelete);
 
-    let response = await fetch("/test-system/ajax?command=update_question", {
-        method: 'POST',
-        body: dataF,
+
+    let allInputs = document.querySelectorAll(".modal-body .questionFormEdit input");
+    let flag=true;
+    allInputs.forEach(e => {
+        if (e.value === "") {
+            e.classList.add("colorRed");
+            flag = false;
+        }
     });
 
-    if (response.ok) {
-        answerToDelete = [];
-        location.reload();
+    if (flag) {
+        dataF.append("deletedAnswers", answerToDelete);
 
-    } else {
+        let response = await fetch("/test-system/ajax?command=update_question", {
+            method: 'POST',
+            body: dataF,
+        });
 
+        if (response.ok) {
+            answerToDelete = [];
+            location.reload();
+
+        } else {
+            let form = document.querySelector(".modal-body");
+            form.classList.add("borderError");
+        }
 
     }
-    //отправляем данные
-    //очищаем массив answerToDelete
-    //перезагружаем страницу если все ок
-
 }
 
 function backEditedQuestion() {

@@ -23,6 +23,20 @@
 <fmt:message bundle="${loc}" key="nav-item.admin.users" var="nav_item_admin_users"/>
 <fmt:message bundle="${loc}" key="button.language_en" var="button_language_en"/>
 <fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
+<fmt:message bundle="${loc}" key="editTest.lable.testTitle" var="lable_testTitle"/>
+<fmt:message bundle="${loc}" key="editTest.lable.testType" var="lable_testType"/>
+<fmt:message bundle="${loc}" key="editTest.lable.testKey" var="lable_testKey"/>
+<fmt:message bundle="${loc}" key="editTest.lable.duration" var="lable_duration"/>
+<fmt:message bundle="${loc}" key="editTest.button.stopEdit" var="button_stop_edit"/>
+<fmt:message bundle="${loc}" key="editTest.button.add.answer" var="button_add_answer"/>
+<fmt:message bundle="${loc}" key="editTest.checkbox.conditions" var="message_checkbox"/>
+
+<fmt:message bundle="${loc}" key="delete.confirm.message" var="delete_confirm_message"/>
+<fmt:message bundle="${loc}" key="delete.button.cancel" var="delete_button_cancel"/>
+<fmt:message bundle="${loc}" key="delete.button.delete" var="delete_button_delete"/>
+<fmt:message bundle="${loc}" key="editTest.button.close" var="button_close"/>
+<fmt:message bundle="${loc}" key="editTest.lable.add_question" var="lable_add_question"/>
+<fmt:message bundle="${loc}" key="editTest.lable.edit" var="lable_edit"/>
 
 <div class="container-fluid p-0">
 
@@ -38,11 +52,11 @@
                             value="${requestScope.testData.id}"
                             class="btn btn-link"><i class="far fa-edit"></i></button></div>
                     <div class="form-group">
-                        <label for="testTitle">Название теста</label>
+                        <label for="testTitle">${lable_testTitle}</label>
                         <input disabled type="text" class="form-control" name="testTitle" value="${requestScope.testData.title}" id="testTitle">
                     </div>
                     <div class="form-group">
-                        <label for="testType">Тип теста</label>
+                        <label for="testType">${lable_testType}</label>
                         <select disabled class="form-control" name="typeId" id="testType">
                             <c:forEach var="type" items="${requestScope.testTypes}">
                                 <c:if test="${requestScope.testData.type.id==type.id}">
@@ -55,11 +69,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="testKey">Ключ</label>
+                        <label for="testKey">${lable_testKey}</label>
                         <input disabled type="text" class="form-control" name="testKey" value="${requestScope.testData.key}" id="testKey">
                     </div>
                     <div class="form-group">
-                        <label for="testDuration">Продолжительность, мин</label>
+                        <label for="testDuration">${lable_duration}</label>
                         <input disabled type="time" class="form-control" name="testDuration" value="${requestScope.testData.duration}"
                                id="testDuration">
                     </div>
@@ -126,7 +140,7 @@
                 </c:forEach>
                 <div class="form-group m-t-15">
                     <button type="button" onclick="completeTestCreating()" id="preview" class="btn btn-outline-info">
-                        Завершить создание теста
+                       ${button_stop_edit}
                     </button>
                 </div>
             </form>
@@ -153,7 +167,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary closeButton" data-dismiss="modal">Close</button>
-                <button onclick="updateTestInfo(this)" type="button" class="btn btn-info">Сохранить</button>
+                <button onclick="updateTestInfo(this)" type="button" class="btn btn-info">${button_save}</button>
             </div>
         </div>
     </div>
@@ -163,7 +177,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit</h5>
+                <h5 class="modal-title">${lable_edit}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span class="closeButton" aria-hidden="true">&times;</span>
                 </button>
@@ -172,10 +186,10 @@
                 <form enctype="multipart/form-data" id="addQuestionModalWindowForm"
                       accept-charset="UTF-8" class="key-form" role="form">
                     <div class="form-group">
-                        <label for="quest">Добавить вопрос</label>
+                        <label for="quest">${lable_add_question}</label>
                         <textarea class="form-control" id="quest" name="question" rows="3"></textarea>
                     </div>
-                    <div>Отметьте правильный вариант ответа(ов) чекбоксом.</div>
+                    <div>${message_checkbox}</div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
@@ -186,7 +200,7 @@
                                   aria-label="Text input with checkbox"></textarea>
                     </div>
                     <div class="form-group">
-                        <button onclick="addAnswerTextArea(this)" type="button" class="btn btn-link">+Добавить ответ
+                        <button onclick="addAnswerTextArea(this)" type="button" class="btn btn-link">${button_add_answer}
                         </button>
                     </div>
                 </form>
@@ -194,9 +208,9 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary closeButton" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary closeButton" data-dismiss="modal">${button_close}</button>
                 <div class="form-group  float-right">
-                    <button type="submit" onclick="addQuestion(this)" class="btn btn-info">Сохранить вопрос</button>
+                    <button type="submit" onclick="addQuestion(this)" class="btn btn-info">${button_save}</button>
                 </div>
             </div>
         </div>
@@ -206,12 +220,12 @@
     <div class="modal-dialog modal-confirm">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Are you sure?</h4>
+                <h4 class="modal-title">${delete_confirm_message}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger btn-ok">Delete</button>
+                <button type="button" class="btn btn-info" data-dismiss="modal">${delete_button_cancel}</button>
+                <button type="button" class="btn btn-danger btn-ok">${delete_button_delete}</button>
             </div>
         </div>
     </div>

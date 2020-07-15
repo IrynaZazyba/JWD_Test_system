@@ -61,8 +61,6 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item"
                            href="${pageContext.request.contextPath}/test?command=assign_test">${nav_item_assign_test}</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">${nav_item_admin_users}</a>
                     </div>
                 </li>
                 <li class="nav-item">

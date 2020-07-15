@@ -173,7 +173,6 @@ public class UserServiceImpl implements UserService {
         ValidatorFactory validatorFactory = ValidatorFactory.getInstance();
         UserValidator userValidator = validatorFactory.getUserValidator();
 
-//todo проверить что старый пароль?
         Set<String> validationResult;
         if (!userValidator.validatePassword(newPassword)) {
             validationResult = new HashSet<>();
