@@ -401,6 +401,7 @@ li.nav-item:hover {
     border: 1px solid lightseagreen;
     border-radius: 1rem;
     padding: 15px;
+    margin-bottom: 0px;
 }
 
 a {
@@ -473,15 +474,17 @@ input:checked {
 
 }
 
-.colorForPage{
+.colorForPage {
     background-color: #F5FFFE;
 }
 
-.colorRed{
+.colorRed {
     background-color: rgba(255, 66, 100, 0.57);
 }
 
-.borderError{
-    border-color: red;
+.borderError {
+    border: 1px solid #fd4167;
+    box-shadow: 0 0 10px rgba(253, 65, 103, 0.6); /* Параметры тени */
+    border-radius: 1rem;
 }
 

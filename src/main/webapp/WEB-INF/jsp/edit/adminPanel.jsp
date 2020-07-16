@@ -107,6 +107,7 @@
                                 <td>${test.edited}</td>
 
                                 <td>
+
                                     <a href="${pageContext.request.contextPath}/test?command=edit_test&testId=${test.id}">
                                         <button class="btn btn-link">${button_edit}</button>
                                     </a>

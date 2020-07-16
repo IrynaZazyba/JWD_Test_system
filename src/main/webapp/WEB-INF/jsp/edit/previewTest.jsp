@@ -24,9 +24,65 @@
 <fmt:message bundle="${loc}" key="button.language_en" var="button_language_en"/>
 <fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
 
-<div class="container-fluid p-0">
 
-    <jsp:include page="../parts/nav-menu.jsp"/>
+<fmt:message bundle="${loc}" key="editTest.button.save" var="button_save"/>
+
+<fmt:message bundle="${loc}" key="editTest.label.testTitle" var="label_testTitle"/>
+<fmt:message bundle="${loc}" key="editTest.label.testType" var="label_testType"/>
+<fmt:message bundle="${loc}" key="editTest.label.testKey" var="label_testKey"/>
+<fmt:message bundle="${loc}" key="editTest.label.duration" var="label_duration"/>
+<fmt:message bundle="${loc}" key="editTest.button.stopEdit" var="button_stop_edit"/>
+<fmt:message bundle="${loc}" key="editTest.button.add.answer" var="button_add_answer"/>
+<fmt:message bundle="${loc}" key="editTest.checkbox.conditions" var="message_checkbox"/>
+
+<fmt:message bundle="${loc}" key="delete.confirm.message" var="delete_confirm_message"/>
+<fmt:message bundle="${loc}" key="delete.button.cancel" var="delete_button_cancel"/>
+<fmt:message bundle="${loc}" key="delete.button.delete" var="delete_button_delete"/>
+<fmt:message bundle="${loc}" key="editTest.button.close" var="button_close"/>
+<fmt:message bundle="${loc}" key="editTest.label.add_question" var="label_add_question"/>
+<fmt:message bundle="${loc}" key="editTest.label.edit" var="label_edit"/>
+<fmt:message bundle="${loc}" key="editTest.button.save.question" var="button_save_question"/>
+
+<fmt:message bundle="${loc}" key="editTest.message.testTitle.conditions" var="message_testTitle_conditions"/>
+<fmt:message bundle="${loc}" key="editTest.message.invalid.testTitle" var="message_invalid_testTitle"/>
+<fmt:message bundle="${loc}" key="editTest.message.key.conditions" var="message_key_conditions"/>
+<fmt:message bundle="${loc}" key="editTest.message.invalid.key" var="message_invalid_key"/>
+<fmt:message bundle="${loc}" key="editTest.message.invalid.time" var="message_invalid_time"/>
+<fmt:message bundle="${loc}" key="editTest.button.continueLater" var="button_continue_later"/>
+<fmt:message bundle="${loc}" key="editTest.comfirm.leave.edit.mode" var="message_leave_edit_mode"/>
+<fmt:message bundle="${loc}" key="editTest.mode.add.test" var="mode_add_test"/>
+
+
+<div class="container-fluid ">
+
+    <nav class="navbar navbar-expand-lg navbar-light menu-color p-t-b-0 border-menu">
+        <div class="collapse navbar-collapse start-page-nav-itm max-w-nav" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto start-page-nav-itm" id="myTab">
+                <li class="nav-item">
+                    <img alt="logo" class="logo-size" src="resources/img/logo.png">
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav mr-auto start-page-nav-itm" id="editPageMessage">
+                <li class="nav-item">
+                    ${mode_add_test} </li>
+            </ul>
+        </div>
+
+        <form action="test" method="POST" class="m-0">
+            <input type="hidden" name="command" value="change_language"/>
+            <input type="hidden" name="local" value="ru"/>
+            <button type="submit" class="btn ru"></button>
+        </form>
+
+        <form action="test" method="POST" class="m-0">
+            <input type="hidden" name="command" value="change_language"/>
+            <input type="hidden" name="local" value="en"/>
+            <button type="submit" class="btn en"></button>
+        </form>
+    </nav>
+
+
     <div class="row m-t-27">
         <input type="hidden" name="testId" id="testId" value="${requestScope.testData.id}"/>
         <div class="col-3"></div>
@@ -34,34 +90,48 @@
             <form id="editTest">
                 <div id="testInfo" class="edit-quest-form">
                     <div class="row edit-button">
-                    <button onclick="showModalWindowEditTestInfo(this); return false;" type="button"
-                            value="${requestScope.testData.id}"
-                            class="btn btn-link"><i class="far fa-edit"></i></button></div>
-                    <div class="form-group">
-                        <label for="testTitle">Название теста</label>
-                        <input disabled type="email" class="form-control" name="testTitle" value="${requestScope.testData.title}" id="testTitle">
+                        <button onclick="showModalWindowEditTestInfo(this); return false;" type="button"
+                                value="${requestScope.testData.id}"
+                                class="btn btn-link"><i class="far fa-edit"></i></button>
                     </div>
                     <div class="form-group">
-                        <label for="testType">Тип теста</label>
+                        <label for="testTitle">${label_testTitle}</label>
+                        <input disabled required type="text" class="form-control" name="testTitle"
+                               value="${requestScope.testData.title}" id="testTitle">
+                        <small id="testTitleHelpInline" class="text-muted">
+                            ${message_testTitle_conditions} </small>
+                        <div class="invalid-feedback">
+                            ${message_invalid_testTitle} </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="testType">${label_testType}</label>
                         <select disabled class="form-control" name="typeId" id="testType">
                             <c:forEach var="type" items="${requestScope.testTypes}">
                                 <c:if test="${requestScope.testData.type.id==type.id}">
-                                    <option  selected value="${type.id}">${type.title}</option>
+                                    <option selected value="${type.id}">${type.title}</option>
                                 </c:if>
                                 <c:if test="${requestScope.testData.type.id!=type.id}">
-                                    <option  value="${type.id}">${type.title}</option>
+                                    <option value="${type.id}">${type.title}</option>
                                 </c:if>
                             </c:forEach>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="testKey">Ключ</label>
-                        <input disabled type="email" class="form-control" name="testKey" value="${requestScope.testData.key}" id="testKey">
+                        <label for="testKey">${label_testKey}</label>
+                        <input disabled type="text" class="form-control" name="testKey"
+                               value="${requestScope.testData.key}" id="testKey">
+                        <small id="keyHelpInline" class="text-muted">
+                            ${message_key_conditions} </small>
+                        <div class="invalid-feedback">
+                            ${message_invalid_key} </div>
                     </div>
                     <div class="form-group">
-                        <label for="testDuration">Продолжительность, мин</label>
-                        <input disabled type="email" class="form-control" name="testDuration" value="${requestScope.testData.duration}"
+                        <label for="testDuration">${label_duration}</label>
+                        <input disabled required type="text" class="form-control" name="testDuration"
+                               value="${requestScope.testData.duration}"
                                id="testDuration">
+                        <div class="invalid-feedback">
+                            ${message_invalid_time} </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -76,7 +146,8 @@
                             <button onclick="showModalWindowEditQuestion(this); return false;" type="button"
                                     value="${quest.id}"
                                     class="btn btn-link"><i class="far fa-edit"></i></button>
-                            <a href="#deleteQuestion" class="trigger-btn p-t-r" data-toggle="modal" data-value="${quest.id}"
+                            <a href="#deleteQuestion" class="trigger-btn p-t-r" data-toggle="modal"
+                               data-value="${quest.id}"
                                data-onclick="deleteQuestion(this)">
                                 <i class="far fa-trash-alt"></i>
                             </a>
@@ -127,9 +198,14 @@
                     </div>
                 </c:forEach>
                 <div class="form-group m-t-15">
+                    <a href="${pageContext.request.contextPath}/test?command=show_admin_panel">
+                        <button type="button" id="continueLater" class="btn btn-outline-info">
+                            ${button_continue_later} </button>
+                    </a>
+
                     <button type="button" onclick="completeTestCreating()" id="preview" class="btn btn-outline-info">
-                        Завершить создание теста
-                    </button>
+                        ${button_stop_edit} </button>
+
                 </div>
             </form>
         </div>
@@ -142,7 +218,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit</h5>
+                <h5 class="modal-title">${label_edit}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span class="closeButton" aria-hidden="true">&times;</span>
                 </button>
@@ -154,8 +230,9 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary closeButton" data-dismiss="modal">Close</button>
-                <button onclick="updateQuestion(this)" type="button" class="btn btn-info">Сохранить</button>
+                <button type="button" class="btn btn-secondary closeButton"
+                        data-dismiss="modal">${button_close}</button>
+                <button onclick="updateQuestion(this)" type="button" class="btn btn-info">${button_save}</button>
             </div>
         </div>
     </div>
@@ -165,7 +242,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit</h5>
+                <h5 class="modal-title">${label_edit}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span class="closeButton" aria-hidden="true">&times;</span>
                 </button>
@@ -177,8 +254,9 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary closeButton" data-dismiss="modal">Close</button>
-                <button onclick="updateTestInfo(this)" type="button" class="btn btn-info">Сохранить</button>
+                <button type="button" class="btn btn-secondary closeButton"
+                        data-dismiss="modal">${button_close}</button>
+                <button onclick="updateTestInfo(this)" type="button" class="btn btn-info">${button_save}</button>
             </div>
         </div>
     </div>
@@ -188,7 +266,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit</h5>
+                <h5 class="modal-title">${label_edit}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span class="closeButton" aria-hidden="true">&times;</span>
                 </button>
@@ -197,10 +275,10 @@
                 <form enctype="multipart/form-data" id="addQuestionModalWindowForm"
                       accept-charset="UTF-8" class="key-form" role="form">
                     <div class="form-group">
-                        <label for="quest">Добавить вопрос</label>
+                        <label for="quest">${label_add_question}</label>
                         <textarea class="form-control" id="quest" name="question" rows="3"></textarea>
                     </div>
-                    <div>Отметьте правильный вариант ответа(ов) чекбоксом.</div>
+                    <div>${message_checkbox}</div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
@@ -211,7 +289,8 @@
                                   aria-label="Text input with checkbox"></textarea>
                     </div>
                     <div class="form-group">
-                        <button onclick="addAnswerTextArea(this)" type="button" class="btn btn-link">+Добавить ответ
+                        <button onclick="addAnswerTextArea(this)" type="button"
+                                class="btn btn-link">${button_add_answer}
                         </button>
                     </div>
                 </form>
@@ -219,23 +298,26 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary closeButton" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary closeButton"
+                        data-dismiss="modal">${button_close}</button>
                 <div class="form-group  float-right">
-                    <button type="submit" onclick="addQuestion(this)" class="btn btn-info">Сохранить вопрос</button>
+                    <button type="submit" onclick="addQuestion(this)"
+                            class="btn btn-info">${button_save_question}</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-danger btn-ok">Delete</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">${delete_button_cancel}</button>
+                <a class="btn btn-danger btn-ok">${delete_button_delete}</a>
             </div>
         </div>
     </div>
@@ -246,12 +328,12 @@
     <div class="modal-dialog modal-confirm">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Are you sure?</h4>
+                <h4 class="modal-title">${delete_confirm_message}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger btn-ok">Delete</button>
+                <button type="button" class="btn btn-info" data-dismiss="modal">${delete_button_cancel}</button>
+                <button type="button" class="btn btn-danger btn-ok">${delete_button_delete}</button>
             </div>
         </div>
     </div>

@@ -26,13 +26,15 @@
 <fmt:message bundle="${loc}" key="button.language_en" var="button_language_en"/>
 <fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
 
-<fmt:message bundle="${loc}" key="editTest.tab.lable.test" var="lable_test"/>
-<fmt:message bundle="${loc}" key="editTest.tab.lable.question" var="lable_question"/>
+<fmt:message bundle="${loc}" key="editTest.tab.label.test" var="label_test"/>
+<fmt:message bundle="${loc}" key="editTest.tab.label.question" var="label_question"/>
 <fmt:message bundle="${loc}" key="editTest.message.error" var="message_error_save"/>
-<fmt:message bundle="${loc}" key="editTest.lable.testTitle" var="lable_testTitle"/>
-<fmt:message bundle="${loc}" key="editTest.lable.testKey" var="lable_testKey"/>
-<fmt:message bundle="${loc}" key="editTest.lable.duration" var="lable_duration"/>
-<fmt:message bundle="${loc}" key="editTest.lable.testType" var="lable_testType"/>
+<fmt:message bundle="${loc}" key="editTest.message.success" var="message_success_save"/>
+
+<fmt:message bundle="${loc}" key="editTest.label.testTitle" var="label_testTitle"/>
+<fmt:message bundle="${loc}" key="editTest.label.testKey" var="label_testKey"/>
+<fmt:message bundle="${loc}" key="editTest.label.duration" var="label_duration"/>
+<fmt:message bundle="${loc}" key="editTest.label.testType" var="label_testType"/>
 <fmt:message bundle="${loc}" key="editTest.message.invalid.key" var="message_invalid_key"/>
 <fmt:message bundle="${loc}" key="editTest.message.invalid.testTitle" var="message_invalid_testTitle"/>
 <fmt:message bundle="${loc}" key="editTest.message.key.conditions" var="message_key_conditions"/>
@@ -43,14 +45,40 @@
 <fmt:message bundle="${loc}" key="editTest.button.add.question" var="button_addQuestion"/>
 <fmt:message bundle="${loc}" key="editTest.button.add.answer" var="button_add_answer"/>
 <fmt:message bundle="${loc}" key="editTest.button.save.question" var="button_save_question"/>
-<fmt:message bundle="${loc}" key="editTest.button.save.question" var="button_save_question"/>
 <fmt:message bundle="${loc}" key="editTest.checkbox.conditions" var="message_checkbox"/>
-<fmt:message bundle="${loc}" key="editTest.button.preview" var="button_preview"/>
+<fmt:message bundle="${loc}" key="editTest.button.continue" var="button_continue"/>
+<fmt:message bundle="${loc}" key="editTest.mode.add.test" var="mode_add_test"/>
 
 
-<div class="container-fluid p-0">
+<div class="container-fluid ">
 
-    <jsp:include page="../parts/nav-menu.jsp"/>
+
+    <nav class="navbar navbar-expand-lg navbar-light menu-color p-t-b-0 border-menu">
+        <div class="collapse navbar-collapse start-page-nav-itm max-w-nav" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto start-page-nav-itm" id="myTab">
+                <li class="nav-item">
+                    <img alt="logo" class="logo-size" src="resources/img/logo.png">
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav mr-auto start-page-nav-itm" id="editPageMessage">
+                <li class="nav-item">
+                    ${mode_add_test} </li>
+            </ul>
+        </div>
+
+        <form action="test" method="POST" class="m-0">
+            <input type="hidden" name="command" value="change_language"/>
+            <input type="hidden" name="local" value="ru"/>
+            <button type="submit" class="btn ru"></button>
+        </form>
+
+        <form action="test" method="POST" class="m-0">
+            <input type="hidden" name="command" value="change_language"/>
+            <input type="hidden" name="local" value="en"/>
+            <button type="submit" class="btn en"></button>
+        </form>
+    </nav>
 
     <div class="row">
         <div class="col-5" style="margin: 0 auto;">
@@ -58,18 +86,6 @@
             </div>
             <div id="testId">
             </div>
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link active" id="testEditForm-tab" data-toggle="tab" href="#testEditForm" role="tab"
-                       aria-controls="home"
-                       aria-selected="true">${lable_test}</a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link disabled" id="questionEditForm-tab" data-toggle="tab" href="#questionEditForm"
-                       role="tab"
-                       aria-controls="profile" aria-selected="false" aria-disabled="true">${lable_question}</a>
-                </li>
-            </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="testEditForm" role="tabpanel" aria-labelledby="home-tab">
 
@@ -82,75 +98,73 @@
                     <form id="addTestForm" onsubmit="saveTestInfo(this);return false;" enctype="multipart/form-data"
                           accept-charset="UTF-8" class="key-form" role="form">
                         <div class="form-group">
-                            <label for="testType">${lable_testType}</label>
+                            <label for="testType">${label_testType}</label>
                             <select required class="form-control" name="typeId" id="testType">
                                 <c:forEach var="type" items="${requestScope.testTypes}">
-                                    <option value="${type.id}">${type.title}</option>
+                                    <c:if test="${not empty sessionScope.typeId}">
+                                        <c:if test="${sessionScope.typeId==type.id}">
+                                            <option selected value="${type.id}">${type.title}</option>
+                                        </c:if>
+                                        <c:if test="${sessionScope.typeId!=type.id}">
+                                            <option value="${type.id}">${type.title}</option>
+                                        </c:if>
+                                    </c:if>
+                                    <c:if test="${empty sessionScope.typeId}">
+                                        <option value="${type.id}">${type.title}</option>
+                                    </c:if>
                                 </c:forEach>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="testTitle">${lable_testTitle}</label>
-                            <input required type="text" class="form-control" name="testTitle" id="testTitle">
+                            <label for="testTitle">${label_testTitle}</label>
+                            <c:if test="${not empty sessionScope.testTitle}">
+                                <input required type="text" class="form-control" name="testTitle"
+                                       value="${sessionScope.testTitle}" id="testTitle">
+                            </c:if>
+                            <c:if test="${empty sessionScope.testTitle}">
+                                <input required type="text" class="form-control" name="testTitle" id="testTitle">
+                            </c:if>
                             <small id="testTitleHelpInline" class="text-muted">
                                 ${message_testTitle_conditions} </small>
                             <div class="invalid-feedback">
                                 ${message_invalid_testTitle} </div>
                         </div>
                         <div class="form-group">
-                            <label for="keyValue">${lable_testKey}</label>
-                            <input type="text" class="form-control" name="testKey" id="keyValue">
+                            <label for="keyValue">${label_testKey}</label>
+                            <c:if test="${not empty sessionScope.testTitle}">
+                                <input type="text" class="form-control" name="testKey" value="${sessionScope.testKey}"
+                                       id="keyValue">
+                            </c:if>
+                            <c:if test="${empty sessionScope.testTitle}">
+                                <input type="text" class="form-control" name="testKey" id="keyValue">
+                            </c:if>
                             <small id="keyHelpInline" class="text-muted">
                                 ${message_key_conditions} </small>
                             <div class="invalid-feedback">
                                 ${message_invalid_key} </div>
                         </div>
                         <div class="form-group">
-                            <label for="duration">${lable_duration}</label>
-                            <input required type="time" class="form-control" name="testDuration" id="duration">
+                            <label for="duration">${label_duration}</label>
+                            <c:if test="${not empty sessionScope.testTitle}">
+                                <input required type="time" class="form-control" name="testDuration"
+                                       value="${sessionScope.testDuration}" id="duration">
+                            </c:if>
+                            <c:if test="${empty sessionScope.testTitle}">
+                                <input required type="time" class="form-control" name="testDuration" id="duration">
+                            </c:if>
                             <div class="invalid-feedback">
                                 ${message_invalid_time} </div>
                         </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-info float-right">${button_save}</button>
-                        </div>
-                        <div id="buttonBack" class="form-group float-left">
-                            <button onclick="window.history.back()" type="submit" class="btn btn-info">${button_to_tests}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                <div class="tab-pane fade" id="questionEditForm" role="tabpanel" aria-labelledby="profile-tab">
-
-                    <form onsubmit="saveQuestion(this);return false;" enctype="multipart/form-data"
-                          accept-charset="UTF-8" class="key-form" role="form">
-                        <div class="form-group">
-                            <label for="quest">${button_addQuestion}</label>
-                            <textarea class="form-control" id="quest" name="question" rows="3"></textarea>
-                        </div>
-                        <div>${message_checkbox}</div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text">
-                                    <input type="checkbox" name="check-1"
-                                           aria-label="Checkbox for following text input">
-                                </div>
-                            </div>
-                            <textarea type="text" class="form-control" name="answer-1"
-                                      aria-label="Text input with checkbox"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <button onclick="addAnswerTextArea(this)" type="button" class="btn btn-link">${button_add_answer}
-                            </button>
-                        </div>
-                        <div class="form-group  float-right">
-                            <button type="submit" class="btn btn-info">${button_save_question}</button>
-                        </div>
                         <div class="form-group m-t-15">
-                            <button type="button" onclick="showPreviewPage()"
-                                    class="btn btn-outline-info btn-lg btn-block">${button_preview}
+                            <a href="${pageContext.request.contextPath}/test?command=show_admin_panel">
+                                <button type="button" id="continueLater" class="btn btn-outline-info">
+                                    ${button_to_tests}</button>
+                            </a>
+                            <button type="submit"
+                                    class="btn btn-outline-info">${button_continue}
                             </button>
                         </div>
+
                     </form>
                 </div>
             </div>

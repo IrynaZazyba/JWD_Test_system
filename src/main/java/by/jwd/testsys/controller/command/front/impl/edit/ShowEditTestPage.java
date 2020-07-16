@@ -63,6 +63,7 @@ public class ShowEditTestPage implements Command {
             adminService.changeTestIsEdited(testId, true);
             Test testData = adminService.receiveTestWithQuestionsAndAnswers(testId);
             List<Type> testTypes = testService.allTestsType();
+
             request.setAttribute(RequestParameterName.FULL_TEST_DATA, testData);
             request.setAttribute(RequestParameterName.TEST_TYPES_LIST, testTypes);
 

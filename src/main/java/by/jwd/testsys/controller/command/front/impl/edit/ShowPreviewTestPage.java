@@ -31,6 +31,9 @@ public class ShowPreviewTestPage implements Command {
             ShowEditTestPage.TestEditRequestBuilder.prepareTestInfo(request, testId);
 
             HttpSession session = request.getSession();
+
+
+
             session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
             forwardToPage(request, response, JspPageName.PREVIEW_TEST);
 

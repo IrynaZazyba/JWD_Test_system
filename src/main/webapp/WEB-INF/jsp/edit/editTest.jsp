@@ -23,10 +23,11 @@
 <fmt:message bundle="${loc}" key="nav-item.admin.users" var="nav_item_admin_users"/>
 <fmt:message bundle="${loc}" key="button.language_en" var="button_language_en"/>
 <fmt:message bundle="${loc}" key="button.language_ru" var="button_language_ru"/>
-<fmt:message bundle="${loc}" key="editTest.lable.testTitle" var="lable_testTitle"/>
-<fmt:message bundle="${loc}" key="editTest.lable.testType" var="lable_testType"/>
-<fmt:message bundle="${loc}" key="editTest.lable.testKey" var="lable_testKey"/>
-<fmt:message bundle="${loc}" key="editTest.lable.duration" var="lable_duration"/>
+
+<fmt:message bundle="${loc}" key="editTest.label.testTitle" var="label_testTitle"/>
+<fmt:message bundle="${loc}" key="editTest.label.testType" var="label_testType"/>
+<fmt:message bundle="${loc}" key="editTest.label.testKey" var="label_testKey"/>
+<fmt:message bundle="${loc}" key="editTest.label.duration" var="label_duration"/>
 <fmt:message bundle="${loc}" key="editTest.button.stopEdit" var="button_stop_edit"/>
 <fmt:message bundle="${loc}" key="editTest.button.add.answer" var="button_add_answer"/>
 <fmt:message bundle="${loc}" key="editTest.checkbox.conditions" var="message_checkbox"/>
@@ -35,12 +36,16 @@
 <fmt:message bundle="${loc}" key="delete.button.cancel" var="delete_button_cancel"/>
 <fmt:message bundle="${loc}" key="delete.button.delete" var="delete_button_delete"/>
 <fmt:message bundle="${loc}" key="editTest.button.close" var="button_close"/>
-<fmt:message bundle="${loc}" key="editTest.lable.add_question" var="lable_add_question"/>
-<fmt:message bundle="${loc}" key="editTest.lable.edit" var="lable_edit"/>
+<fmt:message bundle="${loc}" key="editTest.label.add_question" var="label_add_question"/>
+<fmt:message bundle="${loc}" key="editTest.label.edit" var="label_edit"/>
+<fmt:message bundle="${loc}" key="editTest.button.continueLater" var="button_continue_later"/>
+<fmt:message bundle="${loc}" key="editTest.button.save" var="button_save"/>
 
-<div class="container-fluid p-0">
+
+<div class="container-fluid ">
 
     <jsp:include page="../parts/nav-menu.jsp"/>
+
     <div class="row m-t-27">
         <input type="hidden" name="testId" id="testId" value="${requestScope.testData.id}"/>
         <div class="col-3"></div>
@@ -52,11 +57,11 @@
                             value="${requestScope.testData.id}"
                             class="btn btn-link"><i class="far fa-edit"></i></button></div>
                     <div class="form-group">
-                        <label for="testTitle">${lable_testTitle}</label>
+                        <label for="testTitle">${label_testTitle}</label>
                         <input disabled type="text" class="form-control" name="testTitle" value="${requestScope.testData.title}" id="testTitle">
                     </div>
                     <div class="form-group">
-                        <label for="testType">${lable_testType}</label>
+                        <label for="testType">${label_testType}</label>
                         <select disabled class="form-control" name="typeId" id="testType">
                             <c:forEach var="type" items="${requestScope.testTypes}">
                                 <c:if test="${requestScope.testData.type.id==type.id}">
@@ -69,11 +74,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="testKey">${lable_testKey}</label>
+                        <label for="testKey">${label_testKey}</label>
                         <input disabled type="text" class="form-control" name="testKey" value="${requestScope.testData.key}" id="testKey">
                     </div>
                     <div class="form-group">
-                        <label for="testDuration">${lable_duration}</label>
+                        <label for="testDuration">${label_duration}</label>
                         <input disabled type="time" class="form-control" name="testDuration" value="${requestScope.testData.duration}"
                                id="testDuration">
                     </div>
@@ -139,6 +144,10 @@
                     </div>
                 </c:forEach>
                 <div class="form-group m-t-15">
+                    <a href="${pageContext.request.contextPath}/test?command=show_admin_panel">
+                        <button type="button" id="continueLater" class="btn btn-outline-info">
+                            ${button_continue_later} </button>
+                    </a>
                     <button type="button" onclick="completeTestCreating()" id="preview" class="btn btn-outline-info">
                        ${button_stop_edit}
                     </button>
@@ -166,7 +175,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary closeButton" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary closeButton" data-dismiss="modal">${button_close}</button>
                 <button onclick="updateTestInfo(this)" type="button" class="btn btn-info">${button_save}</button>
             </div>
         </div>
@@ -177,7 +186,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">${lable_edit}</h5>
+                <h5 class="modal-title">${label_edit}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span class="closeButton" aria-hidden="true">&times;</span>
                 </button>
@@ -186,7 +195,7 @@
                 <form enctype="multipart/form-data" id="addQuestionModalWindowForm"
                       accept-charset="UTF-8" class="key-form" role="form">
                     <div class="form-group">
-                        <label for="quest">${lable_add_question}</label>
+                        <label for="quest">${label_add_question}</label>
                         <textarea class="form-control" id="quest" name="question" rows="3"></textarea>
                     </div>
                     <div>${message_checkbox}</div>

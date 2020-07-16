@@ -20,8 +20,7 @@
 <fmt:message bundle="${loc}" key="nav-item.assign_test" var="nav_item_assign_test"/>
 <fmt:message bundle="${loc}" key="nav-item.results" var="nav_item_results"/>
 <fmt:message bundle="${loc}" key="nav-item.assigned_test" var="nav_item_assigned_tests"/>
-
-
+<fmt:message bundle="${loc}" key="nav-item.user.account" var="nav_item_user_account"/>
 
 
 <nav class="navbar navbar-expand-lg navbar-light menu-color p-t-b-0 border-menu">
@@ -77,7 +76,7 @@
             </c:if>
 
             <li class="nav-item">
-                <a class="nav-link nav-vrl item-start"  href="#">${nav_item_about}</a>
+                <a class="nav-link nav-vrl item-start" href="#">${nav_item_about}</a>
             </li>
         </ul>
     </div>
@@ -108,8 +107,7 @@
                 <div class="dropdown-menu p-t-b-0" aria-labelledby="navbarDropdown-User">
                     <a class="dropdown-item user-drop-down p-t-b-5"
                        href="${pageContext.request.contextPath}/test?command=show_user_account">
-                        Личный кабинет
-                    </a>
+                            ${nav_item_user_account} </a>
                     <div class="dropdown-divider"></div>
 
                     <form action="test" method="POST" class="m-0 txt-algn-center">

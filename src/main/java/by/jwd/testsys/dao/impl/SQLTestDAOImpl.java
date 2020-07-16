@@ -67,10 +67,10 @@ public class SQLTestDAOImpl implements TestDAO {
     private static final String UPDATE_TEST = "UPDATE test SET title=?, `key`=?, time=?,type_id=?, " +
             "is_edited=? WHERE id=?";
 
-    private static final String SELECT_ALL_TESTS_BY_TYPE_ID_LIMIT_PAGE = "SELECT id, title,`key`, time FROM `test` " +
+    private static final String SELECT_ALL_TESTS_BY_TYPE_ID_LIMIT_PAGE = "SELECT id, title,`key`,is_edited, time FROM `test` " +
             "WHERE type_id=? and deleted_at is null LIMIT ?,?";
 
-    private static final String SELECT_TESTS_BY_TYPE_ID_PARAMS="SELECT id, title,`key`, time FROM `test`" +
+    private static final String SELECT_TESTS_BY_TYPE_ID_PARAMS = "SELECT id, title,`key`, time FROM `test`" +
             "WHERE type_id=? and deleted_at is null and is_edited=?";
 
     private static final String GET_COUNT_TESTS_BY_TYPE_ID = "SELECT count(id) as countRow FROM `test` " +
@@ -80,11 +80,11 @@ public class SQLTestDAOImpl implements TestDAO {
     private static final String SELECT_TYPE_BY_TITLE = "SELECT id, title from type WHERE deleted_at IS null AND title=?";
     private static final String INSERT_TYPE = "INSERT INTO type (title) VALUES (?)";
 
-    private final static String SQL_CONDITION_TEST_KEY_IS_NOT_NULL=" AND `key` is not null";
-    private final static String SQL_CONDITION_TEST_KEY_IS_NULL=" AND `key` is null";
-    private final static String SQL_CONDITION_LIMIT="  LIMIT ?,?";
-    private final static String SQL_CONDITION_TEST_IS_EDITED_FALSE=" AND is_edited=false";
-    private final static String SQL_CONDITION_TEST_IS_EDITED_TRUE=" AND is_edited=true";
+    private final static String SQL_CONDITION_TEST_KEY_IS_NOT_NULL = " AND `key` is not null";
+    private final static String SQL_CONDITION_TEST_KEY_IS_NULL = " AND `key` is null";
+    private final static String SQL_CONDITION_LIMIT = "  LIMIT ?,?";
+    private final static String SQL_CONDITION_TEST_IS_EDITED_FALSE = " AND is_edited=false";
+    private final static String SQL_CONDITION_TEST_IS_EDITED_TRUE = " AND is_edited=true";
 
 
     private static final String TEST_ID_COLUMN = "id";
@@ -101,7 +101,7 @@ public class SQLTestDAOImpl implements TestDAO {
     private static final String TYPE_ID_COLUMN_ALIAS = "type_id";
     private static final String QUESTION_ID_COLUMN = "id";
     private static final String COUNT_QUESTION = "count_quest";
-
+    private static final String TEST_IS_EDITED_COLUMN = "is_edited";
 
     @Override
     public Set<Test> getAssignedTests(int userId) throws DAOException {
@@ -231,7 +231,7 @@ public class SQLTestDAOImpl implements TestDAO {
             while (resultSet.next()) {
                 if (test == null) {
                     test = buildTest(resultSet);
-
+                    test.setId(id);
                     int typeId = resultSet.getInt(TYPE_ID_COLUMN_ALIAS);
                     Type type = new Type.Builder().withId(typeId).build();
 
@@ -358,6 +358,8 @@ public class SQLTestDAOImpl implements TestDAO {
                 Test test = buildTest(resultSet);
                 int id = resultSet.getInt(TEST_ID_COLUMN);
                 test.setId(id);
+                boolean isEdited = resultSet.getBoolean(TEST_IS_EDITED_COLUMN);
+                test.setEdited(isEdited);
                 tests.add(test);
             }
         } catch (ConnectionPoolException e) {
@@ -382,18 +384,18 @@ public class SQLTestDAOImpl implements TestDAO {
 
         try {
             connection = connectionPool.takeConnection();
-            String query=SELECT_TESTS_BY_TYPE_ID_PARAMS;
-            if(isExistsKey){
-                query=query+SQL_CONDITION_TEST_KEY_IS_NOT_NULL;
-            }else{
-                query=query+SQL_CONDITION_TEST_KEY_IS_NULL;
+            String query = SELECT_TESTS_BY_TYPE_ID_PARAMS;
+            if (isExistsKey) {
+                query = query + SQL_CONDITION_TEST_KEY_IS_NOT_NULL;
+            } else {
+                query = query + SQL_CONDITION_TEST_KEY_IS_NULL;
             }
 
-            query=query+SQL_CONDITION_LIMIT;
+            query = query + SQL_CONDITION_LIMIT;
 
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, typeId);
-            preparedStatement.setBoolean(2,isEdited);
+            preparedStatement.setBoolean(2, isEdited);
             preparedStatement.setInt(3, from);
             preparedStatement.setInt(4, to);
             resultSet = preparedStatement.executeQuery();
@@ -455,15 +457,15 @@ public class SQLTestDAOImpl implements TestDAO {
             connection = connectionPool.takeConnection();
             String query = GET_COUNT_TESTS_BY_TYPE_ID;
             if (!isEdited) {
-                query =query+ SQL_CONDITION_TEST_IS_EDITED_FALSE;
+                query = query + SQL_CONDITION_TEST_IS_EDITED_FALSE;
             } else {
-                query =query+ SQL_CONDITION_TEST_IS_EDITED_TRUE;
+                query = query + SQL_CONDITION_TEST_IS_EDITED_TRUE;
             }
 
             if (isExistsKey) {
-                query = query+SQL_CONDITION_TEST_KEY_IS_NOT_NULL;
+                query = query + SQL_CONDITION_TEST_KEY_IS_NOT_NULL;
             } else {
-                query =query+ SQL_CONDITION_TEST_KEY_IS_NULL;
+                query = query + SQL_CONDITION_TEST_KEY_IS_NULL;
             }
 
             preparedStatement = connection.prepareStatement(query);

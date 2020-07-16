@@ -113,6 +113,12 @@ async function saveTestInfo(obj) {
         addTestForm.testTitle.classList.add('is-invalid')
     }
 
+    let duration = addTestForm.testDuration.value;
+
+    if(duration===""){
+        addTestForm.testDuration.classList.add('is-invalid')
+    }
+
     let divButtonBack = document.getElementById('buttonBack');
 
     if ((key === "" || result) && testTitle.length < 20) {
@@ -141,12 +147,6 @@ async function saveTestInfo(obj) {
 
 
         if (response.ok) {
-            if (divButtonBack != null) {
-                divButtonBack.remove();
-            }
-
-            document.getElementById("questionEditForm-tab").classList.remove('disabled');
-            // document.getElementById("preview").setAttribute("onclick","document.location=")
 
             let json = await response.json();
 
@@ -154,6 +154,7 @@ async function saveTestInfo(obj) {
                 document.getElementById('testId').insertAdjacentHTML('afterbegin', "<input type='hidden' name='testId' value='" + json.testId + "'>");
             }
             successMessageDiv.style.display = 'block';
+            showPreviewPage();
 
         } else {
             dangerMessageDiv.style.display = 'block';
@@ -251,13 +252,18 @@ async function updateQuestion(button) {
 
 
     let allInputs = document.querySelectorAll(".modal-body .questionFormEdit input");
-    let flag=true;
+    let flag = true;
     allInputs.forEach(e => {
         if (e.value === "") {
             e.classList.add("colorRed");
             flag = false;
         }
     });
+
+    let quest = document.querySelectorAll(".modal-body .questionFormEdit textarea").value;
+    if (quest === ""){
+        flag=false;
+    }
 
     if (flag) {
         dataF.append("deletedAnswers", answerToDelete);
@@ -272,7 +278,7 @@ async function updateQuestion(button) {
             location.reload();
 
         } else {
-            let form = document.querySelector(".modal-body");
+            let form = document.querySelector(".modal-body div[id^='modal']");
             form.classList.add("borderError");
         }
 
@@ -318,22 +324,44 @@ function showModalWindowAddQuestion() {
 }
 
 async function addQuestion(button) {
-    let questionAddForm = document.getElementById("addQuestionModalWindowForm");
-    let formData = new FormData(questionAddForm);
-    let testId = document.getElementById("testId").value;
-    formData.append("testId", testId);
-    let response = await fetch("/test-system/ajax?command=create_question_answer", {
-        method: 'POST',
-        body: formData,
+
+    let form = document.querySelector(".modal-body form");
+    let dataF = new FormData(form);
+
+
+    let allInputs = document.querySelectorAll(".modal-body .questionFormEdit input");
+    let flag = true;
+    allInputs.forEach(e => {
+        if (e.value === "") {
+            e.classList.add("colorRed");
+            flag = false;
+        }
     });
 
-    if (response.ok) {
-        location.reload();
-
-
-    } else {
-
+    let quest = document.querySelectorAll(".modal-body .questionFormEdit textarea").value;
+    if (quest === ""){
+        flag=false;
     }
+
+        if (flag) {
+
+            let questionAddForm = document.getElementById("addQuestionModalWindowForm");
+            let formData = new FormData(questionAddForm);
+            let testId = document.getElementById("testId").value;
+            formData.append("testId", testId);
+            let response = await fetch("/test-system/ajax?command=create_question_answer", {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                location.reload();
+
+
+            } else {
+
+            }
+        }
 }
 
 function showPreviewPage() {
@@ -381,20 +409,50 @@ async function deleteQuestion(button) {
 
 async function updateTestInfo(button) {
 
-    let testId = document.getElementById("testId").value;
-    let testInfoFormEdit = document.getElementById("testInfoFormEdit");
-
-    let response = await fetch("/test-system/ajax?command=update_test_info&testId=" + testId, {
-        method: 'POST',
-        body: new FormData(testInfoFormEdit),
-    });
-
-    if (response.ok) {
-        location.reload();
-
-    } else {
-
+    let invalidClass = document.getElementsByClassName('is-invalid');
+    console.log(invalidClass);
+    if (invalidClass.length !== 0) {
+        Array.from(invalidClass).forEach(elem => elem.classList.remove('is-invalid'));
     }
+
+    let addTestForm = document.getElementById("testInfoFormEdit");
+
+    let key = addTestForm.testKey.value;
+    let testTitle = addTestForm.testTitle.value;
+
+    let result = /[a-zA-Z0-9]{4,7}/g.test(key);
+
+    if (key !== "" && !result) {
+        addTestForm.testKey.classList.add('is-invalid');
+    }
+    let duration = addTestForm.testDuration.value;
+
+    if(duration===""){
+        addTestForm.testDuration.classList.add('is-invalid')
+    }
+
+    if (testTitle.length > 20 || testTitle.length <= 0) {
+        addTestForm.testTitle.classList.add('is-invalid')
+    }
+
+    if ((key !== "" && result) && testTitle.length < 20 || testTitle.length < 0) {
+
+        let testId = document.getElementById("testId").value;
+        let testInfoFormEdit = document.getElementById("testInfoFormEdit");
+
+        let response = await fetch("/test-system/ajax?command=update_test_info&testId=" + testId, {
+            method: 'POST',
+            body: new FormData(testInfoFormEdit),
+        });
+
+        if (response.ok) {
+            location.reload();
+
+        } else {
+
+        }
+    }
+
 
 }
 
