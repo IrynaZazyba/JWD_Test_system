@@ -488,3 +488,6 @@ input:checked {
     border-radius: 1rem;
 }
 
+.centerImg{
+    justify-content: center;
+}

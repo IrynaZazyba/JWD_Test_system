@@ -49,8 +49,9 @@
 <fmt:message bundle="${loc}" key="editTest.message.invalid.key" var="message_invalid_key"/>
 <fmt:message bundle="${loc}" key="editTest.message.invalid.time" var="message_invalid_time"/>
 <fmt:message bundle="${loc}" key="editTest.button.continueLater" var="button_continue_later"/>
-<fmt:message bundle="${loc}" key="editTest.comfirm.leave.edit.mode" var="message_leave_edit_mode"/>
 <fmt:message bundle="${loc}" key="editTest.mode.add.test" var="mode_add_test"/>
+<fmt:message bundle="${loc}" key="editTest.confirm.leave.edit.mode" var="mode_comfirm_message"/>
+<fmt:message bundle="${loc}" key="editTest.confirm.button.confirm" var="mode_button_confirm"/>
 
 
 <div class="container-fluid ">
@@ -200,7 +201,7 @@
                 <div class="form-group m-t-15">
                     <a href="${pageContext.request.contextPath}/test?command=show_admin_panel">
                         <button type="button" id="continueLater" class="btn btn-outline-info">
-                            ${button_continue_later} </button>
+                           ${button_continue_later}</button>
                     </a>
 
                     <button type="button" onclick="completeTestCreating()" id="preview" class="btn btn-outline-info">
@@ -274,24 +275,27 @@
             <div class="modal-body">
                 <form enctype="multipart/form-data" id="addQuestionModalWindowForm"
                       accept-charset="UTF-8" class="key-form" role="form">
-                    <div class="form-group">
-                        <label for="quest">${label_add_question}</label>
-                        <textarea class="form-control" id="quest" name="question" rows="3"></textarea>
-                    </div>
-                    <div>${message_checkbox}</div>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">
-                                <input type="checkbox" name="check-1" aria-label="Checkbox for following text input">
-                            </div>
+                    <div id="modal-">
+                        <div class="form-group">
+                            <label for="quest">${label_add_question}</label>
+                            <textarea class="form-control" id="quest" name="question" rows="3"></textarea>
                         </div>
-                        <textarea type="text" class="form-control" name="answer-1"
-                                  aria-label="Text input with checkbox"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <button onclick="addAnswerTextArea(this)" type="button"
-                                class="btn btn-link">${button_add_answer}
-                        </button>
+                        <div class="input-group mb-3 answer">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <input type="checkbox" name="check-1"
+                                           aria-label="Checkbox for following text input">
+                                </div>
+                            </div>
+                            <input type="text" class="form-control" name="answer-1"
+                                      aria-label="Text input with checkbox"></input>
+                            <button onclick="deleteAnswerArea(this); return false;" type="button" id="answer-add-1"
+                                    class="btn btn-link editAnswerButton"><i class="far fa-trash-alt"></i></button>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" id="addAnswer" onclick="addAnswerTextArea(this)"
+                                    class="btn btn-link btn-block"><i class="fas fa-plus"></i></button>
+                        </div>
                     </div>
                 </form>
 
@@ -323,6 +327,20 @@
     </div>
 </div>
 
+<div id="confirmLeaveAddMode" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"> ${mode_comfirm_message}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal">${delete_button_cancel}</button>
+                <button type="button" class="btn btn-danger btn-ok">${mode_button_confirm}</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div id="deleteQuestion" class="modal fade">
     <div class="modal-dialog modal-confirm">

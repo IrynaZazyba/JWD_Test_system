@@ -76,7 +76,8 @@
             </c:if>
 
             <li class="nav-item">
-                <a class="nav-link nav-vrl item-start" href="#">${nav_item_about}</a>
+                <a class="nav-link nav-vrl item-start"
+                   href="${pageContext.request.contextPath}/about.jsp">${nav_item_about}</a>
             </li>
         </ul>
     </div>

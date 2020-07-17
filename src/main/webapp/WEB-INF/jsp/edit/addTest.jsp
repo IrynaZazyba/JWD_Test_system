@@ -63,7 +63,7 @@
             </ul>
             <ul class="navbar-nav mr-auto start-page-nav-itm" id="editPageMessage">
                 <li class="nav-item">
-                    ${mode_add_test} </li>
+                   <h5> ${mode_add_test}</h5> </li>
             </ul>
         </div>
 

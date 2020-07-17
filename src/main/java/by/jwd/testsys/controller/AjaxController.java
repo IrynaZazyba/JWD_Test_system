@@ -48,6 +48,7 @@ public class AjaxController extends HttpServlet {
     }
 
     private void doProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String ajaxCommandName = request.getParameter(RequestParameterName.COMMAND_NAME);
         CommandProvider ajaxCommandProvider = CommandProvider.getInstance();
         AjaxCommand ajaxCommand = ajaxCommandProvider.getAjaxCommand(ajaxCommandName.toUpperCase());

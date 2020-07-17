@@ -5,7 +5,7 @@ import org.mindrot.jbcrypt.BCrypt;
 public class HashStringHelper {
 
     private static final String HASHED_STRING_START = "$2a$";
-    private static int workload = 12;
+    private static final int workload = 12;
 
     private HashStringHelper() {
     }

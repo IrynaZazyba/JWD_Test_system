@@ -39,12 +39,14 @@ function generateTextArea() {
     let html = "";
     if (count < 4) {
         count++;
-        html = "<div class='input-group mb-3 jsInsertAnswer'>" +
+        html = "<div class='input-group mb-3 jsInsertAnswer answer'>" +
             "<div class='input-group-prepend'>" +
             "<div class='input-group-text'>" +
             "<input type='checkbox'  name='check-" + count + "' aria-label='Checkbox for following text input'></div>" +
             "</div>" +
             "<textarea  class='form-control' name='answer-" + count + "' aria-label='Text input with checkbox'></textarea>" +
+            "<button onclick='deleteAnswerArea(this); return false;' type='button' id='answer-add-" + count + "'" +
+            "                                class='btn btn-link editAnswerButton'><i class='far fa-trash-alt'></i></button>" +
             "</div>";
     }
     return html;
@@ -115,7 +117,7 @@ async function saveTestInfo(obj) {
 
     let duration = addTestForm.testDuration.value;
 
-    if(duration===""){
+    if (duration === "") {
         addTestForm.testDuration.classList.add('is-invalid')
     }
 
@@ -181,7 +183,7 @@ function showModalWindowEditQuestion(obj) {
     document.querySelectorAll(".modal-body input[type='text']").forEach(i => i.insertAdjacentHTML('afterend',
         "<button onclick='deleteAnswer(this); return false;' type='button' id='" + i.id + "' class='btn btn-link editAnswerButton'><i class='far fa-trash-alt'></i></button>"));
 
-    let answerSize = document.querySelectorAll('.modal-body .answer').length;
+    let answerSize = document.querySelectorAll('.modal-body .questionFormEdit .answer').length;
     if (answerSize < 4) {
         insertButtonAddAnswer();
     }
@@ -197,8 +199,6 @@ function showModalWindowEditTestInfo(obj) {
     modalBody.insertAdjacentElement('afterbegin', formTestInfo);
     formTestInfo.querySelector("div[id^='modal'] button").style.display = 'none';
     document.querySelectorAll('#modalTestInfo .modal-body :disabled').forEach(e => e.removeAttribute('disabled'));
-
-
 }
 
 let countInsertedAnswer = 0;
@@ -209,7 +209,7 @@ function insertButtonAddAnswer() {
 }
 
 function addAnswerInput() {
-    let size = document.querySelectorAll('.modal-body .answer').length;
+    let size = document.querySelectorAll('.modal-body .questionFormEdit .answer').length;
     if ((size) < 4) {
         document.querySelectorAll('.modal-body .answer')[size - 1].insertAdjacentHTML('afterend', generateInput());
     }
@@ -237,13 +237,22 @@ function deleteAnswer(button) {
         answerToDelete.push(answerId);
     }
 
+    button.closest(".answer").remove();
+
     if (document.getElementById("addAnswer") == null) {
         insertButtonAddAnswer();
     }
-    button.closest(".answer").remove();
-
-
 }
+
+function deleteAnswerArea(button) {
+
+    button.closest(".answer").remove();
+    count--;
+    if (document.getElementById("addAnswer") == null) {
+        insertButtonAddAnswer();
+    }
+}
+
 
 async function updateQuestion(button) {
 
@@ -261,8 +270,8 @@ async function updateQuestion(button) {
     });
 
     let quest = document.querySelectorAll(".modal-body .questionFormEdit textarea").value;
-    if (quest === ""){
-        flag=false;
+    if (quest === "") {
+        flag = false;
     }
 
     if (flag) {
@@ -325,43 +334,35 @@ function showModalWindowAddQuestion() {
 
 async function addQuestion(button) {
 
-    let form = document.querySelector(".modal-body form");
-    let dataF = new FormData(form);
-
-
-    let allInputs = document.querySelectorAll(".modal-body .questionFormEdit input");
+    let allTextarea = document.querySelectorAll(".modal-body #addQuestionModalWindowForm textarea");
     let flag = true;
-    allInputs.forEach(e => {
+    allTextarea.forEach(e => {
         if (e.value === "") {
             e.classList.add("colorRed");
             flag = false;
         }
     });
 
-    let quest = document.querySelectorAll(".modal-body .questionFormEdit textarea").value;
-    if (quest === ""){
-        flag=false;
-    }
 
-        if (flag) {
+    if (flag) {
 
-            let questionAddForm = document.getElementById("addQuestionModalWindowForm");
-            let formData = new FormData(questionAddForm);
-            let testId = document.getElementById("testId").value;
-            formData.append("testId", testId);
-            let response = await fetch("/test-system/ajax?command=create_question_answer", {
-                method: 'POST',
-                body: formData,
-            });
+        let questionAddForm = document.getElementById("addQuestionModalWindowForm");
+        let formData = new FormData(questionAddForm);
+        let testId = document.getElementById("testId").value;
+        formData.append("testId", testId);
+        let response = await fetch("/test-system/ajax?command=create_question_answer", {
+            method: 'POST',
+            body: formData,
+        });
 
-            if (response.ok) {
-                location.reload();
+        if (response.ok) {
+            location.reload();
 
 
-            } else {
+        } else {
 
-            }
         }
+    }
 }
 
 function showPreviewPage() {
@@ -385,6 +386,12 @@ async function completeTestCreating() {
 }
 
 $('#deleteQuestion').on('show.bs.modal', function (e) {
+    $(this).find('.btn-ok').attr('onclick', $(e.relatedTarget).data('onclick'));
+    $(this).find('.btn-ok').attr('value', $(e.relatedTarget).data('value'));
+});
+
+
+$('#confirmLeaveAddMode').on('show.bs.modal', function (e) {
     $(this).find('.btn-ok').attr('onclick', $(e.relatedTarget).data('onclick'));
     $(this).find('.btn-ok').attr('value', $(e.relatedTarget).data('value'));
 });
@@ -427,7 +434,7 @@ async function updateTestInfo(button) {
     }
     let duration = addTestForm.testDuration.value;
 
-    if(duration===""){
+    if (duration === "") {
         addTestForm.testDuration.classList.add('is-invalid')
     }
 

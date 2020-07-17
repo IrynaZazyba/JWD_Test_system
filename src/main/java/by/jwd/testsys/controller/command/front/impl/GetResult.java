@@ -53,6 +53,8 @@ public class GetResult implements Command {
             session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
             forwardToPage(request, response, JspPageName.TEST_RESULT_PAGE);
 
+
+
         } catch (TestServiceException e) {
             response.sendRedirect(JspPageName.ERROR_PAGE);
         } catch (ForwardCommandException e) {
