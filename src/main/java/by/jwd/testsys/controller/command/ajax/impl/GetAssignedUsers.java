@@ -2,6 +2,7 @@ package by.jwd.testsys.controller.command.ajax.impl;
 
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
+import by.jwd.testsys.controller.command.util.GetParameterFromRequestHelper;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.logic.UserService;
 import by.jwd.testsys.logic.exception.InvalidUserDataException;
@@ -38,8 +39,7 @@ public class GetAssignedUsers implements AjaxCommand {
             testTypeId = Integer.parseInt(testTypeIdValue);
         }
 
-        String completed = request.getParameter(RequestParameterName.COMPLETED);
-        boolean isCompleted =parseBooleanParameter(completed);
+        boolean isCompleted = GetParameterFromRequestHelper.parseBooleanParameter(request,RequestParameterName.COMPLETED);
 
         String answer = null;
 
@@ -64,22 +64,5 @@ public class GetAssignedUsers implements AjaxCommand {
         return answer;
     }
 
-
-    //todo в отдельный класс
-    private boolean parseBooleanParameter(String booleanParam) {
-
-        if (booleanParam.equalsIgnoreCase("true") ||
-                booleanParam.equalsIgnoreCase("on") ||
-                booleanParam.equalsIgnoreCase("yes")) {
-            return true;
-        } else
-            if (booleanParam.equalsIgnoreCase("false") ||
-                booleanParam.equalsIgnoreCase("off") ||
-                booleanParam.equalsIgnoreCase("no")) {
-            return false;
-        } else {
-                throw  new NumberFormatException("Parameter "+booleanParam+" is not a boolean");
-        }
-    }
 
 }

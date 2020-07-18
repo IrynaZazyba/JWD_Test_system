@@ -454,6 +454,14 @@ public class TestServiceImpl implements TestService {
         Set<Test> tests;
         try {
             tests = testDAO.getTestsByLimit(typeId, start, recordsPerPage);
+            for (Test test : tests) {
+                if (testDAO.getCountTestAssignment(test.getId(), false) != 0) {
+                    test.setStarted(true);
+                } else {
+                    test.setStarted(false);
+                    System.out.println(test.getId());
+                }
+            }
         } catch (DAOException e) {
             throw new TestServiceException("DAOException in TestService getTestByTypeId() method", e);
         }

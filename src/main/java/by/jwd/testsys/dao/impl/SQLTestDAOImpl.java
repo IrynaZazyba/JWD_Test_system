@@ -51,8 +51,8 @@ public class SQLTestDAOImpl implements TestDAO {
 
     private static final String UPDATE_TEST_EDITED = "UPDATE `test` SET `is_edited`=? where id=?";
 
-    private static final String GET_COUNT_INCOMPLETE_ASSIGNMENT_BY_TEST_ID = "SELECT count(id) as count_id FROM `assignment` " +
-            "WHERE test_id=? and completed=?";
+    private static final String GET_COUNT_ASSIGNMENT_BY_TEST_ID = "SELECT count(id) as count_assignment " +
+            "FROM `assignment` WHERE test_id=? and completed=?";
 
     private static final String DELETE_QUESTIONS_BY_TEST_ID = "UPDATE `question` set deleted_at=? WHERE test_id=?";
 
@@ -91,7 +91,7 @@ public class SQLTestDAOImpl implements TestDAO {
     private static final String TEST_TITLE_COLUMN = "title";
     private static final String TEST_KEY_COLUMN = "key";
     private static final String TEST_TIME_COLUMN = "time";
-    private static final String COUNT_TEST_ASSIGNMENT = "count_id";
+    private static final String COUNT_TEST_ASSIGNMENT = "count_assignment";
     private static final String COUNT_TEST_ROW = "countRow";
     private static final String TEST_ID_COLUMN_ALIAS = "t_id";
     private static final String TEST_TITLE_COLUMN_ALIAS = "t_title";
@@ -102,6 +102,7 @@ public class SQLTestDAOImpl implements TestDAO {
     private static final String QUESTION_ID_COLUMN = "id";
     private static final String COUNT_QUESTION = "count_quest";
     private static final String TEST_IS_EDITED_COLUMN = "is_edited";
+
 
     @Override
     public Set<Test> getAssignedTests(int userId) throws DAOException {
@@ -495,7 +496,7 @@ public class SQLTestDAOImpl implements TestDAO {
         try {
             connection = connectionPool.takeConnection();
 
-            preparedStatement = connection.prepareStatement(GET_COUNT_INCOMPLETE_ASSIGNMENT_BY_TEST_ID);
+            preparedStatement = connection.prepareStatement(GET_COUNT_ASSIGNMENT_BY_TEST_ID);
             preparedStatement.setInt(1, testId);
             preparedStatement.setBoolean(2, isCompleted);
             resultSet = preparedStatement.executeQuery();

@@ -92,7 +92,6 @@ public class SQLUserDAOImpl implements UserDAO {
     private static final String ASSIGNMENT_TEST_ID_COLUMN = "test_id";
     private static final String ASSIGNMENT_COMPLETED_COLUMN = "completed";
 
-
     @Override
     public Set<User> getAll() throws DAOException {
 
@@ -182,6 +181,7 @@ public class SQLUserDAOImpl implements UserDAO {
         }
         return user;
     }
+
 
     @Override
     public User getUserById(int id) throws DAOException {

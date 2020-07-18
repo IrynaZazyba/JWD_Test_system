@@ -40,7 +40,9 @@
 <fmt:message bundle="${loc}" key="editTest.label.edit" var="label_edit"/>
 <fmt:message bundle="${loc}" key="editTest.button.continueLater" var="button_continue_later"/>
 <fmt:message bundle="${loc}" key="editTest.button.save" var="button_save"/>
-
+<fmt:message bundle="${loc}" key="editTest.mode.add.test" var="mode_add_test"/>
+<fmt:message bundle="${loc}" key="editTest.confirm.leave.edit.mode" var="mode_comfirm_message"/>
+<fmt:message bundle="${loc}" key="editTest.confirm.button.confirm" var="mode_button_confirm"/>
 
 <div class="container-fluid ">
 
@@ -148,9 +150,8 @@
                         <button type="button" id="continueLater" class="btn btn-outline-info">
                             ${button_continue_later} </button>
                     </a>
-                    <button type="button" onclick="completeTestCreating()" id="preview" class="btn btn-outline-info">
-                       ${button_stop_edit}
-                    </button>
+                    <button type="button" onclick="showModalStopEdit();false" class="btn btn-outline-info">
+                        ${button_stop_edit} </button>
                 </div>
             </form>
         </div>
@@ -207,6 +208,8 @@
                         </div>
                         <textarea type="text" class="form-control" name="answer-1"
                                   aria-label="Text input with checkbox"></textarea>
+                        <button onclick="deleteAnswerArea(this); return false;" type="button" id="answer-add-1"
+                                class="btn btn-link editAnswerButton"><i class="far fa-trash-alt"></i></button>
                     </div>
                     <div class="form-group">
                         <button onclick="addAnswerTextArea(this)" type="button" class="btn btn-link">${button_add_answer}
@@ -235,6 +238,25 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-info" data-dismiss="modal">${delete_button_cancel}</button>
                 <button type="button" class="btn btn-danger btn-ok">${delete_button_delete}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmStopEdit" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true" data-target="#staticBackdrop">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">
+                    ${mode_comfirm_message}
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">${delete_button_cancel}</button>
+                <button type="button" onclick="completeTestCreating(); false" class="btn btn-danger btn-ok">${mode_button_confirm}</button>
             </div>
         </div>
     </div>

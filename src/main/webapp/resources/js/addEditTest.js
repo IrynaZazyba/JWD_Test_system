@@ -370,7 +370,13 @@ function showPreviewPage() {
     document.location.href = "/test-system/test?command=preview_test&testId=" + testId;
 }
 
+
+function showModalStopEdit(){
+    $("#confirmStopEdit").modal('show');
+}
+
 async function completeTestCreating() {
+
     let testId = document.getElementById("testId").value;
     let response = await fetch("/test-system/ajax?command=complete_test&testId=" + testId, {
         method: 'GET',
@@ -391,10 +397,6 @@ $('#deleteQuestion').on('show.bs.modal', function (e) {
 });
 
 
-$('#confirmLeaveAddMode').on('show.bs.modal', function (e) {
-    $(this).find('.btn-ok').attr('onclick', $(e.relatedTarget).data('onclick'));
-    $(this).find('.btn-ok').attr('value', $(e.relatedTarget).data('value'));
-});
 
 async function deleteQuestion(button) {
 

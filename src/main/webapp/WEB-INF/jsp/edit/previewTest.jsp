@@ -61,7 +61,6 @@
             <ul class="navbar-nav mr-auto start-page-nav-itm" id="myTab">
                 <li class="nav-item">
                     <img alt="logo" class="logo-size" src="resources/img/logo.png">
-                    </a>
                 </li>
             </ul>
             <ul class="navbar-nav mr-auto start-page-nav-itm" id="editPageMessage">
@@ -204,7 +203,7 @@
                            ${button_continue_later}</button>
                     </a>
 
-                    <button type="button" onclick="completeTestCreating()" id="preview" class="btn btn-outline-info">
+                    <button type="button" onclick="showModalStopEdit();false"  class="btn btn-outline-info">
                         ${button_stop_edit} </button>
 
                 </div>
@@ -287,8 +286,8 @@
                                            aria-label="Checkbox for following text input">
                                 </div>
                             </div>
-                            <input type="text" class="form-control" name="answer-1"
-                                      aria-label="Text input with checkbox"></input>
+                            <textarea type="text" class="form-control" name="answer-1"
+                                      aria-label="Text input with checkbox"></textarea>
                             <button onclick="deleteAnswerArea(this); return false;" type="button" id="answer-add-1"
                                     class="btn btn-link editAnswerButton"><i class="far fa-trash-alt"></i></button>
                         </div>
@@ -327,16 +326,22 @@
     </div>
 </div>
 
-<div id="confirmLeaveAddMode" class="modal fade">
-    <div class="modal-dialog modal-confirm">
+
+<div id="confirmStopEdit" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true" data-target="#staticBackdrop">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"> ${mode_comfirm_message}</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h5 class="modal-title" id="staticBackdropLabel">
+                    ${mode_comfirm_message}
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info" data-dismiss="modal">${delete_button_cancel}</button>
-                <button type="button" class="btn btn-danger btn-ok">${mode_button_confirm}</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">${delete_button_cancel}</button>
+                <button type="button" onclick="completeTestCreating(), false" class="btn btn-danger btn-ok">${mode_button_confirm}</button>
             </div>
         </div>
     </div>

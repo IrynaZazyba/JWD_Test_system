@@ -39,6 +39,15 @@
 <fmt:message bundle="${loc}" key="admin_panel.tests.message.empty_data" var="message_empty_data"/>
 
 
+<fmt:message bundle="${loc}" key="delete.confirm.message" var="delete_confirm_message"/>
+<fmt:message bundle="${loc}" key="delete.button.cancel" var="delete_button_cancel"/>
+<fmt:message bundle="${loc}" key="delete.button.delete" var="delete_button_delete"/>
+<fmt:message bundle="${loc}" key="admin_panel.tests.button.close" var="button_close"/>
+<fmt:message bundle="${loc}" key="admin_panel.tests.button.save" var="button_save"/>
+<fmt:message bundle="${loc}" key="admin_panel.tests.message.enter.type" var="message_enter_type"/>
+<fmt:message bundle="${loc}" key="admin_panel.tests.message.exists.value" var="message_exists_value"/>
+
+
 <div class="container-fluid p-0">
 
     <jsp:include page="../parts/nav-menu.jsp"/>
@@ -49,7 +58,7 @@
 
                 <button type="submit" data-toggle="modal" data-target="#addTestType" data-onclick="addTestType()"
                         class="card-btn btn btn-outline-primary d-block mx-auto vertical-menu-button-add">
-                   ${button_add_type}
+                    ${button_add_type}
                 </button>
 
                 <c:forEach var="type" items="${requestScope.testTypes}">
@@ -89,7 +98,7 @@
                 <table class="table table-sm">
                     <thead>
                     <tr>
-                         <th scope="col">${table_test_title}</th>
+                        <th scope="col">${table_test_title}</th>
                         <th scope="col">${table_duration}</th>
                         <th scope="col">${table_key}</th>
                         <th scope="col">${table_in_process}</th>
@@ -107,10 +116,19 @@
                                 <td>${test.edited}</td>
 
                                 <td>
+                                    <c:if test="${!test.started}">
+                                        <a href="${pageContext.request.contextPath}/test?command=preview_test&testId=${test.id}">
+                                            <button class="btn btn-link">${button_edit}</button>
+                                        </a>
+                                    </c:if>
+                                    <c:if test="${test.started}">
+                                        <button disabled class="btn btn-link">
+                                            <a href="">
+                                                    ${button_edit}
+                                            </a>
+                                        </button>
 
-                                    <a href="${pageContext.request.contextPath}/test?command=edit_test&testId=${test.id}">
-                                        <button class="btn btn-link">${button_edit}</button>
-                                    </a>
+                                    </c:if>
                                 </td>
                                 <td>
                                     <button class="btn btn-link" id="btn-${test.id}" data-toggle="modal"
@@ -130,7 +148,7 @@
                 </table>
 
 
-                <nav aria-label="..." >
+                <nav aria-label="...">
                     <ul class="pagination pagination-sm pagination_center">
                         <c:forEach var="i" begin="1" end="${requestScope.countPages}">
                             <c:if test="${i==requestScope.currentPage}">
@@ -144,7 +162,7 @@
                             <c:if test="${i!=requestScope.currentPage}">
                                 <li class="page-item">
                                     <a class="page-link"
-                                       href="${pageContext.request.contextPath}/test?command=show_admin_panel&currentPage=${i}">
+                                       href="${pageContext.request.contextPath}/test?command=show_admin_panel&typeId=${requestScope.activeTypeId}&currentPage=${i}">
                                             ${i}
                                     </a>
                                 </li>
@@ -170,15 +188,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="staticBackdropLabel">
-                    Вы действительно хотите удалить
+                    ${delete_confirm_message}
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger btn-ok">Удалить</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">${delete_button_cancel}</button>
+                <button type="button" class="btn btn-danger btn-ok">${delete_button_delete}</button>
             </div>
         </div>
     </div>
@@ -190,7 +208,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="staticLabel">
-                    Введите название раздела </h5>
+                    ${message_enter_type}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -199,14 +217,14 @@
                 <div class="form-group">
                     <input type="text" class="form-control" id="testTypeTitle">
                     <div class="invalid-feedback">
-                        Exists value
+                        ${message_exists_value}
                     </div>
                 </div>
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" onclick="addTestType()" class="btn btn-danger btn-ok">Сохранить</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">${button_close}</button>
+                <button type="button" onclick="addTestType()" class="btn btn-danger btn-ok">${button_save}</button>
             </div>
         </div>
     </div>
