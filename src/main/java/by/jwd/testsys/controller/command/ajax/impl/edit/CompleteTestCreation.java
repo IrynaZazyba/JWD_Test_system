@@ -2,6 +2,7 @@ package by.jwd.testsys.controller.command.ajax.impl.edit;
 
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
+import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.AdminService;
 import by.jwd.testsys.logic.exception.AdminServiceException;
 import by.jwd.testsys.logic.exception.InvalidUserDataException;
@@ -29,10 +30,10 @@ public class CompleteTestCreation implements AjaxCommand {
         AdminService adminService = serviceFactory.getAdminService();
 
         HttpSession session = request.getSession();
-        session.removeAttribute("typeId");
-        session.removeAttribute("testTitle");
-        session.removeAttribute("testKey");
-        session.removeAttribute("testDuration");
+        session.removeAttribute(SessionAttributeName.TYPE_ID);
+        session.removeAttribute(SessionAttributeName.TEST_TITLE);
+        session.removeAttribute(SessionAttributeName.TEST_KEY);
+        session.removeAttribute(SessionAttributeName.TEST_DURATION);
         try {
             adminService.completeTestCreation(testId);
             response.setStatus(204);

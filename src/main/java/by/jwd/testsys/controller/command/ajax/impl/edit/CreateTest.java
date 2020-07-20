@@ -2,6 +2,7 @@ package by.jwd.testsys.controller.command.ajax.impl.edit;
 
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
+import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.AdminService;
 import by.jwd.testsys.logic.exception.AdminServiceException;
 import by.jwd.testsys.logic.exception.InvalidUserDataException;
@@ -55,11 +56,10 @@ public class CreateTest implements AjaxCommand {
                 answer = gson.toJson(parameterMapForJson);
             }
 
-            //todo
-            session.setAttribute("typeId", typeId);
-            session.setAttribute("testTitle", testTitle);
-            session.setAttribute("testKey", testKey);
-            session.setAttribute("testDuration",testDuration);
+            session.setAttribute(SessionAttributeName.TYPE_ID, typeId);
+            session.setAttribute(SessionAttributeName.TEST_TITLE, testTitle);
+            session.setAttribute(SessionAttributeName.TEST_KEY, testKey);
+            session.setAttribute(SessionAttributeName.TEST_DURATION,testDuration);
 
         } catch (AdminServiceException e) {
             response.setStatus(500);

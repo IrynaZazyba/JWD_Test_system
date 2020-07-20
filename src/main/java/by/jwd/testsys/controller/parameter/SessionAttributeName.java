@@ -10,6 +10,9 @@ public final class SessionAttributeName {
     public static final String LANGUAGE_ATTRIBUTE="local";
     public static final String QUERY_STRING="query_string";
 
-
+    public static final String TYPE_ID="typeId";
+    public static final String TEST_TITLE="testTitle";
+    public static final String TEST_KEY="testKey";
+    public static final String TEST_DURATION="testDuration";
 
 }
