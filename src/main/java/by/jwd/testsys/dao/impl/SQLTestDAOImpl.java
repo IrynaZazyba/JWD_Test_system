@@ -21,13 +21,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static java.sql.Types.NULL;
-
 public class SQLTestDAOImpl implements TestDAO {
 
     private static Logger logger = LogManager.getLogger();
     private final ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
-    private ConnectionPoolDAO connectionPool = connectionPoolFactory.getMySqlConnectionPoolDAO();
+    private ConnectionPoolDAO connectionPool = connectionPoolFactory.getSqlConnectionPoolDAO();
 
 
     private static final String SELECT_TEST_INFO_BY_ID = "SELECT t.title, t.key, t.time, " +

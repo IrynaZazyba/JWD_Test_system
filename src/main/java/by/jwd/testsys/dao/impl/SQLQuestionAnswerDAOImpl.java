@@ -23,7 +23,7 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
 
     private static Logger logger = LogManager.getLogger();
     private final ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
-    private ConnectionPoolDAO connectionPool = connectionPoolFactory.getMySqlConnectionPoolDAO();
+    private ConnectionPoolDAO connectionPool = connectionPoolFactory.getSqlConnectionPoolDAO();
 
     private static final String SELECT_QUESTION = "SELECT id, question FROM question q WHERE test_id=? " +
             "and not EXISTS (select * from `question-log` where q.id=question_id  and assignment_id=?) Limit 1;";

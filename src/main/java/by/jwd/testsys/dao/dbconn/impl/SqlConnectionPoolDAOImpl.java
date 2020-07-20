@@ -15,7 +15,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
-public final class MySqlConnectionPoolDAOImpl implements ConnectionPoolDAO {
+public final class SqlConnectionPoolDAOImpl implements ConnectionPoolDAO {
 
     private static Logger logger = LogManager.getLogger();
     private BlockingQueue<Connection> connectionQueue;
@@ -28,7 +28,7 @@ public final class MySqlConnectionPoolDAOImpl implements ConnectionPoolDAO {
     private int poolSize;
 
 
-    public MySqlConnectionPoolDAOImpl() {
+    public SqlConnectionPoolDAOImpl() {
         DBResourceManager dbResourseManager = DBResourceManager.getInstance();
         this.driverName = dbResourseManager.getValue(DBParameter.DB_DRIVER);
         this.url = dbResourseManager.getValue(DBParameter.DB_URL);

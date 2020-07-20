@@ -17,7 +17,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,7 +25,7 @@ public class SQLUserDAOImpl implements UserDAO {
 
     private static Logger logger = LogManager.getLogger();
     private final ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
-    private ConnectionPoolDAO connectionPool = connectionPoolFactory.getMySqlConnectionPoolDAO();
+    private ConnectionPoolDAO connectionPool = connectionPoolFactory.getSqlConnectionPoolDAO();
 
     private static final String SELECT_ALL_USERS = "SELECT users.id, login,first_name, last_name, email, role.title" +
             " from users INNER JOIN role ON users.role_id=role.id";

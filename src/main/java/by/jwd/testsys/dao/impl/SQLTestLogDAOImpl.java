@@ -13,16 +13,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
-import java.sql.Date;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class SQLTestLogDAOImpl implements TestLogDAO {
 
     private static Logger logger = LogManager.getLogger();
     private final ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
-    private ConnectionPoolDAO connectionPool = connectionPoolFactory.getMySqlConnectionPoolDAO();
+    private ConnectionPoolDAO connectionPool = connectionPoolFactory.getSqlConnectionPoolDAO();
 
     private static final String INSERT_ANSWER_LOG = "INSERT INTO `answer-log` (`answer_id`, `question_log_id`) " +
             "VALUES (?,?);";

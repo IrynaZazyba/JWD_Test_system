@@ -1,13 +1,13 @@
 package by.jwd.testsys.dao.dbconn.factory;
 
 
-import by.jwd.testsys.dao.dbconn.impl.MySqlConnectionPoolDAOImpl;
+import by.jwd.testsys.dao.dbconn.impl.SqlConnectionPoolDAOImpl;
 
 public final class ConnectionPoolFactory {
 
     private static final ConnectionPoolFactory instance = new ConnectionPoolFactory();
 
-    private final MySqlConnectionPoolDAOImpl mySqlConnectionPoolDAO = new MySqlConnectionPoolDAOImpl();
+    private final SqlConnectionPoolDAOImpl SqlConnectionPoolDAO = new SqlConnectionPoolDAOImpl();
 
     private ConnectionPoolFactory() {
     }
@@ -16,8 +16,8 @@ public final class ConnectionPoolFactory {
         return instance;
     }
 
-    public MySqlConnectionPoolDAOImpl getMySqlConnectionPoolDAO() {
-        return mySqlConnectionPoolDAO;
+    public SqlConnectionPoolDAOImpl getSqlConnectionPoolDAO() {
+        return SqlConnectionPoolDAO;
     }
 
 }

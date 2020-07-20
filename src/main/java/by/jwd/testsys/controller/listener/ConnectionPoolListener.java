@@ -23,11 +23,11 @@ public class ConnectionPoolListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         try {
             ConnectionPoolFactory poolFactory = ConnectionPoolFactory.getInstance();
-            ConnectionPoolDAO connectionPoolDAO = poolFactory.getMySqlConnectionPoolDAO();
+            ConnectionPoolDAO connectionPoolDAO = poolFactory.getSqlConnectionPoolDAO();
             connectionPoolDAO.initPoolData();
 
         } catch (ConnectionPoolException e) {
-            logger.log(Level.ERROR, e.getMessage());
+            logger.log(Level.ERROR, "Connection pool didn't initialize.",e);
             throw new InitConnectionPoolRuntimeException("Connection pool didn't initialize.",e);
         }
     }
@@ -35,7 +35,7 @@ public class ConnectionPoolListener implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         ConnectionPoolFactory poolFactory = ConnectionPoolFactory.getInstance();
-        ConnectionPoolDAO connectionPoolDAO = poolFactory.getMySqlConnectionPoolDAO();
+        ConnectionPoolDAO connectionPoolDAO = poolFactory.getSqlConnectionPoolDAO();
         connectionPoolDAO.dispose();
     }
 }
