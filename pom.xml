@@ -13,6 +13,11 @@
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.12</maven.compiler.source>
+        <maven.compiler.target>1.12</maven.compiler.target>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -108,7 +113,7 @@
                 <configuration>
                     <source>12</source>
                     <target>12</target>
-                    <encoding>UTF-8</encoding>
+                    <verbose>true</verbose>
                 </configuration>
             </plugin>
         </plugins>
