@@ -196,14 +196,6 @@ public class TestServiceImpl implements TestService {
         }
 
 
-        if (key != null) {
-
-            if (!testValidator.validateKey(key)) {
-                throw new InvalidTestKeyException("Invalid user data.");
-            }
-        }
-
-
         Assignment assignment;
         try {
             assignment = userDAO.getUserAssignmentByTestId(userId, testId);
@@ -459,7 +451,6 @@ public class TestServiceImpl implements TestService {
                     test.setStarted(true);
                 } else {
                     test.setStarted(false);
-                    System.out.println(test.getId());
                 }
             }
         } catch (DAOException e) {

@@ -401,7 +401,8 @@ li.nav-item:hover {
     border: 1px solid lightseagreen;
     border-radius: 1rem;
     padding: 15px;
-    margin-bottom: 0px;
+    margin-bottom: 5px;
+    margin-top: 5px;
 }
 
 a {
@@ -491,3 +492,10 @@ input:checked {
 .centerImg{
     justify-content: center;
 }
+
+#editTest div, .modal-body div{
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+

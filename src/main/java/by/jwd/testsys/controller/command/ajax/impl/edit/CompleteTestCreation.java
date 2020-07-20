@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class CompleteTestCreation implements AjaxCommand {
 
@@ -27,13 +28,18 @@ public class CompleteTestCreation implements AjaxCommand {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         AdminService adminService = serviceFactory.getAdminService();
 
+        HttpSession session = request.getSession();
+        session.removeAttribute("typeId");
+        session.removeAttribute("testTitle");
+        session.removeAttribute("testKey");
+        session.removeAttribute("testDuration");
         try {
             adminService.completeTestCreation(testId);
             response.setStatus(204);
         } catch (AdminServiceException e) {
             response.setStatus(500);
         } catch (InvalidUserDataException e) {
-            logger.log(Level.ERROR, "Invalid user data in CompleteTestCreation command method execute()",e);
+            logger.log(Level.ERROR, "Invalid user data in CompleteTestCreation command method execute()", e);
             response.setStatus(409);
         }
         return answer;

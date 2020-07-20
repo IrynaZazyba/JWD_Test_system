@@ -115,29 +115,34 @@
                     </div>
                 </c:forEach>
             </div>
-            <nav aria-label="..." class="m-t-27">
-                <ul class="pagination pagination-sm pagination_center">
-                    <c:forEach var="i" begin="1" end="${requestScope.countPages}">
-                        <c:if test="${i==requestScope.currentPage}">
+            <div style="position: absolute; bottom: 0px; width: 100%; align-content: center">
+                <div>
+                    <nav aria-label="..." class="m-t-27">
+                        <ul class="pagination pagination-sm pagination_center">
+                            <c:forEach var="i" begin="1" end="${requestScope.countPages}">
+                                <c:if test="${i==requestScope.currentPage}">
 
-                            <li class="page-item page-item-change active" aria-current="page">
+                                    <li class="page-item page-item-change active" aria-current="page">
                                                 <span class="page-link">${i}
                                                             <span class="sr-only">(current)</span>
                                                             </span>
-                            </li>
-                        </c:if>
+                                    </li>
+                                </c:if>
 
-                        <c:if test="${i!=requestScope.currentPage}">
-                            <li class="page-item">
-                                <a class="page-link"
-                                   href="${pageContext.request.contextPath}/test?command=show_tests_page&currentPage=${i}">
-                                        ${i}
-                                </a>
-                            </li>
-                        </c:if>
-                    </c:forEach>
-                </ul>
-            </nav>
+
+                                <c:if test="${i!=requestScope.currentPage}">
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                           href="${pageContext.request.contextPath}/test?command=show_tests_page&currentPage=${i}">
+                                                ${i}
+                                        </a>
+                                    </li>
+                                </c:if>
+                            </c:forEach>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
         </div>
 
     </div>

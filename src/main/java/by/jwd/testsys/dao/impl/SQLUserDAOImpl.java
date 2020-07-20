@@ -74,6 +74,9 @@ public class SQLUserDAOImpl implements UserDAO {
 
     private static final String UPDATE_ASSIGNMENT_DELETED_AT = "UPDATE `assignment` SET `deleted_at`=? where id=?";
 
+    private final static String SQL_CONDITION_TEST_ID = " and test_id=?";
+    private final static String SQL_CONDITION_TEST_TABLE_TYPE_ID = "  AND test.type_id=?";
+    private final static String SQL_CONDITION_COMPLETED = "AND completed=?";
 
     private static final String ASSIGNMENT_TEST_TITLE_COLUMN = "title";
     private static final String ASSIGNMENT_ID_COLUMN_ALIAS = "asgn_id";
@@ -220,7 +223,7 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                password = resultSet.getString("password");
+                password = resultSet.getString(USER_PASSWORD_COLUMN);
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl getPassword() method", e);
@@ -237,7 +240,7 @@ public class SQLUserDAOImpl implements UserDAO {
     public User updateUser(User user) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        User updatedUser=new User();
+        User updatedUser = new User();
 
         try {
             connection = connectionPool.takeConnection();
@@ -458,6 +461,7 @@ public class SQLUserDAOImpl implements UserDAO {
 
     }
 
+
     @Override
     public Set<User> getUsersWithAssignmentByTestId(int testId, int testTypeId, boolean isCompleted) throws DAOException {
         Connection connection = null;
@@ -472,15 +476,15 @@ public class SQLUserDAOImpl implements UserDAO {
             int count = 1;
 
             if (testId != 0) {
-                query = query + " AND test_id=?";
+                query = query + SQL_CONDITION_TEST_ID;
             }
 
             if (testTypeId != 0) {
-                query = query + " AND test.type_id=?";
+                query = query + SQL_CONDITION_TEST_TABLE_TYPE_ID;
             }
 
             if (!isCompleted) {
-                query = query + " AND completed=?";
+                query = query + SQL_CONDITION_COMPLETED;
             }
 
 
@@ -600,6 +604,7 @@ public class SQLUserDAOImpl implements UserDAO {
         return roleId;
     }
 
+    //todo true заменить
     @Override
     public void updateAssignment(int assignmentId, boolean isCompleted) throws DAOSqlException {
         Connection connection = null;

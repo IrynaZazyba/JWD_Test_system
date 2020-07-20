@@ -47,23 +47,20 @@ public class CreateTest implements AjaxCommand {
 
             if (testId != null) {
                 adminService.updateTestData(Integer.parseInt(testId), typeId, testTitle, testKey, testDuration);
-                session.setAttribute("typeId", typeId);
-                session.setAttribute("testTitle", testTitle);
-                session.setAttribute("testKey", testKey);
-                System.out.println(testDuration);
-                session.setAttribute("testDuration",testDuration);
             }
 
             if (testId == null) {
                 int createdTestId = adminService.createTest(typeId, testTitle, testKey, testDuration);
                 parameterMapForJson.put(RequestParameterName.TEST_ID, createdTestId);
                 answer = gson.toJson(parameterMapForJson);
-                session.setAttribute("typeId", typeId);
-                session.setAttribute("testTitle", testTitle);
-                session.setAttribute("testKey", testKey);
-                System.out.println(testDuration);
-                session.setAttribute("testDuration",testDuration);
             }
+
+            //todo
+            session.setAttribute("typeId", typeId);
+            session.setAttribute("testTitle", testTitle);
+            session.setAttribute("testKey", testKey);
+            session.setAttribute("testDuration",testDuration);
+
         } catch (AdminServiceException e) {
             response.setStatus(500);
         } catch (InvalidUserDataException e) {

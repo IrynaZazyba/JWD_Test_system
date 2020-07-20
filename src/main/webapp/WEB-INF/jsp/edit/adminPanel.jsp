@@ -147,7 +147,8 @@
                     </tbody>
                 </table>
 
-
+                <div style="position: absolute; bottom: 0px; width: 100%; align-content: center">
+<div>
                 <nav aria-label="...">
                     <ul class="pagination pagination-sm pagination_center">
                         <c:forEach var="i" begin="1" end="${requestScope.countPages}">
@@ -170,8 +171,8 @@
                         </c:forEach>
                     </ul>
                 </nav>
-
-
+                </div>
+                </div>
             </div>
         </div>
 

@@ -77,7 +77,8 @@ async function saveQuestion(obj) {
         document.querySelector('textarea[name="answer-1"]').value = "";
 
     } else {
-
+        let form = document.querySelector(".modal-body div[id^='modal']");
+        form.classList.add("borderError");
     }
 }
 
@@ -360,7 +361,8 @@ async function addQuestion(button) {
 
 
         } else {
-
+            let form = document.querySelector(".modal-body div[id^='modal']");
+            form.classList.add("borderError");
         }
     }
 }

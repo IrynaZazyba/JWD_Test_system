@@ -49,6 +49,10 @@ public class SQLTestResultDAOImpl implements TestResultDAO {
 
     private static final String SELECT_START_TEST_DATE_TIME = "SELECT date_start FROM `result` WHERE assignment_id=?";
 
+    private final static String SQL_CONDITION_TEST_ID = " and test_id=?";
+    private final static String SQL_CONDITION_USER_ID = " and user_id=?";
+    private final static String SQL_CONDITION_TYPE_TABLE_ID = " and type.id=?";
+    private final static String SQL_CONDITION_DATE = " and date=?";
 
     private static final String RESULT_ID_COLUMN = "id";
     private static final String RESULT_DATE_START_COLUMN = "date_start";
@@ -248,19 +252,19 @@ public class SQLTestResultDAOImpl implements TestResultDAO {
             int count = 1;
 
             if (testId != 0) {
-                query += " and test_id=?";
+                query += SQL_CONDITION_TEST_ID;
             }
 
             if (userId != 0) {
-                query += " and user_id=?";
+                query += SQL_CONDITION_USER_ID;
             }
 
             if (typeId != 0) {
-                query += " and type.id=?";
+                query += SQL_CONDITION_TYPE_TABLE_ID;
             }
 
             if (date != null) {
-                query += " and date=?";
+                query += SQL_CONDITION_DATE;
             }
 
 
