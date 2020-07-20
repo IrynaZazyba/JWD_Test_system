@@ -26,6 +26,7 @@ public class CompleteTestCreation implements AjaxCommand {
 
         String answer = null;
 
+
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         AdminService adminService = serviceFactory.getAdminService();
 
