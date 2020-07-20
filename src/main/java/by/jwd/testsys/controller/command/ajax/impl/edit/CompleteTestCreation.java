@@ -25,8 +25,6 @@ public class CompleteTestCreation implements AjaxCommand {
         int testId = Integer.parseInt(request.getParameter(RequestParameterName.TEST_ID));
 
         String answer = null;
-
-
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         AdminService adminService = serviceFactory.getAdminService();
 
