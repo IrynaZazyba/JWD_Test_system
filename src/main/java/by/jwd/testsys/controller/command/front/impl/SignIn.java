@@ -49,7 +49,7 @@ public class SignIn implements Command {
                 session.setAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE, userByLogin.getId());
                 session.setAttribute(SessionAttributeName.USER_LOGIN_SESSION_ATTRIBUTE, userByLogin.getLogin());
                 session.setAttribute(SessionAttributeName.USER_ROLE_SESSION_ATTRIBUTE, userByLogin.getRole());
-                response.sendRedirect(request.getContextPath());
+                response.sendRedirect(JspPageName.START_JSP_PAGE);
             } else {
                 ResourceBundle resourceBundle = ResourceBundle.getBundle(LOCAL_FILE_PACKAGE + File.separator + LOCAL_FILE_NAME);
                 request.setAttribute(RequestParameterName.SIGN_IN_ERROR, resourceBundle.getString(LOCAL_MESSAGE_INVALID_SIGN_IN));
