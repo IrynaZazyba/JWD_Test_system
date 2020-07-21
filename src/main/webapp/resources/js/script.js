@@ -147,9 +147,7 @@ async function getQuestion() {
 
         }
     } else {
-
-        document.location.href = '/errorPage.jsp';
-
+        document.location.href = "/test?command=wrong_request";
     }
 
 }
@@ -212,7 +210,7 @@ async function sendAnswer() {
         if (response.ok) {
 
         } else {
-            document.location.href = '/errorPage.jsp';
+            document.location.href = "/test?command=wrong_request";
         }
     }
 }

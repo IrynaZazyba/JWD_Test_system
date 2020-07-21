@@ -48,7 +48,7 @@ async function changeOption() {
         let json = await response.json();
         document.getElementById("testTitle").insertAdjacentHTML('beforeend', generateOptionSelect(json));
     } else {
-        document.location.href = '/errorPage.jsp';
+        document.location.href = "/test?command=wrong_request";
     }
 }
 
@@ -145,7 +145,7 @@ async function showUsersAssignedToTest() {
         let json = await response.json();
         document.getElementById("jsData").insertAdjacentHTML('afterbegin', generateUsersAssignmentTable(json.usersTestInfo));
     } else {
-        document.location.href = '/errorPage.jsp';
+        document.location.href = "/test?command=wrong_request";
     }
 
 }
@@ -200,7 +200,7 @@ async function changeOptionFormDisplay() {
         let json = await response.json();
         document.getElementById("test").insertAdjacentHTML('beforeend', generateOptionSelect(json));
     } else {
-        document.location.href = '/errorPage.jsp';
+        document.location.href = "/test?command=wrong_request";
     }
 }
 
@@ -259,7 +259,7 @@ async function editAssignment(id) {
         document.getElementById(assignId).setAttribute('class', 'table-danger');
 
     } else {
-        document.location.href = '/errorPage.jsp';
+        document.location.href = "/test?command=wrong_request";
     }
 
 }
