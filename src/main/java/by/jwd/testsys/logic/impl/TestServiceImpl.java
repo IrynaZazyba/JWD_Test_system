@@ -265,22 +265,22 @@ public class TestServiceImpl implements TestService {
     @Override
     public long calculateTestDuration(Assignment assignment) throws TestServiceException, TimeIsOverServiceException {
 
-        long testDurationSeconds=0;
-//        try {
-//            LocalTime testDuration = testDAO.getTestDuration(assignment.getId());
-//            Result result = testResultDAO.getTestResult(assignment);
-//            LocalDateTime dateStart = result.getDateStart();
-//            Duration duration = Duration.between(dateStart, LocalDateTime.now());
-//
-//            testDurationSeconds = testDuration.toSecondOfDay() - duration.toSeconds();
-//
-//            if (testDurationSeconds <= 0) {
-//                throw new TimeIsOverServiceException("Time is over");
-//            }
-//
-//        } catch (DAOException e) {
-//            throw new TestServiceException("DAOException in TestService calculateTestDuration() method", e);
-//        }
+        long testDurationSeconds;
+        try {
+            LocalTime testDuration = testDAO.getTestDuration(assignment.getId());
+            Result result = testResultDAO.getTestResult(assignment);
+            LocalDateTime dateStart = result.getDateStart();
+            Duration duration = Duration.between(dateStart, LocalDateTime.now());
+
+            testDurationSeconds = testDuration.toSecondOfDay() - duration.toSeconds();
+
+            if (testDurationSeconds <= 0) {
+                throw new TimeIsOverServiceException("Time is over");
+            }
+
+        } catch (DAOException e) {
+            throw new TestServiceException("DAOException in TestService calculateTestDuration() method", e);
+        }
 
         return testDurationSeconds;
     }
@@ -310,9 +310,9 @@ public class TestServiceImpl implements TestService {
 
         Duration duration = Duration.between(startTestTime, LocalDateTime.now());
 
-//        if (duration.toSeconds() >= testDuration.toSecondOfDay()) {
-//            throw new TimeIsOverServiceException("Time is over");
-//        }
+        if (duration.toSeconds() >= testDuration.toSecondOfDay()) {
+            throw new TimeIsOverServiceException("Time is over");
+        }
 
     }
 
