@@ -26,7 +26,7 @@ function menuLinkHelper() {
 async function changeUserInfo() {
 
     let formElem = document.getElementById("formElem");
-    let response = await fetch("/test-system/ajax", {
+    let response = await fetch("/ajax", {
         method: 'POST',
         body: new FormData(formElem),
 
@@ -89,7 +89,7 @@ async function getQuestion() {
     dataToGetQuestion.append("testId", test_id);
 
 
-    let response = await fetch("/test-system/ajax", {
+    let response = await fetch("/ajax", {
         method: 'POST',
         body: dataToGetQuestion,
 
@@ -148,7 +148,7 @@ async function getQuestion() {
         }
     } else {
 
-        document.location.href = '/test-system/errorPage.jsp';
+        document.location.href = '/errorPage.jsp';
 
     }
 
@@ -203,7 +203,7 @@ async function sendAnswer() {
 
     if (document.getElementById("js_quest") != null) {
 
-        let response = await fetch("/test-system/ajax", {
+        let response = await fetch("/ajax", {
             method: 'POST',
             body: new FormData(startTest),
 
@@ -212,7 +212,7 @@ async function sendAnswer() {
         if (response.ok) {
 
         } else {
-            document.location.href = '/test-system/errorPage.jsp';
+            document.location.href = '/errorPage.jsp';
         }
     }
 }
@@ -281,7 +281,7 @@ async function getContinuedQuestion() {
 
     dataToGetQuestion.append("command", "get_empty_question_page");
 
-    let response = await fetch("/test-system/test", {
+    let response = await fetch("/test", {
         method: 'POST',
         body: dataToGetQuestion,
 
@@ -294,7 +294,7 @@ async function changePassword(obj) {
 
 
     let formData = new FormData(obj);
-    let response = await fetch("/test-system/ajax?command=change_password", {
+    let response = await fetch("/ajax?command=change_password", {
         method: 'POST',
         body: formData,
     });

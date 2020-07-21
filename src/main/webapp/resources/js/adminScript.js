@@ -39,7 +39,7 @@ async function changeOption() {
         jsOptions.forEach(element => element.remove());
     }
 
-    let response = await fetch("/test-system/ajax?command=get_tests&typeId=" + typeId, {
+    let response = await fetch("/ajax?command=get_tests&typeId=" + typeId, {
         method: 'GET',
     });
 
@@ -48,7 +48,7 @@ async function changeOption() {
         let json = await response.json();
         document.getElementById("testTitle").insertAdjacentHTML('beforeend', generateOptionSelect(json));
     } else {
-        document.location.href = '/test-system/errorPage.jsp';
+        document.location.href = '/errorPage.jsp';
     }
 }
 
@@ -83,7 +83,7 @@ async function assignUser() {
     }
 
     let startTest = document.getElementById("assignAction");
-    let response = await fetch("/test-system/ajax", {
+    let response = await fetch("/ajax", {
         method: 'POST',
         body: new FormData(startTest),
 
@@ -130,7 +130,7 @@ async function showUsersAssignedToTest() {
        form.append('completed','false');
    }
 
-    let response = await fetch("/test-system/ajax?command=get_assigned_users", {
+    let response = await fetch("/ajax?command=get_assigned_users", {
         method: 'POST',
         body: form,
     });
@@ -145,7 +145,7 @@ async function showUsersAssignedToTest() {
         let json = await response.json();
         document.getElementById("jsData").insertAdjacentHTML('afterbegin', generateUsersAssignmentTable(json.usersTestInfo));
     } else {
-        document.location.href = '/test-system/errorPage.jsp';
+        document.location.href = '/errorPage.jsp';
     }
 
 }
@@ -191,7 +191,7 @@ async function changeOptionFormDisplay() {
         jsOptions.forEach(element => element.remove());
     }
 
-    let response = await fetch("/test-system/ajax?command=get_tests&typeId=" + typeId, {
+    let response = await fetch("/ajax?command=get_tests&typeId=" + typeId, {
         method: 'GET',
     });
 
@@ -200,7 +200,7 @@ async function changeOptionFormDisplay() {
         let json = await response.json();
         document.getElementById("test").insertAdjacentHTML('beforeend', generateOptionSelect(json));
     } else {
-        document.location.href = '/test-system/errorPage.jsp';
+        document.location.href = '/errorPage.jsp';
     }
 }
 
@@ -249,7 +249,7 @@ async function editAssignment(id) {
     let editAssign = new FormData(form);
     let assignId = editAssign.get('assignId');
 
-    let response = await fetch("/test-system/ajax?command=delete_assignment", {
+    let response = await fetch("/ajax?command=delete_assignment", {
         method: 'POST',
         body: editAssign,
     });
@@ -259,7 +259,7 @@ async function editAssignment(id) {
         document.getElementById(assignId).setAttribute('class', 'table-danger');
 
     } else {
-        document.location.href = '/test-system/errorPage.jsp';
+        document.location.href = '/errorPage.jsp';
     }
 
 }
@@ -267,7 +267,7 @@ async function editAssignment(id) {
 async function showResult() {
 
     let filterData = document.getElementById('assign');
-    let response = await fetch("/test-system/ajax?command=show_result_data", {
+    let response = await fetch("/ajax?command=show_result_data", {
         method: 'POST',
         body: new FormData(filterData),
     });

@@ -6,7 +6,7 @@
 async function deleteTest(testId, obj) {
 
 
-    let response = await fetch("/test-system/ajax?command=delete_test&testId=" + testId, {
+    let response = await fetch("/ajax?command=delete_test&testId=" + testId, {
         method: 'DELETE',
     });
 
@@ -57,7 +57,7 @@ async function saveQuestion(obj) {
     let formData = new FormData(obj);
     let testId = document.querySelector("#testId > input[type=hidden]").value;
     formData.append("testId", testId);
-    let response = await fetch("/test-system/ajax?command=create_question_answer", {
+    let response = await fetch("/ajax?command=create_question_answer", {
         method: 'POST',
         body: formData,
     });
@@ -143,7 +143,7 @@ async function saveTestInfo(obj) {
             formData.append("testId", testId.value);
         }
         let response = await
-            fetch("/test-system/ajax?command=create_test", {
+            fetch("/ajax?command=create_test", {
                 method: 'POST',
                 body: formData,
             });
@@ -278,7 +278,7 @@ async function updateQuestion(button) {
     if (flag) {
         dataF.append("deletedAnswers", answerToDelete);
 
-        let response = await fetch("/test-system/ajax?command=update_question", {
+        let response = await fetch("/ajax?command=update_question", {
             method: 'POST',
             body: dataF,
         });
@@ -351,7 +351,7 @@ async function addQuestion(button) {
         let formData = new FormData(questionAddForm);
         let testId = document.getElementById("testId").value;
         formData.append("testId", testId);
-        let response = await fetch("/test-system/ajax?command=create_question_answer", {
+        let response = await fetch("/ajax?command=create_question_answer", {
             method: 'POST',
             body: formData,
         });
@@ -369,7 +369,7 @@ async function addQuestion(button) {
 
 function showPreviewPage() {
     let testId = document.querySelector("#testId > input[type=hidden]").value;
-    document.location.href = "/test-system/test?command=preview_test&testId=" + testId;
+    document.location.href = "/test?command=preview_test&testId=" + testId;
 }
 
 
@@ -380,7 +380,7 @@ function showModalStopEdit(){
 async function completeTestCreating() {
 
     let testId = document.getElementById("testId").value;
-    let response = await fetch("/test-system/ajax?command=complete_test&testId=" + testId, {
+    let response = await fetch("/ajax?command=complete_test&testId=" + testId, {
         method: 'GET',
     });
 
@@ -403,7 +403,7 @@ $('#deleteQuestion').on('show.bs.modal', function (e) {
 async function deleteQuestion(button) {
 
     let questionId = button.value;
-    let response = await fetch("/test-system/ajax?command=delete_question&questionId=" + questionId, {
+    let response = await fetch("/ajax?command=delete_question&questionId=" + questionId, {
         method: 'DELETE',
     });
 
@@ -451,7 +451,7 @@ async function updateTestInfo(button) {
         let testId = document.getElementById("testId").value;
         let testInfoFormEdit = document.getElementById("testInfoFormEdit");
 
-        let response = await fetch("/test-system/ajax?command=update_test_info&testId=" + testId, {
+        let response = await fetch("/ajax?command=update_test_info&testId=" + testId, {
             method: 'POST',
             body: new FormData(testInfoFormEdit),
         });
@@ -473,7 +473,7 @@ async function addTestType() {
     let testTypeTitle = document.getElementById("testTypeTitle").value;
     let formData = new FormData();
     formData.append("testTypeTitle", testTypeTitle);
-    let response = await fetch("/test-system/ajax?command=add_test_type", {
+    let response = await fetch("/ajax?command=add_test_type", {
         method: 'POST',
         body: formData,
     });
