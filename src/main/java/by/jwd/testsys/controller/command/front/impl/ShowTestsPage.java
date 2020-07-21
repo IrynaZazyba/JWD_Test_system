@@ -26,7 +26,7 @@ import java.util.Set;
 
 public class ShowTestsPage implements Command {
 
-    private static Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger(ShowTestsPage.class);
     private final static int NUMBER_OF_RECORDS_PER_PAGE = 8;
 
 

@@ -25,9 +25,7 @@ public final class CommandProvider {
         frontRepository.put(CommandName.SIGN_IN, new SignIn());
         frontRepository.put(CommandName.SIGN_OUT, new SignOut());
         frontRepository.put(CommandName.SIGN_UP, new SignUp());
-
         frontRepository.put(CommandName.SHOW_TESTS_PAGE, new ShowTestsPage());
-
         frontRepository.put(CommandName.SHOW_USER_ACCOUNT, new ShowUserPage());
         frontRepository.put(CommandName.WRONG_REQUEST, new WrongRequest());
         frontRepository.put(CommandName.CHANGE_LANGUAGE, new ChangeLocal());
@@ -41,6 +39,8 @@ public final class CommandProvider {
         frontRepository.put(CommandName.ADD_TEST, new AddTestPage());
         frontRepository.put(CommandName.PREVIEW_TEST, new ShowPreviewTestPage());
         frontRepository.put(CommandName.SHOW_ASSIGNED_TESTS_PAGE, new ShowAssignedTestsPage());
+        frontRepository.put(CommandName.MAIN_PAGE, new MainPage());
+        frontRepository.put(CommandName.ABOUT_US, new AboutPage());
 
 
         ajaxRepository.put(AjaxCommandName.EDIT_USER, new EditUser());

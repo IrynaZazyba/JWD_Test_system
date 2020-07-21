@@ -24,7 +24,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class GetResult implements Command {
-    private static Logger logger = LogManager.getLogger();
+
+    private static Logger logger = LogManager.getLogger(GetResult.class);
 
 
     @Override

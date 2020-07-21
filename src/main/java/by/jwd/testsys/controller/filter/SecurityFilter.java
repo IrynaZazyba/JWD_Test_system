@@ -35,11 +35,11 @@ public class SecurityFilter implements Filter {
 
         if (session == null || command == null) {
             sendRedirectToStartPage(servletResponse);
-        }else
-
-        if ( !command.equals(CommandName.SIGN_IN.toString().toLowerCase())
-              && !command.equals(CommandName.SIGN_UP.toString().toLowerCase())
-              && !command.equals(CommandName.CHANGE_LANGUAGE.toString().toLowerCase())) {
+        } else if (!command.equals(CommandName.SIGN_IN.toString().toLowerCase())
+                && !command.equals(CommandName.SIGN_UP.toString().toLowerCase())
+                && !command.equals(CommandName.CHANGE_LANGUAGE.toString().toLowerCase())
+                && !command.equals(CommandName.MAIN_PAGE.toString().toLowerCase())
+                && !command.equals(CommandName.ABOUT_US.toString().toLowerCase())) {
 
             Object userId = session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
 
@@ -81,6 +81,6 @@ public class SecurityFilter implements Filter {
 
     private void sendRedirectToStartPage(ServletResponse servletResponse) throws IOException {
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
-        httpServletResponse.sendRedirect(JspPageName.START_PAGE);
+        httpServletResponse.sendRedirect(JspPageName.START_JSP_PAGE);
     }
 }

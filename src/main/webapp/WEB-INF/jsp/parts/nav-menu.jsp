@@ -28,7 +28,7 @@
         <ul class="navbar-nav mr-auto start-page-nav-itm" id="myTab">
             <li class="nav-item">
 
-                <a class="navbar-brand logo-color active " href="${pageContext.request.contextPath}">
+                <a class="navbar-brand logo-color active " href="${pageContext.request.contextPath}/test?command=main_page">
                     <img alt="logo" class="logo-size" src="resources/img/logo.png">
                 </a>
             </li>
@@ -77,7 +77,7 @@
 
             <li class="nav-item">
                 <a class="nav-link nav-vrl item-start"
-                   href="${pageContext.request.contextPath}/about.jsp">${nav_item_about}</a>
+                   href="${pageContext.request.contextPath}/test?command=about_us">${nav_item_about}</a>
             </li>
         </ul>
     </div>
