@@ -30,7 +30,8 @@ public class SignIn implements Command {
     private static final String LOCAL_FILE_NAME = "local";
     private static final String LOCAL_FILE_PACKAGE = "local";
     private static final String LOCAL_MESSAGE_INVALID_SIGN_IN = "message.invalid_sign_in";
-
+    private final static String CONTROLLER_ROUTE = "/test?";
+    private final static String COMMAND_MAIN_PAGE_TO_URL = "command=main_page";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -45,11 +46,11 @@ public class SignIn implements Command {
         try {
             User userByLogin = userService.checkUserCredentials(login, password);
 
-            if (userByLogin.getId()!=0) {
+            if (userByLogin.getId() != 0) {
                 session.setAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE, userByLogin.getId());
                 session.setAttribute(SessionAttributeName.USER_LOGIN_SESSION_ATTRIBUTE, userByLogin.getLogin());
                 session.setAttribute(SessionAttributeName.USER_ROLE_SESSION_ATTRIBUTE, userByLogin.getRole());
-                response.sendRedirect(JspPageName.START_JSP_PAGE);
+                response.sendRedirect(request.getContextPath() + CONTROLLER_ROUTE +COMMAND_MAIN_PAGE_TO_URL);
             } else {
                 ResourceBundle resourceBundle = ResourceBundle.getBundle(LOCAL_FILE_PACKAGE + File.separator + LOCAL_FILE_NAME);
                 request.setAttribute(RequestParameterName.SIGN_IN_ERROR, resourceBundle.getString(LOCAL_MESSAGE_INVALID_SIGN_IN));
@@ -58,9 +59,9 @@ public class SignIn implements Command {
                 forwardToPage(request, response, JspPageName.START_JSP_PAGE);
             }
 
-        } catch(UserServiceException e) {
+        } catch (UserServiceException e) {
             response.sendRedirect(JspPageName.ERROR_PAGE);
-        } catch(ForwardCommandException e){
+        } catch (ForwardCommandException e) {
             logger.log(Level.ERROR, "Forward to page Exception in SignIn command", e);
             response.sendRedirect(JspPageName.ERROR_PAGE);
         }

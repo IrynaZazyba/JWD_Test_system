@@ -16,7 +16,8 @@ import java.io.IOException;
 
 public class SignOut implements Command {
 
-    private static Logger logger = LogManager.getLogger(SignOut.class);
+    private final static String CONTROLLER_ROUTE = "/test?";
+    private final static String COMMAND_MAIN_PAGE_TO_URL = "command=main_page";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -25,13 +26,7 @@ public class SignOut implements Command {
         session.removeAttribute(SessionAttributeName.USER_LOGIN_SESSION_ATTRIBUTE);
         session.removeAttribute(SessionAttributeName.USER_ROLE_SESSION_ATTRIBUTE);
         session.removeAttribute(SessionAttributeName.QUERY_STRING);
-
-        try {
-            forwardToPage(request, response, JspPageName.START_JSP_PAGE);
-        } catch (ForwardCommandException e) {
-            logger.log(Level.ERROR, "Forward to page Exception in SignOut command", e);
-            response.sendRedirect(JspPageName.ERROR_PAGE);
-        }
+        response.sendRedirect(request.getContextPath() + CONTROLLER_ROUTE + COMMAND_MAIN_PAGE_TO_URL);
 
     }
 }
