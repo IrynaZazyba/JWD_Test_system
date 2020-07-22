@@ -11,8 +11,6 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="resources/fontawesome-free-5.12.1-web/css/all.css">
     <link rel="stylesheet" href="resources/css/style.css"/>
-    <link rel="stylesheet" href="resources/css/test-card.css"/>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
 
 </head>
@@ -44,7 +42,6 @@
         integrity="" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="" crossorigin="anonymous"></script>
-<script src="resources/js/resultChart.js"></script>
 
 </body>
 

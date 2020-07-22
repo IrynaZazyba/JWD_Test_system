@@ -29,11 +29,11 @@ public class SQLUserDAOImpl implements UserDAO {
 
     private static final String SELECT_ALL_USERS = "SELECT users.id, login,first_name, last_name, email, role.title" +
             " from users INNER JOIN role ON users.role_id=role.id";
-    private static final String INSERT_USER = "INSERT INTO users (login, password, first_name, last_name,email, role_id) " +
-            "VALUES (?,?,?,?,?,?)";
+    private static final String INSERT_USER = "INSERT INTO users (login, password, first_name, last_name,email, role_id,confirm_code) " +
+            "VALUES (?,?,?,?,?,?,?)";
     private static final String SELECT_ROLE_ID = "SELECT id FROM role WHERE title=?";
     private static final String SELECT_USER_BY_LOGIN = "SELECT users.id,login,password,first_name,last_name," +
-            "title, email FROM users INNER JOIN role ON users.role_id=role.id WHERE login=?";
+            "title, email FROM users INNER JOIN role ON users.role_id=role.id WHERE login=? AND is_activated=true";
     private static final String SELECT_USER_BY_ID = "SELECT users.id,login,first_name,last_name," +
             "title, email FROM users INNER JOIN role ON users.role_id=role.id WHERE users.id=?";
 
@@ -49,7 +49,7 @@ public class SQLUserDAOImpl implements UserDAO {
     private static final String SELECT_USER_ASSIGNMENT_BY_USER_ID = "SELECT id, date, deadline, test_id, completed " +
             "FROM assignment where user_id=? AND deleted_at IS NULL";
 
-    private static final String SELECT_USER_EMAIL_BY_ID = "SELECT email FROM users where id=?";
+    private static final String SELECT_USER_EMAIL = "SELECT id FROM users where email=?";
 
     private static final String SELECT_USER_ASSIGNMENT_BY_ASSIGNMENT_ID = "SELECT id, date, deadline, test_id, " +
             "completed FROM assignment where id=? AND deleted_at IS NULL";
@@ -72,6 +72,10 @@ public class SQLUserDAOImpl implements UserDAO {
             "WHERE assignment.id=?";
 
     private static final String UPDATE_ASSIGNMENT_DELETED_AT = "UPDATE `assignment` SET `deleted_at`=? where id=?";
+    private static final String SELECT_USER_ACTIVATION_CODE = "SELECT confirm_code FROM `users` WHERE id=?";
+    private static final String SELECT_USER_IS_ACTIVATED = "SELECT is_activated FROM `users` WHERE id=?";
+    private static final String UPDATE_USER_IS_ACTIVATED = "UPDATE users SET is_activated=? WHERE id=?";
+
 
     private final static String SQL_CONDITION_TEST_ID = " and test_id=?";
     private final static String SQL_CONDITION_TEST_TABLE_TYPE_ID = "  AND test.type_id=?";
@@ -139,6 +143,7 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setString(4, user.getLastName());
             preparedStatement.setString(5, user.getEmail());
             preparedStatement.setInt(6, id_role);
+            preparedStatement.setString(7, user.getConfirmCode());
             preparedStatement.executeUpdate();
 
             generatedKeys = preparedStatement.getGeneratedKeys();
@@ -155,6 +160,27 @@ public class SQLUserDAOImpl implements UserDAO {
             connectionPool.closeConnection(connection, preparedStatement, generatedKeys);
         }
         return user;
+    }
+
+    @Override
+    public void updateUserIsActivated(int userId, boolean isActivated) throws DAOException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(UPDATE_USER_IS_ACTIVATED);
+            preparedStatement.setBoolean(1, isActivated);
+            preparedStatement.setInt(2, userId);
+            preparedStatement.executeUpdate();
+
+        } catch (ConnectionPoolException e) {
+            throw new DAOConnectionPoolException("ConnectionPoolException in SQLUserDAOImpl updateUserIsActive() method", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl updateUserIsActive() method", e);
+            throw new DAOSqlException("SQLException in SQLUserDAOImpl updateUserIsActive() method", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
+        }
     }
 
     @Override
@@ -551,32 +577,31 @@ public class SQLUserDAOImpl implements UserDAO {
         return users;
     }
 
-    //todo unused
     @Override
-    public String getUserEmail(int userId) throws DAOException {
+    public int getUserIdByEmail(String email) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        String email = null;
+        int userId=0;
 
         try {
             connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(SELECT_USER_EMAIL_BY_ID);
-            preparedStatement.setInt(1, userId);
+            preparedStatement = connection.prepareStatement(SELECT_USER_EMAIL);
+            preparedStatement.setString(1, email);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                email = resultSet.getString("email");
+                userId = resultSet.getInt(1);
             }
         } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method getUserEmail()", e);
+            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method getUserIdByEmail()", e);
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getUserEmail()", e);
-            throw new DAOSqlException("SQLException in SQLTestDAOImpl method getUserEmail()", e);
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getUserIdByEmail()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method getUserIdByEmail()", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
 
-        return email;
+        return userId;
     }
 
     private int getRoleId(Role role) throws DAOException {
@@ -603,7 +628,7 @@ public class SQLUserDAOImpl implements UserDAO {
         return roleId;
     }
 
-    //todo true заменить
+    //todo true заменила проверить как работает
     @Override
     public void updateAssignment(int assignmentId, boolean isCompleted) throws DAOSqlException {
         Connection connection = null;
@@ -611,7 +636,7 @@ public class SQLUserDAOImpl implements UserDAO {
         try {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(UPDATE_ASSIGNMENT_COMPLETE);
-            preparedStatement.setBoolean(1, true);
+            preparedStatement.setBoolean(1, isCompleted);
             preparedStatement.setInt(2, assignmentId);
             preparedStatement.executeUpdate();
 
@@ -625,6 +650,59 @@ public class SQLUserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
+    public String getActivationCode(int userId) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        String code = null;
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_USER_ACTIVATION_CODE);
+            preparedStatement.setInt(1, userId);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                code = resultSet.getString(1);
+            }
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method getActivationCode()", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getActivationCode()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method getActivationCode()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+        }
+        return code;
+
+    }
+
+    @Override
+    public boolean getUserIsActivated(int userId) throws DAOSqlException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        boolean isActivated = false;
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_USER_IS_ACTIVATED);
+            preparedStatement.setInt(1, userId);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                isActivated = resultSet.getBoolean(1);
+            }
+        } catch (ConnectionPoolException e) {
+            throw new DAOSqlException("ConnectionPoolException in SQLTestDAOImpl method getUserIsActivated()", e);
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getUserIsActivated()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method getUserIsActivated()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+        }
+        return isActivated;
+
+    }
 
     @Override
     public Integer writeAssignment(Assignment assignment) throws DAOSqlException {

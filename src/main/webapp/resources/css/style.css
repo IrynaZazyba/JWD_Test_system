@@ -498,4 +498,14 @@ input:checked {
     margin-right: 0px;
 }
 
+.confirmEmail{
+    width: 300px;
+    height: 200px;
+    border: 1px solid black;
+}
+
+.contentCenter{
+    text-align: center;
+    vertical-align: center;
+}
 

@@ -11,19 +11,19 @@ public class HashStringHelper {
     }
 
 
-    public static String hashPassword(String password_plaintext) {
+    public static String hashString(String text) {
 
         String salt = BCrypt.gensalt(workload);
-        return BCrypt.hashpw(password_plaintext, salt);
+        return BCrypt.hashpw(text, salt);
     }
 
-    public static boolean checkPassword(String password_plaintext, String stored_hash) {
+    public static boolean checkString(String text, String stored_hash) {
 
         if (null == stored_hash || !stored_hash.startsWith(HASHED_STRING_START)) {
             throw new IllegalArgumentException("Invalid hash provided for comparison");
         }
 
-        return BCrypt.checkpw(password_plaintext, stored_hash);
+        return BCrypt.checkpw(text, stored_hash);
     }
 
 }

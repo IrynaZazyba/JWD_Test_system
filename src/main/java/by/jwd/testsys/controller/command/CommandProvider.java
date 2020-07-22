@@ -41,6 +41,7 @@ public final class CommandProvider {
         frontRepository.put(CommandName.SHOW_ASSIGNED_TESTS_PAGE, new ShowAssignedTestsPage());
         frontRepository.put(CommandName.MAIN_PAGE, new MainPage());
         frontRepository.put(CommandName.ABOUT_US, new AboutPage());
+        frontRepository.put(CommandName.CONFIRM_EMAIL, new ConfirmEmail());
 
 
         ajaxRepository.put(AjaxCommandName.EDIT_USER, new EditUser());

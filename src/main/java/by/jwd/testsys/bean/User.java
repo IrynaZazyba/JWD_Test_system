@@ -24,6 +24,7 @@ class User implements Serializable {
     private String lastName;
     private Role role;
     private Set<Assignment> assignment;
+    private String confirmCode;
 
     public User() {
     }
@@ -73,6 +74,11 @@ class User implements Serializable {
 
         public Builder withAssignment(Set<Assignment> assignment) {
             newUser.assignment = assignment;
+            return this;
+        }
+
+        public Builder withConfirmCode(String confirmCode) {
+            newUser.confirmCode = confirmCode;
             return this;
         }
 

@@ -1,6 +1,6 @@
 package by.jwd.testsys.controller.listener;
 
-import by.jwd.testsys.logic.util.SslSender;
+import by.jwd.testsys.logic.util.MailSender;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +30,7 @@ public class MailConfigListener implements ServletContextListener {
             Properties properties = new Properties();
             if (input != null) {
                 properties.load(input);
-                SslSender instance = SslSender.getInstance();
+                MailSender instance = MailSender.getInstance();
                 instance.initializeSalSender(properties);
             }
 

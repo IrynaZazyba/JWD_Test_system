@@ -3,17 +3,20 @@ package by.jwd.testsys.logic.impl;
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.dao.UserDAO;
 import by.jwd.testsys.dao.exception.DAOException;
+import by.jwd.testsys.dao.exception.DAOSqlException;
 import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.factory.DAOFactoryProvider;
 import by.jwd.testsys.logic.UserService;
-import by.jwd.testsys.logic.exception.ExistsUserException;
-import by.jwd.testsys.logic.exception.InvalidUserDataException;
-import by.jwd.testsys.logic.exception.UserServiceException;
+import by.jwd.testsys.logic.exception.*;
 import by.jwd.testsys.logic.util.HashStringHelper;
+import by.jwd.testsys.logic.util.LetterBuilder;
+import by.jwd.testsys.logic.util.MailSender;
 import by.jwd.testsys.logic.validator.FrontDataValidator;
 import by.jwd.testsys.logic.validator.UserValidator;
 import by.jwd.testsys.logic.validator.factory.ValidatorFactory;
 import by.jwd.testsys.logic.validator.util.InvalidParam;
+import lombok.Builder;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,6 +36,10 @@ public class UserServiceImpl implements UserService {
     private FrontDataValidator frontDataValidator = validatorFactory.getFrontDataValidator();
     private UserValidator userValidator = validatorFactory.getUserValidator();
 
+    private final static String EMAIL_ACTIVATION_LETTER_SUBJECT = "BeeTesting activation letter";
+    private final static String MARK_EQUAL = "=";
+    private final static String AMPERSAND = "&";
+
 
     @Override
     public User checkUserCredentials(String userLogin, String userPassword) throws UserServiceException {
@@ -42,7 +49,7 @@ public class UserServiceImpl implements UserService {
             userByLogin = userDao.getUserByLogin(userLogin);
             boolean checkResult = false;
             if (userByLogin != null) {
-                checkResult = HashStringHelper.checkPassword(userPassword, userByLogin.getPassword());
+                checkResult = HashStringHelper.checkString(userPassword, userByLogin.getPassword());
             }
 
             if (userByLogin == null || !checkResult) {
@@ -55,7 +62,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public synchronized User registerUser(User user) throws UserServiceException, ExistsUserException, InvalidUserDataException {
+    public synchronized User registerUser(User user) throws UserServiceException, ExistsUserException, InvalidUserDataException, ExistsEmailException {
 
         Set<String> validateResult = userValidator.validate(user);
 
@@ -65,12 +72,19 @@ public class UserServiceImpl implements UserService {
 
         User userCreated;
         try {
+            int userIdByEmail = userDao.getUserIdByEmail(user.getEmail());
+            if (userIdByEmail != 0) {
+                throw new ExistsEmailException("Exists email");
+            }
+
             User userByLogin = userDao.getUserByLogin(user.getLogin());
 
             if (userByLogin == null) {
                 String password = user.getPassword();
-                String hashedPassword = HashStringHelper.hashPassword(password);
+                String hashedPassword = HashStringHelper.hashString(password);
                 user.setPassword(hashedPassword);
+                String activationCode = HashStringHelper.hashString(user.getLogin());
+                user.setConfirmCode(activationCode);
                 userCreated = userDao.create(user);
             } else {
                 throw new ExistsUserException("Such login alreadyExists.");
@@ -80,6 +94,21 @@ public class UserServiceImpl implements UserService {
             throw new UserServiceException("Exception in UserServiceImpl method registerUser().", e);
         }
         return userCreated;
+    }
+
+    @Override
+    public void sendActivationLetter(String link, String activationCodeParamName, User user) throws UserServiceException {
+
+        String message = LetterBuilder.
+                buildActivationLetter(link + AMPERSAND + activationCodeParamName + MARK_EQUAL + user.getConfirmCode(), user);
+
+        try {
+            MailSender.getInstance().send(EMAIL_ACTIVATION_LETTER_SUBJECT, message, user.getEmail());
+
+        } catch (FaildSendMailException e) {
+            logger.log(Level.ERROR, "Failure in attempt to send activation code", e);
+            throw new UserServiceException("Exception in UserServiceImpl method sendActivationLetter().", e);
+        }
     }
 
     @Override
@@ -99,7 +128,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User editUserInfo(User user) throws UserServiceException, InvalidUserDataException, ExistsUserException {
 
-        Set<String> validateResult = userValidator.validate(user.getLogin(),user.getFirstName(),user.getLastName(),user.getEmail());
+        Set<String> validateResult = userValidator.validate(user.getLogin(), user.getFirstName(), user.getLastName(), user.getEmail());
 
         if (validateResult.size() != 0) {
             throw new InvalidUserDataException("Invalid user data.", validateResult);
@@ -107,7 +136,7 @@ public class UserServiceImpl implements UserService {
 
         try {
             User userById = userDao.getUserById(user.getId());
-            if(!userById.getLogin().equals(user.getLogin())){
+            if (!userById.getLogin().equals(user.getLogin())) {
                 User userByLogin = userDao.getUserByLogin(user.getLogin());
                 if (userByLogin != null) {
                     throw new ExistsUserException("Such login alreadyExists.");
@@ -182,21 +211,60 @@ public class UserServiceImpl implements UserService {
 
         try {
             String password = userDao.getPassword(userId);
-            boolean isValid = HashStringHelper.checkPassword(oldPassword, password);
+            boolean isValid = HashStringHelper.checkString(oldPassword, password);
             if (!isValid) {
                 validationResult = new HashSet<>();
                 validationResult.add(InvalidParam.PASSWORD_MISMATCH.toString());
                 throw new InvalidUserDataException("Invalid user data.", validationResult);
             }
 
-            String newHashedPassword = HashStringHelper.hashPassword(newPassword);
+            String newHashedPassword = HashStringHelper.hashString(newPassword);
             userDao.updateUserPassword(userId, newHashedPassword);
 
         } catch (DAOException e) {
             throw new UserServiceException("Exception in UserServiceImpl method changePassword().", e);
         }
+    }
 
 
+    @Override
+    public boolean checkRegistration(int userId, String activatedCode) throws UserServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(userId)||
+        activatedCode==null) {
+            throw new InvalidUserDataException("Invalid userId in UserServiceImpl checkRegistration() method");
+        }
+
+        try {
+            String storedActivationCode = userDao.getActivationCode(userId);
+            System.out.println(userId);
+            return activatedCode.equals(storedActivationCode);
+
+        } catch (DAOSqlException e) {
+            throw new UserServiceException("Exception in UserServiceImpl method checkRegistration().", e);
+        }
+    }
+
+    @Override
+    public boolean checkAccountStatus(int userId) throws InvalidUserDataException, UserServiceException {
+        if (!frontDataValidator.validateId(userId)) {
+            throw new InvalidUserDataException("Invalid userId in UserServiceImpl checkRegistration() method");
+        }
+        try {
+            return userDao.getUserIsActivated(userId);
+
+        } catch (DAOSqlException e) {
+            throw new UserServiceException("Exception in UserServiceImpl method checkAccountStatus().", e);
+        }
+    }
+
+    @Override
+    public void markAccountActive(int userId) throws UserServiceException {
+        try {
+            userDao.updateUserIsActivated(userId, true);
+        } catch (DAOException e) {
+            throw new UserServiceException("Exception in UserServiceImpl method markAccountActive().", e);
+        }
     }
 
 }

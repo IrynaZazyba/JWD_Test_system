@@ -3,6 +3,7 @@ package by.jwd.testsys.controller.filter;
 import by.jwd.testsys.bean.Role;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.command.ajax.AjaxCommandName;
+import by.jwd.testsys.controller.command.front.Command;
 import by.jwd.testsys.controller.command.front.CommandName;
 import by.jwd.testsys.controller.parameter.JspPageName;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
@@ -39,7 +40,8 @@ public class SecurityFilter implements Filter {
                 && !command.equals(CommandName.SIGN_UP.toString().toLowerCase())
                 && !command.equals(CommandName.CHANGE_LANGUAGE.toString().toLowerCase())
                 && !command.equals(CommandName.MAIN_PAGE.toString().toLowerCase())
-                && !command.equals(CommandName.ABOUT_US.toString().toLowerCase())) {
+                && !command.equals(CommandName.ABOUT_US.toString().toLowerCase())
+                && !command.equals(CommandName.CONFIRM_EMAIL.toString().toLowerCase())) {
 
             Object userId = session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
 

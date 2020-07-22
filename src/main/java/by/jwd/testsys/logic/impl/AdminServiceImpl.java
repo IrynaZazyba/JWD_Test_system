@@ -10,11 +10,11 @@ import by.jwd.testsys.dao.factory.DAOFactory;
 import by.jwd.testsys.dao.factory.DAOFactoryProvider;
 import by.jwd.testsys.logic.AdminService;
 import by.jwd.testsys.logic.exception.*;
-import by.jwd.testsys.logic.util.SslSender;
+import by.jwd.testsys.logic.util.LetterBuilder;
+import by.jwd.testsys.logic.util.MailSender;
 import by.jwd.testsys.logic.validator.FrontDataValidator;
 import by.jwd.testsys.logic.validator.TestValidator;
 import by.jwd.testsys.logic.validator.factory.ValidatorFactory;
-import by.jwd.testsys.logic.validator.impl.TestValidatorImpl;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,14 +38,7 @@ public class AdminServiceImpl implements AdminService {
     private TestValidator testValidator = validatorFactory.getTestValidator();
 
     private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT = "BeeTesting test assignment";
-    private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_TEST = "you have been assigned to the test ";
-    private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_KEY = "Key: ";
-    private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_DEADLINE = "Deadline: ";
-    private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_REGARDS = "Best regards,\n \"Bee testing\" team.";
-    private static final String COMMA = ",";
-    private static final String QUOTATION_MARK = "\"";
-    private static final String NEW_LINE = "\n";
-    private static final String DOT = ".";
+
 
 
     @Override
@@ -396,10 +389,10 @@ public class AdminServiceImpl implements AdminService {
         Test testInfo;
         try {
             testInfo = testDAO.getTestInfo(testId);
-            SslSender sender = SslSender.getInstance();
+            MailSender sender = MailSender.getInstance();
 
             for (User user : assignedUsers) {
-                String message = buildEmailMessage(user.getFirstName(), testInfo.getTitle(), testInfo.getKey(), deadline);
+                String message = LetterBuilder.buildAssignedTestMessage(user.getFirstName(), testInfo.getTitle(), testInfo.getKey(), deadline);
                 sender.send(EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT, message, user.getEmail());
             }
         } catch (DAOException e) {
@@ -411,18 +404,6 @@ public class AdminServiceImpl implements AdminService {
         return true;
     }
 
-    private String buildEmailMessage(String userName, String testName, String key, LocalDate deadline) {
-        StringBuilder message = new StringBuilder();
-        message.append(userName)
-                .append(COMMA)
-                .append(EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_TEST)
-                .append(QUOTATION_MARK).append(testName).append(QUOTATION_MARK).append(DOT + NEW_LINE);
-        message.append(EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_DEADLINE).append(deadline).append(DOT + NEW_LINE);
-        if (key != null) {
-            message.append(EMAIL_ABOUT_TEST_ASSIGNMENT_TEXT_KEY).append(key).append(DOT + NEW_LINE);
-        }
-        message.append(EMAIL_ABOUT_TEST_ASSIGNMENT_REGARDS);
-        return message.toString();
-    }
+
 
 }

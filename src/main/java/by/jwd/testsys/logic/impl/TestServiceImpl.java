@@ -8,11 +8,7 @@ import by.jwd.testsys.dao.factory.DAOFactoryProvider;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.*;
 import by.jwd.testsys.logic.validator.FrontDataValidator;
-import by.jwd.testsys.logic.validator.TestValidator;
 import by.jwd.testsys.logic.validator.factory.ValidatorFactory;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -26,7 +22,6 @@ import java.util.Set;
 
 public class TestServiceImpl implements TestService {
 
-    private final static Logger logger = LogManager.getLogger(TestServiceImpl.class);
     private final static int DEFAULT_DEADLINE_VALUE = 7;
 
     private final DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
@@ -37,7 +32,6 @@ public class TestServiceImpl implements TestService {
     private QuestionAnswerDAO questionAnswerDAO = daoFactory.getQuestionAnswerDao();
 
     private ValidatorFactory validatorFactory = ValidatorFactory.getInstance();
-    private TestValidator testValidator = validatorFactory.getTestValidator();
     private FrontDataValidator frontDataValidator = validatorFactory.getFrontDataValidator();
 
     @Override
@@ -50,46 +44,6 @@ public class TestServiceImpl implements TestService {
         }
         return testsType;
     }
-
-//    @Override
-//    public List<Type> typeWithTests(int userId) throws TestServiceException, InvalidUserDataException {
-//
-//        if (!frontDataValidator.validateId(userId)) {
-//            throw new InvalidUserDataException("Invalid userId in TestServiceImpl typeWithTests() method");
-//        }
-//
-//        List<Type> testsType;
-//
-//        try {
-//            testsType = testDAO.getTypes();
-//
-//            for (Type type : testsType) {
-//                Set<Test> tests = testDAO.getTests(type.getId(), false);
-//                type.setTests(tests);
-//            }
-//
-//            for (Type testType : testsType) {
-//                Set<Test> tests = testType.getTests();
-//                for (Test test : tests) {
-//                    int testId = test.getId();
-//
-//                    int countQuestion = questionAnswerDAO.getCountQuestion(testId);
-//                    test.setCountQuestion(countQuestion);
-//                    Assignment userAssignment = userDAO.getUserAssignmentByTestId(userId, testId);
-//                    if (userAssignment != null) {
-//                        Result testResult = testResultDAO.getTestResult(userAssignment);
-//                        test.setStarted(testResult != null);
-//                    } else {
-//                        test.setStarted(false);
-//                    }
-//                }
-//            }
-//
-//        } catch (DAOException e) {
-//            throw new TestServiceException("DAOException in TestService typeWithTests() method", e);
-//        }
-//        return testsType;
-//    }
 
     @Override
     public Set<Test> getUserAssignmentTests(int userId) throws TestServiceException, InvalidUserDataException {

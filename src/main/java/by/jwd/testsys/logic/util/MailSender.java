@@ -7,15 +7,15 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
-public class SslSender {
+public class MailSender {
 
     private String username;
     private String password;
     private Properties props;
 
-    private static final SslSender instance = new SslSender();
+    private static final MailSender instance = new MailSender();
 
-    public static SslSender getInstance() {
+    public static MailSender getInstance() {
         return instance;
     }
 
@@ -25,7 +25,7 @@ public class SslSender {
         this.password = props.getProperty("mail.password");
     }
 
-    private SslSender() {}
+    private MailSender() {}
 
     public void send(String subject, String text, String toEmail) throws FaildSendMailException {
         Session session = Session.getDefaultInstance(props, new Authenticator() {

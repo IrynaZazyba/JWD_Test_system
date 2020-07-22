@@ -22,6 +22,8 @@ public interface UserDAO {
 
     User updateUser(User user) throws DAOException;
 
+    void updateUserIsActivated(int userId, boolean isActivated) throws DAOException;
+
     User getUserByLogin(String login) throws DAOException;
 
     Set<Assignment> getUserAssignment(int user_id) throws DAOException;
@@ -38,9 +40,13 @@ public interface UserDAO {
 
     Set<User> getUsersWithAssignmentByTestId(int testId, int testTypeId, boolean isCompleted) throws DAOException;
 
-    String getUserEmail(int userId) throws DAOException;
+    int getUserIdByEmail(String email) throws DAOException;
 
     void updateAssignment(int assignmentId, boolean isCompleted) throws DAOSqlException;
+
+    String getActivationCode(int userId) throws DAOSqlException;
+
+    boolean getUserIsActivated(int userId) throws DAOSqlException;
 
     Integer writeAssignment(Assignment assignment) throws DAOSqlException;
 

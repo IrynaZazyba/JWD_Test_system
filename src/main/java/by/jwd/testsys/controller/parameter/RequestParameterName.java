@@ -64,6 +64,11 @@ public final class RequestParameterName {
     public final static String UPDATED_QUESTION_RIGHT_ANSWER_ID = "check-";
     public final static String UPDATED_QUESTION_ADDED_ANSWER_ID = "answerAdd";
     public final static String UPDATED_QUESTION_ADDED_RIGHT_ANSWER_ID = "checkAdd";
+    public final static String CONFIRM_EMAIL_CODE = "confirmEmail";
+    public final static String INVALID_CONFIRM_DATA = "invalidData";
+    public final static String SUCCESS_CONFIRM_DATA = "success";
+    public final static String EXISTS_EMAIL = "existsEmail";
+
 
 
 }

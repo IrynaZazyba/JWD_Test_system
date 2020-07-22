@@ -8,6 +8,7 @@ import by.jwd.testsys.controller.parameter.JspPageName;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.UserService;
+import by.jwd.testsys.logic.exception.ExistsEmailException;
 import by.jwd.testsys.logic.exception.ExistsUserException;
 import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.exception.UserServiceException;
@@ -25,7 +26,13 @@ import java.util.Set;
 
 
 public class SignUp implements Command {
-    private static Logger logger = LogManager.getLogger();
+
+    private static Logger logger = LogManager.getLogger(SignUp.class);
+    private final static String SYMBOL_QUESTION= "?";
+    private final static String COMMAND_PAGE_TO_SITE_TO_URL = "command=confirm_email";
+    private final static String AMPERSAND = "&";
+    private final static String SYMBOL_EQUALS="=";
+
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -38,7 +45,7 @@ public class SignUp implements Command {
         HttpSession session = request.getSession();
         UserService userService = ServiceFactory.getInstance().getUserService();
 
-        Set<String> validateResult = userService.validateUserData(login, password, firstName, lastName,email);
+        Set<String> validateResult = userService.validateUserData(login, password, firstName, lastName, email);
 
         if (validateResult.size() == 0) {
 
@@ -52,41 +59,54 @@ public class SignUp implements Command {
                         .withRole(Role.USER).build();
                 userService.registerUser(user);
 
-                request.setAttribute(RequestParameterName.SIGN_UP_SUCCESS_MESSAGE,RequestParameterName.SIGN_UP_SUCCESS_MESSAGE);
+                String linkToActivateAccount = request.getRequestURL() + SYMBOL_QUESTION + COMMAND_PAGE_TO_SITE_TO_URL + AMPERSAND + RequestParameterName.USER_ID + SYMBOL_EQUALS + user.getId();
+                userService.sendActivationLetter(linkToActivateAccount, RequestParameterName.CONFIRM_EMAIL_CODE, user);
 
+                request.setAttribute(RequestParameterName.SIGN_UP_SUCCESS_MESSAGE, RequestParameterName.SIGN_UP_SUCCESS_MESSAGE);
                 session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
                 forwardToPage(request, response, JspPageName.START_JSP_PAGE);
 
             } catch (UserServiceException e) {
                 response.sendRedirect(JspPageName.ERROR_PAGE);
             } catch (ExistsUserException ex) {
-                logger.log(Level.ERROR,"ExistsUserException in SignUp command method execute()", ex);
-                request.setAttribute(RequestParameterName.SIGN_UP_ERROR,RequestParameterName.SIGN_UP_ERROR);
-                request.setAttribute(RequestParameterName.SIGN_UP_EXISTS_ERROR,RequestParameterName.SIGN_UP_EXISTS_ERROR);
+                logger.log(Level.ERROR, "ExistsUserException in SignUp command method execute()", ex);
+                request.setAttribute(RequestParameterName.SIGN_UP_ERROR, RequestParameterName.SIGN_UP_ERROR);
+                request.setAttribute(RequestParameterName.SIGN_UP_EXISTS_ERROR, RequestParameterName.SIGN_UP_EXISTS_ERROR);
 
                 try {
                     forwardToPage(request, response, JspPageName.START_JSP_PAGE);
                 } catch (ForwardCommandException e) {
-                    logger.log(Level.ERROR,"Forward to page Exception in SignUp command", e);
+                    logger.log(Level.ERROR, "Forward to page Exception in SignUp command", e);
                     response.sendRedirect(JspPageName.ERROR_PAGE);
                 }
 
             } catch (ForwardCommandException e) {
                 response.sendRedirect(JspPageName.ERROR_PAGE);
-                logger.log(Level.ERROR,"Forward to page in Exception SignUp command method execute()", e);
+                logger.log(Level.ERROR, "Forward to page in Exception SignUp command method execute()", e);
             } catch (InvalidUserDataException e) {
-                request.setAttribute(RequestParameterName.SIGN_UP_ERROR,RequestParameterName.SIGN_UP_ERROR);
-                logger.log(Level.ERROR,"Invalid user data in SignUp command method execute()", e);
+                request.setAttribute(RequestParameterName.SIGN_UP_ERROR, RequestParameterName.SIGN_UP_ERROR);
+                logger.log(Level.ERROR, "Invalid user data in SignUp command method execute()", e);
 
                 try {
                     forwardToPage(request, response, JspPageName.START_JSP_PAGE);
                 } catch (ForwardCommandException ex) {
-                    logger.log(Level.ERROR,"Forward to page Exception in SignUp command", ex);
+                    logger.log(Level.ERROR, "Forward to page Exception in SignUp command", ex);
+                    response.sendRedirect(JspPageName.ERROR_PAGE);
+                }
+            } catch (ExistsEmailException e) {
+                logger.log(Level.ERROR, "Exists email Exception in SignUp command", e);
+                request.setAttribute(RequestParameterName.SIGN_UP_ERROR, RequestParameterName.SIGN_UP_ERROR);
+                request.setAttribute(RequestParameterName.EXISTS_EMAIL, RequestParameterName.EXISTS_EMAIL);
+
+                try {
+                    forwardToPage(request, response, JspPageName.START_JSP_PAGE);
+                } catch (ForwardCommandException ex) {
+                    logger.log(Level.ERROR, "Forward to page Exception in SignUp command", ex);
                     response.sendRedirect(JspPageName.ERROR_PAGE);
                 }
             }
 
-        }else{
+        } else {
             checkAnswerAccordingValidation(validateResult, request, response);
         }
 
@@ -97,12 +117,12 @@ public class SignUp implements Command {
                                                 HttpServletResponse response) throws ServletException, IOException {
 
         if (userValidateAnswer != null && userValidateAnswer.size() != 0) {
-            userValidateAnswer.forEach((k) -> request.setAttribute(k.toLowerCase(),k));
+            userValidateAnswer.forEach((k) -> request.setAttribute(k.toLowerCase(), k));
             request.setAttribute(RequestParameterName.SIGN_UP_ERROR, RequestParameterName.SIGN_UP_ERROR);
             try {
                 forwardToPage(request, response, JspPageName.START_JSP_PAGE);
             } catch (ForwardCommandException e) {
-                logger.log(Level.ERROR,"Forward to page Exception in SignUp command", e);
+                logger.log(Level.ERROR, "Forward to page Exception in SignUp command", e);
                 response.sendRedirect(JspPageName.ERROR_PAGE);
             }
         }

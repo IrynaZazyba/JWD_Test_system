@@ -18,7 +18,8 @@ public final class JspPageName {
     public static final String TEST_RESULT_PAGE = "WEB-INF/jsp/result.jsp";
     public static final String USER_ACCOUNT_PAGE = "WEB-INF/jsp/userAccount.jsp";
     public static final String STATISTIC_PAGE = "WEB-INF/jsp/statistic.jsp";
-    public static final String EXE_TEST_PAGE="WEB-INF/jsp/exe_test.jsp";
+    public static final String EXE_TEST_PAGE = "WEB-INF/jsp/exe_test.jsp";
+    public static final String CONFIRM_EMAIL_PAGE = "emailConfirm.jsp";
 
 }
 

@@ -27,6 +27,7 @@
 <fmt:message bundle="${loc}" key="message.invalid_first_name" var="message_invalid_first_name"/>
 <fmt:message bundle="${loc}" key="message.invalid_last_name" var="message_invalid_last_name"/>
 <fmt:message bundle="${loc}" key="message.invalid_email" var="message_invalid_email"/>
+<fmt:message bundle="${loc}" key="message.exists_email" var="message_exists_email"/>
 <fmt:message bundle="${loc}" key="message.invalid_password" var="message_invalid_password"/>
 <fmt:message bundle="${loc}" key="message.success_sign_up" var="message_success_sign_up"/>
 <fmt:message bundle="${loc}" key="nav-tabs.log_in" var="nav_tabs_log_in"/>
@@ -252,6 +253,10 @@
                                                 <c:if test="${not empty requestScope.invalid_email}">
                                                     <div class="alert alert-danger" role="alert">
                                                         <c:out value="${message_invalid_email}"/></div>
+                                                </c:if>
+                                                <c:if test="${not empty requestScope.existsEmail}">
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <c:out value="${message_exists_email}"/></div>
                                                 </c:if>
 
 
