@@ -33,6 +33,8 @@
 <fmt:message bundle="${loc}" key="admin_panel.tests.table.in_process" var="table_in_process"/>
 <fmt:message bundle="${loc}" key="admin_panel.tests.button.add" var="button_add_test"/>
 <fmt:message bundle="${loc}" key="admin_panel.types.button.add" var="button_add_type"/>
+<fmt:message bundle="${loc}" key="admin_panel.types.button.delete" var="button_delete_type"/>
+
 <fmt:message bundle="${loc}" key="admin_panel.tests.button.delete" var="button_delete"/>
 <fmt:message bundle="${loc}" key="admin_panel.tests.button.edit" var="button_edit"/>
 <fmt:message bundle="${loc}" key="admin_panel.tests.message.delete" var="message_impossible_delete"/>
@@ -78,9 +80,9 @@
                 </c:forEach>
 
                 <a href="${pageContext.request.contextPath}/test?command=delete_test_type_page">
-                <button type="submit" class="card-btn btn btn-outline-primary d-block mx-auto vertical-menu-button-add">
-                    - delete testType
-                </button>
+                    <button type="submit"
+                            class="card-btn btn btn-outline-primary d-block mx-auto vertical-menu-button-add">
+                        ${button_delete_type} </button>
                 </a>
             </div>
 
