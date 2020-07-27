@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class UpdateQuestion implements AjaxCommand {
 
-    private final static Logger logger = LogManager.getLogger(UpdateQuestion.class);
+    private static Logger logger = LogManager.getLogger(UpdateQuestion.class);
     private final static String SPLIT_PARAMETER = "-";
 
 

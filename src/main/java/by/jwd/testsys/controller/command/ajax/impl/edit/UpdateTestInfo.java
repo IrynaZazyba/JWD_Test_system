@@ -16,7 +16,7 @@ import java.time.LocalTime;
 
 public class UpdateTestInfo implements AjaxCommand {
 
-    private final static Logger logger = LogManager.getLogger(UpdateTestInfo.class);
+    private static Logger logger = LogManager.getLogger(UpdateTestInfo.class);
 
 
     @Override

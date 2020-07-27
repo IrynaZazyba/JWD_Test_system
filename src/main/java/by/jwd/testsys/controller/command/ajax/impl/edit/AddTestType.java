@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class AddTestType implements AjaxCommand {
 
-    private final static Logger logger = LogManager.getLogger(AddTestType.class);
+    private static Logger logger = LogManager.getLogger(AddTestType.class);
 
 
     @Override

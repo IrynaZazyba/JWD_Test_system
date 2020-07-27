@@ -44,5 +44,5 @@ public interface AdminService {
 
     Map<String, Set<User>> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws InvalidUserDataException, AdminServiceException;
 
-    boolean sendTestKeyToUsers(Set<User> assignedUsers, int testId, LocalDate deadline) throws AdminServiceException, InvalidUserDataException;
+    boolean sendLetterAboutAssignmentToUsers(Set<User> assignedUsers, int testId, LocalDate deadline) throws AdminServiceException, InvalidUserDataException;
 }

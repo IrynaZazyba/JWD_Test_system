@@ -2,7 +2,7 @@ package by.jwd.testsys.controller.command.ajax.impl;
 
 import by.jwd.testsys.bean.User;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
-import by.jwd.testsys.controller.command.util.GetParameterFromRequestHelper;
+import by.jwd.testsys.controller.parameter.GetParameterFromRequestHelper;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.logic.UserService;
 import by.jwd.testsys.logic.exception.InvalidUserDataException;

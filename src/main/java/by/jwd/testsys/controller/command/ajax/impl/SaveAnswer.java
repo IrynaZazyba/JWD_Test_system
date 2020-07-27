@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class SaveAnswer implements AjaxCommand {
 
-    private final static Logger logger = LogManager.getLogger(SaveAnswer.class);
+    private static Logger logger = LogManager.getLogger(SaveAnswer.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {

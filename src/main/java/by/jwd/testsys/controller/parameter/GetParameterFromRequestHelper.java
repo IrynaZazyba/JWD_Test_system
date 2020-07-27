@@ -1,4 +1,4 @@
-package by.jwd.testsys.controller.command.util;
+package by.jwd.testsys.controller.parameter;
 
 import by.jwd.testsys.bean.Type;
 import by.jwd.testsys.controller.parameter.RequestParameterName;

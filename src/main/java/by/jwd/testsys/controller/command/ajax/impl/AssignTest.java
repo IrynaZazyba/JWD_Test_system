@@ -22,7 +22,7 @@ import java.util.Set;
 
 public class AssignTest implements AjaxCommand {
 
-    private final static Logger logger = LogManager.getLogger(AssignTest.class);
+    private static Logger logger = LogManager.getLogger(AssignTest.class);
     private final static String EMAIL_FAILURE = "emailFailure";
     private final static String SUCCESS_ASSIGNMENT = "successAssignment";
 
@@ -51,7 +51,7 @@ public class AssignTest implements AjaxCommand {
                 LocalDate deadline = LocalDate.parse(deadlineParam);
                 assignmentResult = adminService.assignTestToUsers(testId, deadline, usersId);
                 boolean successAssignment = adminService.
-                        sendTestKeyToUsers(assignmentResult.get(SUCCESS_ASSIGNMENT), testId, deadline);
+                        sendLetterAboutAssignmentToUsers(assignmentResult.get(SUCCESS_ASSIGNMENT), testId, deadline);
 
                 JsonElement jsonAnswer = gson.toJsonTree(assignmentResult);
 

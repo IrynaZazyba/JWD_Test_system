@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 
 public class CompleteTestCreation implements AjaxCommand {
 
-    private final static Logger logger = LogManager.getLogger(CompleteTestCreation.class);
+    private static Logger logger = LogManager.getLogger(CompleteTestCreation.class);
 
 
     @Override

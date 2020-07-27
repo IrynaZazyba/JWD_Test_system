@@ -46,9 +46,6 @@ public class SQLUserDAOImpl implements UserDAO {
             " (`date`,`deadline`, `test_id`, `user_id`, `completed`) " +
             "VALUES (?,?,?,?,?)";
 
-    private static final String SELECT_USER_ASSIGNMENT_BY_USER_ID = "SELECT id, date, deadline, test_id, completed " +
-            "FROM assignment where user_id=? AND deleted_at IS NULL";
-
     private static final String SELECT_USER_EMAIL = "SELECT id FROM users where email=?";
 
     private static final String SELECT_USER_ASSIGNMENT_BY_ASSIGNMENT_ID = "SELECT id, date, deadline, test_id, " +
@@ -56,9 +53,6 @@ public class SQLUserDAOImpl implements UserDAO {
 
     private static final String SELECT_USER_ASSIGNMENT_BY_TEST_ID = "SELECT id, date, deadline, test_id, completed " +
             "FROM assignment where user_id=? AND test_id=? AND completed is false AND deleted_at IS NULL";
-
-    private static final String SELECT_USER_BY_ROLE = "SELECT id, first_name, last_name FROM `users` WHERE " +
-            "role_id=(SELECT id from role where title=?)";
 
     private static final String INSERT_NEW_ASSIGNMENT = "INSERT INTO `assignment` (`date`, `deadline`, `test_id`, " +
             "`user_id`, `completed`) VALUES (?,?,?,?, false)";
@@ -313,36 +307,6 @@ public class SQLUserDAOImpl implements UserDAO {
 
 
     @Override
-    public Set<Assignment> getUserAssignment(int user_id) throws DAOException {
-
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        Set<Assignment> assignments = new HashSet<>();
-        try {
-            connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(SELECT_USER_ASSIGNMENT_BY_USER_ID);
-            preparedStatement.setInt(1, user_id);
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                User user = new User.Builder().withId(user_id).build();
-                Assignment assignment = buildAssignment(resultSet);
-                assignment.setUser(user);
-                assignments.add(assignment);
-            }
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl getUserAssignment() method", e);
-            throw new DAOSqlException("SQLException in SQLUserDAOImpl getUserAssignment() method", e);
-        } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLUserDAOImpl getUserAssignment() method", e);
-        } finally {
-            connectionPool.closeConnection(connection, preparedStatement, resultSet);
-        }
-        return assignments;
-    }
-
-
-    @Override
     public Assignment getUserAssignmentByTestId(int user_id, int test_id) throws DAOException {
 
         Connection connection = null;
@@ -395,32 +359,6 @@ public class SQLUserDAOImpl implements UserDAO {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
         return assignment;
-    }
-
-    @Override
-    public Set<User> getUserByRole(Role role) throws DAOException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        Set<User> students = new HashSet<>();
-        try {
-            connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(SELECT_USER_BY_ROLE);
-            preparedStatement.setString(1, role.toString());
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                User user = buildUserWithIdFirstNameLastName(resultSet);
-                students.add(user);
-            }
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "SQLException in SQLUserDAOImpl getUserByRole() method", e);
-            throw new DAOSqlException("SQLException in SQLUserDAOImpl getUserByRole() method", e);
-        } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLUserDAOImpl getUserByRole() method", e);
-        } finally {
-            connectionPool.closeConnection(connection, preparedStatement, resultSet);
-        }
-        return students;
     }
 
     @Override
@@ -628,7 +566,6 @@ public class SQLUserDAOImpl implements UserDAO {
         return roleId;
     }
 
-    //todo true заменила проверить как работает
     @Override
     public void updateAssignment(int assignmentId, boolean isCompleted) throws DAOSqlException {
         Connection connection = null;

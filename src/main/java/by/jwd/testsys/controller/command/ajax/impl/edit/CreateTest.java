@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class CreateTest implements AjaxCommand {
 
-    private final static Logger logger = LogManager.getLogger(CreateTest.class);
+    private static Logger logger = LogManager.getLogger(CreateTest.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {

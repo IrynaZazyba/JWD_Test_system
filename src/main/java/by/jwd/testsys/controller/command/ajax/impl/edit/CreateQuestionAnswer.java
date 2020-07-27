@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class CreateQuestionAnswer implements AjaxCommand {
 
-    private final static Logger logger = LogManager.getLogger(CreateQuestionAnswer.class);
+    private static Logger logger = LogManager.getLogger(CreateQuestionAnswer.class);
     private final static String EMPTY_STRING = "";
     private final static String SPLIT_PARAMETER = "-";
     private final static String ANSWER_PAIR_ID_VALUE="answer";

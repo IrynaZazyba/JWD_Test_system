@@ -6,6 +6,7 @@ import by.jwd.testsys.controller.command.ajax.AjaxCommand;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.logic.UserService;
+import by.jwd.testsys.logic.exception.ExistsEmailException;
 import by.jwd.testsys.logic.exception.ExistsUserException;
 import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.exception.UserServiceException;
@@ -25,7 +26,7 @@ import java.util.*;
 
 public class EditUser implements AjaxCommand {
 
-    private static final Logger logger = LogManager.getLogger(EditUser.class);
+    private static Logger logger = LogManager.getLogger(EditUser.class);
     private static final String MESSAGE_KEY = "message";
 
     private static final String LOCAL_FILE_NAME = "local";
@@ -33,11 +34,12 @@ public class EditUser implements AjaxCommand {
     private static final String LOCAL_MESSAGE_SUCCESS_USER_EDIT = "message.json.user_edit_changed";
     private static final String LOCAL_MESSAGE_EXISTS_LOGIN = "message.exists_login";
     private static final String LOCAL_MESSAGE_ERROR = "message.json.user_edit_error";
+    private static final String LOCAL_MESSAGE_EXISTS_EMAIL = "message.exists_email";
 
     private static final String LOCAL_MESSAGE_INVALID_LOGIN = "message.invalid_login";
     private static final String LOCAL_MESSAGE_INVALID_FIRST_NAME = "message.invalid_first_name";
     private static final String LOCAL_MESSAGE_INVALID_LAST_NAME = "message.invalid_last_name";
-    private static final String LOCAL_MESSAGE_INVALID_EMAIL="message.invalid_email";
+    private static final String LOCAL_MESSAGE_INVALID_EMAIL = "message.invalid_email";
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
@@ -86,6 +88,11 @@ public class EditUser implements AjaxCommand {
             answerToUser.addProperty(MESSAGE_KEY, resourceBundle.getString(LOCAL_MESSAGE_EXISTS_LOGIN));
             answer = answerToUser.toString();
             logger.log(Level.ERROR, "Exists user data in EditUser command method execute()", e);
+            response.setStatus(409);
+        } catch (ExistsEmailException e) {
+            answerToUser.addProperty(MESSAGE_KEY, resourceBundle.getString(LOCAL_MESSAGE_EXISTS_EMAIL));
+            answer = answerToUser.toString();
+            logger.log(Level.ERROR, "Exists email data in EditUser command method execute()", e);
             response.setStatus(409);
         }
 

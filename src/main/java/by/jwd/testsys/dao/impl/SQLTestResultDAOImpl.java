@@ -166,7 +166,7 @@ public class SQLTestResultDAOImpl implements TestResultDAO {
 
 
     @Override
-    public void updateResult(Result result) throws DAOException {
+    public void updateResultDateEndRightCount(Result result) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -178,10 +178,10 @@ public class SQLTestResultDAOImpl implements TestResultDAO {
             preparedStatement.setInt(3, result.getId());
             preparedStatement.executeUpdate();
         } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestLogDAOImpl method updateResult()", e);
+            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestLogDAOImpl method updateResultDateEndRightCount()", e);
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "SQLException in SQLTestLogDAOImpl method updateResult()", e);
-            throw new DAOSqlException("SQLException in SQLTestLogDAOImpl method updateResult()", e);
+            logger.log(Level.ERROR, "SQLException in SQLTestLogDAOImpl method updateResultDateEndRightCount()", e);
+            throw new DAOSqlException("SQLException in SQLTestLogDAOImpl method updateResultDateEndRightCount()", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }

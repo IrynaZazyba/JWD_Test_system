@@ -18,7 +18,7 @@ public interface TestResultDAO {
 
     void insertResult(Result result) throws DAOException;
 
-    void updateResult(Result result) throws DAOException;
+    void updateResultDateEndRightCount(Result result) throws DAOException;
 
     Set<Statistic> getUserTestStatistic(int userId) throws DAOException;
 

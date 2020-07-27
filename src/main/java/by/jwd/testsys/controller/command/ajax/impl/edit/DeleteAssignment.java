@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class DeleteAssignment implements AjaxCommand {
 
-    private final static Logger logger = LogManager.getLogger(DeleteAssignment.class);
+    private static Logger logger = LogManager.getLogger(DeleteAssignment.class);
 
 
     @Override

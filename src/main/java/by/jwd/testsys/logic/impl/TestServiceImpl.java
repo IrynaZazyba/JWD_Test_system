@@ -102,6 +102,18 @@ public class TestServiceImpl implements TestService {
         return test;
     }
 
+    /**
+     * Check if user have assignment
+     * if the user was assigned to the test will return the existing assignment
+     * if test without a key and no assignment, the test will be assigned to the user
+     * and the created assignment will be returned
+     *
+     * @param testId test id
+     * @param userId user id
+     * @return user assignment
+     * @throws TestServiceException     in case of error getting data from the database
+     * @throws InvalidUserDataException in case if the parameters passed to the method are not valid
+     */
     @Override
     public Assignment checkTestAssignment(int testId, int userId) throws TestServiceException, InvalidUserDataException {
 
@@ -141,6 +153,25 @@ public class TestServiceImpl implements TestService {
         return assignment;
     }
 
+    /**
+     * Checks if the user has access to take this test:
+     * if test key exists and user don't have assignment
+     * InvalidUserDataException exception will be thrown;
+     * if test key exists and user have assignment is
+     * checking if result dont't exists (test isn't started).
+     * When the conditions are reached, it is checked whether
+     * the entered and the existing key match and a result is
+     * created;
+     * if test key not exists, assignment exists and result
+     * not exists result will be created.
+     *
+     * @param userId user id
+     * @param testId test id
+     * @param key    key to test
+     * @throws TestServiceException     in case of error getting data from the database
+     * @throws InvalidUserDataException in case if the parameters passed to the method are not valid
+     * @throws InvalidTestKeyException  in case the key entered by the user is incorrect
+     */
     @Override
     public void checkPermission(int userId, int testId, String key) throws TestServiceException, InvalidUserDataException, InvalidTestKeyException {
 
@@ -216,6 +247,16 @@ public class TestServiceImpl implements TestService {
     }
 
 
+    /**
+     * The value of the test duration is obtained, the test start time
+     * is obtained and the difference is calculated to find the time
+     * elapsed from the beginning of the test
+     *
+     * @param assignment user assignment
+     * @return time elapsed since the start of the test
+     * @throws TestServiceException       in case of error getting data from the database
+     * @throws TimeIsOverServiceException if the time allotted for the test has run out
+     */
     @Override
     public long calculateTestDuration(Assignment assignment) throws TestServiceException, TimeIsOverServiceException {
 
@@ -246,7 +287,7 @@ public class TestServiceImpl implements TestService {
 
             Result result = calculateResult(assignment);
             result.setDateEnd(localDateTime);
-            testResultDAO.updateResult(result);
+            testResultDAO.updateResultDateEndRightCount(result);
         } catch (DAOException e) {
             throw new TestServiceException("DAOException in TestService completeTest() method", e);
         }
@@ -464,7 +505,6 @@ public class TestServiceImpl implements TestService {
                 !frontDataValidator.validatePositiveNumber(recordsPerPage)) {
             throw new InvalidUserDataException("Invalid assignmentId in TestService getTestByTypeId() method");
         }
-
 
         int numberOfPages;
         int numberRecords;

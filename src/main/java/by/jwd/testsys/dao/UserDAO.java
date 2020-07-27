@@ -26,13 +26,9 @@ public interface UserDAO {
 
     User getUserByLogin(String login) throws DAOException;
 
-    Set<Assignment> getUserAssignment(int user_id) throws DAOException;
-
     Assignment getUserAssignmentByTestId(int user_id, int test_id) throws DAOException;
 
     Assignment getUserAssignmentByAssignmentId(int assignmentId) throws DAOException;
-
-    Set<User> getUserByRole(Role role) throws DAOException;
 
     void insertAssignment(LocalDate assignmentDate, LocalDate deadline, int testId, List<Integer> usersId) throws DAOException;
 

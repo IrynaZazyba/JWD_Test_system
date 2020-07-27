@@ -23,7 +23,7 @@ public class LetterBuilder {
     public static String buildActivationLetter(String link, User user) {
         StringBuilder message = new StringBuilder();
         message.append(user.getFirstName())
-                .append(COMMA)
+                .append(COMMA).append(NEW_LINE)
                 .append(EMAIL_ACTIVATION_REGISTRATION).append(NEW_LINE)
                 .append(EMAIL_ACTIVATION_FOLLOW_LINK).append(NEW_LINE)
                 .append(link).append(NEW_LINE);

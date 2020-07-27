@@ -26,7 +26,7 @@ import java.util.*;
 
 public class AdminServiceImpl implements AdminService {
 
-    private final static Logger logger = LogManager.getLogger(AdminServiceImpl.class);
+    private static Logger logger = LogManager.getLogger(AdminServiceImpl.class);
 
     private final DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
     private TestDAO testDAO = daoFactory.getTestDao();
@@ -38,8 +38,8 @@ public class AdminServiceImpl implements AdminService {
     private TestValidator testValidator = validatorFactory.getTestValidator();
 
     private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT = "BeeTesting test assignment";
-
-
+    private final static String SUCCESS_ASSIGNMENT="successAssignment";
+    private final static String EXISTS_ASSIGNMENT="existsAssignment";
 
     @Override
     public void deleteTest(int testId) throws AdminServiceException, InvalidDeleteActionServiceException, InvalidUserDataException {
@@ -118,6 +118,16 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+    /**
+     * Сreates a question with answers
+     *
+     * @param question
+     * @param answers
+     * @param rightAnswers map with contains answers id and answer title
+     * @param testId       list with right answers id
+     * @throws AdminServiceException    in case of error getting data from the database
+     * @throws InvalidUserDataException in case of invalid questionLogId, answers
+     */
     @Override
     public void createQuestionAnswer(String question,
                                      Map<Integer, String> answers,
@@ -203,6 +213,20 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+    /**
+     * Edits the question and answers to it
+     *
+     * @param questionId          ID of the updated question
+     * @param question            title of the updated question
+     * @param deletedAnswers      answers to delete
+     * @param answers             the answers that existed in this question as key value
+     * @param addedAnswers        added answers as key value
+     * @param rightAnswersId      list with right answers id to @param answers
+     * @param rightAddedAnswersId list with right answers id to @param addedAnswers
+     * @throws AdminServiceException    in case of error getting data from the database
+     * @throws InvalidUserDataException in case if the parameters passed to the method are not valid
+     * @see TestValidator, FrontDataValidator
+     */
     @Override
     public void updateQuestionWithAnswers(int questionId,
                                           String question,
@@ -364,8 +388,8 @@ public class AdminServiceImpl implements AdminService {
                 }
             }
 
-            assignmentResult.put("successAssignment", successAssignment);
-            assignmentResult.put("existsAssignment", existsAssignment);
+            assignmentResult.put(SUCCESS_ASSIGNMENT, successAssignment);
+            assignmentResult.put(EXISTS_ASSIGNMENT, existsAssignment);
             userDAO.insertAssignment(LocalDate.now(), deadline, testId, usersId);
         } catch (DAOException e) {
             throw new AdminServiceException("DAOException in AdminServiceImpl assignTestToUsers() method", e);
@@ -375,15 +399,26 @@ public class AdminServiceImpl implements AdminService {
     }
 
 
+    /**
+     * Sends a letter to the user stating that a test has been assigned to him
+     *
+     * @param assignedUsers users to whom the test was assigned
+     * @param testId        test id assigned to users
+     * @param deadline      test due date
+     * @return return true if emails have been sent and false otherwise
+     * @throws AdminServiceException    in case of error getting data from the database
+     * @throws InvalidUserDataException in case of invalid questionLogId, answers
+     * @see FrontDataValidator, UserValidator
+     */
     @Override
-    public boolean sendTestKeyToUsers(Set<User> assignedUsers, int testId, LocalDate deadline) throws AdminServiceException, InvalidUserDataException {
+    public boolean sendLetterAboutAssignmentToUsers(Set<User> assignedUsers, int testId, LocalDate deadline) throws AdminServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(testId)) {
-            throw new InvalidUserDataException("Invalid testId in AdminService sendTestKeyToUsers() method");
+            throw new InvalidUserDataException("Invalid testId in AdminService sendLetterAboutAssignmentToUsers() method");
         }
 
         if (!testValidator.validateDeadlineDate(deadline)) {
-            throw new InvalidUserDataException("Invalid deadline in AdminService sendTestKeyToUsers() method");
+            throw new InvalidUserDataException("Invalid deadline in AdminService sendLetterAboutAssignmentToUsers() method");
         }
 
         Test testInfo;
@@ -396,14 +431,13 @@ public class AdminServiceImpl implements AdminService {
                 sender.send(EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT, message, user.getEmail());
             }
         } catch (DAOException e) {
-            throw new AdminServiceException("DAOException in AdminServiceImpl sendTestKeyToUsers() method", e);
+            throw new AdminServiceException("DAOException in AdminServiceImpl sendLetterAboutAssignmentToUsers() method", e);
         } catch (FaildSendMailException e) {
-            logger.log(Level.ERROR, "Failure in attempt to send email in AdminServiceImpl sendTestKeyToUsers() method", e);
+            logger.log(Level.ERROR, "Failure in attempt to send email in AdminServiceImpl sendLetterAboutAssignmentToUsers() method", e);
             return false;
         }
         return true;
     }
-
 
 
 }

@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 
 public class ChangePassword implements AjaxCommand {
 
-    private final static Logger logger = LogManager.getLogger(ChangePassword.class);
+    private static Logger logger = LogManager.getLogger(ChangePassword.class);
     private static final String MESSAGE_KEY = "message";
 
     private static final String LOCAL_FILE_NAME = "local";

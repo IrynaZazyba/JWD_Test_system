@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class ShowQuestion implements AjaxCommand {
 
-    private final static Logger logger = LogManager.getLogger(ShowQuestion.class);
+    private static Logger logger = LogManager.getLogger(ShowQuestion.class);
     private final static boolean TRUE = true;
 
     @Override

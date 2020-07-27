@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class DeleteQuestion implements AjaxCommand {
 
-    private final static Logger logger = LogManager.getLogger(DeleteQuestion.class);
+    private static Logger logger = LogManager.getLogger(DeleteQuestion.class);
 
 
     @Override

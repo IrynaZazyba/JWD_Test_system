@@ -4,7 +4,7 @@ import by.jwd.testsys.bean.Test;
 import by.jwd.testsys.bean.Type;
 import by.jwd.testsys.controller.command.front.Command;
 import by.jwd.testsys.controller.command.front.ForwardCommandException;
-import by.jwd.testsys.controller.command.util.GetParameterFromRequestHelper;
+import by.jwd.testsys.controller.parameter.GetParameterFromRequestHelper;
 import by.jwd.testsys.controller.parameter.JspPageName;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;

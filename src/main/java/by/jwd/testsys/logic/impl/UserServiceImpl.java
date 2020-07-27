@@ -26,7 +26,7 @@ import java.util.Set;
 
 public class UserServiceImpl implements UserService {
 
-    private final static Logger logger = LogManager.getLogger(UserServiceImpl.class);
+    private static Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
     private final DAOFactory daoFactory = DAOFactoryProvider.getSqlDaoFactory();
     private UserDAO userDao = daoFactory.getUserDao();
@@ -61,8 +61,20 @@ public class UserServiceImpl implements UserService {
         return userByLogin;
     }
 
+    /**
+     * Registers a user, after that an account confirmation is required
+     *
+     * @param user user data
+     * @return registered user
+     * @throws UserServiceException     in case of error getting data from the database
+     * @throws ExistsUserException      if a user with the same login already exists
+     * @throws InvalidUserDataException in case if the parameters passed to the method
+     *                                  are not valid
+     * @throws ExistsEmailException     if a user with the same email already exists
+     */
     @Override
-    public synchronized User registerUser(User user) throws UserServiceException, ExistsUserException, InvalidUserDataException, ExistsEmailException {
+    public synchronized User registerUser(User user) throws UserServiceException, ExistsUserException,
+            InvalidUserDataException, ExistsEmailException {
 
         Set<String> validateResult = userValidator.validate(user);
 
@@ -126,7 +138,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User editUserInfo(User user) throws UserServiceException, InvalidUserDataException, ExistsUserException {
+    public User editUserInfo(User user) throws UserServiceException, InvalidUserDataException, ExistsUserException, ExistsEmailException {
 
         Set<String> validateResult = userValidator.validate(user.getLogin(), user.getFirstName(), user.getLastName(), user.getEmail());
 
@@ -135,6 +147,11 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
+            int userIdByEmail = userDao.getUserIdByEmail(user.getEmail());
+            if (userIdByEmail != 0) {
+                throw new ExistsEmailException("Exists email");
+            }
+
             User userById = userDao.getUserById(user.getId());
             if (!userById.getLogin().equals(user.getLogin())) {
                 User userByLogin = userDao.getUserByLogin(user.getLogin());
@@ -192,6 +209,16 @@ public class UserServiceImpl implements UserService {
         return userValidator.validate(registerUser);
     }
 
+    /**
+     * Changes user password and saves it in the database in a hashed form
+     *
+     * @param userId      user id
+     * @param oldPassword old user password value
+     * @param newPassword new user password value
+     * @throws UserServiceException     in case of error getting data from the database
+     * @throws InvalidUserDataException in case if the parameters passed to the method
+     *                                  are not valid or the old password was entered incorrectly
+     */
     @Override
     public void changePassword(int userId, String oldPassword, String newPassword) throws UserServiceException, InvalidUserDataException {
 
@@ -230,14 +257,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean checkRegistration(int userId, String activatedCode) throws UserServiceException, InvalidUserDataException {
 
-        if (!frontDataValidator.validateId(userId)||
-        activatedCode==null) {
+        if (!frontDataValidator.validateId(userId) ||
+                activatedCode == null) {
             throw new InvalidUserDataException("Invalid userId in UserServiceImpl checkRegistration() method");
         }
 
         try {
             String storedActivationCode = userDao.getActivationCode(userId);
-            System.out.println(userId);
             return activatedCode.equals(storedActivationCode);
 
         } catch (DAOSqlException e) {
