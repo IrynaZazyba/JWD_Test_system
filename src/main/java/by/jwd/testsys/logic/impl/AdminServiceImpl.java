@@ -38,8 +38,8 @@ public class AdminServiceImpl implements AdminService {
     private TestValidator testValidator = validatorFactory.getTestValidator();
 
     private final static String EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT = "BeeTesting test assignment";
-    private final static String SUCCESS_ASSIGNMENT="successAssignment";
-    private final static String EXISTS_ASSIGNMENT="existsAssignment";
+    private final static String SUCCESS_ASSIGNMENT = "successAssignment";
+    private final static String EXISTS_ASSIGNMENT = "existsAssignment";
 
     @Override
     public void deleteTest(int testId) throws AdminServiceException, InvalidDeleteActionServiceException, InvalidUserDataException {
@@ -439,5 +439,24 @@ public class AdminServiceImpl implements AdminService {
         return true;
     }
 
+    @Override
+    public void deleteType(int testTypeId) throws AdminServiceException, InvalidDeleteActionServiceException, InvalidUserDataException {
+
+        if (!frontDataValidator.validateId(testTypeId)) {
+            throw new InvalidUserDataException("Invalid testTypeId in AdminService deleteType() method");
+        }
+
+        try {
+            int countTests = testDAO.getCountTests(testTypeId);
+            if(countTests>0){
+                throw new InvalidDeleteActionServiceException("Such type has tests: "+countTests);
+            }
+
+            testDAO.deleteTestType(testTypeId, LocalDateTime.now());
+        } catch (DAOException e) {
+            throw new AdminServiceException("DAOException in AdminServiceImpl deleteType() method", e);
+        }
+
+    }
 
 }

@@ -77,7 +77,11 @@
                     </c:if>
                 </c:forEach>
 
-
+                <a href="${pageContext.request.contextPath}/test?command=delete_test_type_page">
+                <button type="submit" class="card-btn btn btn-outline-primary d-block mx-auto vertical-menu-button-add">
+                    - delete testType
+                </button>
+                </a>
             </div>
 
 
@@ -148,30 +152,30 @@
                 </table>
 
                 <div style="position: absolute; bottom: 0px; width: 100%; align-content: center">
-<div>
-                <nav aria-label="...">
-                    <ul class="pagination pagination-sm pagination_center">
-                        <c:forEach var="i" begin="1" end="${requestScope.countPages}">
-                            <c:if test="${i==requestScope.currentPage}">
+                    <div>
+                        <nav aria-label="...">
+                            <ul class="pagination pagination-sm pagination_center">
+                                <c:forEach var="i" begin="1" end="${requestScope.countPages}">
+                                    <c:if test="${i==requestScope.currentPage}">
 
-                                <li class="page-item page-item-change active" aria-current="page">
-                                <span class="page-link">${i}
+                                        <li class="page-item page-item-change active" aria-current="page">
+                                        <span class="page-link">${i}
                                 <span class="sr-only">(current)</span>
                           </span>
-                            </c:if>
+                                    </c:if>
 
-                            <c:if test="${i!=requestScope.currentPage}">
-                                <li class="page-item">
-                                    <a class="page-link"
-                                       href="${pageContext.request.contextPath}/test?command=show_admin_panel&typeId=${requestScope.activeTypeId}&currentPage=${i}">
-                                            ${i}
-                                    </a>
-                                </li>
-                            </c:if>
-                        </c:forEach>
-                    </ul>
-                </nav>
-                </div>
+                                    <c:if test="${i!=requestScope.currentPage}">
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                               href="${pageContext.request.contextPath}/test?command=show_admin_panel&typeId=${requestScope.activeTypeId}&currentPage=${i}">
+                                                    ${i}
+                                            </a>
+                                        </li>
+                                    </c:if>
+                                </c:forEach>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>

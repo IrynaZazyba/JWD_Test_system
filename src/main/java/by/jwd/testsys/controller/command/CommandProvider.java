@@ -8,6 +8,7 @@ import by.jwd.testsys.controller.command.front.Command;
 import by.jwd.testsys.controller.command.front.CommandName;
 import by.jwd.testsys.controller.command.front.impl.*;
 import by.jwd.testsys.controller.command.front.impl.edit.AddTestPage;
+import by.jwd.testsys.controller.command.front.impl.edit.DeleteTestTypePage;
 import by.jwd.testsys.controller.command.front.impl.edit.ShowAdminPanel;
 import by.jwd.testsys.controller.command.front.impl.edit.ShowPreviewTestPage;
 
@@ -42,6 +43,7 @@ public final class CommandProvider {
         frontRepository.put(CommandName.MAIN_PAGE, new MainPage());
         frontRepository.put(CommandName.ABOUT_US, new AboutPage());
         frontRepository.put(CommandName.CONFIRM_EMAIL, new ConfirmEmail());
+        frontRepository.put(CommandName.DELETE_TEST_TYPE_PAGE, new DeleteTestTypePage());
 
 
         ajaxRepository.put(AjaxCommandName.EDIT_USER, new EditUser());
@@ -61,7 +63,7 @@ public final class CommandProvider {
         ajaxRepository.put(AjaxCommandName.UPDATE_TEST_INFO, new UpdateTestInfo());
         ajaxRepository.put(AjaxCommandName.ADD_TEST_TYPE, new AddTestType());
         ajaxRepository.put(AjaxCommandName.CHANGE_PASSWORD, new ChangePassword());
-
+        ajaxRepository.put(AjaxCommandName.DELETE_TYPE, new DeleteType());
 
     }
 

@@ -62,7 +62,7 @@
                 </li>
             </ul>
             <ul class="navbar-nav mr-auto start-page-nav-itm" id="editPageMessage">
-                <li class="nav-item">
+                <li class="nav-item p-t-15">
                    <h5> ${mode_add_test}</h5> </li>
             </ul>
         </div>
@@ -86,7 +86,7 @@
             </div>
             <div id="testId">
             </div>
-            <div class="tab-content" id="myTabContent">
+            <div class="tab-content p-t-27" id="myTabContent">
                 <div class="tab-pane fade show active" id="testEditForm" role="tabpanel" aria-labelledby="home-tab">
 
                     <div id="successCreatedTest" class="alert alert-success" role="alert" style="display: none;">
@@ -96,7 +96,7 @@
                         ${message_error_save} </div>
 
                     <form id="addTestForm" onsubmit="saveTestInfo(this);return false;" enctype="multipart/form-data"
-                          accept-charset="UTF-8" class="key-form" role="form">
+                          accept-charset="UTF-8" class="key-form p-t-27" role="form">
                         <div class="form-group">
                             <label for="testType">${label_testType}</label>
                             <select required class="form-control" name="typeId" id="testType">

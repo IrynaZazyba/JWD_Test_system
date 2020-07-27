@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", menuLinkHelper);
 
 
 function menuLinkHelper() {
-    console.log(window.location.search.toString());
     let urlParams = window.location.search.toString().split('&');
     urlParams.forEach(elem => {
         if (elem.includes('command')) {

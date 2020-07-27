@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -74,6 +75,7 @@ public class SQLTestDAOImpl implements TestDAO {
     private static final String GET_COUNT_TESTS_BY_TYPE_ID = "SELECT count(id) as countRow FROM `test` " +
             "WHERE type_id=? and deleted_at is null";
 
+    private static final String DELETE_TEST_TYPE = "UPDATE `type` SET`deleted_at`=? WHERE id=?";
     private static final String SELECT_ALL_TYPES = "SELECT id, title from type WHERE deleted_at IS null";
     private static final String SELECT_TYPE_BY_TITLE = "SELECT id, title from type WHERE deleted_at IS null AND title=?";
     private static final String INSERT_TYPE = "INSERT INTO type (title) VALUES (?)";
@@ -653,6 +655,27 @@ public class SQLTestDAOImpl implements TestDAO {
         } catch (SQLException e) {
             logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method updateTestIsEdited()", e);
             throw new DAOSqlException("SQLException in SQLTestDAOImpl method updateTestIsEdited()", e);
+        } finally {
+            connectionPool.closeConnection(connection, preparedStatement);
+        }
+    }
+
+    @Override
+    public void deleteTestType(int typeId, LocalDateTime deletedDate) throws DAOException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(DELETE_TEST_TYPE);
+            preparedStatement.setTimestamp(1, Timestamp.valueOf(deletedDate));
+            preparedStatement.setInt(2,typeId);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method deleteTestType()", e);
+            throw new DAOSqlException("SQLException in SQLTestDAOImpl method deleteTestType()", e);
+        } catch (ConnectionPoolException e) {
+            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method deleteTestType()", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }

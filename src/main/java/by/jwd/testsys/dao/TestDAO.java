@@ -48,5 +48,5 @@ public interface TestDAO {
 
     void updateTestIsEdited(int testId, boolean isEdited) throws DAOException;
 
-
+    void deleteTestType(int typeId, LocalDateTime deletedDate) throws DAOException;
 }

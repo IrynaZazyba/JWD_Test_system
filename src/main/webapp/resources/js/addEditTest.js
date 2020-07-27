@@ -96,7 +96,6 @@ async function saveTestInfo(obj) {
 
 
     let invalidClass = document.getElementsByClassName('is-invalid');
-    console.log(invalidClass);
     if (invalidClass.length !== 0) {
         Array.from(invalidClass).forEach(elem => elem.classList.remove('is-invalid'));
     }
@@ -106,7 +105,7 @@ async function saveTestInfo(obj) {
     let key = addTestForm.testKey.value;
     let testTitle = addTestForm.testTitle.value;
 
-    let result = /[a-zA-Z0-9]{4,7}/g.test(key);
+    let result = /^[a-z0-9_-]{4,7}$/.test(key);
 
     if (key !== "" && !result) {
         addTestForm.testKey.classList.add('is-invalid');
@@ -373,7 +372,7 @@ function showPreviewPage() {
 }
 
 
-function showModalStopEdit(){
+function showModalStopEdit() {
     $("#confirmStopEdit").modal('show');
 }
 
@@ -399,7 +398,6 @@ $('#deleteQuestion').on('show.bs.modal', function (e) {
 });
 
 
-
 async function deleteQuestion(button) {
 
     let questionId = button.value;
@@ -421,7 +419,6 @@ async function deleteQuestion(button) {
 async function updateTestInfo(button) {
 
     let invalidClass = document.getElementsByClassName('is-invalid');
-    console.log(invalidClass);
     if (invalidClass.length !== 0) {
         Array.from(invalidClass).forEach(elem => elem.classList.remove('is-invalid'));
     }
@@ -431,7 +428,7 @@ async function updateTestInfo(button) {
     let key = addTestForm.testKey.value;
     let testTitle = addTestForm.testTitle.value;
 
-    let result = /[a-zA-Z0-9]{4,7}/g.test(key);
+    let result = /^[a-z0-9_-]{4,7}$/.test(key);
 
     if (key !== "" && !result) {
         addTestForm.testKey.classList.add('is-invalid');

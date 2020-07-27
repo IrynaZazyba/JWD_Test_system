@@ -45,4 +45,6 @@ public interface AdminService {
     Map<String, Set<User>> assignTestToUsers(int testId, LocalDate deadline, String[] assignUsersId) throws InvalidUserDataException, AdminServiceException;
 
     boolean sendLetterAboutAssignmentToUsers(Set<User> assignedUsers, int testId, LocalDate deadline) throws AdminServiceException, InvalidUserDataException;
+
+    void deleteType(int testTypeId) throws AdminServiceException, InvalidDeleteActionServiceException, InvalidUserDataException;
 }

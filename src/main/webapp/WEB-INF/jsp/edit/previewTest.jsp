@@ -64,8 +64,8 @@
                 </li>
             </ul>
             <ul class="navbar-nav mr-auto start-page-nav-itm" id="editPageMessage">
-                <li class="nav-item">
-                    ${mode_add_test} </li>
+                <li class="nav-item p-t-15">
+                    <h5>${mode_add_test} </h5></li>
             </ul>
         </div>
 
@@ -87,7 +87,7 @@
         <input type="hidden" name="testId" id="testId" value="${requestScope.testData.id}"/>
         <div class="col-3"></div>
         <div class="col-5">
-            <form id="editTest">
+            <form id="editTest" class="p-t-27">
                 <div id="testInfo" class="edit-quest-form">
                     <div class="row edit-button">
                         <button onclick="showModalWindowEditTestInfo(this); return false;" type="button"

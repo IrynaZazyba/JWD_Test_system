@@ -3,15 +3,7 @@
  */
 "use strict"
 
-/* Add calendar to ASSIGNgn test */
-// document.getElementById("date").daterangepicker({
-//     singleDatePicker: true,
-//     locale: {
-//         format: 'DD.MM.YYYY'
-//     }
-// });
 
-/*select*/
 let form = document.forms.assign;
 let type = form.elements.typeId;
 type.onchange = changeResultStatisticOption;
@@ -126,9 +118,9 @@ async function showUsersAssignedToTest() {
     let formData = document.getElementById('displayUsers');
     let form = new FormData(formData);
 
-   if(!form.hasOwnProperty('completed')){
-       form.append('completed','false');
-   }
+    if (!form.hasOwnProperty('completed')) {
+        form.append('completed', 'false');
+    }
 
     let response = await fetch("/ajax?command=get_assigned_users", {
         method: 'POST',
@@ -303,5 +295,35 @@ function generateTableResult(result, num) {
         "<td>" + result.rightCountQuestion + "</td>" +
         "</tr>";
     return html;
+}
+
+async function deleteTestType() {
+
+    if (document.getElementById("invalidDeleteMessage").style.display === "block") {
+        document.getElementById("invalidDeleteMessage").style.display = "none";
+    }
+
+    let typeId=document.getElementById("typeId").value;
+
+    let formData = new FormData;
+    formData.append("typeId", typeId);
+    let response = await fetch("/ajax?command=delete_type", {
+        method: 'POST',
+        body: formData,
+    });
+    if (response.ok) {
+        $("#confirmDeleteType").modal('hide');
+        document.getElementById(typeId).setAttribute("class", "deleted-row");
+        document.getElementById("btn-" + typeId).setAttribute("disabled", "disabled");
+    } else {
+        $("#confirmDeleteType").modal('hide');
+        document.getElementById("invalidDeleteMessage").style.display = "block";
+    }
+}
+
+
+function showConfirmDeleteType(typeId) {
+    document.getElementById("confirmDeleteType").insertAdjacentHTML("afterbegin","<input type=\"hidden\" id=\"typeId\" name=\"typeId\" value=\"" +typeId+ "\">");
+    $("#confirmDeleteType").modal('show');
 }
 
