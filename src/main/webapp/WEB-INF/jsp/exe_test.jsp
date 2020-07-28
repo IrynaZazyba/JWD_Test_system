@@ -51,7 +51,7 @@
         <div class="card-section card-section-exe border rounded">
             <div class="card-header card-header-exe rounded">
                 <div class="ribbon-type ribbon-top-asgmt-left"><span>${requestScope.testInfo.title}</span></div>
-                <div class="ribbon ribbon-top-type-left"><span>ribbon</span></div>
+                <div class="ribbon ribbon-top-type-left"><span></span></div>
 
             </div>
             <div id="card-body" class="card-body mb-2 card-test">

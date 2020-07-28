@@ -31,16 +31,19 @@ async function changeOption() {
         jsOptions.forEach(element => element.remove());
     }
 
-    let response = await fetch("/ajax?command=get_tests&typeId=" + typeId, {
-        method: 'GET',
-    });
+
+    if (typeId !== "") {
+        let response = await fetch("/ajax?command=get_tests&typeId=" + typeId, {
+            method: 'GET',
+        });
 
 
-    if (response.ok) {
-        let json = await response.json();
-        document.getElementById("testTitle").insertAdjacentHTML('beforeend', generateOptionSelect(json));
-    } else {
-        document.location.href = "/test?command=wrong_request";
+        if (response.ok) {
+            let json = await response.json();
+            document.getElementById("testTitle").insertAdjacentHTML('beforeend', generateOptionSelect(json));
+        } else {
+            document.location.href = "/test?command=wrong_request";
+        }
     }
 }
 
@@ -303,7 +306,7 @@ async function deleteTestType() {
         document.getElementById("invalidDeleteMessage").style.display = "none";
     }
 
-    let typeId=document.getElementById("typeId").value;
+    let typeId = document.getElementById("typeId").value;
 
     let formData = new FormData;
     formData.append("typeId", typeId);
@@ -323,7 +326,7 @@ async function deleteTestType() {
 
 
 function showConfirmDeleteType(typeId) {
-    document.getElementById("confirmDeleteType").insertAdjacentHTML("afterbegin","<input type=\"hidden\" id=\"typeId\" name=\"typeId\" value=\"" +typeId+ "\">");
+    document.getElementById("confirmDeleteType").insertAdjacentHTML("afterbegin", "<input type=\"hidden\" id=\"typeId\" name=\"typeId\" value=\"" + typeId + "\">");
     $("#confirmDeleteType").modal('show');
 }
 

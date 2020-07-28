@@ -38,7 +38,7 @@ public class SQLTestDAOImpl implements TestDAO {
     private static final String SELECT_TEST_TIME = "SELECT time FROM `test` WHERE id=(" +
             "SELECT test_id FROM assignment WHERE id=?)";
 
-    private static final String GET_ASSIGNMENT_TESTS = "SELECT test.id as t_id, test.title as t_title, test.time," +
+    private static final String GET_ASSIGNED_TESTS = "SELECT test.id as t_id, test.title as t_title, test.time," +
             " count(question.id) as count_quest, type.title as type_title FROM test inner join question on question.test_id=test.id " +
             "INNER JOIN assignment on assignment.test_id=test.id inner join type on test.type_id=type.id where assignment.user_id =? " +
             "and completed is false and question.deleted_at is null and assignment.deleted_at is null group BY test.id";
@@ -112,7 +112,7 @@ public class SQLTestDAOImpl implements TestDAO {
         Set<Test> assignmentTests = new HashSet<>();
         try {
             connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(GET_ASSIGNMENT_TESTS);
+            preparedStatement = connection.prepareStatement(GET_ASSIGNED_TESTS);
             preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {

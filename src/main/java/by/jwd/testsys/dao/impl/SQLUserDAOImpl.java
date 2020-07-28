@@ -40,7 +40,7 @@ public class SQLUserDAOImpl implements UserDAO {
     private static final String SELECT_PASSWORD_BY_USER_ID = "SELECT password FROM users WHERE id=?";
 
     private static final String UPDATE_USER = "UPDATE users SET login=?,first_name=?, last_name=?," +
-            "role_id=?, email=? WHERE id=?";
+            "role_id=? WHERE id=?";
     private static final String UPDATE_USER_PASSWORD = "UPDATE users SET password=? WHERE id=?";
     private static final String WRITE_ASSIGNMENT = "INSERT INTO `assignment`" +
             " (`date`,`deadline`, `test_id`, `user_id`, `completed`) " +
@@ -65,7 +65,8 @@ public class SQLUserDAOImpl implements UserDAO {
     private static final String UPDATE_ASSIGNMENT_COMPLETE = "UPDATE `assignment` SET `completed`=? " +
             "WHERE assignment.id=?";
 
-    private static final String UPDATE_ASSIGNMENT_DELETED_AT = "UPDATE `assignment` SET `deleted_at`=? where id=?";
+    private static final String UPDATE_ASSIGNMENT_DELETED_AT = "UPDATE `assignment` SET `deleted_at`=?, " +
+            "`completed`=true where id=?";
     private static final String SELECT_USER_ACTIVATION_CODE = "SELECT confirm_code FROM `users` WHERE id=?";
     private static final String SELECT_USER_IS_ACTIVATED = "SELECT is_activated FROM `users` WHERE id=?";
     private static final String UPDATE_USER_IS_ACTIVATED = "UPDATE users SET is_activated=? WHERE id=?";
@@ -73,7 +74,7 @@ public class SQLUserDAOImpl implements UserDAO {
 
     private final static String SQL_CONDITION_TEST_ID = " and test_id=?";
     private final static String SQL_CONDITION_TEST_TABLE_TYPE_ID = "  AND test.type_id=?";
-    private final static String SQL_CONDITION_COMPLETED = "AND completed=?";
+    private final static String SQL_CONDITION_COMPLETED = " AND completed=?";
 
     private static final String ASSIGNMENT_TEST_TITLE_COLUMN = "title";
     private static final String ASSIGNMENT_ID_COLUMN_ALIAS = "asgn_id";
@@ -268,8 +269,7 @@ public class SQLUserDAOImpl implements UserDAO {
             preparedStatement.setString(2, user.getFirstName());
             preparedStatement.setString(3, user.getLastName());
             preparedStatement.setInt(4, getRoleId(user.getRole()));
-            preparedStatement.setString(5, user.getEmail());
-            preparedStatement.setInt(6, user.getId());
+            preparedStatement.setInt(5, user.getId());
             preparedStatement.executeUpdate();
             updatedUser = user;
         } catch (SQLException e) {
@@ -420,8 +420,6 @@ public class SQLUserDAOImpl implements UserDAO {
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
         }
-
-
     }
 
 
@@ -707,10 +705,4 @@ public class SQLUserDAOImpl implements UserDAO {
                 .build();
     }
 
-    private User buildUserWithIdFirstNameLastName(ResultSet resultSet) throws SQLException {
-        int id = resultSet.getInt(USER_ID_COLUMN);
-        String firstName = resultSet.getString(USER_FIRST_NAME_COLUMN);
-        String lastName = resultSet.getString(USER_LAST_NAME_COLUMN);
-        return new User.Builder().withId(id).withFirstName(firstName).withLastName(lastName).build();
-    }
 }

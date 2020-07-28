@@ -48,6 +48,7 @@
 <fmt:message bundle="${loc}" key="admin_panel.tests.button.save" var="button_save"/>
 <fmt:message bundle="${loc}" key="admin_panel.tests.message.enter.type" var="message_enter_type"/>
 <fmt:message bundle="${loc}" key="admin_panel.tests.message.exists.value" var="message_exists_value"/>
+<fmt:message bundle="${loc}" key="assignment.message.empty_data" var="message_empty_data"/>
 
 
 <div class="container-fluid p-0">
@@ -146,7 +147,7 @@
                     </c:if>
                     <c:if test="${empty requestScope.testsInfoData}">
                         <tr>
-                            <td>empty data</td>
+                            <td>${message_empty_data}</td>
                         </tr>
                     </c:if>
 

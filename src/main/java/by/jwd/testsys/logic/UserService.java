@@ -16,7 +16,7 @@ public interface UserService {
 
     User userInfoToAccount(int id) throws UserServiceException, InvalidUserDataException;
 
-    User editUserInfo(User user) throws UserServiceException, InvalidUserDataException, ExistsUserException, ExistsEmailException;
+    User editUserInfo(User user) throws UserServiceException, InvalidUserDataException, ExistsUserException;
 
     Set<User> getUsers() throws UserServiceException;
 

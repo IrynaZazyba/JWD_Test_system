@@ -15,10 +15,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TestServiceImpl implements TestService {
 
@@ -334,7 +331,13 @@ public class TestServiceImpl implements TestService {
         }
 
         try {
-            return testResultDAO.getUserTestStatistic(userId);
+
+            Set<Statistic> userTestStatistic = testResultDAO.getUserTestStatistic(userId);
+            for (Statistic statistic : userTestStatistic) {
+                Duration duration = Duration.between(statistic.getTestStart(), statistic.getTestEnd());
+                statistic.setMinutesSpentOnTest(duration.toMinutes());
+            }
+            return userTestStatistic;
         } catch (DAOException e) {
             throw new TestServiceException("DAOException in TestService getUserTestStatistic() method", e);
         }
@@ -418,13 +421,19 @@ public class TestServiceImpl implements TestService {
             throw new InvalidUserDataException("Invalid id in TestServiceImpl checkResult() method");
         }
 
-        Set<Test> tests;
+        Set<Test> permittedTests = new HashSet<>();
         try {
-            tests = testDAO.getTests(typeId, false);
+            Set<Test> tests = testDAO.getTests(typeId, false);
+            for (Test test : tests) {
+                int countQuestion = questionAnswerDAO.getCountQuestion(test.getId());
+                if (countQuestion != 0) {
+                    permittedTests.add(test);
+                }
+            }
         } catch (DAOException e) {
             throw new TestServiceException("DAOException in TestService getNotEditedTestByTypeId() method", e);
         }
-        return tests;
+        return permittedTests;
     }
 
 
@@ -456,7 +465,7 @@ public class TestServiceImpl implements TestService {
 
 
     @Override
-    public Set<Test> getTestsPermittedForUser(int typeId, int currentPage, int recordsPerPage) throws TestServiceException, InvalidUserDataException {
+    public Set<Test> getTestsPermittedForUser(int typeId, int userId, int currentPage, int recordsPerPage) throws TestServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(typeId) ||
                 !frontDataValidator.validatePositiveNumber(currentPage) ||
@@ -465,17 +474,24 @@ public class TestServiceImpl implements TestService {
         }
 
         int start = currentPage * recordsPerPage - recordsPerPage;
-        Set<Test> tests;
+        Set<Test> permittedTest = new HashSet<>();
         try {
-            tests = testDAO.getTestsByLimit(typeId, start, recordsPerPage, false, false);
+            Set<Test> tests = testDAO.getTestsByLimit(typeId, start, recordsPerPage, false, false);
             for (Test test : tests) {
                 int countQuestion = questionAnswerDAO.getCountQuestion(test.getId());
-                test.setCountQuestion(countQuestion);
+                if (countQuestion != 0) {
+                    test.setCountQuestion(countQuestion);
+                    Assignment userAssignmentByTestId = userDAO.getUserAssignmentByTestId(userId,test.getId());
+                    if (userAssignmentByTestId != null) {
+                        test.setStarted(!userAssignmentByTestId.isComplete());
+                    }
+                    permittedTest.add(test);
+                }
             }
         } catch (DAOException e) {
             throw new TestServiceException("DAOException in TestService getTestByTypeId() method", e);
         }
-        return tests;
+        return permittedTest;
     }
 
 

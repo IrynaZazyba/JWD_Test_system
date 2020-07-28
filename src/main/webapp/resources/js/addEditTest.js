@@ -5,6 +5,9 @@
 
 async function deleteTest(testId, obj) {
 
+    if (document.getElementById('invalidDeleteMessage').style.display === 'block') {
+        document.getElementById('invalidDeleteMessage').style.display = 'none';
+    }
 
     let response = await fetch("/ajax?command=delete_test&testId=" + testId, {
         method: 'DELETE',
@@ -18,6 +21,7 @@ async function deleteTest(testId, obj) {
         tableRow.querySelectorAll("button").forEach(elem => elem.setAttribute("disabled", "disabled"));
         tableRow.querySelector("a").removeAttribute("href");
     } else {
+        $("#confirm-delete").modal('hide');
         document.getElementById('invalidDeleteMessage').style.display = 'block';
     }
 }

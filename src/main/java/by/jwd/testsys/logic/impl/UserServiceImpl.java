@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User editUserInfo(User user) throws UserServiceException, InvalidUserDataException, ExistsUserException, ExistsEmailException {
+    public User editUserInfo(User user) throws UserServiceException, InvalidUserDataException, ExistsUserException {
 
         Set<String> validateResult = userValidator.validate(user.getLogin(), user.getFirstName(), user.getLastName(), user.getEmail());
 
@@ -147,11 +147,6 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
-            int userIdByEmail = userDao.getUserIdByEmail(user.getEmail());
-            if (userIdByEmail != 0) {
-                throw new ExistsEmailException("Exists email");
-            }
-
             User userById = userDao.getUserById(user.getId());
             if (!userById.getLogin().equals(user.getLogin())) {
                 User userByLogin = userDao.getUserByLogin(user.getLogin());

@@ -64,9 +64,9 @@
                     <tr>
                         <td><c:out value="${item.testTitle}"/></td>
                         <td><res:local-date date="${item.testStart}"/></td>
-                        <td><c:out value="${item.minutesSpentOnTest}"/></td>
+                        <td class="center-t"><c:out value="${item.minutesSpentOnTest}"/></td>
                         <td><c:out value="${item.timeOnTest}"/></td>
-                        <td><c:out value="${item.rightCountQuestion}"/></td>
+                        <td class="center-t"><c:out value="${item.rightCountQuestion}"/></td>
                         <td><res:result-tag rightCountQuestion="${item.rightCountQuestion}" countTestQuestion="${item.countTestQuestion}"/></td>
                     </tr>
                 </c:forEach>

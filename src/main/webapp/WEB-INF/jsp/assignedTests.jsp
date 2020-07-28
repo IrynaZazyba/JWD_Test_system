@@ -26,7 +26,8 @@
 <fmt:message bundle="${loc}" key="button.test.get_started" var="button_get_started"/>
 <fmt:message bundle="${loc}" key="button.test.continue" var="button_continue"/>
 <fmt:message bundle="${loc}" key="nav-link.assigned_tests" var="assigned_test"/>
-
+<fmt:message bundle="${loc}" key="test.card.time.min" var="card_time_min"/>
+<fmt:message bundle="${loc}" key="test.card.question" var="card_question"/>
 
 <div class="container-fluid p-0">
 
@@ -48,8 +49,8 @@
                                         <div class="card-body text-center mb-2 card-test">
                                             <h6 class="name-test">${item.title}</h6>
                                             <hr>
-                                            <p class="card-text time-quest">${item.duration} min</p>
-                                            <p class="card-text time-quest">${item.countQuestion}questions</p>
+                                            <p class="card-text time-quest">${item.duration} ${card_time_min}</p>
+                                            <p class="card-text time-quest">${item.countQuestion} ${card_question}</p>
 
 
                                         </div>
@@ -91,8 +92,8 @@
                                                 <h5 class="name-test">${itm.title}</h5>
                                                 <hr>
 
-                                                <p class="card-text time-quest">${itm.duration} min</p>
-                                                <p class="card-text time-quest">${itm.countQuestion} questions</p>
+                                                <p class="card-text time-quest">${itm.duration} ${card_time_min}</p>
+                                                <p class="card-text time-quest">${itm.countQuestion} ${card_question}</p>
 
 
                                             </div>
@@ -127,30 +128,6 @@
                                                 </form>
 
                                             </c:if>
-
-
-<%--                                            <nav aria-label="...">--%>
-<%--                                                <ul class="pagination pagination-sm pagination_center">--%>
-<%--                                                    <c:forEach var="i" begin="1" end="${requestScope.countPages}">--%>
-<%--                                                        <c:if test="${i==requestScope.currentPage}">--%>
-
-<%--                                                            <li class="page-item page-item-change active" aria-current="page">--%>
-<%--                                                            <span class="page-link">${i}--%>
-<%--                                                            <span class="sr-only">(current)</span>--%>
-<%--                                                            </span>--%>
-<%--                                                        </c:if>--%>
-
-<%--                                                        <c:if test="${i!=requestScope.currentPage}">--%>
-<%--                                                            <li class="page-item">--%>
-<%--                                                                <a class="page-link"--%>
-<%--                                                                   href="${pageContext.request.contextPath}/test?command=show_admin_panel&currentPage=${i}">--%>
-<%--                                                                        ${i}--%>
-<%--                                                                </a>--%>
-<%--                                                            </li>--%>
-<%--                                                        </c:if>--%>
-<%--                                                    </c:forEach>--%>
-<%--                                                </ul>--%>
-<%--                                            </nav>--%>
 
                                         </div>
                                     </div>

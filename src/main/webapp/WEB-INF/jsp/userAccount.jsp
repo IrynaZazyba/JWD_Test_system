@@ -94,7 +94,7 @@
                             <div class="row">
                                 <label class="col-sm-3 control-label" for="email">${lable_email}</label>
                                 <div class="col-sm-9">
-                                    <input type="email" class="form-control" id="email"
+                                    <input disabled type="email" class="form-control" id="email"
                                            name="email" value="${requestScope.user_info.email}"
                                            aria-describedby="emailHelp">
                                 </div>

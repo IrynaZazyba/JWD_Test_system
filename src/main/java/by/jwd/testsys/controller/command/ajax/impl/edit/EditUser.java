@@ -34,12 +34,9 @@ public class EditUser implements AjaxCommand {
     private static final String LOCAL_MESSAGE_SUCCESS_USER_EDIT = "message.json.user_edit_changed";
     private static final String LOCAL_MESSAGE_EXISTS_LOGIN = "message.exists_login";
     private static final String LOCAL_MESSAGE_ERROR = "message.json.user_edit_error";
-    private static final String LOCAL_MESSAGE_EXISTS_EMAIL = "message.exists_email";
-
     private static final String LOCAL_MESSAGE_INVALID_LOGIN = "message.invalid_login";
     private static final String LOCAL_MESSAGE_INVALID_FIRST_NAME = "message.invalid_first_name";
     private static final String LOCAL_MESSAGE_INVALID_LAST_NAME = "message.invalid_last_name";
-    private static final String LOCAL_MESSAGE_INVALID_EMAIL = "message.invalid_email";
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
@@ -48,13 +45,11 @@ public class EditUser implements AjaxCommand {
         String login = request.getParameter(RequestParameterName.USER_LOGIN_PARAMETER);
         String first_name = request.getParameter(RequestParameterName.USER_FIRST_NAME_PARAMETER);
         String last_name = request.getParameter(RequestParameterName.USER_LAST_NAME_PARAMETER);
-        String email = request.getParameter(RequestParameterName.USER_EMAIL_PARAMETER);
 
         User user = new User.Builder()
                 .withLogin(login)
                 .withFirstName(first_name)
                 .withLastName(last_name)
-                .withEmail(email)
                 .build();
 
         UserService userService = ServiceFactory.getInstance().getUserService();
@@ -89,11 +84,6 @@ public class EditUser implements AjaxCommand {
             answer = answerToUser.toString();
             logger.log(Level.ERROR, "Exists user data in EditUser command method execute()", e);
             response.setStatus(409);
-        } catch (ExistsEmailException e) {
-            answerToUser.addProperty(MESSAGE_KEY, resourceBundle.getString(LOCAL_MESSAGE_EXISTS_EMAIL));
-            answer = answerToUser.toString();
-            logger.log(Level.ERROR, "Exists email data in EditUser command method execute()", e);
-            response.setStatus(409);
         }
 
         return answer;
@@ -114,10 +104,6 @@ public class EditUser implements AjaxCommand {
 
             if (param.equals(InvalidParam.INVALID_LAST_NAME.toString())) {
                 messages.add(bundle.getString(LOCAL_MESSAGE_INVALID_LAST_NAME));
-            }
-
-            if (param.equals(InvalidParam.INVALID_EMAIL.toString())) {
-                messages.add(bundle.getString(LOCAL_MESSAGE_INVALID_EMAIL));
             }
         }
         answer.put(MESSAGE_KEY, messages);

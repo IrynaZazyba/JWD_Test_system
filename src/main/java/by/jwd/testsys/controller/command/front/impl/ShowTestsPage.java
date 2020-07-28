@@ -33,7 +33,6 @@ public class ShowTestsPage implements Command {
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        HttpSession session = req.getSession();
         try {
 
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
@@ -44,7 +43,10 @@ public class ShowTestsPage implements Command {
             int activeTypeId = GetParameterFromRequestHelper.getActiveTypeId(req, types);
             int page = GetParameterFromRequestHelper.getCurrentPage(req);
 
-            Set<Test> testByTypeId = testService.getTestsPermittedForUser(activeTypeId, page, NUMBER_OF_RECORDS_PER_PAGE);
+            HttpSession session = req.getSession();
+            int userId = (Integer) session.getAttribute(SessionAttributeName.USER_ID_SESSION_ATTRIBUTE);
+
+            Set<Test> testByTypeId = testService.getTestsPermittedForUser(activeTypeId,userId, page, NUMBER_OF_RECORDS_PER_PAGE);
 
             req.setAttribute(RequestParameterName.TEST_TYPES_LIST, types);
             req.setAttribute(RequestParameterName.INFO_ABOUT_TESTS, testByTypeId);

@@ -25,13 +25,15 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
     private final ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
     private ConnectionPoolDAO connectionPool = connectionPoolFactory.getSqlConnectionPoolDAO();
 
-    private static final String SELECT_QUESTION = "SELECT id, question FROM question q WHERE test_id=? " +
-            "and not EXISTS (select * from `question-log` where q.id=question_id  and assignment_id=?) Limit 1;";
+    private static final String SELECT_QUESTION = "SELECT id, question FROM question q WHERE deleted_at IS NULL AND " +
+            "test_id=? and not EXISTS (select * from `question-log` where q.id=question_id  and assignment_id=?) " +
+            "Limit 1;";
 
-    private static final String SELECT_ANSWER_BY_QUESTION_ID = "SELECT a.id, a.answer FROM answer a WHERE question_id=?";
+    private static final String SELECT_ANSWER_BY_QUESTION_ID = "SELECT a.id, a.answer FROM answer a WHERE question_id=? " +
+            "and deleted_at is NULL";
 
     private static final String GET_COUNT_QUESTION_BY_TEST_ID = "SELECT count(id) as count_question FROM `question` " +
-            "WHERE test_id=?";
+            "WHERE test_id=? and deleted_at is NULL";
 
     private static final String SELECT_RIGHT_ANSWERS_TO_QUESTION = "SELECT q.id q_id, a.id  a_id FROM question q " +
             "INNER JOIN answer a ON q.id=a.question_id WHERE test_id=? AND result=1";

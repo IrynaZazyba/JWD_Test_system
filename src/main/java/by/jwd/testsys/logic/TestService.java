@@ -42,7 +42,7 @@ public interface TestService {
 
     Set<Test> getTestByTypeId(int typeId, int currentPage, int recordsPerPage) throws TestServiceException, InvalidUserDataException;
 
-    Set<Test> getTestsPermittedForUser(int typeId, int currentPage, int recordsPerPage) throws TestServiceException, InvalidUserDataException;
+    Set<Test> getTestsPermittedForUser(int typeId,int userId, int currentPage, int recordsPerPage) throws TestServiceException, InvalidUserDataException;
 
     int receiveNumberTestPages(int testId, int recordsPerPage, boolean isEdited, boolean isExistsKey) throws TestServiceException, InvalidUserDataException;
 }

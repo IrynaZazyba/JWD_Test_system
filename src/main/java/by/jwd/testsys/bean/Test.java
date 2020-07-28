@@ -32,7 +32,6 @@ class Test implements Serializable {
     private boolean started;
     private boolean edited;
 
-    private int flag;
 
     public Test() {
     }

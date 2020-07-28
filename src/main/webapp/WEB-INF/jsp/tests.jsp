@@ -26,6 +26,8 @@
 <fmt:message bundle="${loc}" key="button.test.get_started" var="button_get_started"/>
 <fmt:message bundle="${loc}" key="button.test.continue" var="button_continue"/>
 <fmt:message bundle="${loc}" key="nav-link.assigned_tests" var="assigned_test"/>
+<fmt:message bundle="${loc}" key="test.card.time.min" var="card_time_min"/>
+<fmt:message bundle="${loc}" key="test.card.question" var="card_question"/>
 
 
 <div class="container-fluid p-0">
@@ -73,14 +75,14 @@
                                     <h6 class="name-test">${itm.title}</h6>
                                     <hr>
 
-                                    <p class="card-text time-quest">${itm.duration} min</p>
-                                    <p class="card-text time-quest">${itm.countQuestion} questions</p>
+                                    <p class="card-text time-quest">${itm.duration} ${card_time_min}</p>
+                                    <p class="card-text time-quest">${itm.countQuestion} ${card_question}</p>
 
 
                                 </div>
 
 
-                                <c:if test="${itm.flag==0}">
+                                <c:if test="${!itm.started}">
 
                                     <form method="GET" action="test">
                                         <input type="hidden" name="command" value="show_exe_test_page"/>
@@ -92,15 +94,11 @@
                                     </form>
 
                                 </c:if>
-                                <c:if test="${itm.flag==1}">
+                                <c:if test="${itm.started}">
 
-                                    <form onsubmit="getContinuedQuestion(); return false" id="exeTest"
-                                          enctype="multipart/form-data"
-                                          accept-charset="UTF-8" class="key-form" role="form">
-                                        <input type="hidden" name="command" value="save_answer"/>
-                                        <input type="hidden" id="testId" name="testId"
-                                               value="${itm.id}"/>
-
+                                    <form method="GET" action="test">
+                                        <input type="hidden" name="command" value="show_exe_test_page"/>
+                                        <input type="hidden" name="testId" value="${itm.id}"/>
 
                                         <button type="submit"
                                                 class="card-btn btn btn-outline-primary d-block mx-auto">
