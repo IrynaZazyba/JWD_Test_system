@@ -28,18 +28,21 @@
 <fmt:message bundle="${loc}" key="test.message.invalid_key" var="message_invalid_key"/>
 <fmt:message bundle="${loc}" key="test.run_page.button.next" var="button_next"/>
 <fmt:message bundle="${loc}" key="test.run_page.button.start" var="button_start"/>
+<fmt:message bundle="${loc}" key="test.run_page.button.back" var="button_back"/>
 <fmt:message bundle="${loc}" key="test.run_page.input.enter_key" var="input_enter_key"/>
 <fmt:message bundle="${loc}" key="test.run_page.message.duration_test" var="message_test_duration"/>
 <fmt:message bundle="${loc}" key="test.run_page.message.number_question" var="message_number_question"/>
+<fmt:message bundle="${loc}" key="test.card.time.min" var="time_min"/>
+<fmt:message bundle="${loc}" key="test.card.time.sec" var="time_sec"/>
 
 <div class="row m-0">
     <div id="timer" class="row m-0" style="visibility: hidden">
         <div id="countdown" class="countdown">
             <div class="countdown-number">
                 <span class="minutes countdown-time"></span>
-                <span class="countdown-text">min</span>
+                <span class="countdown-text">${time_min}</span>
                 <span class="seconds countdown-time"></span>
-                <span class="countdown-text">sec</span>
+                <span class="countdown-text">${time_sec}</span>
             </div>
         </div>
     </div>
@@ -93,7 +96,7 @@
                                 <div class="row justify-content-center">
                                     <div class="col">
                                         <button onclick="window.history.back()" type="button"
-                                                class="card-exe-btn btn btn-right btn-outline-primary">Назад
+                                                class="card-exe-btn btn btn-right btn-outline-primary">${button_back}
                                         </button>
                                     </div>
                                     <div class="col">
