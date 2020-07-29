@@ -24,9 +24,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-public class ShowAdminPanel implements Command {
+public class AdminPanel implements Command {
 
-    private static Logger logger = LogManager.getLogger(ShowAdminPanel.class);
+    private static Logger logger = LogManager.getLogger(AdminPanel.class);
     private final static int NUMBER_OF_RECORDS_PER_PAGE=11;
 
     @Override

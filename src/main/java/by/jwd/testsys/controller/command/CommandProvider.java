@@ -9,7 +9,7 @@ import by.jwd.testsys.controller.command.front.CommandName;
 import by.jwd.testsys.controller.command.front.impl.*;
 import by.jwd.testsys.controller.command.front.impl.edit.AddTest;
 import by.jwd.testsys.controller.command.front.impl.edit.DeleteTestType;
-import by.jwd.testsys.controller.command.front.impl.edit.ShowAdminPanel;
+import by.jwd.testsys.controller.command.front.impl.edit.AdminPanel;
 import by.jwd.testsys.controller.command.front.impl.edit.PreviewTest;
 
 import java.util.HashMap;
@@ -35,7 +35,7 @@ public final class CommandProvider {
         frontRepository.put(CommandName.SHOW_EXE_TEST_PAGE, new ExeTestPage());
         frontRepository.put(CommandName.ASSIGN_TEST, new AdminAssignTest());
         frontRepository.put(CommandName.TESTS_RESULTS, new TestsResults());
-        frontRepository.put(CommandName.SHOW_ADMIN_PANEL, new ShowAdminPanel());
+        frontRepository.put(CommandName.SHOW_ADMIN_PANEL, new AdminPanel());
         frontRepository.put(CommandName.GET_EDIT_TEST_PAGE, new PreviewTest());
         frontRepository.put(CommandName.ADD_TEST, new AddTest());
         frontRepository.put(CommandName.PREVIEW_TEST, new PreviewTest());

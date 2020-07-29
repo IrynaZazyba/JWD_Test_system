@@ -63,7 +63,7 @@
 
     <jsp:include page="../parts/nav-menu.jsp"/>
     <div class="row height-100 wight-99">
-        <div class="col-2 background-gradient height-100 p-l-15 p-r-0">
+        <div class="col-2 background-gradient p-l-15 p-r-0">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
                 <a class="nav-link vertical-menu active" id="v-pills-assigned_test-tab" data-toggle="pill"

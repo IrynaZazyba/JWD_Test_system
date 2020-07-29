@@ -131,7 +131,7 @@
                                 <c:if test="${i!=requestScope.currentPage}">
                                     <li class="page-item">
                                         <a class="page-link"
-                                           href="${pageContext.request.contextPath}/test?command=show_tests_page&currentPage=${i}">
+                                           href="${pageContext.request.contextPath}/test?command=show_tests_page&typeId=${requestScope.activeTypeId}&currentPage=${i}">
                                                 ${i}
                                         </a>
                                     </li>
