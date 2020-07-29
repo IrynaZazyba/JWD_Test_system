@@ -50,7 +50,7 @@ public class UserValidatorImpl implements UserValidator {
 
 
     @Override
-    public Set<String> validate(String login, String firstName, String lastName, String email) {
+    public Set<String> validate(String login, String firstName, String lastName) {
 
         Set<String> validationResult = new HashSet<>();
 
@@ -67,9 +67,6 @@ public class UserValidatorImpl implements UserValidator {
             validationResult.add(InvalidParam.INVALID_LAST_NAME.toString());
         }
 
-        if (email == null || !validateEmail(email)) {
-            validationResult.add(InvalidParam.INVALID_EMAIL.toString());
-        }
         return validationResult;
     }
 

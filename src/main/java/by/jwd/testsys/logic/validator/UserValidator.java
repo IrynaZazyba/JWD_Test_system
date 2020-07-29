@@ -8,7 +8,7 @@ public interface UserValidator {
 
     Set<String> validate(User user);
 
-    Set<String> validate(String login, String firstName, String lastName, String email);
+    Set<String> validate(String login, String firstName, String lastName);
 
     boolean validatePassword(String password);
 }

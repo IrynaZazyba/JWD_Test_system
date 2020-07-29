@@ -23,7 +23,7 @@ import java.util.Set;
 
 public class DisplayStatistic implements Command {
 
-    private static Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger(DisplayStatistic.class);
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -1,9 +1,5 @@
 package by.jwd.testsys.dao.dbconn;
 
-import by.jwd.testsys.dao.dbconn.ConnectionPoolDAO;
-import by.jwd.testsys.dao.dbconn.ConnectionPoolException;
-import by.jwd.testsys.dao.dbconn.DBParameterTest;
-import by.jwd.testsys.dao.dbconn.DBResourceManagerTest;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,7 +13,7 @@ import java.util.concurrent.Executor;
 
 public final class SqlConnectionPoolDAOTestImpl implements ConnectionPoolDAO {
 
-    private static Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger(SqlConnectionPoolDAOTestImpl.class);
     private BlockingQueue<Connection> connectionQueue;
     private BlockingQueue<Connection> givenAwayConQueue;
     private Class<? extends PooledConnection> aClass;

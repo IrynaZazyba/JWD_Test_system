@@ -24,8 +24,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-public class ShowAdminAssignTest implements Command {
-    private static Logger logger = LogManager.getLogger();
+public class AdminAssignTest implements Command {
+    private static Logger logger = LogManager.getLogger(AdminAssignTest.class);
 
 
     @Override

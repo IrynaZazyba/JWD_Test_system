@@ -21,7 +21,7 @@ import java.util.*;
 
 public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
 
-    private static Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger(SQLQuestionAnswerDAOImpl.class);
     private final ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
     private ConnectionPoolDAO connectionPool = connectionPoolFactory.getSqlConnectionPoolDAO();
 

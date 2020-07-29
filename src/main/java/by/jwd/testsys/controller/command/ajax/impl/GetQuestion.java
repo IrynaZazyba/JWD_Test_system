@@ -22,9 +22,9 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ShowQuestion implements AjaxCommand {
+public class GetQuestion implements AjaxCommand {
 
-    private static Logger logger = LogManager.getLogger(ShowQuestion.class);
+    private static Logger logger = LogManager.getLogger(GetQuestion.class);
     private final static boolean TRUE = true;
 
     @Override

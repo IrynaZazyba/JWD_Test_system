@@ -18,7 +18,7 @@ import java.io.IOException;
 
 public class TestsResults implements Command {
 
-    private static Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger(TestsResults.class);
 
 
     @Override
@@ -26,7 +26,7 @@ public class TestsResults implements Command {
 
         try {
 
-            ShowAdminAssignTest.BuildRequest.addFilterInfoToRequest(request);
+            AdminAssignTest.BuildRequest.addFilterInfoToRequest(request);
             HttpSession session = request.getSession(false);
             session.setAttribute(SessionAttributeName.QUERY_STRING, request.getQueryString());
 

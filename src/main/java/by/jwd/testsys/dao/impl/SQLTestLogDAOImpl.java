@@ -17,7 +17,7 @@ import java.util.*;
 
 public class SQLTestLogDAOImpl implements TestLogDAO {
 
-    private static Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger(SQLTestLogDAOImpl.class);
     private final ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
     private ConnectionPoolDAO connectionPool = connectionPoolFactory.getSqlConnectionPoolDAO();
 

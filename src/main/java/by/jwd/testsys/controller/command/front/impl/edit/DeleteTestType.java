@@ -20,9 +20,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-public class DeleteTestTypePage implements Command {
+public class DeleteTestType implements Command {
 
-    private static Logger logger = LogManager.getLogger(DeleteTestTypePage.class);
+    private static Logger logger = LogManager.getLogger(DeleteTestType.class);
 
 
     @Override

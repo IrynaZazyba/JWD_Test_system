@@ -20,9 +20,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-public class AddTestPage implements Command {
+public class AddTest implements Command {
 
-    private static Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger(AddTest.class);
 
 
     @Override

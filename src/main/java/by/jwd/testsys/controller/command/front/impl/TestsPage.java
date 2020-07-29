@@ -24,9 +24,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-public class ShowTestsPage implements Command {
+public class TestsPage implements Command {
 
-    private static Logger logger = LogManager.getLogger(ShowTestsPage.class);
+    private static Logger logger = LogManager.getLogger(TestsPage.class);
     private final static int NUMBER_OF_RECORDS_PER_PAGE = 8;
 
 

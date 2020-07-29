@@ -24,8 +24,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-public class ShowPreviewTestPage implements Command {
-    private static Logger logger = LogManager.getLogger();
+public class PreviewTest implements Command {
+    private static Logger logger = LogManager.getLogger(PreviewTest.class);
 
 
     @Override

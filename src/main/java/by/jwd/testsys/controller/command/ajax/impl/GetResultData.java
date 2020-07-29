@@ -2,9 +2,7 @@ package by.jwd.testsys.controller.command.ajax.impl;
 
 import by.jwd.testsys.bean.Result;
 import by.jwd.testsys.controller.command.ajax.AjaxCommand;
-import by.jwd.testsys.controller.command.front.impl.edit.ShowAdminPanel;
 import by.jwd.testsys.controller.parameter.RequestParameterName;
-import by.jwd.testsys.logic.TestLogService;
 import by.jwd.testsys.logic.TestService;
 import by.jwd.testsys.logic.exception.InvalidUserDataException;
 import by.jwd.testsys.logic.exception.TestLogServiceException;
@@ -21,9 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class ShowResultData implements AjaxCommand {
+public class GetResultData implements AjaxCommand {
 
-    private static Logger logger = LogManager.getLogger(ShowResultData.class);
+    private static Logger logger = LogManager.getLogger(GetResultData.class);
     private static final String EMPTY_STRING = "";
 
     @Override

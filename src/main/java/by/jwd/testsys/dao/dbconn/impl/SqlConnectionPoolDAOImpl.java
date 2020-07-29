@@ -17,7 +17,7 @@ import java.util.concurrent.Executor;
 
 public final class SqlConnectionPoolDAOImpl implements ConnectionPoolDAO {
 
-    private static Logger logger = LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger(SqlConnectionPoolDAOImpl.class);
     private BlockingQueue<Connection> connectionQueue;
     private BlockingQueue<Connection> givenAwayConQueue;
     private Class<? extends PooledConnection> aClass;

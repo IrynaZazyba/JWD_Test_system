@@ -140,7 +140,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User editUserInfo(User user) throws UserServiceException, InvalidUserDataException, ExistsUserException {
 
-        Set<String> validateResult = userValidator.validate(user.getLogin(), user.getFirstName(), user.getLastName(), user.getEmail());
+        Set<String> validateResult = userValidator.validate(user.getLogin(), user.getFirstName(), user.getLastName());
 
         if (validateResult.size() != 0) {
             throw new InvalidUserDataException("Invalid user data.", validateResult);
