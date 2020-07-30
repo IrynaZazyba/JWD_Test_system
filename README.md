@@ -21,6 +21,7 @@ Additional functionality for the administrator:
 
 ### Features
 Notifying the user about test assignment via email.
+Application localization Russian / English
 
 ### Getting Started
 Host the parent directory to the web server.
