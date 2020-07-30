@@ -1,13 +1,12 @@
-# JWD_Test_system
-Client-server application for testing knowledge
+# Bee-testing system
 
 ### Structure description
-The application provides the ability to download and display files of certain formats (JPG, PNG, GIF).
+Client-server application for testing knowledge
 
 ### Functionality
 
 For user:
-- registration using e-mail
+- registration with confirmation via email
 - authorization
 - changing user data
 - passing tests / passing assigned tests
@@ -17,11 +16,11 @@ Additional functionality for the administrator:
 - adding / removing tests
 - editing tests
 - assigning tests to users /deleting assignment 
-- viewing assigned tests
+- viewing assigned tests of all users
 - viewing test results of all users
 
 ### Features
-Files are saved in the project root directory. All changes (for example, new files) will be lost every time you redeploy the application.
+Notifying the user about test assignment via email.
 
 ### Getting Started
 Host the parent directory to the web server.
