@@ -28,4 +28,4 @@ Host the parent directory to the web server.
 
 ### App website
 You can see a hosted version of Bee-testing app:
-test-system.mycloud.by
+http://test-system.mycloud.by
