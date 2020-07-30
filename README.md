@@ -1,7 +1,7 @@
 # Bee-testing system
 
-### Structure description
-Client-server application for testing knowledge
+### Description
+Client-server application for testing knowledge. Bee-testing provides the infrastructure for creating and passing tests. Ease of use,  the ability to collect statistics, wide functionality in administration, content-appropriate interface.
 
 ### Functionality
 
@@ -27,4 +27,5 @@ Application localization Russian / English
 Host the parent directory to the web server.
 
 ### App website
+You can see a hosted version of Bee-testing app:
 test-system.mycloud.by
