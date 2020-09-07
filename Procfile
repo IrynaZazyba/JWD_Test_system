@@ -1,1 +1,1 @@
-web: java -war target/by.jwd.testsys.war
+web: java -jar target/by.jwd.testsys.war
