@@ -116,7 +116,6 @@
                         <button type="submit"
                                 class="btn btn-outline-primary btn-sign-out">${button_sign_out}</button>
                     </form>
-
                 </div>
             </li>
         </ul>
