@@ -174,7 +174,7 @@
 
 
         </div>
-        <div class="col-1"></div>
+        <div class="coinsertAl-1"></div>
     </div>
     <div id="content bor"></div>
 

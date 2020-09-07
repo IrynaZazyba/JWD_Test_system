@@ -515,6 +515,7 @@ public class SQLTestDAOImpl implements TestDAO {
         return countAssignment;
     }
 
+
     @Override
     public int saveTest(Test test, int typeId) throws DAOException {
         Connection connection = null;
@@ -546,7 +547,6 @@ public class SQLTestDAOImpl implements TestDAO {
         }
         return createdTestId;
     }
-
 
     @Override
     public void deleteTestById(int testId, LocalDateTime deletedDate) throws DAOException {
@@ -611,7 +611,6 @@ public class SQLTestDAOImpl implements TestDAO {
         }
     }
 
-
     @Override
     public void updateTest(Test test, int typeId) throws DAOException {
         Connection connection = null;
@@ -659,6 +658,7 @@ public class SQLTestDAOImpl implements TestDAO {
             connectionPool.closeConnection(connection, preparedStatement);
         }
     }
+
 
     @Override
     public void deleteTestType(int typeId, LocalDateTime deletedDate) throws DAOException {

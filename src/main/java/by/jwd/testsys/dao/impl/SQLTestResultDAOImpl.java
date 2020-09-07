@@ -164,7 +164,6 @@ public class SQLTestResultDAOImpl implements TestResultDAO {
 
     }
 
-
     @Override
     public void updateResultDateEndRightCount(Result result) throws DAOException {
         Connection connection = null;

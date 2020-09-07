@@ -518,7 +518,7 @@ public class SQLUserDAOImpl implements UserDAO {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        int userId=0;
+        int userId = 0;
 
         try {
             connection = connectionPool.takeConnection();
@@ -638,6 +638,7 @@ public class SQLUserDAOImpl implements UserDAO {
         return isActivated;
 
     }
+
 
     @Override
     public Integer writeAssignment(Assignment assignment) throws DAOSqlException {

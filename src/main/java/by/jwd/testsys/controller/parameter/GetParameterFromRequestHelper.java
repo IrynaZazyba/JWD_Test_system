@@ -23,7 +23,6 @@ public class GetParameterFromRequestHelper {
         if (currentPage != null) {
             page = Integer.parseInt(currentPage);
         }
-
         return page;
     }
 

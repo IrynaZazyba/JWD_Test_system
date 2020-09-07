@@ -192,6 +192,7 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
         return questionAnswers;
     }
 
+
     @Override
     public int saveQuestionWithAnswers(Question question, int testId) throws DAOException {
         Connection connection = null;
@@ -244,6 +245,7 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
         }
         return createdQuestionId;
     }
+
 
 
     @Override

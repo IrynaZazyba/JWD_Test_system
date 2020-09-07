@@ -35,6 +35,7 @@ public class SQLTestResultDAOTest {
 
     private static Logger logger = LogManager.getLogger(SQLTestResultDAOTest.class);
 
+
     @Mock
     private static ConnectionPoolDAO mockedConnectionPool;
 
@@ -80,7 +81,7 @@ public class SQLTestResultDAOTest {
 
 
     @Theory
-    public void getTestResult(Assignment assignment) throws DAOException {
+    public void getTestResultTest(Assignment assignment) throws DAOException {
 
         Result actualTestResult = testResultDAO.getTestResult(assignment);
         Result expectedTestResult = new Result.Builder()
@@ -91,22 +92,20 @@ public class SQLTestResultDAOTest {
                 .withAssignment(ASSIGNMENT)
                 .build();
         Assert.assertEquals(expectedTestResult, actualTestResult);
-
     }
 
 
     @Test
-    public void getTestStartDateTime() throws DAOException {
+    public void getTestStartDateTimeTest() throws DAOException {
 
         Timestamp actualTestStartDateTime = testResultDAO.getTestStartDateTime(249);
         Timestamp expectedTestStartDateTime = Timestamp.valueOf("2020-07-22 21:12:58");
         Assert.assertEquals(expectedTestStartDateTime, actualTestStartDateTime);
-
     }
 
 
     @Theory
-    public void insertResult(Result result) throws DAOException {
+    public void insertResultTest(Result result) throws DAOException {
 
         int beforeInsert = getCountRowResultTableTestDB();
         testResultDAO.insertResult(result);
@@ -116,7 +115,7 @@ public class SQLTestResultDAOTest {
     }
 
     @Test
-    public void updateResultDateEndRightCount() throws DAOException {
+    public void updateResultDateEndRightCountTest() throws DAOException {
         Result resultForUpdate = new Result.Builder()
                 .withRightCountQuestion(10)
                 .withDateEnd(LocalDateTime.parse("2020-07-22 21:33:29", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
@@ -131,7 +130,7 @@ public class SQLTestResultDAOTest {
     }
 
     @Test
-    public void getUserTestStatistic() throws DAOException {
+    public void getUserTestStatisticTest() throws DAOException {
         Set<Statistic> actualUserTestStatistic = new TreeSet<>(new StatisticComparator());
         actualUserTestStatistic.addAll(testResultDAO.getUserTestStatistic(2));
 
@@ -165,7 +164,7 @@ public class SQLTestResultDAOTest {
     }
 
     @Test
-    public void getTestResult_oneParameter() throws DAOException {
+    public void getTestResultTest_oneParameter() throws DAOException {
         int typeId = 1;
         int testId = 0;
         int userId = 0;
@@ -201,7 +200,7 @@ public class SQLTestResultDAOTest {
     }
 
     @Test
-    public void getTestResult_twoParameters() throws DAOException {
+    public void getTestResultTest_twoParameters() throws DAOException {
         int typeId = 1;
         int testId = 6;
         int userId = 0;

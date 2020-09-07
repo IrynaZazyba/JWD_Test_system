@@ -12,6 +12,11 @@
     <name>by.jwd.testsys Maven Webapp</name>
     <url>http://test-system.mycloud.by/</url>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.12</maven.compiler.source>
+        <maven.compiler.target>1.12</maven.compiler.target>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -109,12 +114,12 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <release>12</release>
-                    <encoding>UTF-8</encoding>
+                    <source>1.12</source>
+                    <target>1.12</target>
+                    <verbose>true</verbose>
                 </configuration>
             </plugin>
         </plugins>
