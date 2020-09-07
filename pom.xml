@@ -10,7 +10,7 @@
     <packaging>war</packaging>
 
     <name>by.jwd.testsys Maven Webapp</name>
-    <url>http://test-system.mycloud.by/</url>
+    <url>https://bee-testing.herokuapp.com/</url>
 
 
     <dependencies>
