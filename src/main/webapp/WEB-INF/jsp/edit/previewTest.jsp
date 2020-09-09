@@ -127,7 +127,7 @@
                     </div>
                     <div class="form-group">
                         <label for="testDuration">${label_duration}</label>
-                        <input disabled required type="text" class="form-control" name="testDuration"
+                        <input disabled required type="time" class="form-control" name="testDuration"
                                value="${requestScope.testData.duration}"
                                id="testDuration">
                         <div class="invalid-feedback">

@@ -1,5 +1,6 @@
 package by.jwd.testsys.controller.command.front.impl;
 
+import by.jwd.testsys.controller.parameter.JspPageName;
 import by.jwd.testsys.controller.parameter.SessionAttributeName;
 import by.jwd.testsys.controller.command.front.Command;
 
@@ -27,7 +28,7 @@ public class ChangeLocal implements Command {
         if (queryString != null) {
             response.sendRedirect(request.getContextPath() + CONTROLLER_ROUTE+queryString);
         } else {
-            response.sendRedirect(request.getContextPath());
+            response.sendRedirect(JspPageName.START_JSP_PAGE);
         }
 
     }

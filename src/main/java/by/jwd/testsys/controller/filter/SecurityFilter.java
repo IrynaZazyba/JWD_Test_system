@@ -66,7 +66,6 @@ public class SecurityFilter implements Filter {
 
 
                 if (sessionRole.equalsIgnoreCase(Role.USER.toString()) && role == Role.ADMIN) {
-                    sendRedirectToStartPage(servletResponse);
                 } else {
                     filterChain.doFilter(httpServletRequest, servletResponse);
                 }
