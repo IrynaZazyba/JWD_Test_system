@@ -243,7 +243,7 @@ function deleteAnswer(button) {
 
     button.closest(".answer").remove();
 
-    if (document.querySelector(".modal.show #addAnswer")==null){
+    if (document.querySelector(".modal.show #addAnswer") == null) {
         insertButtonAddAnswer();
     }
 }
@@ -439,7 +439,7 @@ async function updateTestInfo(button) {
     }
     let duration = addTestForm.testDuration.value;
 
-    if (duration === ""||duration==="00:00") {
+    if (duration === "" || duration === "00:00") {
         addTestForm.testDuration.classList.add('is-invalid')
     }
 
@@ -447,7 +447,7 @@ async function updateTestInfo(button) {
         addTestForm.testTitle.classList.add('is-invalid')
     }
 
-    if ((key !== "" && result) && testTitle.length < 20 && testTitle.length > 0&&duration !== ""&&duration!=="00:00") {
+    if (((key !== "" && result) || key === "") && testTitle.length < 20 && testTitle.length > 0 && duration !== "" && duration !== "00:00") {
 
         let testId = document.getElementById("testId").value;
         let testInfoFormEdit = document.getElementById("testInfoFormEdit");
