@@ -5,7 +5,6 @@ import by.jwd.testsys.logic.validator.FrontDataValidator;
 public class FrontDataValidatorImpl implements FrontDataValidator {
 
     private static final String LETTERS_WITH_DASHES = "[a-zA-Zа-яА-Я-]";
-    private static final String LETTER_AND_NUMBER = "[a-zA-Z0-9]*";
     private static final String ONLY_LATIN_LETTER = "[a-zA-Z]";
     private static final String ONLY_LETTER = "[a-zA-Zа-яА-Я]";
     private static final String ANY_SYMBOLS = ".+";

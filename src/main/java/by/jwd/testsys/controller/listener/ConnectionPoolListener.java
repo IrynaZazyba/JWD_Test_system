@@ -2,7 +2,7 @@ package by.jwd.testsys.controller.listener;
 
 import by.jwd.testsys.dao.dbconn.ConnectionPoolDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolException;
-import by.jwd.testsys.dao.dbconn.factory.ConnectionPoolFactory;
+import by.jwd.testsys.dao.dbconn.impl.SqlConnectionPoolDAOImpl;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,20 +22,18 @@ public class ConnectionPoolListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         try {
-            ConnectionPoolFactory poolFactory = ConnectionPoolFactory.getInstance();
-            ConnectionPoolDAO connectionPoolDAO = poolFactory.getSqlConnectionPoolDAO();
-            connectionPoolDAO.initPoolData();
+            ConnectionPoolDAO connectionPool = SqlConnectionPoolDAOImpl.getInstance();
+            connectionPool.initPoolData();
 
         } catch (ConnectionPoolException e) {
-            logger.log(Level.ERROR, "Connection pool didn't initialize.",e);
-            throw new InitConnectionPoolRuntimeException("Connection pool didn't initialize.",e);
+            logger.log(Level.ERROR, "Connection pool didn't initialize.", e);
+            throw new InitConnectionPoolRuntimeException("Connection pool didn't initialize.", e);
         }
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        ConnectionPoolFactory poolFactory = ConnectionPoolFactory.getInstance();
-        ConnectionPoolDAO connectionPoolDAO = poolFactory.getSqlConnectionPoolDAO();
-        connectionPoolDAO.dispose();
+        ConnectionPoolDAO connectionPool = SqlConnectionPoolDAOImpl.getInstance();
+        connectionPool.dispose();
     }
 }

@@ -18,6 +18,7 @@ import java.util.concurrent.Executor;
 public final class SqlConnectionPoolDAOImpl implements ConnectionPoolDAO {
 
     private static Logger logger = LogManager.getLogger(SqlConnectionPoolDAOImpl.class);
+    private static volatile SqlConnectionPoolDAOImpl instance;
     private BlockingQueue<Connection> connectionQueue;
     private BlockingQueue<Connection> givenAwayConQueue;
     private Class<? extends PooledConnection> aClass;
@@ -28,7 +29,19 @@ public final class SqlConnectionPoolDAOImpl implements ConnectionPoolDAO {
     private int poolSize;
 
 
-    public SqlConnectionPoolDAOImpl() {
+    public static SqlConnectionPoolDAOImpl getInstance() {
+        if (instance == null) {
+            synchronized (SqlConnectionPoolDAOImpl.class) {
+                if (instance == null) {
+                    instance = new SqlConnectionPoolDAOImpl();
+                }
+            }
+        }
+        return instance;
+    }
+
+
+    private SqlConnectionPoolDAOImpl() {
         DBResourceManager dbResourseManager = DBResourceManager.getInstance();
         this.driverName = dbResourseManager.getValue(DBParameter.DB_DRIVER);
         this.url = dbResourseManager.getValue(DBParameter.DB_URL);
@@ -80,7 +93,7 @@ public final class SqlConnectionPoolDAOImpl implements ConnectionPoolDAO {
             connection = connectionQueue.take();
             givenAwayConQueue.add(connection);
         } catch (InterruptedException e) {
-            logger.log(Level.ERROR,"InterruptedException in takeConnection() method", e);
+            logger.log(Level.ERROR, "InterruptedException in takeConnection() method", e);
             throw new ConnectionPoolException("Error connecting to the data source.", e);
         }
         return connection;
@@ -88,40 +101,42 @@ public final class SqlConnectionPoolDAOImpl implements ConnectionPoolDAO {
 
     public void closeConnection(Connection con, Statement st, ResultSet rs) {
         try {
-            if (con != null && con.getClass() ==aClass) {
+            if (con != null && con.getClass() == aClass) {
                 con.close();
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Connection isn't return to the pool.",e);
+            logger.log(Level.ERROR, "Connection isn't return to the pool.", e);
         }
         try {
             if (rs != null) {
                 rs.close();
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "ResultSet isn't closed.",e);
+            logger.log(Level.ERROR, "ResultSet isn't closed.", e);
         }
         try {
             if (st != null) {
                 st.close();
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Statement isn't closed.",e);
+            logger.log(Level.ERROR, "Statement isn't closed.", e);
         }
     }
 
     public void closeConnection(Connection con, Statement st) {
         try {
-            if(con!=null&&con.getClass()==aClass){
-            con.close();}
+            if (con != null && con.getClass() == aClass) {
+                con.close();
+            }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Connection isn't return to the pool.",e);
+            logger.log(Level.ERROR, "Connection isn't return to the pool.", e);
         }
         try {
-            if(st!=null){
-            st.close();}
+            if (st != null) {
+                st.close();
+            }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Statement isn't closed.",e);
+            logger.log(Level.ERROR, "Statement isn't closed.", e);
         }
     }
 

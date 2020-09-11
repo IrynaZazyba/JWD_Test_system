@@ -33,7 +33,8 @@ public class TestLogServiceImpl implements TestLogService {
      * @throws InvalidUserDataException in case of invalid questionLogId, answers
      */
     @Override
-    public void writeUserAnswer(int questionLogId, String[] answers) throws TestLogServiceException, InvalidUserDataException {
+    public void writeUserAnswer(int questionLogId, String[] answers)
+            throws TestLogServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(questionLogId)) {
             throw new InvalidUserDataException("Invalid userId in TestLogServiceImpl writeUserAnswer() method");
@@ -63,7 +64,8 @@ public class TestLogServiceImpl implements TestLogService {
      * @throws InvalidUserDataException in case of invalid questionLogId, answers
      */
     @Override
-    public int writeQuestionLog(int questionId, int assignmentId) throws TestLogServiceException, InvalidUserDataException {
+    public int writeQuestionLog(int questionId, int assignmentId)
+            throws TestLogServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(questionId)) {
             throw new InvalidUserDataException("Invalid userId in TestLogServiceImpl writeQuestionLog() method");

@@ -5,7 +5,7 @@ import by.jwd.testsys.bean.Question;
 import by.jwd.testsys.dao.QuestionAnswerDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolException;
-import by.jwd.testsys.dao.dbconn.factory.ConnectionPoolFactory;
+import by.jwd.testsys.dao.dbconn.impl.SqlConnectionPoolDAOImpl;
 import by.jwd.testsys.dao.exception.DAOConnectionPoolException;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
@@ -22,8 +22,7 @@ import java.util.*;
 public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
 
     private static Logger logger = LogManager.getLogger(SQLQuestionAnswerDAOImpl.class);
-    private final ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
-    private ConnectionPoolDAO connectionPool = connectionPoolFactory.getSqlConnectionPoolDAO();
+    private ConnectionPoolDAO connectionPool = SqlConnectionPoolDAOImpl.getInstance();
 
     private static final String SELECT_QUESTION = "SELECT id, question FROM question q WHERE deleted_at IS NULL AND " +
             "test_id=? and not EXISTS (select * from `question-log` where q.id=question_id  and assignment_id=?) " +
@@ -48,7 +47,8 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
 
     private static final String UPDATE_ANSWER_DELETED_AT_BY_ANSWER_ID = "UPDATE `answer` SET `deleted_at`=? WHERE id=?";
 
-    private static final String UPDATE_ANSWER_TITLE_RESULT_BY_ANSWER_ID = "UPDATE `answer` SET `answer`=?,`result`=? WHERE id=?;";
+    private static final String UPDATE_ANSWER_TITLE_RESULT_BY_ANSWER_ID = "UPDATE `answer` SET `answer`=?,`result`=? " +
+            "WHERE id=?";
 
     private static final String SELECT_QUESTION_WITH_ANSWER_BY_TEST_ID = "SELECT question, question.id as q_id, " +
             "answer.id as a_id, answer, result FROM `question` inner join answer on answer.question_id=question.id " +
@@ -181,7 +181,8 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
                 }
             }
         } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method getRightAnswersToQuestionByTestId", e);
+            throw new DAOConnectionPoolException(
+                    "ConnectionPoolException in SQLTestDAOImpl method getRightAnswersToQuestionByTestId", e);
         } catch (SQLException e) {
             logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getRightAnswersToQuestionByTestId()", e);
             throw new DAOSqlException("SQLException in SQLTestDAOImpl method getRightAnswersToQuestionByTestId()", e);
@@ -222,7 +223,8 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
             }
             connection.commit();
         } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method saveQuestionWithAnswers()", e);
+            throw new DAOConnectionPoolException(
+                    "ConnectionPoolException in SQLTestDAOImpl method saveQuestionWithAnswers()", e);
         } catch (SQLException e) {
             try {
                 connection.rollback();
@@ -295,13 +297,15 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
             connection.commit();
 
         } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method updateQuestionWithAnswersByQuestionId()", e);
+            throw new DAOConnectionPoolException(
+                    "ConnectionPoolException in SQLTestDAOImpl method updateQuestionWithAnswersByQuestionId()", e);
         } catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (SQLException ex) {
                 logger.log(Level.ERROR, "Rollback SQLTestDAOImpl method updateQuestionWithAnswersByQuestionId()", e);
-                throw new DAOSqlException("Impossible to rollback SQLTestDAOImpl method updateQuestionWithAnswersByQuestionId()", e);
+                throw new DAOSqlException(
+                        "Impossible to rollback SQLTestDAOImpl method updateQuestionWithAnswersByQuestionId()", e);
             }
             logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method updateQuestionWithAnswersByQuestionId()", e);
             throw new DAOSqlException("SQLException in SQLTestDAOImpl method updateQuestionWithAnswersByQuestionId()", e);
@@ -310,7 +314,8 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
                 try {
                     connection.setAutoCommit(true);
                 } catch (SQLException e) {
-                    logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method updateQuestionWithAnswersByQuestionId() in" +
+                    logger.log(Level.ERROR,
+                            "SQLException in SQLTestDAOImpl method updateQuestionWithAnswersByQuestionId() in" +
                             "attempt to setAutoCommit(true)", e);
                 }
             }
@@ -350,7 +355,8 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
             }
 
         } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method getQuestionsWithAnswersByTestId()", e);
+            throw new DAOConnectionPoolException(
+                    "ConnectionPoolException in SQLTestDAOImpl method getQuestionsWithAnswersByTestId()", e);
         } catch (SQLException e) {
             logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getQuestionsWithAnswersByTestId()", e);
             throw new DAOSqlException("SQLException in SQLTestDAOImpl method getQuestionsWithAnswersByTestId()", e);
@@ -400,7 +406,8 @@ public class SQLQuestionAnswerDAOImpl implements QuestionAnswerDAO {
             logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method deleteQuestionWithAnswers()", e);
             throw new DAOSqlException("SQLException in SQLTestDAOImpl method deleteQuestionWithAnswers()", e);
         } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method deleteQuestionWithAnswers()", e);
+            throw new DAOConnectionPoolException(
+                    "ConnectionPoolException in SQLTestDAOImpl method deleteQuestionWithAnswers()", e);
         } finally {
             if (connection != null) {
                 try {

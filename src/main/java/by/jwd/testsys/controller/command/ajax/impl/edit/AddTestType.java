@@ -34,10 +34,10 @@ public class AddTestType implements AjaxCommand {
         } catch (AdminServiceException e) {
             response.setStatus(500);
         } catch (ExistsTypeAdminServiceException e) {
-            logger.log(Level.ERROR, "Exists test type in AddTestType command method execute()",e);
+            logger.log(Level.ERROR, "Exists test type in AddTestType command method execute()", e);
             response.setStatus(409);
         } catch (InvalidUserDataException e) {
-            logger.log(Level.ERROR, "Invalid user data in AddTestType command method execute()",e);
+            logger.log(Level.ERROR, "Invalid user data in AddTestType command method execute()", e);
             response.setStatus(409);
         }
         return answer;

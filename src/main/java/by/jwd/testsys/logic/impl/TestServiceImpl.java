@@ -170,7 +170,8 @@ public class TestServiceImpl implements TestService {
      * @throws InvalidTestKeyException  in case the key entered by the user is incorrect
      */
     @Override
-    public void checkPermission(int userId, int testId, String key) throws TestServiceException, InvalidUserDataException, InvalidTestKeyException {
+    public void checkPermission(int userId, int testId, String key)
+            throws TestServiceException, InvalidUserDataException, InvalidTestKeyException {
 
         if (!frontDataValidator.validateId(testId) ||
                 !frontDataValidator.validateId(userId)) {
@@ -213,7 +214,8 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Set<Result> receiveResultData(int typeId, int testId, int userId, LocalDate date) throws TestLogServiceException, InvalidUserDataException {
+    public Set<Result> receiveResultData(int typeId, int testId, int userId, LocalDate date)
+            throws TestLogServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(typeId) ||
                 !frontDataValidator.validateId(testId) ||
@@ -438,7 +440,8 @@ public class TestServiceImpl implements TestService {
 
 
     @Override
-    public Set<Test> getTestByTypeId(int typeId, int currentPage, int recordsPerPage) throws TestServiceException, InvalidUserDataException {
+    public Set<Test> getTestByTypeId(int typeId, int currentPage, int recordsPerPage)
+            throws TestServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(typeId) ||
                 !frontDataValidator.validatePositiveNumber(currentPage) ||
@@ -465,7 +468,8 @@ public class TestServiceImpl implements TestService {
 
 
     @Override
-    public Set<Test> getTestsPermittedForUser(int typeId, int userId, int currentPage, int recordsPerPage) throws TestServiceException, InvalidUserDataException {
+    public Set<Test> getTestsPermittedForUser(int typeId, int userId, int currentPage, int recordsPerPage)
+            throws TestServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(typeId) ||
                 !frontDataValidator.validatePositiveNumber(currentPage) ||
@@ -515,7 +519,8 @@ public class TestServiceImpl implements TestService {
 
 
     @Override
-    public int receiveNumberTestPages(int typeId, int recordsPerPage, boolean isEdited, boolean isExistsKey) throws TestServiceException, InvalidUserDataException {
+    public int receiveNumberTestPages(int typeId, int recordsPerPage, boolean isEdited, boolean isExistsKey)
+            throws TestServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(typeId) ||
                 !frontDataValidator.validatePositiveNumber(recordsPerPage)) {

@@ -5,7 +5,7 @@ import by.jwd.testsys.bean.Type;
 import by.jwd.testsys.dao.TestDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolException;
-import by.jwd.testsys.dao.dbconn.factory.ConnectionPoolFactory;
+import by.jwd.testsys.dao.dbconn.impl.SqlConnectionPoolDAOImpl;
 import by.jwd.testsys.dao.exception.DAOConnectionPoolException;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
@@ -14,7 +14,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -25,8 +24,7 @@ import java.util.Set;
 public class SQLTestDAOImpl implements TestDAO {
 
     private static Logger logger = LogManager.getLogger(SQLTestDAOImpl.class);
-    private final ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
-    private ConnectionPoolDAO connectionPool = connectionPoolFactory.getSqlConnectionPoolDAO();
+    private ConnectionPoolDAO connectionPool = SqlConnectionPoolDAOImpl.getInstance();
 
 
     private static final String SELECT_TEST_INFO_BY_ID = "SELECT t.title, t.key, t.time, " +
@@ -297,7 +295,8 @@ public class SQLTestDAOImpl implements TestDAO {
                 duration = time.toLocalTime();
             }
         } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method getTestStartDateTime()", e);
+            throw new DAOConnectionPoolException(
+                    "ConnectionPoolException in SQLTestDAOImpl method getTestStartDateTime()", e);
         } catch (SQLException e) {
             logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getTestStartDateTime()", e);
             throw new DAOSqlException("SQLException in SQLTestDAOImpl method getTestStartDateTime()", e);
@@ -364,7 +363,8 @@ public class SQLTestDAOImpl implements TestDAO {
                 tests.add(test);
             }
         } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method getTestsByLimit()", e);
+            throw new DAOConnectionPoolException(
+                    "ConnectionPoolException in SQLTestDAOImpl method getTestsByLimit()", e);
         } catch (SQLException e) {
             logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getTestsByLimit()", e);
             throw new DAOSqlException("SQLException in SQLTestDAOImpl method getTestsByLimit()", e);
@@ -377,7 +377,8 @@ public class SQLTestDAOImpl implements TestDAO {
 
 
     @Override
-    public Set<Test> getTestsByLimit(int typeId, int from, int to, boolean isEdited, boolean isExistsKey) throws DAOException {
+    public Set<Test> getTestsByLimit(int typeId, int from, int to, boolean isEdited, boolean isExistsKey)
+            throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -408,7 +409,8 @@ public class SQLTestDAOImpl implements TestDAO {
                 tests.add(test);
             }
         } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method getTestsByLimit()", e);
+            throw new DAOConnectionPoolException(
+                    "ConnectionPoolException in SQLTestDAOImpl method getTestsByLimit()", e);
         } catch (SQLException e) {
             logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getTestsByLimit()", e);
             throw new DAOSqlException("SQLException in SQLTestDAOImpl method getTestsByLimit()", e);
@@ -505,7 +507,8 @@ public class SQLTestDAOImpl implements TestDAO {
             }
 
         } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method getCountTestAssignment()", e);
+            throw new DAOConnectionPoolException(
+                    "ConnectionPoolException in SQLTestDAOImpl method getCountTestAssignment()", e);
         } catch (SQLException e) {
             logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method getCountTestAssignment()", e);
             throw new DAOSqlException("SQLException in SQLTestDAOImpl method getCountTestAssignment()", e);
@@ -650,7 +653,8 @@ public class SQLTestDAOImpl implements TestDAO {
             preparedStatement.executeUpdate();
 
         } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestDAOImpl method updateTestIsEdited()", e);
+            throw new DAOConnectionPoolException(
+                    "ConnectionPoolException in SQLTestDAOImpl method updateTestIsEdited()", e);
         } catch (SQLException e) {
             logger.log(Level.ERROR, "SQLException in SQLTestDAOImpl method updateTestIsEdited()", e);
             throw new DAOSqlException("SQLException in SQLTestDAOImpl method updateTestIsEdited()", e);

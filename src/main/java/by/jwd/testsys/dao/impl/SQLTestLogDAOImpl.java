@@ -1,10 +1,10 @@
 package by.jwd.testsys.dao.impl;
 
-import by.jwd.testsys.bean.*;
+import by.jwd.testsys.bean.TestLog;
 import by.jwd.testsys.dao.TestLogDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolDAO;
 import by.jwd.testsys.dao.dbconn.ConnectionPoolException;
-import by.jwd.testsys.dao.dbconn.factory.ConnectionPoolFactory;
+import by.jwd.testsys.dao.dbconn.impl.SqlConnectionPoolDAOImpl;
 import by.jwd.testsys.dao.exception.DAOConnectionPoolException;
 import by.jwd.testsys.dao.exception.DAOException;
 import by.jwd.testsys.dao.exception.DAOSqlException;
@@ -18,8 +18,8 @@ import java.util.*;
 public class SQLTestLogDAOImpl implements TestLogDAO {
 
     private static Logger logger = LogManager.getLogger(SQLTestLogDAOImpl.class);
-    private final ConnectionPoolFactory connectionPoolFactory = ConnectionPoolFactory.getInstance();
-    private ConnectionPoolDAO connectionPool = connectionPoolFactory.getSqlConnectionPoolDAO();
+    private ConnectionPoolDAO connectionPool = SqlConnectionPoolDAOImpl.getInstance();
+
 
     private static final String INSERT_ANSWER_LOG = "INSERT INTO `answer-log` (`answer_id`, `question_log_id`) " +
             "VALUES (?,?);";
@@ -54,12 +54,14 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
                 connection.rollback();
             } catch (SQLException ex) {
                 logger.log(Level.ERROR, "Rollback answersLog SQLTestLogDAOImpl method writeAnswerLog()", e);
-                throw new DAOSqlException("Impossible to rollback answersLog SQLTestLogDAOImpl method writeAnswerLog()", e);
+                throw new DAOSqlException(
+                        "Impossible to rollback answersLog SQLTestLogDAOImpl method writeAnswerLog()", e);
             }
             logger.log(Level.ERROR, "SQLException in SQLTestLogDAOImpl method writeAnswerLog()", e);
             throw new DAOSqlException("SQLException in SQLTestLogDAOImpl method writeAnswerLog()", e);
         } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestLogDAOImpl method writeAnswerLog()", e);
+            throw new DAOConnectionPoolException(
+                    "ConnectionPoolException in SQLTestLogDAOImpl method writeAnswerLog()", e);
         } finally {
             if (connection != null) {
                 try {
@@ -94,7 +96,8 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
             }
 
         } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestLogDAOImpl method writeQuestionLog()", e);
+            throw new DAOConnectionPoolException(
+                    "ConnectionPoolException in SQLTestLogDAOImpl method writeQuestionLog()", e);
         } catch (SQLException e) {
             logger.log(Level.ERROR, "SQLException in SQLTestLogDAOImpl method writeQuestionLog()", e);
             throw new DAOSqlException("SQLException in SQLTestLogDAOImpl method writeQuestionLog()", e);
@@ -137,7 +140,8 @@ public class SQLTestLogDAOImpl implements TestLogDAO {
             testLog.setQuestionAnswerMap(questionAnswerMap);
 
         } catch (ConnectionPoolException e) {
-            throw new DAOConnectionPoolException("ConnectionPoolException in SQLTestLogDAOImpl method writeQuestionLog()", e);
+            throw new DAOConnectionPoolException(
+                    "ConnectionPoolException in SQLTestLogDAOImpl method writeQuestionLog()", e);
         } catch (SQLException e) {
             logger.log(Level.ERROR, "SQLException in SQLTestLogDAOImpl method writeAnswerLog()", e);
             throw new DAOSqlException("SQLException in SQLTestLogDAOImpl method writeQuestionLog()", e);

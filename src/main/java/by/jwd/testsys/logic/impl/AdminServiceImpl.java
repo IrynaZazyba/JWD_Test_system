@@ -15,6 +15,7 @@ import by.jwd.testsys.logic.util.MailSender;
 import by.jwd.testsys.logic.validator.FrontDataValidator;
 import by.jwd.testsys.logic.validator.TestValidator;
 import by.jwd.testsys.logic.validator.factory.ValidatorFactory;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,7 +43,8 @@ public class AdminServiceImpl implements AdminService {
     private final static String EXISTS_ASSIGNMENT = "existsAssignment";
 
     @Override
-    public void deleteTest(int testId) throws AdminServiceException, InvalidDeleteActionServiceException, InvalidUserDataException {
+    public void deleteTest(int testId) throws AdminServiceException,
+            InvalidDeleteActionServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(testId)) {
             throw new InvalidUserDataException("Invalid testId in AdminServiceImpl deleteTest() method");
@@ -61,7 +63,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public int createTest(int typeId, String title, String key, LocalTime duration) throws AdminServiceException, InvalidUserDataException {
+    public int createTest(int typeId, String title, String key, LocalTime duration)
+            throws AdminServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(typeId)) {
             throw new InvalidUserDataException("Invalid typeId in AdminServiceImpl createTest() method");
@@ -80,7 +83,9 @@ public class AdminServiceImpl implements AdminService {
         if (key.equals("")) {
             key = null;
         }
-        Test test = new Test.Builder().withTitle(title).withKey(key).withDuration(duration).withEdited(true).build();
+        Test test = new Test.Builder()
+                .withTitle(StringEscapeUtils.escapeHtml4(title))
+                .withKey(key).withDuration(duration).withEdited(true).build();
         try {
             generatedTestId = testDAO.saveTest(test, typeId);
         } catch (DAOException e) {
@@ -90,7 +95,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void updateTestData(int testId, int typeId, String title, String key, LocalTime duration) throws AdminServiceException, InvalidUserDataException {
+    public void updateTestData(int testId, int typeId, String title, String key, LocalTime duration)
+            throws AdminServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(testId)) {
             throw new InvalidUserDataException("Invalid typeId in AdminServiceImpl updateTestData() method");
@@ -110,7 +116,9 @@ public class AdminServiceImpl implements AdminService {
 
 
         Test test = new Test.Builder()
-                .withId(testId).withTitle(title).withKey(key).withDuration(duration).withEdited(true).build();
+                .withId(testId)
+                .withTitle(StringEscapeUtils.escapeHtml4(title))
+                .withKey(key).withDuration(duration).withEdited(true).build();
         try {
             testDAO.updateTest(test, typeId);
         } catch (DAOException e) {
@@ -142,12 +150,19 @@ public class AdminServiceImpl implements AdminService {
         validateData(answers);
         validateData(rightAnswers);
 
-        Question createdQuestion = new Question.Builder().withQuestion(question).build();
+        Question createdQuestion = new Question.Builder()
+                .withQuestion(StringEscapeUtils.escapeHtml4(question))
+                .build();
+
         Set<Answer> createdAnswers = new HashSet<>();
         try {
 
             answers.forEach((k, v) -> {
-                Answer answer = new Answer.Builder().withAnswer(v).withResult(false).build();
+                Answer answer = new Answer.Builder()
+                        .withAnswer(StringEscapeUtils.escapeHtml4(v))
+                        .withResult(false)
+                        .build();
+
                 rightAnswers.forEach(rightAnswer ->
                 {
                     if (k.equals(rightAnswer)) {
@@ -234,7 +249,8 @@ public class AdminServiceImpl implements AdminService {
                                           Map<Integer, String> answers,
                                           Map<Integer, String> addedAnswers,
                                           List<Integer> rightAnswersId,
-                                          List<Integer> rightAddedAnswersId) throws AdminServiceException, InvalidUserDataException {
+                                          List<Integer> rightAddedAnswersId)
+            throws AdminServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(questionId) ||
                 !testValidator.validateQuestionTitle(question)) {
@@ -246,7 +262,11 @@ public class AdminServiceImpl implements AdminService {
         validateData(addedAnswers);
 
 
-        Question updatedQuestion = new Question.Builder().withId(questionId).withQuestion(question).build();
+        Question updatedQuestion = new Question.Builder()
+                .withId(questionId)
+                .withQuestion(StringEscapeUtils.escapeHtml4(question))
+                .build();
+
         Set<Answer> answerToUpdate = new HashSet<>();
         Set<Answer> answerToAdd = new HashSet<>();
 
@@ -264,7 +284,7 @@ public class AdminServiceImpl implements AdminService {
         }
 
         answers.forEach((k, v) -> {
-            Answer answer = new Answer.Builder().withId(k).withAnswer(v).build();
+            Answer answer = new Answer.Builder().withId(k).withAnswer(StringEscapeUtils.escapeHtml4(v)).build();
             rightAnswersId.forEach(value -> {
                 if (value.equals(k)) {
                     answer.setResult(true);
@@ -274,7 +294,7 @@ public class AdminServiceImpl implements AdminService {
         });
 
         addedAnswers.forEach((k, v) -> {
-            Answer answer = new Answer.Builder().withAnswer(v).build();
+            Answer answer = new Answer.Builder().withAnswer(StringEscapeUtils.escapeHtml4(v)).build();
             rightAddedAnswersId.forEach(value -> {
                 if (value.equals(k)) {
                     answer.setResult(true);
@@ -284,7 +304,8 @@ public class AdminServiceImpl implements AdminService {
         });
 
         try {
-            questionAnswerDAO.updateQuestionWithAnswersByQuestionId(updatedQuestion, answerToUpdate, answerToAdd, answerToDelete, LocalDate.now());
+            questionAnswerDAO.updateQuestionWithAnswersByQuestionId(
+                    updatedQuestion, answerToUpdate, answerToAdd, answerToDelete, LocalDate.now());
         } catch (DAOException e) {
             throw new AdminServiceException("DAOException in AdminServiceImpl updateQuestionWithAnswers() method", e);
         }
@@ -319,19 +340,22 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void addTestType(String testTypeTitle) throws AdminServiceException, ExistsTypeAdminServiceException, InvalidUserDataException {
+    public void addTestType(String testTypeTitle)
+            throws AdminServiceException, ExistsTypeAdminServiceException, InvalidUserDataException {
 
         if (!testValidator.validateTypeTitle(testTypeTitle)) {
             throw new InvalidUserDataException("Invalid testTypeTitle in AdminService addTestType() method");
         }
 
         try {
-            Type typeByTitle = testDAO.getTypeByTitle(testTypeTitle);
+            String testTypeTitleEscaped = StringEscapeUtils.escapeHtml4(testTypeTitle);
+
+            Type typeByTitle = testDAO.getTypeByTitle(testTypeTitleEscaped);
             if (typeByTitle.getTitle() != null) {
                 throw new ExistsTypeAdminServiceException("Exists test type exception in AdminService addTestType() method");
             }
 
-            testDAO.saveTestType(testTypeTitle);
+            testDAO.saveTestType(testTypeTitleEscaped);
 
         } catch (DAOException e) {
             throw new AdminServiceException("DAOException in AdminServiceImpl addTestType() method", e);
@@ -411,7 +435,8 @@ public class AdminServiceImpl implements AdminService {
      * @see FrontDataValidator, UserValidator
      */
     @Override
-    public boolean sendLetterAboutAssignmentToUsers(Set<User> assignedUsers, int testId, LocalDate deadline) throws AdminServiceException, InvalidUserDataException {
+    public boolean sendLetterAboutAssignmentToUsers(Set<User> assignedUsers, int testId, LocalDate deadline)
+            throws AdminServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(testId)) {
             throw new InvalidUserDataException("Invalid testId in AdminService sendLetterAboutAssignmentToUsers() method");
@@ -427,7 +452,8 @@ public class AdminServiceImpl implements AdminService {
             MailSender sender = MailSender.getInstance();
 
             for (User user : assignedUsers) {
-                String message = LetterBuilder.buildAssignedTestMessage(user.getFirstName(), testInfo.getTitle(), testInfo.getKey(), deadline);
+                String message = LetterBuilder
+                        .buildAssignedTestMessage(user.getFirstName(), testInfo.getTitle(), testInfo.getKey(), deadline);
                 sender.send(EMAIL_ABOUT_TEST_ASSIGNMENT_SUBJECT, message, user.getEmail());
             }
         } catch (DAOException e) {
@@ -440,7 +466,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void deleteType(int testTypeId) throws AdminServiceException, InvalidDeleteActionServiceException, InvalidUserDataException {
+    public void deleteType(int testTypeId)
+            throws AdminServiceException, InvalidDeleteActionServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(testTypeId)) {
             throw new InvalidUserDataException("Invalid testTypeId in AdminService deleteType() method");
@@ -448,8 +475,8 @@ public class AdminServiceImpl implements AdminService {
 
         try {
             int countTests = testDAO.getCountTests(testTypeId);
-            if(countTests>0){
-                throw new InvalidDeleteActionServiceException("Such type has tests: "+countTests);
+            if (countTests > 0) {
+                throw new InvalidDeleteActionServiceException("Such type has tests: " + countTests);
             }
 
             testDAO.deleteTestType(testTypeId, LocalDateTime.now());

@@ -109,7 +109,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void sendActivationLetter(String link, String activationCodeParamName, User user) throws UserServiceException {
+    public void sendActivationLetter(String link, String activationCodeParamName, User user)
+            throws UserServiceException {
 
         String message = LetterBuilder.
                 buildActivationLetter(link + AMPERSAND + activationCodeParamName + MARK_EQUAL + user.getConfirmCode(), user);
@@ -171,7 +172,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<User> getUsersWithAssignment(int testId, int testTypeId, boolean isCompleted) throws UserServiceException, InvalidUserDataException {
+    public Set<User> getUsersWithAssignment(int testId, int testTypeId, boolean isCompleted)
+            throws UserServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(testId) ||
                 !frontDataValidator.validateId(testTypeId)) {
@@ -215,7 +217,8 @@ public class UserServiceImpl implements UserService {
      *                                  are not valid or the old password was entered incorrectly
      */
     @Override
-    public void changePassword(int userId, String oldPassword, String newPassword) throws UserServiceException, InvalidUserDataException {
+    public void changePassword(int userId, String oldPassword, String newPassword)
+            throws UserServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(userId)) {
             throw new InvalidUserDataException("Invalid userId in UserServiceImpl changePassword() method");
@@ -250,7 +253,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public boolean checkRegistration(int userId, String activatedCode) throws UserServiceException, InvalidUserDataException {
+    public boolean checkRegistration(int userId, String activatedCode)
+            throws UserServiceException, InvalidUserDataException {
 
         if (!frontDataValidator.validateId(userId) ||
                 activatedCode == null) {
